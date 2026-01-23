@@ -95,10 +95,10 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 8: 백엔드 서버 (Bun)
-- [ ] `server/index.ts` - Bun HTTP 서버
-- [ ] `server/routes/generate.ts` - AI 생성 API 엔드포인트
-- [ ] `server/routes/content.ts` - 콘텐츠 CRUD API
-- [ ] Claude API 프록시 (API 키 보호)
+- [x] `server/index.ts` - Bun HTTP 서버
+- [x] `server/routes/generate.ts` - AI 생성 API 엔드포인트
+- [x] `server/routes/content.ts` - 콘텐츠 CRUD API
+- [x] Claude API 프록시 (API 키 보호)
 
 **Files**: `server/index.ts`, `server/routes/*.ts`
 
