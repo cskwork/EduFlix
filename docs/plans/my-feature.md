@@ -151,10 +151,10 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 13: 반응형 및 마무리
-- [ ] 모바일 반응형 CSS
-- [ ] 키보드 네비게이션 지원
-- [ ] 로딩 상태, 에러 처리 UI
-- [ ] README.md 작성
+- [x] 모바일 반응형 CSS
+- [x] 키보드 네비게이션 지원
+- [x] 로딩 상태, 에러 처리 UI
+- [x] README.md 작성
 
 **Files**: `src/assets/styles/responsive.css`, `README.md`
 

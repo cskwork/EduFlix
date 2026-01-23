@@ -1,5 +1,6 @@
 /* 전역 테마 임포트 */
 @import './assets/styles/theme.css';
+@import './assets/styles/responsive.css';
 
 /* 앱 전역 스타일 */
 #app {

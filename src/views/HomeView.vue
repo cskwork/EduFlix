@@ -1,23 +1,33 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useContentStore } from '../stores/content'
 import ContentRow from '../components/home/ContentRow.vue'
+import LoadingSpinner from '../components/common/LoadingSpinner.vue'
+import ErrorMessage from '../components/common/ErrorMessage.vue'
+import EmptyState from '../components/common/EmptyState.vue'
 
 // 콘텐츠 스토어 사용
 const contentStore = useContentStore()
+const router = useRouter()
 
 // 컴포넌트 마운트 시 콘텐츠 로드
 onMounted(() => {
   contentStore.loadContents()
 })
+
+// 창조 모드로 이동
+function goToCreateMode() {
+  router.push('/create')
+}
 </script>
 
 <template>
   <div class="home-view">
     <!-- 히어로 섹션 -->
-    <section class="hero-section">
+    <section class="hero-section" aria-labelledby="hero-title">
       <div class="hero-content">
-        <h1 class="hero-title">배움이 재미있어지는 순간</h1>
+        <h1 id="hero-title" class="hero-title">배움이 재미있어지는 순간</h1>
         <p class="hero-subtitle">
           게임, 시뮬레이션, 탐험으로 즐기는 인터랙티브 교육 콘텐츠
         </p>
@@ -25,24 +35,31 @@ onMounted(() => {
     </section>
 
     <!-- 로딩 상태 -->
-    <div v-if="contentStore.isLoading" class="loading-state">
-      <div class="loading-spinner"></div>
-      <p>콘텐츠를 불러오는 중...</p>
-    </div>
+    <LoadingSpinner
+      v-if="contentStore.isLoading"
+      size="lg"
+      message="콘텐츠를 불러오는 중..."
+    />
 
     <!-- 에러 상태 -->
-    <div v-else-if="contentStore.error" class="error-state">
-      <p class="error-message">{{ contentStore.error }}</p>
-      <button class="retry-btn" @click="contentStore.loadContents()">다시 시도</button>
-    </div>
+    <ErrorMessage
+      v-else-if="contentStore.error"
+      title="콘텐츠를 불러올 수 없습니다"
+      :message="contentStore.error"
+      retry-label="다시 시도"
+      @retry="contentStore.loadContents()"
+    />
 
     <!-- 콘텐츠 목록 -->
     <div v-else class="content-sections">
       <!-- 콘텐츠가 없는 경우 -->
-      <div v-if="contentStore.contentGroups.length === 0" class="empty-state">
-        <p>표시할 콘텐츠가 없습니다.</p>
-        <p class="empty-hint">창조 모드에서 새로운 콘텐츠를 만들어보세요!</p>
-      </div>
+      <EmptyState
+        v-if="contentStore.contentGroups.length === 0"
+        title="표시할 콘텐츠가 없습니다"
+        message="창조 모드에서 AI와 함께 새로운 학습 콘텐츠를 만들어보세요!"
+        action-label="콘텐츠 만들기"
+        @action="goToCreateMode"
+      />
 
       <!-- 과목별 콘텐츠 행 -->
       <ContentRow
@@ -84,73 +101,6 @@ onMounted(() => {
 .hero-subtitle {
   font-size: var(--font-size-lg);
   color: var(--color-text-secondary);
-}
-
-/* 로딩 상태 */
-.loading-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-2xl);
-  color: var(--color-text-secondary);
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--color-bg-card);
-  border-top-color: var(--color-brand-primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: var(--spacing-md);
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* 에러 상태 */
-.error-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: var(--spacing-2xl);
-}
-
-.error-message {
-  color: var(--color-error);
-  margin-bottom: var(--spacing-md);
-}
-
-.retry-btn {
-  padding: var(--spacing-sm) var(--spacing-lg);
-  background: var(--color-brand-primary);
-  color: var(--color-text-primary);
-  border-radius: var(--card-border-radius);
-  font-weight: var(--font-weight-medium);
-  transition: background var(--transition-fast);
-}
-
-.retry-btn:hover {
-  background: var(--color-brand-secondary);
-}
-
-/* 빈 상태 */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: var(--spacing-2xl);
-  color: var(--color-text-secondary);
-}
-
-.empty-hint {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-  margin-top: var(--spacing-sm);
 }
 
 /* 콘텐츠 섹션 */
