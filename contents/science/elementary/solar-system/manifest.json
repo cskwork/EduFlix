@@ -1,0 +1,21 @@
+{
+  "id": "solar-system",
+  "title": "태양계 여행",
+  "subject": "science",
+  "gradeLevel": "elementary",
+  "grade": 4,
+  "type": "simulation",
+  "language": "ko",
+  "description": "우주선을 타고 태양계를 여행하며 각 행성의 특징을 알아보세요!",
+  "thumbnail": "",
+  "path": "contents/science/elementary/solar-system/index.html",
+  "learningObjectives": [
+    "태양계의 구성 이해하기",
+    "8개 행성의 이름과 순서 알기",
+    "각 행성의 특징 파악하기"
+  ],
+  "prerequisites": [],
+  "estimatedTime": 15,
+  "createdAt": "2026-01-23T00:00:00.000Z",
+  "updatedAt": "2026-01-23T00:00:00.000Z"
+}

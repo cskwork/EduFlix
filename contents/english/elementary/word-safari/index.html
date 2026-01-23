@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Safari</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #2d5016 0%, #1a3009 50%, #0f1f05 100%);
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    .content-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .content-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .content-score {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      color: #ffd700;
+    }
+
+    .content-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      gap: 20px;
+    }
+
+    .content-footer {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .content-container {
+        padding: 12px;
+      }
+
+      .content-title {
+        font-size: 18px;
+      }
+
+      .content-score {
+        font-size: 14px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="content-container">
+    <header class="content-header">
+      <h1 class="content-title">Word Safari &#129409;</h1>
+      <div class="content-score" id="score-display">
+        <span class="score-icon">&#9733;</span>
+        <span id="score-value">0</span>
+      </div>
+    </header>
+
+    <main class="content-main" id="main-content">
+      <div class="game-area">
+        <div class="level-info">
+          <span class="category-label" id="category-label">Animals</span>
+          <span class="round-info">Round <span id="current-round">1</span> / <span id="total-rounds">5</span></span>
+        </div>
+
+        <div class="picture-card" id="picture-card">
+          <div class="picture-emoji" id="picture-emoji">&#128049;</div>
+          <div class="picture-hint" id="picture-hint">Click a word!</div>
+        </div>
+
+        <div class="word-choices" id="word-choices">
+          <!-- 단어 선택지가 여기에 삽입됩니다 -->
+        </div>
+
+        <div class="feedback-area" id="feedback-area">
+          <p class="feedback-text" id="feedback-text"></p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="content-footer">
+      <button class="btn btn-secondary" id="btn-reset">Start Over</button>
+      <button class="btn btn-primary" id="btn-next" disabled>Next Word</button>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

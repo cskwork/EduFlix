@@ -1,5 +1,42 @@
 {
   "version": "1.0.0",
   "lastUpdated": "2026-01-23T00:00:00.000Z",
-  "contents": []
+  "contents": [
+    {
+      "id": "fractions-pizza",
+      "title": "피자로 배우는 분수",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": 3,
+      "type": "game",
+      "language": "ko",
+      "description": "맛있는 피자를 통해 분수의 개념을 배워보세요! 피자 조각을 나누고 분수를 만들어 봅니다.",
+      "thumbnail": "",
+      "path": "contents/math/elementary/fractions-pizza/index.html"
+    },
+    {
+      "id": "solar-system",
+      "title": "태양계 여행",
+      "subject": "science",
+      "gradeLevel": "elementary",
+      "grade": 4,
+      "type": "simulation",
+      "language": "ko",
+      "description": "우주선을 타고 태양계를 여행하며 각 행성의 특징을 알아보세요!",
+      "thumbnail": "",
+      "path": "contents/science/elementary/solar-system/index.html"
+    },
+    {
+      "id": "word-safari",
+      "title": "Word Safari",
+      "subject": "english",
+      "gradeLevel": "elementary",
+      "grade": 3,
+      "type": "game",
+      "language": "en",
+      "description": "Go on a word adventure! Match pictures with English words and learn new vocabulary.",
+      "thumbnail": "",
+      "path": "contents/english/elementary/word-safari/index.html"
+    }
+  ]
 }

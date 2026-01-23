@@ -1,0 +1,21 @@
+{
+  "id": "word-safari",
+  "title": "Word Safari",
+  "subject": "english",
+  "gradeLevel": "elementary",
+  "grade": 3,
+  "type": "game",
+  "language": "en",
+  "description": "Go on a word adventure! Match pictures with English words and learn new vocabulary.",
+  "thumbnail": "",
+  "path": "contents/english/elementary/word-safari/index.html",
+  "learningObjectives": [
+    "Learn basic English vocabulary",
+    "Match words with pictures",
+    "Practice spelling and recognition"
+  ],
+  "prerequisites": [],
+  "estimatedTime": 10,
+  "createdAt": "2026-01-23T00:00:00.000Z",
+  "updatedAt": "2026-01-23T00:00:00.000Z"
+}

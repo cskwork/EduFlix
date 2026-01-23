@@ -82,10 +82,10 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 7: 첫 3개 콘텐츠 제작 (AI + 수정)
-- [ ] **수학 초3**: 피자로 배우는 분수 (game) - 한국어
-- [ ] **과학 초4**: 태양계 여행 (simulation) - 한국어
-- [ ] **영어 초3**: Word Safari (game) - 영어
-- [ ] 각 콘텐츠 `manifest.json` 작성
+- [x] **수학 초3**: 피자로 배우는 분수 (game) - 한국어
+- [x] **과학 초4**: 태양계 여행 (simulation) - 한국어
+- [x] **영어 초3**: Word Safari (game) - 영어
+- [x] 각 콘텐츠 `manifest.json` 작성
 
 **Files**:
 - `contents/math/elementary/fractions-pizza/`
