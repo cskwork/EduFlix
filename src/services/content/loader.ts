@@ -35,7 +35,8 @@ export async function loadContentManifest(contentPath: string): Promise<ContentM
 export function getContentHtmlPath(content: ContentManifest): string {
   // path 필드가 있으면 사용, 없으면 기본 경로 생성
   if (content.path) {
-    return content.path
+    // 상대경로면 절대경로로 변환
+    return content.path.startsWith('/') ? content.path : `/${content.path}`
   }
 
   // 기본 경로: /contents/{subject}/{gradeLevel}/{id}/index.html

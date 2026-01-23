@@ -12,7 +12,7 @@
       "language": "ko",
       "description": "맛있는 피자를 통해 분수의 개념을 배워보세요! 피자 조각을 나누고 분수를 만들어 봅니다.",
       "thumbnail": "",
-      "path": "contents/math/elementary/fractions-pizza/index.html"
+      "path": "/contents/math/elementary/fractions-pizza/index.html"
     },
     {
       "id": "shapes-explorer",
@@ -24,7 +24,7 @@
       "language": "ko",
       "description": "다양한 평면도형과 입체도형을 탐험하며 도형의 성질을 배워보세요!",
       "thumbnail": "",
-      "path": "contents/math/elementary/shapes-explorer/index.html"
+      "path": "/contents/math/elementary/shapes-explorer/index.html"
     },
     {
       "id": "equation-puzzle",
@@ -36,7 +36,7 @@
       "language": "ko",
       "description": "재미있는 퍼즐로 일차방정식과 연립방정식을 풀어보세요!",
       "thumbnail": "",
-      "path": "contents/math/middle/equation-puzzle/index.html"
+      "path": "/contents/math/middle/equation-puzzle/index.html"
     },
     {
       "id": "solar-system",
@@ -48,7 +48,7 @@
       "language": "ko",
       "description": "우주선을 타고 태양계를 여행하며 각 행성의 특징을 알아보세요!",
       "thumbnail": "",
-      "path": "contents/science/elementary/solar-system/index.html"
+      "path": "/contents/science/elementary/solar-system/index.html"
     },
     {
       "id": "circuit-lab",
@@ -60,7 +60,7 @@
       "language": "ko",
       "description": "전기회로를 직접 만들며 전기의 흐름과 원리를 배워보세요!",
       "thumbnail": "",
-      "path": "contents/science/elementary/circuit-lab/index.html"
+      "path": "/contents/science/elementary/circuit-lab/index.html"
     },
     {
       "id": "cell-explorer",
@@ -72,7 +72,7 @@
       "language": "ko",
       "description": "현미경으로 세포를 관찰하고 각 세포소기관의 역할을 탐험해보세요!",
       "thumbnail": "",
-      "path": "contents/science/middle/cell-explorer/index.html"
+      "path": "/contents/science/middle/cell-explorer/index.html"
     },
     {
       "id": "chemical-reactor",
@@ -84,7 +84,7 @@
       "language": "ko",
       "description": "다양한 화학 반응을 시뮬레이션하며 반응식과 원리를 배워보세요!",
       "thumbnail": "",
-      "path": "contents/science/high/chemical-reactor/index.html"
+      "path": "/contents/science/high/chemical-reactor/index.html"
     },
     {
       "id": "word-safari",
@@ -96,7 +96,7 @@
       "language": "en",
       "description": "Go on a word adventure! Match pictures with English words and learn new vocabulary.",
       "thumbnail": "",
-      "path": "contents/english/elementary/word-safari/index.html"
+      "path": "/contents/english/elementary/word-safari/index.html"
     },
     {
       "id": "grammar-quest",
@@ -108,7 +108,7 @@
       "language": "en",
       "description": "Embark on a quest to master English grammar! Learn tenses, articles, and sentence structures.",
       "thumbnail": "",
-      "path": "contents/english/middle/grammar-quest/index.html"
+      "path": "/contents/english/middle/grammar-quest/index.html"
     },
     {
       "id": "debate-arena",
@@ -120,7 +120,7 @@
       "language": "en",
       "description": "Enter the arena and practice your persuasive writing and debate skills through interactive scenarios!",
       "thumbnail": "",
-      "path": "contents/english/high/debate-arena/index.html"
+      "path": "/contents/english/high/debate-arena/index.html"
     }
   ]
 }

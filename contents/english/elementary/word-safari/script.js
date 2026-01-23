@@ -6,44 +6,44 @@
 // Word data by category
 const wordData = {
   animals: [
-    { word: 'cat', emoji: '&#128049;' },
-    { word: 'dog', emoji: '&#128054;' },
-    { word: 'lion', emoji: '&#129409;' },
-    { word: 'elephant', emoji: '&#128024;' },
-    { word: 'monkey', emoji: '&#128053;' },
-    { word: 'rabbit', emoji: '&#128048;' },
-    { word: 'bird', emoji: '&#128038;' },
-    { word: 'fish', emoji: '&#128031;' },
+    { word: 'cat', type: 'image', src: 'images/cat.png' },
+    { word: 'dog', type: 'image', src: 'images/dog.png' },
+    { word: 'lion', type: 'image', src: 'images/lion.png' },
+    { word: 'elephant', type: 'image', src: 'images/elephant.png' },
+    { word: 'monkey', type: 'image', src: 'images/monkey.png' },
+    { word: 'rabbit', type: 'image', src: 'images/rabbit.png' },
+    { word: 'bird', type: 'image', src: 'images/bird.png' },
+    { word: 'fish', type: 'image', src: 'images/fish.png' },
   ],
   fruits: [
-    { word: 'apple', emoji: '&#127822;' },
-    { word: 'banana', emoji: '&#127820;' },
-    { word: 'orange', emoji: '&#127818;' },
-    { word: 'grape', emoji: '&#127815;' },
-    { word: 'strawberry', emoji: '&#127827;' },
-    { word: 'watermelon', emoji: '&#127817;' },
-    { word: 'cherry', emoji: '&#127826;' },
-    { word: 'peach', emoji: '&#127825;' },
+    { word: 'apple', type: 'image', src: 'images/apple.png' },
+    { word: 'banana', type: 'image', src: 'images/banana.png' },
+    { word: 'orange', type: 'image', src: 'images/orange.png' },
+    { word: 'grape', type: 'image', src: 'images/grape.png' },
+    { word: 'strawberry', type: 'emoji', value: '&#127827;' },
+    { word: 'watermelon', type: 'emoji', value: '&#127817;' },
+    { word: 'cherry', type: 'emoji', value: '&#127826;' },
+    { word: 'peach', type: 'emoji', value: '&#127825;' },
   ],
   colors: [
-    { word: 'red', emoji: '&#128308;' },
-    { word: 'blue', emoji: '&#128309;' },
-    { word: 'green', emoji: '&#128994;' },
-    { word: 'yellow', emoji: '&#128993;' },
-    { word: 'purple', emoji: '&#128995;' },
-    { word: 'orange', emoji: '&#128992;' },
-    { word: 'white', emoji: '&#9898;' },
-    { word: 'black', emoji: '&#9899;' },
+    { word: 'red', type: 'emoji', value: '&#128308;' },
+    { word: 'blue', type: 'emoji', value: '&#128309;' },
+    { word: 'green', type: 'emoji', value: '&#128994;' },
+    { word: 'yellow', type: 'emoji', value: '&#128993;' },
+    { word: 'purple', type: 'emoji', value: '&#128995;' },
+    { word: 'orange', type: 'emoji', value: '&#128992;' },
+    { word: 'white', type: 'emoji', value: '&#9898;' },
+    { word: 'black', type: 'emoji', value: '&#9899;' },
   ],
   weather: [
-    { word: 'sun', emoji: '&#9728;&#65039;' },
-    { word: 'rain', emoji: '&#127783;&#65039;' },
-    { word: 'cloud', emoji: '&#9729;&#65039;' },
-    { word: 'snow', emoji: '&#10052;&#65039;' },
-    { word: 'wind', emoji: '&#128168;' },
-    { word: 'rainbow', emoji: '&#127752;' },
-    { word: 'thunder', emoji: '&#9889;' },
-    { word: 'star', emoji: '&#11088;' },
+    { word: 'sun', type: 'emoji', value: '&#9728;&#65039;' },
+    { word: 'rain', type: 'emoji', value: '&#127783;&#65039;' },
+    { word: 'cloud', type: 'emoji', value: '&#9729;&#65039;' },
+    { word: 'snow', type: 'emoji', value: '&#10052;&#65039;' },
+    { word: 'wind', type: 'emoji', value: '&#128168;' },
+    { word: 'rainbow', type: 'emoji', value: '&#127752;' },
+    { word: 'thunder', type: 'emoji', value: '&#9889;' },
+    { word: 'star', type: 'emoji', value: '&#11088;' },
   ],
 }
 
@@ -126,7 +126,13 @@ function loadRound() {
   gameState.usedWords.push(gameState.currentWord.word)
 
   // Display picture
-  elements.pictureEmoji.innerHTML = gameState.currentWord.emoji
+  if (gameState.currentWord.type === 'image') {
+    elements.pictureEmoji.className = 'picture-emoji'
+    elements.pictureEmoji.innerHTML = `<img src="${gameState.currentWord.src}" alt="${gameState.currentWord.word}">`
+  } else {
+    elements.pictureEmoji.className = 'picture-emoji emoji-text'
+    elements.pictureEmoji.innerHTML = gameState.currentWord.value
+  }
 
   // Generate word choices
   generateWordChoices()
@@ -306,7 +312,9 @@ function showResult() {
         ${[1, 2, 3]
           .map(
             (n) => `
-          <span class="star ${n <= stars ? 'active' : ''}">&#11088;</span>
+          <div class="star ${n <= stars ? 'active' : ''}">
+            <img src="images/star.png" alt="star">
+          </div>
         `
           )
           .join('')}

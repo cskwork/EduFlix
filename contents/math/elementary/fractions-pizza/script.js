@@ -285,7 +285,7 @@ function showResult(success) {
   overlay.className = 'result-overlay'
   overlay.innerHTML = `
     <div class="result-content">
-      <div class="result-icon">${success ? '&#127881;' : '&#128546;'}</div>
+      <div class="result-icon">${success ? '<img src="images/trophy.png" alt="Success">' : '<img src="images/sad.png" alt="Retry">'}</div>
       <h2 class="result-title">${success ? '축하합니다!' : '다시 도전해보세요!'}</h2>
       <div class="result-score">${gameState.score}점</div>
       <p class="result-message">${success ? '모든 레벨을 완료했습니다!' : '조금만 더 노력하면 됩니다!'}</p>

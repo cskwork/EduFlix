@@ -97,9 +97,24 @@
 }
 
 .picture-emoji {
+  width: 140px;
+  height: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.picture-emoji img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.picture-emoji.emoji-text {
   font-size: 80px;
   line-height: 1;
-  transition: transform 0.3s ease;
 }
 
 .picture-card:hover .picture-emoji {
@@ -201,8 +216,20 @@
 }
 
 .result-icon {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px auto;
+}
+
+.result-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+}
+
+.result-icon.emoji {
   font-size: 80px;
-  margin-bottom: 20px;
 }
 
 .result-title {
@@ -290,9 +317,16 @@
 }
 
 .star {
-  font-size: 32px;
+  width: 40px;
+  height: 40px;
   opacity: 0.3;
   transition: all 0.3s ease;
+}
+
+.star img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .star.active {

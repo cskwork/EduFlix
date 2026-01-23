@@ -271,7 +271,7 @@ function showCompletionMessage() {
   overlay.className = 'result-overlay'
   overlay.innerHTML = `
     <div class="result-content">
-      <div class="result-icon">&#127881;</div>
+      <div class="result-icon"><img src="images/trophy.png" alt="Success"></div>
       <h2 class="result-title">축하합니다!</h2>
       <p class="result-message">태양계의 모든 행성을 탐험했어요!<br>이제 퀴즈를 풀어볼까요?</p>
       <div class="result-buttons">
@@ -364,7 +364,7 @@ function showQuizResult() {
   overlay.className = 'result-overlay'
   overlay.innerHTML = `
     <div class="result-content">
-      <div class="result-icon">${isSuccess ? '&#127942;' : '&#128170;'}</div>
+      <div class="result-icon">${isSuccess ? '<img src="images/trophy.png" alt="Success">' : '<img src="images/sad.png" alt="Retry">'}</div>
       <h2 class="result-title">${isSuccess ? '잘했어요!' : '다시 도전해보세요!'}</h2>
       <div class="result-score">${gameState.quizScore} / ${quizData.length}</div>
       <p class="result-message">${isSuccess ? '태양계 전문가가 되셨네요!' : '행성들을 더 탐험하고 다시 도전해보세요!'}</p>
