@@ -105,12 +105,12 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 9: 창조 모드 UI
-- [ ] `CreatorView.vue` - 창조 모드 페이지
-- [ ] `CreatorWizard.vue` - 생성 마법사 컨테이너
-- [ ] `InterestInput.vue` - 관심사 입력 (태그 형식)
-- [ ] `SubjectSelect.vue` - 과목 선택 (수학/과학/영어)
-- [ ] `GradeSelect.vue` - 학년 선택 (초/중/고 + 학년)
-- [ ] `GenerationProgress.vue` - 생성 진행 상태
+- [x] `CreatorView.vue` - 창조 모드 페이지
+- [x] `CreatorWizard.vue` - 생성 마법사 컨테이너
+- [x] `InterestInput.vue` - 관심사 입력 (태그 형식)
+- [x] `SubjectSelect.vue` - 과목 선택 (수학/과학/영어)
+- [x] `GradeSelect.vue` - 학년 선택 (초/중/고 + 학년)
+- [x] `GenerationProgress.vue` - 생성 진행 상태
 
 **Files**: `src/views/CreatorView.vue`, `src/components/creator/*.vue`
 

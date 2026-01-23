@@ -1,0 +1,149 @@
+<script setup lang="ts">
+import type { Subject } from '../../types/content'
+
+// Props
+const props = defineProps<{
+  modelValue: Subject | null
+}>()
+
+// Emits
+const emit = defineEmits<{
+  'update:modelValue': [value: Subject]
+}>()
+
+// 과목 옵션
+const subjects: { value: Subject; label: string; icon: string; color: string }[] = [
+  { value: 'math', label: '수학', icon: '📐', color: 'var(--color-subject-math)' },
+  { value: 'science', label: '과학', icon: '🔬', color: 'var(--color-subject-science)' },
+  { value: 'english', label: '영어', icon: '📚', color: 'var(--color-subject-english)' },
+]
+
+// 선택 처리
+function selectSubject(subject: Subject) {
+  emit('update:modelValue', subject)
+}
+
+// 선택 여부 확인
+function isSelected(subject: Subject) {
+  return props.modelValue === subject
+}
+</script>
+
+<template>
+  <div class="subject-select">
+    <label class="input-label">어떤 과목으로 배울까요?</label>
+    <p class="input-description">콘텐츠에 담길 과목을 선택해주세요.</p>
+
+    <div class="subjects-grid">
+      <button
+        v-for="subject in subjects"
+        :key="subject.value"
+        type="button"
+        class="subject-card"
+        :class="{ selected: isSelected(subject.value) }"
+        :style="{ '--subject-color': subject.color }"
+        @click="selectSubject(subject.value)"
+      >
+        <span class="subject-icon">{{ subject.icon }}</span>
+        <span class="subject-label">{{ subject.label }}</span>
+        <span v-if="isSelected(subject.value)" class="check-mark">V</span>
+      </button>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.subject-select {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.input-label {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.input-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-top: calc(-1 * var(--spacing-sm));
+}
+
+.subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+}
+
+.subject-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xl);
+  background: var(--color-bg-card);
+  border-radius: var(--card-border-radius);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+  position: relative;
+}
+
+.subject-card:hover {
+  background: var(--color-bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.subject-card.selected {
+  border-color: var(--subject-color);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.subject-icon {
+  font-size: 3rem;
+}
+
+.subject-label {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.check-mark {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--subject-color);
+  color: var(--color-bg-primary);
+  border-radius: 50%;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+@media (max-width: 600px) {
+  .subjects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .subject-card {
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: var(--spacing-md);
+  }
+
+  .subject-icon {
+    font-size: 2rem;
+  }
+}
+</style>
