@@ -142,9 +142,9 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 12: 지식맵 데이터
-- [ ] `contents/knowledge-map.json` 작성
-- [ ] 각 콘텐츠와 지식 노드 연결
-- [ ] 선수 지식 관계 정의
+- [x] `contents/knowledge-map.json` 작성
+- [x] 각 콘텐츠와 지식 노드 연결
+- [x] 선수 지식 관계 정의
 
 **Files**: `contents/knowledge-map.json`
 

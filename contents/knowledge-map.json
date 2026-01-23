@@ -1,0 +1,185 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-01-23T00:00:00.000Z",
+  "nodes": [
+    {
+      "id": "fractions-basic",
+      "name": "분수의 기초",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "description": "분수의 개념, 분모와 분자 이해, 단위분수",
+      "contentIds": ["fractions-pizza"]
+    },
+    {
+      "id": "shapes-2d-3d",
+      "name": "평면도형과 입체도형",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "description": "다각형, 원, 각기둥, 각뿔 등 도형의 성질",
+      "contentIds": ["shapes-explorer"]
+    },
+    {
+      "id": "linear-equations",
+      "name": "일차방정식",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "description": "일차방정식과 연립방정식의 풀이",
+      "contentIds": ["equation-puzzle"]
+    },
+    {
+      "id": "solar-system-basics",
+      "name": "태양계",
+      "subject": "science",
+      "gradeLevel": "elementary",
+      "description": "태양계의 구성, 각 행성의 특징",
+      "contentIds": ["solar-system"]
+    },
+    {
+      "id": "electric-circuits",
+      "name": "전기회로",
+      "subject": "science",
+      "gradeLevel": "elementary",
+      "description": "전기의 흐름, 직렬/병렬 회로, 전압과 전류",
+      "contentIds": ["circuit-lab"]
+    },
+    {
+      "id": "cell-structure",
+      "name": "세포의 구조",
+      "subject": "science",
+      "gradeLevel": "middle",
+      "description": "세포의 구조, 세포소기관의 기능",
+      "contentIds": ["cell-explorer"]
+    },
+    {
+      "id": "chemical-reactions",
+      "name": "화학 반응",
+      "subject": "science",
+      "gradeLevel": "high",
+      "description": "화학 반응식, 반응의 종류, 반응 속도",
+      "contentIds": ["chemical-reactor"]
+    },
+    {
+      "id": "basic-vocabulary",
+      "name": "기초 영어 어휘",
+      "subject": "english",
+      "gradeLevel": "elementary",
+      "description": "일상 사물, 동물, 색상 등 기초 단어",
+      "contentIds": ["word-safari"]
+    },
+    {
+      "id": "english-grammar",
+      "name": "영어 문법",
+      "subject": "english",
+      "gradeLevel": "middle",
+      "description": "시제, 관사, 문장 구조",
+      "contentIds": ["grammar-quest"]
+    },
+    {
+      "id": "persuasive-writing",
+      "name": "논증과 토론",
+      "subject": "english",
+      "gradeLevel": "high",
+      "description": "논리적 글쓰기, 토론 기법, 설득력 있는 표현",
+      "contentIds": ["debate-arena"]
+    },
+    {
+      "id": "numbers-operations",
+      "name": "수와 연산",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "description": "덧셈, 뺄셈, 곱셈, 나눗셈의 기초",
+      "contentIds": []
+    },
+    {
+      "id": "algebraic-expressions",
+      "name": "문자와 식",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "description": "변수, 상수, 다항식의 개념",
+      "contentIds": []
+    },
+    {
+      "id": "matter-properties",
+      "name": "물질의 성질",
+      "subject": "science",
+      "gradeLevel": "elementary",
+      "description": "고체, 액체, 기체의 특성",
+      "contentIds": []
+    },
+    {
+      "id": "atoms-molecules",
+      "name": "원자와 분자",
+      "subject": "science",
+      "gradeLevel": "middle",
+      "description": "물질의 구성 단위, 원소 기호",
+      "contentIds": []
+    }
+  ],
+  "edges": [
+    {
+      "from": "numbers-operations",
+      "to": "fractions-basic",
+      "relation": "prerequisite"
+    },
+    {
+      "from": "fractions-basic",
+      "to": "shapes-2d-3d",
+      "relation": "related"
+    },
+    {
+      "from": "numbers-operations",
+      "to": "algebraic-expressions",
+      "relation": "prerequisite"
+    },
+    {
+      "from": "algebraic-expressions",
+      "to": "linear-equations",
+      "relation": "prerequisite"
+    },
+    {
+      "from": "matter-properties",
+      "to": "electric-circuits",
+      "relation": "related"
+    },
+    {
+      "from": "matter-properties",
+      "to": "atoms-molecules",
+      "relation": "prerequisite"
+    },
+    {
+      "from": "atoms-molecules",
+      "to": "cell-structure",
+      "relation": "prerequisite"
+    },
+    {
+      "from": "atoms-molecules",
+      "to": "chemical-reactions",
+      "relation": "prerequisite"
+    },
+    {
+      "from": "cell-structure",
+      "to": "chemical-reactions",
+      "relation": "related"
+    },
+    {
+      "from": "basic-vocabulary",
+      "to": "english-grammar",
+      "relation": "prerequisite"
+    },
+    {
+      "from": "english-grammar",
+      "to": "persuasive-writing",
+      "relation": "prerequisite"
+    },
+    {
+      "from": "solar-system-basics",
+      "to": "matter-properties",
+      "relation": "related"
+    },
+    {
+      "from": "electric-circuits",
+      "to": "chemical-reactions",
+      "relation": "related"
+    }
+  ]
+}
