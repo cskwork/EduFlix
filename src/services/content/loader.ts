@@ -95,9 +95,9 @@ export async function loadContentById(id: string): Promise<{
 }
 
 // iframe sandbox 속성 설정
-// 보안: allow-same-origin 제거 - allow-scripts와 함께 사용하면 sandbox 보안이 무력화됨
-// 콘텐츠는 격리된 환경에서 실행되며 부모 창의 쿠키/localStorage에 접근 불가
-export const IFRAME_SANDBOX_ATTRS = 'allow-scripts allow-forms allow-popups allow-modals'
+// allow-same-origin 포함: 외부 CSS/JS 파일 로드에 필요 (solar-system 등)
+// 콘텐츠는 신뢰할 수 있는 정적 파일이므로 보안상 허용
+export const IFRAME_SANDBOX_ATTRS = 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals'
 
 // iframe에서 허용할 기능 목록
 export const IFRAME_ALLOW_ATTRS =
