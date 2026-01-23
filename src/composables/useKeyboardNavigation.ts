@@ -118,20 +118,23 @@ export function useKeyboardNavigation(options: KeyboardNavigationOptions = {}) {
           const rowIndex = rows.indexOf(currentRow)
           if (rowIndex < rows.length - 1) {
             const nextRow = rows[rowIndex + 1]
-            const nextRowCards = nextRow.querySelectorAll(
-              '.content-card'
-            ) as NodeListOf<HTMLElement>
-            const cardIndexInRow = Array.from(
-              currentRow.querySelectorAll('.content-card')
-            ).indexOf(focusedElement)
-            if (nextRowCards[cardIndexInRow]) {
-              nextRowCards[cardIndexInRow].focus()
-              event.preventDefault()
-              return
-            } else if (nextRowCards.length > 0) {
-              nextRowCards[0].focus()
-              event.preventDefault()
-              return
+            if (nextRow) {
+              const nextRowCards = nextRow.querySelectorAll(
+                '.content-card'
+              ) as NodeListOf<HTMLElement>
+              const cardIndexInRow = Array.from(
+                currentRow.querySelectorAll('.content-card')
+              ).indexOf(focusedElement)
+              const targetCard = nextRowCards[cardIndexInRow]
+              if (targetCard) {
+                targetCard.focus()
+                event.preventDefault()
+                return
+              } else if (nextRowCards.length > 0 && nextRowCards[0]) {
+                nextRowCards[0].focus()
+                event.preventDefault()
+                return
+              }
             }
           }
         }
@@ -145,20 +148,26 @@ export function useKeyboardNavigation(options: KeyboardNavigationOptions = {}) {
           const rowIndex = rows.indexOf(currentRowUp)
           if (rowIndex > 0) {
             const prevRow = rows[rowIndex - 1]
-            const prevRowCards = prevRow.querySelectorAll(
-              '.content-card'
-            ) as NodeListOf<HTMLElement>
-            const cardIndexInRow = Array.from(
-              currentRowUp.querySelectorAll('.content-card')
-            ).indexOf(focusedElement)
-            if (prevRowCards[cardIndexInRow]) {
-              prevRowCards[cardIndexInRow].focus()
-              event.preventDefault()
-              return
-            } else if (prevRowCards.length > 0) {
-              prevRowCards[prevRowCards.length - 1].focus()
-              event.preventDefault()
-              return
+            if (prevRow) {
+              const prevRowCards = prevRow.querySelectorAll(
+                '.content-card'
+              ) as NodeListOf<HTMLElement>
+              const cardIndexInRow = Array.from(
+                currentRowUp.querySelectorAll('.content-card')
+              ).indexOf(focusedElement)
+              const targetCard = prevRowCards[cardIndexInRow]
+              if (targetCard) {
+                targetCard.focus()
+                event.preventDefault()
+                return
+              } else if (prevRowCards.length > 0) {
+                const lastCard = prevRowCards[prevRowCards.length - 1]
+                if (lastCard) {
+                  lastCard.focus()
+                  event.preventDefault()
+                  return
+                }
+              }
             }
           }
         }
