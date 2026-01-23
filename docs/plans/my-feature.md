@@ -42,10 +42,10 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 3: 레이아웃 및 헤더
-- [ ] `App.vue` - 기본 레이아웃
-- [ ] `AppHeader.vue` - 상단 네비게이션
-- [ ] `ModeToggle.vue` - 보기/창조 모드 토글 (우상단)
-- [ ] 전역 CSS 변수 및 Netflix 스타일 테마
+- [x] `App.vue` - 기본 레이아웃
+- [x] `AppHeader.vue` - 상단 네비게이션
+- [x] `ModeToggle.vue` - 보기/창조 모드 토글 (우상단)
+- [x] 전역 CSS 변수 및 Netflix 스타일 테마
 
 **Files**: `src/App.vue`, `src/components/common/*.vue`, `src/assets/styles/`
 

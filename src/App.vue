@@ -1,17 +1,25 @@
 <script setup lang="ts">
-// 기본 레이아웃 - Task 3에서 상세 구현 예정
+import AppHeader from './components/common/AppHeader.vue'
 </script>
 
 <template>
   <div id="app-container">
-    <router-view />
+    <AppHeader />
+    <main class="main-content">
+      <router-view />
+    </main>
   </div>
 </template>
 
 <style scoped>
 #app-container {
   min-height: 100vh;
-  background-color: #141414;
-  color: #ffffff;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.main-content {
+  padding-top: var(--header-height);
+  min-height: calc(100vh - var(--header-height));
 }
 </style>
