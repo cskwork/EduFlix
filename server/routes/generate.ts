@@ -211,9 +211,19 @@ export async function handleGenerateRoute(
         html: string
       }
       try {
-        generatedContent = JSON.parse(jsonStr)
-      } catch {
-        throw new Error(`Claude 응답 JSON 파싱 실패: ${jsonStr.substring(0, 200)}...`)
+        const parsed: unknown = JSON.parse(jsonStr)
+        // 타입 가드: 객체인지 확인 (null, 배열, 원시값 제외)
+        if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+          throw new Error(
+            `Claude 응답이 유효한 객체가 아닙니다. 받은 타입: ${parsed === null ? 'null' : Array.isArray(parsed) ? 'array' : typeof parsed}`
+          )
+        }
+        generatedContent = parsed as typeof generatedContent
+      } catch (parseError) {
+        if (parseError instanceof SyntaxError) {
+          throw new Error(`Claude 응답 JSON 파싱 실패: ${jsonStr.substring(0, 200)}...`)
+        }
+        throw parseError
       }
 
       // Claude 응답 필드 검증

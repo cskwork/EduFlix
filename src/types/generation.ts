@@ -42,6 +42,7 @@ export interface GenerationResponse {
     type: ContentType
   }
   error?: string
+  warning?: string // 소프트 워닝 (성공했으나 일부 문제 발생 시)
 }
 
 // Claude API 요청 타입

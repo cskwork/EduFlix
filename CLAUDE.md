@@ -82,14 +82,21 @@ agents/content-generator/
 - Levels: `elementary`, `middle`, `high`
 
 **iframe Security** (loader.ts):
-```ts
-IFRAME_SANDBOX_ATTRS = 'allow-scripts allow-forms allow-popups allow-modals'
-// allow-same-origin 제외 (샌드박스 우회 방지)
-```
+- `IFRAME_SANDBOX_ATTRS` = 'allow-scripts allow-forms allow-popups allow-modals'
+- `allow-same-origin` 제외 (보안: allow-scripts와 조합 시 sandbox 우회 방지)
+- 콘텐츠는 격리된 환경에서 실행, 부모 창의 쿠키/localStorage 접근 불가
 
 **API Endpoints**:
 - `GET/POST /api/content` - 콘텐츠 CRUD
 - `POST /api/generate` - AI 콘텐츠 생성
+  - Claude 응답 필드 검증: `title`, `description`, `html`, `type` (모두 필수, 공백 제외)
+  - 타입 유효성: `game|quiz|exploration|simulation|story`
+  - `contentId` 검증: 누락 시 히스토리 기록하되 카탈로그 추가 안 함, 소프트 워닝 반환
+
+**Generation Response Pattern**:
+- `success: true` + `manifest` + `contentId` → 정상 (콘텐츠 스토어에 추가)
+- `success: true` + `manifest` + 누락된 `contentId` → 소프트 워닝 (히스토리만 기록, UI에 경고 표시)
+- `success: false` → 에러 (UI에 에러 메시지 표시)
 
 ## Notes
 - API 키는 `.env`에만 저장 (git 제외)

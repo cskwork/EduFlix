@@ -99,51 +99,57 @@ export const useGenerationStore = defineStore('generation', () => {
         handleProgress
       )
 
-      lastResult.value = result
-
       // 성공 시 콘텐츠 스토어에 추가
+      let finalResult = result
       if (result.success && result.manifest) {
         // contentId 검증: 필수 값이 없으면 스토어에 추가하지 않음
         const contentId = result.contentId || result.manifest.id
         if (!contentId) {
-          console.error('콘텐츠 ID가 누락되었습니다')
-          return result
+          console.warn('콘텐츠 ID가 누락되어 카탈로그에 추가되지 않았습니다')
+          // 소프트 워닝: 히스토리는 기록하되 카탈로그에는 추가하지 않음
+          finalResult = {
+            ...result,
+            warning: '콘텐츠가 생성되었으나 카탈로그에 추가되지 않았습니다 (ID 누락)',
+          }
+        } else {
+          const gradeLevel = options.grade.startsWith('elementary')
+            ? 'elementary'
+            : options.grade.startsWith('middle')
+              ? 'middle'
+              : 'high'
+
+          const newContent: ContentManifest = {
+            id: contentId,
+            title: result.manifest.title,
+            subject: options.subject,
+            gradeLevel,
+            grade: options.grade,
+            type: result.manifest.type,
+            language: options.language || 'ko',
+            description: result.manifest.description,
+            thumbnail: '',
+            path: `/contents/${options.subject}/${gradeLevel}/${contentId}/index.html`,
+            createdAt: new Date().toISOString(),
+            tags: options.interests,
+          }
+
+          contentStore.addContent(newContent)
         }
-
-        const gradeLevel = options.grade.startsWith('elementary')
-          ? 'elementary'
-          : options.grade.startsWith('middle')
-            ? 'middle'
-            : 'high'
-
-        const newContent: ContentManifest = {
-          id: contentId,
-          title: result.manifest.title,
-          subject: options.subject,
-          gradeLevel,
-          grade: options.grade,
-          type: result.manifest.type,
-          language: options.language || 'ko',
-          description: result.manifest.description,
-          thumbnail: '',
-          path: `/contents/${options.subject}/${gradeLevel}/${contentId}/index.html`,
-          createdAt: new Date().toISOString(),
-          tags: options.interests,
-        }
-
-        contentStore.addContent(newContent)
       }
 
-      // 히스토리에 추가
+      // lastResult와 history에 동일한 결과 저장 (warning 포함)
+      lastResult.value = finalResult
+
+      // 히스토리에 추가 (contentId 누락 시에도 기록)
       history.value.push({
         id: crypto.randomUUID(),
         request,
-        response: result,
+        response: finalResult,
         createdAt: new Date().toISOString(),
         duration: Date.now() - startTime,
       })
 
-      return result
+      return finalResult
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류'
 
