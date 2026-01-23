@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debate Arena</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    .content-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .content-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .content-score {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      color: #ffd700;
+    }
+
+    .content-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: auto;
+      gap: 16px;
+    }
+
+    .content-footer {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .content-container {
+        padding: 12px;
+      }
+
+      .content-title {
+        font-size: 18px;
+      }
+
+      .content-score {
+        font-size: 14px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="content-container">
+    <header class="content-header">
+      <h1 class="content-title">Debate Arena</h1>
+      <div class="content-score" id="score-display">
+        <span class="score-icon">&#9733;</span>
+        <span id="score-value">0</span>
+      </div>
+    </header>
+
+    <main class="content-main" id="main-content">
+      <div class="arena-area">
+        <div class="round-badge" id="round-badge">
+          <span>Round <span id="current-round">1</span></span>
+          <span class="round-topic" id="round-topic">Social Media</span>
+        </div>
+
+        <div class="debate-stage" id="debate-stage">
+          <div class="speaker pro" id="speaker-pro">
+            <div class="speaker-avatar">&#128100;</div>
+            <div class="speaker-label">PRO</div>
+          </div>
+
+          <div class="vs-badge">VS</div>
+
+          <div class="speaker con" id="speaker-con">
+            <div class="speaker-avatar">&#128100;</div>
+            <div class="speaker-label">CON</div>
+          </div>
+        </div>
+
+        <div class="topic-card" id="topic-card">
+          <div class="topic-label">DEBATE TOPIC</div>
+          <h2 class="topic-text" id="topic-text">
+            Social media does more good than harm to society.
+          </h2>
+          <div class="topic-instruction" id="topic-instruction">
+            Choose a side and build your argument!
+          </div>
+        </div>
+
+        <div class="side-selection" id="side-selection">
+          <button class="side-btn pro" data-side="pro">
+            <span class="side-icon">&#128077;</span>
+            <span class="side-label">I Agree (PRO)</span>
+          </button>
+          <button class="side-btn con" data-side="con">
+            <span class="side-icon">&#128078;</span>
+            <span class="side-label">I Disagree (CON)</span>
+          </button>
+        </div>
+
+        <div class="argument-builder hidden" id="argument-builder">
+          <h3 class="builder-title">Build Your Argument</h3>
+          <div class="builder-prompt" id="builder-prompt">
+            Select the best evidence to support your position:
+          </div>
+          <div class="evidence-options" id="evidence-options"></div>
+          <div class="selected-arguments" id="selected-arguments">
+            <h4>Your Arguments:</h4>
+            <ul id="argument-list"></ul>
+          </div>
+        </div>
+
+        <div class="opponent-response hidden" id="opponent-response">
+          <div class="opponent-card">
+            <div class="opponent-avatar">&#129302;</div>
+            <div class="opponent-speech" id="opponent-speech">
+              Counter-argument appears here...
+            </div>
+          </div>
+        </div>
+
+        <div class="rebuttal-section hidden" id="rebuttal-section">
+          <h3>Respond to the Counter-Argument</h3>
+          <div class="rebuttal-options" id="rebuttal-options"></div>
+        </div>
+
+        <div class="debate-result hidden" id="debate-result">
+          <div class="result-verdict" id="result-verdict">
+            <span class="verdict-icon" id="verdict-icon">&#127942;</span>
+            <span class="verdict-text" id="verdict-text">You Won!</span>
+          </div>
+          <div class="result-feedback" id="result-feedback">
+            Your arguments were well-structured and persuasive.
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-indicator">
+        <span>Debate <span id="debate-progress">1</span> / <span id="total-debates">3</span></span>
+      </div>
+    </main>
+
+    <footer class="content-footer">
+      <button class="btn btn-secondary" id="btn-reset">New Debate</button>
+      <button class="btn btn-primary" id="btn-continue" disabled>Continue</button>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

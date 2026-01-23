@@ -1,0 +1,457 @@
+/* 화학 반응 시뮬레이터 - 스타일 */
+
+/* 버튼 스타일 */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* 시뮬레이션 영역 */
+.simulation-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* 반응 배지 */
+.reaction-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.reaction-type {
+  padding: 4px 12px;
+  background: rgba(255, 107, 107, 0.3);
+  border-radius: 12px;
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+/* 반응 컨테이너 */
+.reaction-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  width: 100%;
+}
+
+/* 비커 */
+.beaker {
+  width: 100px;
+  height: 130px;
+  position: relative;
+  background: linear-gradient(to bottom, transparent 10%, rgba(200, 230, 255, 0.15) 10%);
+  border: 3px solid rgba(200, 230, 255, 0.4);
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+}
+
+.beaker::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  height: 15px;
+  background: rgba(200, 230, 255, 0.3);
+  border: 3px solid rgba(200, 230, 255, 0.4);
+  border-radius: 4px 4px 0 0;
+}
+
+.beaker-liquid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(to top, #4ecdc4 0%, rgba(78, 205, 196, 0.6) 100%);
+  transition: all 0.5s ease;
+  border-radius: 0 0 8px 8px;
+}
+
+.beaker.left .beaker-liquid {
+  background: linear-gradient(to top, #ff6b6b 0%, rgba(255, 107, 107, 0.6) 100%);
+}
+
+.beaker.right .beaker-liquid {
+  background: linear-gradient(to top, #4ecdc4 0%, rgba(78, 205, 196, 0.6) 100%);
+  height: 0%;
+}
+
+.beaker.right.filled .beaker-liquid {
+  height: 70%;
+}
+
+.beaker-label {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+}
+
+/* 반응 화살표 */
+.reaction-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.arrow {
+  font-size: 32px;
+  color: #ffd700;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.arrow.active {
+  opacity: 1;
+  animation: pulse 0.5s ease infinite;
+}
+
+.react-btn {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+  border: none;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.react-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.react-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 방정식 표시 */
+.equation-display {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  font-size: 20px;
+  font-family: 'Courier New', monospace;
+}
+
+.equation-part {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.molecule {
+  padding: 4px 8px;
+  background: rgba(78, 205, 196, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.molecule:hover {
+  background: rgba(78, 205, 196, 0.4);
+}
+
+.molecule.highlight {
+  background: rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.plus {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.reaction-symbol {
+  color: #ffd700;
+  font-size: 24px;
+}
+
+/* 반응 정보 */
+.reaction-info {
+  text-align: center;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+}
+
+.reaction-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #ff6b6b;
+}
+
+.reaction-description {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.reaction-properties {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+}
+
+.property {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.property-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.property-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffd700;
+}
+
+/* 균형 맞추기 */
+.balance-challenge {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  text-align: center;
+}
+
+.balance-challenge h4 {
+  margin-bottom: 16px;
+  color: #ffd700;
+}
+
+.balance-equation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.coef-input {
+  width: 40px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 18px;
+  text-align: center;
+  outline: none;
+}
+
+.coef-input:focus {
+  border-color: #4ecdc4;
+}
+
+.coef-input.correct {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.2);
+}
+
+.coef-input.incorrect {
+  border-color: #f44336;
+  background: rgba(244, 67, 54, 0.2);
+}
+
+.balance-feedback {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.balance-feedback.correct {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+}
+
+.balance-feedback.incorrect {
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
+
+/* 실험 선택기 */
+.experiment-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.exp-btn {
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.exp-btn.active {
+  background: rgba(255, 107, 107, 0.3);
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+.exp-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.exp-btn.completed {
+  position: relative;
+}
+
+.exp-btn.completed::after {
+  content: '\2713';
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  background: #4caf50;
+  border-radius: 50%;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 진행 표시 */
+.progress-indicator {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+}
+
+/* 숨김 */
+.hidden {
+  display: none !important;
+}
+
+/* 애니메이션 */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes bubble {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
+}
+
+@keyframes heat {
+  0%, 100% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(30deg); }
+}
+
+.bubbling .beaker-liquid {
+  animation: heat 1s ease infinite;
+}
+
+.bubble {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  animation: bubble 1s ease-out forwards;
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+  .reaction-container {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .beaker {
+    width: 80px;
+    height: 100px;
+  }
+
+  .equation-display {
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+
+  .reaction-properties {
+    gap: 20px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}

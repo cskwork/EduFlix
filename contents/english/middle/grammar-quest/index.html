@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grammar Quest</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    .content-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .content-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .content-score {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      color: #ffd700;
+    }
+
+    .content-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      gap: 20px;
+    }
+
+    .content-footer {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .content-container {
+        padding: 12px;
+      }
+
+      .content-title {
+        font-size: 18px;
+      }
+
+      .content-score {
+        font-size: 14px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="content-container">
+    <header class="content-header">
+      <h1 class="content-title">Grammar Quest</h1>
+      <div class="content-score" id="score-display">
+        <span class="score-icon">&#9733;</span>
+        <span id="score-value">0</span>
+      </div>
+    </header>
+
+    <main class="content-main" id="main-content">
+      <div class="quest-area">
+        <div class="level-badge" id="level-badge">
+          <span>Level <span id="current-level">1</span></span>
+          <span class="level-topic" id="level-topic">Tenses</span>
+        </div>
+
+        <div class="quest-card" id="quest-card">
+          <div class="quest-icon" id="quest-icon">&#128218;</div>
+          <h3 class="quest-question" id="quest-question">
+            Choose the correct word to complete the sentence:
+          </h3>
+          <div class="sentence-display" id="sentence-display">
+            She <span class="blank" id="blank">_____</span> to school every day.
+          </div>
+        </div>
+
+        <div class="options-container" id="options-container">
+          <button class="option-btn" data-option="go">go</button>
+          <button class="option-btn" data-option="goes">goes</button>
+          <button class="option-btn" data-option="going">going</button>
+          <button class="option-btn" data-option="went">went</button>
+        </div>
+
+        <div class="feedback hidden" id="feedback">
+          <div class="feedback-icon" id="feedback-icon"></div>
+          <div class="feedback-text" id="feedback-text"></div>
+          <div class="feedback-explanation" id="feedback-explanation"></div>
+        </div>
+
+        <div class="streak-display" id="streak-display">
+          <span class="streak-label">Streak</span>
+          <span class="streak-flames" id="streak-flames"></span>
+        </div>
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+        <span class="progress-text"><span id="question-num">1</span> / <span id="total-questions">10</span></span>
+      </div>
+    </main>
+
+    <footer class="content-footer">
+      <button class="btn btn-secondary" id="btn-reset">Restart</button>
+      <button class="btn btn-primary" id="btn-next" disabled>Next Question</button>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

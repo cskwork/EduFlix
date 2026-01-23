@@ -129,13 +129,13 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 11: 나머지 7개 콘텐츠 (AI 생성)
-- [ ] **수학 초5**: 도형 탐험가 (exploration) - 한국어
-- [ ] **수학 중2**: 방정식 퍼즐 (quiz) - 한국어
-- [ ] **과학 초6**: 전기회로 실험실 (simulation) - 한국어
-- [ ] **과학 중1**: 세포 탐험 (exploration) - 한국어
-- [ ] **과학 고1**: 화학 반응 시뮬레이터 (simulation) - 한국어
-- [ ] **영어 중2**: Grammar Quest (quiz) - 영어
-- [ ] **영어 고1**: Debate Arena (story) - 영어
+- [x] **수학 초5**: 도형 탐험가 (exploration) - 한국어
+- [x] **수학 중2**: 방정식 퍼즐 (quiz) - 한국어
+- [x] **과학 초6**: 전기회로 실험실 (simulation) - 한국어
+- [x] **과학 중1**: 세포 탐험 (exploration) - 한국어
+- [x] **과학 고1**: 화학 반응 시뮬레이터 (simulation) - 한국어
+- [x] **영어 중2**: Grammar Quest (quiz) - 영어
+- [x] **영어 고1**: Debate Arena (story) - 영어
 
 **Files**: `contents/{subject}/{level}/{content-name}/`
 

@@ -1,0 +1,21 @@
+{
+  "id": "circuit-lab",
+  "title": "전기회로 실험실",
+  "subject": "science",
+  "gradeLevel": "elementary",
+  "grade": 6,
+  "type": "simulation",
+  "language": "ko",
+  "description": "전기회로를 직접 만들며 전기의 흐름과 원리를 배워보세요!",
+  "thumbnail": "",
+  "path": "contents/science/elementary/circuit-lab/index.html",
+  "learningObjectives": [
+    "전기회로의 구성 요소 이해하기",
+    "직렬 연결과 병렬 연결의 차이점 알기",
+    "스위치의 역할 이해하기"
+  ],
+  "prerequisites": ["전기의 기초 개념"],
+  "estimatedTime": 15,
+  "createdAt": "2026-01-23T00:00:00.000Z",
+  "updatedAt": "2026-01-23T00:00:00.000Z"
+}

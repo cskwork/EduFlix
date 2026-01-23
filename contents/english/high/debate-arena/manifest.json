@@ -1,0 +1,21 @@
+{
+  "id": "debate-arena",
+  "title": "Debate Arena",
+  "subject": "english",
+  "gradeLevel": "high",
+  "grade": 1,
+  "type": "story",
+  "language": "en",
+  "description": "Enter the arena and practice your persuasive writing and debate skills through interactive scenarios!",
+  "thumbnail": "",
+  "path": "contents/english/high/debate-arena/index.html",
+  "learningObjectives": [
+    "Constructing persuasive arguments",
+    "Understanding different perspectives",
+    "Using evidence to support claims"
+  ],
+  "prerequisites": ["Basic essay structure", "Vocabulary for opinions"],
+  "estimatedTime": 20,
+  "createdAt": "2026-01-23T00:00:00.000Z",
+  "updatedAt": "2026-01-23T00:00:00.000Z"
+}

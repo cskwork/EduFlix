@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>방정식 퍼즐</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    .content-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .content-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .content-score {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      color: #ffd700;
+    }
+
+    .content-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      gap: 24px;
+    }
+
+    .content-footer {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .content-container {
+        padding: 12px;
+      }
+
+      .content-title {
+        font-size: 18px;
+      }
+
+      .content-score {
+        font-size: 14px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="content-container">
+    <header class="content-header">
+      <h1 class="content-title">방정식 퍼즐</h1>
+      <div class="content-score" id="score-display">
+        <span class="score-icon">&#9733;</span>
+        <span id="score-value">0</span>
+      </div>
+    </header>
+
+    <main class="content-main" id="main-content">
+      <div class="quiz-area">
+        <div class="level-badge" id="level-badge">
+          <span>레벨 <span id="current-level">1</span></span>
+          <span class="level-type" id="level-type">일차방정식</span>
+        </div>
+
+        <div class="equation-display" id="equation-display">
+          <div class="equation" id="equation">2x + 3 = 7</div>
+          <div class="equation-hint" id="equation-hint">x의 값을 구하세요</div>
+        </div>
+
+        <div class="balance-visual" id="balance-visual">
+          <div class="balance">
+            <div class="balance-arm"></div>
+            <div class="balance-base"></div>
+            <div class="balance-plate left" id="plate-left">
+              <span class="plate-content">2x + 3</span>
+            </div>
+            <div class="balance-plate right" id="plate-right">
+              <span class="plate-content">7</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="answer-section">
+          <label class="answer-label">x = </label>
+          <input type="number" class="answer-input" id="answer-input" placeholder="?" step="any">
+          <button class="btn btn-primary" id="btn-submit">확인</button>
+        </div>
+
+        <div class="hint-section hidden" id="hint-section">
+          <button class="hint-btn" id="btn-hint">힌트 보기</button>
+          <div class="hint-content hidden" id="hint-content"></div>
+        </div>
+
+        <div class="feedback hidden" id="feedback"></div>
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+        <span class="progress-text"><span id="question-num">1</span> / <span id="total-questions">10</span></span>
+      </div>
+    </main>
+
+    <footer class="content-footer">
+      <button class="btn btn-secondary" id="btn-reset">다시 시작</button>
+      <button class="btn btn-primary" id="btn-next" disabled>다음 문제</button>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

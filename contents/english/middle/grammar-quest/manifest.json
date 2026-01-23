@@ -1,0 +1,21 @@
+{
+  "id": "grammar-quest",
+  "title": "Grammar Quest",
+  "subject": "english",
+  "gradeLevel": "middle",
+  "grade": 2,
+  "type": "quiz",
+  "language": "en",
+  "description": "Embark on a quest to master English grammar! Learn tenses, articles, and sentence structures.",
+  "thumbnail": "",
+  "path": "contents/english/middle/grammar-quest/index.html",
+  "learningObjectives": [
+    "Understanding present, past, and future tenses",
+    "Mastering articles (a, an, the)",
+    "Learning subject-verb agreement"
+  ],
+  "prerequisites": ["Basic English vocabulary"],
+  "estimatedTime": 15,
+  "createdAt": "2026-01-23T00:00:00.000Z",
+  "updatedAt": "2026-01-23T00:00:00.000Z"
+}
