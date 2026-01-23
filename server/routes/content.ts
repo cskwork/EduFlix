@@ -185,8 +185,17 @@ export async function handleContentRoute(
       const deleteFiles = url.searchParams.get('deleteFiles') === 'true'
       if (deleteFiles && deletedContent.path) {
         try {
-          const contentDir = deletedContent.path.replace('/index.html', '')
-          await fs.rm(contentDir, { recursive: true, force: true })
+          const path = await import('path')
+          const contentDir = deletedContent.path.replace('/index.html', '').replace(/^\//, '')
+          const resolvedPath = path.resolve(contentDir)
+          const contentsDir = path.resolve('contents')
+
+          // Path traversal 방지: contents 디렉토리 내부인지 확인
+          if (!resolvedPath.startsWith(contentsDir)) {
+            console.error('잘못된 콘텐츠 경로:', resolvedPath)
+          } else {
+            await fs.rm(resolvedPath, { recursive: true, force: true })
+          }
         } catch {
           // 파일 삭제 실패는 무시 (이미 없을 수 있음)
         }

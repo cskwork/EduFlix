@@ -93,8 +93,8 @@ defineExpose({
       <p>콘텐츠 로딩 중...</p>
     </div>
 
-    <!-- 에러 상태 -->
-    <div v-if="loadError" class="viewer-error">
+    <!-- 에러 상태 (로딩 완료 후에만 표시) -->
+    <div v-else-if="loadError" class="viewer-error">
       <div class="error-icon">!</div>
       <p>{{ loadError }}</p>
     </div>

@@ -2,14 +2,17 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Subject, Grade } from '../../types/content'
-import type { GenerationProgress, GenerationStatus } from '../../types/generation'
 import InterestInput from './InterestInput.vue'
 import SubjectSelect from './SubjectSelect.vue'
 import GradeSelect from './GradeSelect.vue'
 import GenerationProgressVue from './GenerationProgress.vue'
+import { useGenerationStore } from '../../stores/generation'
 
 // Router
 const router = useRouter()
+
+// Generation Store
+const generationStore = useGenerationStore()
 
 // 마법사 단계
 type WizardStep = 'interests' | 'subject' | 'grade' | 'generating'
@@ -22,12 +25,11 @@ const interests = ref<string[]>([])
 const subject = ref<Subject | null>(null)
 const grade = ref<Grade | null>(null)
 
-// 생성 진행 상태
-const generationProgress = ref<GenerationProgress>({
-  status: 'idle',
-  progress: 0,
-  message: '',
-})
+// 생성된 콘텐츠 ID
+const generatedContentId = ref<string | null>(null)
+
+// 생성 진행 상태 (스토어에서 가져옴)
+const generationProgress = computed(() => generationStore.currentProgress)
 
 // 단계 정보
 const steps: { key: WizardStep; label: string; number: number }[] = [
@@ -89,50 +91,31 @@ function prevStep() {
 }
 
 // 생성 시작
-function startGeneration() {
+async function startGeneration() {
+  if (!subject.value || !grade.value) return
+
   currentStep.value = 'generating'
-  generationProgress.value = {
-    status: 'preparing',
-    progress: 0,
-    message: '콘텐츠 준비 중...',
-  }
+  generatedContentId.value = null
 
-  // TODO: 실제 AI 생성 API 호출
-  // 현재는 시뮬레이션
-  simulateGeneration()
-}
+  try {
+    const result = await generationStore.startGeneration({
+      interests: interests.value,
+      subject: subject.value,
+      grade: grade.value,
+      language: subject.value === 'english' ? 'en' : 'ko',
+    })
 
-// 생성 시뮬레이션 (개발용)
-function simulateGeneration() {
-  const statuses: { status: GenerationStatus; progress: number; message: string }[] = [
-    { status: 'preparing', progress: 10, message: '관심사 분석 중...' },
-    { status: 'generating', progress: 30, message: 'AI가 콘텐츠 구조를 설계하고 있어요...' },
-    { status: 'generating', progress: 50, message: '학습 활동을 만들고 있어요...' },
-    { status: 'generating', progress: 70, message: '인터랙션을 추가하고 있어요...' },
-    { status: 'generating-images', progress: 85, message: '이미지를 생성하고 있어요...' },
-    { status: 'finalizing', progress: 95, message: '마무리 중...' },
-    { status: 'completed', progress: 100, message: '완성되었어요!' },
-  ]
-
-  let index = 0
-  const interval = setInterval(() => {
-    const current = statuses[index]
-    if (current) {
-      generationProgress.value = current
-      index++
-    } else {
-      clearInterval(interval)
+    if (result.success && result.contentId) {
+      generatedContentId.value = result.contentId
     }
-  }, 1500)
+  } catch (error) {
+    console.error('콘텐츠 생성 실패:', error)
+  }
 }
 
 // 생성 취소
 function cancelGeneration() {
-  generationProgress.value = {
-    status: 'idle',
-    progress: 0,
-    message: '',
-  }
+  generationStore.cancelGeneration()
   currentStep.value = 'grade'
 }
 
@@ -143,8 +126,10 @@ function retryGeneration() {
 
 // 콘텐츠 보기
 function viewContent(_contentId: string) {
-  // TODO: 실제 생성된 콘텐츠 ID로 이동
-  router.push('/content/generated-content')
+  // 실제 생성된 콘텐츠 ID로 이동
+  if (generatedContentId.value) {
+    router.push(`/content/${generatedContentId.value}`)
+  }
 }
 
 // 처음부터 다시 시작
@@ -152,11 +137,8 @@ function resetWizard() {
   interests.value = []
   subject.value = null
   grade.value = null
-  generationProgress.value = {
-    status: 'idle',
-    progress: 0,
-    message: '',
-  }
+  generatedContentId.value = null
+  generationStore.resetState()
   currentStep.value = 'interests'
 }
 </script>

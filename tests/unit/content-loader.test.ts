@@ -84,7 +84,9 @@ describe('content-loader', () => {
   describe('iframe 보안 속성', () => {
     it('IFRAME_SANDBOX_ATTRS가 필수 보안 설정을 포함한다', () => {
       expect(IFRAME_SANDBOX_ATTRS).toContain('allow-scripts')
-      expect(IFRAME_SANDBOX_ATTRS).toContain('allow-same-origin')
+      expect(IFRAME_SANDBOX_ATTRS).toContain('allow-forms')
+      // allow-same-origin은 allow-scripts와 함께 사용 시 샌드박스 보호를 무효화하므로 제외됨
+      expect(IFRAME_SANDBOX_ATTRS).not.toContain('allow-same-origin')
     })
 
     it('IFRAME_ALLOW_ATTRS가 필요한 권한을 포함한다', () => {

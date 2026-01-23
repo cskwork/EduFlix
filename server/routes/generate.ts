@@ -141,6 +141,38 @@ export async function handleGenerateRoute(
         return errorResponse('필수 필드가 누락되었습니다: interests, subject, grade, language', 400)
       }
 
+      // interests 배열 검증
+      if (
+        !Array.isArray(body.interests) ||
+        body.interests.length > 10 ||
+        body.interests.some((i) => typeof i !== 'string' || i.length > 100)
+      ) {
+        return errorResponse('interests는 최대 10개의 문자열 배열이어야 합니다', 400)
+      }
+
+      // subject/grade 타입 검증
+      const validSubjects: Subject[] = ['math', 'science', 'english']
+      const validGrades = [
+        'elementary-1',
+        'elementary-2',
+        'elementary-3',
+        'elementary-4',
+        'elementary-5',
+        'elementary-6',
+        'middle-1',
+        'middle-2',
+        'middle-3',
+        'high-1',
+        'high-2',
+        'high-3',
+      ]
+      if (!validSubjects.includes(body.subject)) {
+        return errorResponse('유효하지 않은 과목입니다', 400)
+      }
+      if (!validGrades.includes(body.grade)) {
+        return errorResponse('유효하지 않은 학년입니다', 400)
+      }
+
       // Claude API 요청 구성
       const claudeRequest: ClaudeRequest = {
         model: CLAUDE_MODEL,
@@ -172,11 +204,16 @@ export async function handleGenerateRoute(
         jsonStr = jsonMatch[1].trim()
       }
 
-      const generatedContent = JSON.parse(jsonStr) as {
+      let generatedContent: {
         title: string
         description: string
         type: ContentType
         html: string
+      }
+      try {
+        generatedContent = JSON.parse(jsonStr)
+      } catch {
+        throw new Error(`Claude 응답 JSON 파싱 실패: ${jsonStr.substring(0, 200)}...`)
       }
 
       // 콘텐츠 ID 생성
@@ -186,6 +223,14 @@ export async function handleGenerateRoute(
       // 콘텐츠 파일 저장
       const contentDir = `contents/${body.subject}/${gradeLevel}/${contentId}`
       const fs = await import('fs/promises')
+      const pathModule = await import('path')
+
+      // Path traversal 방지
+      const resolvedDir = pathModule.resolve(contentDir)
+      const contentsBase = pathModule.resolve('contents')
+      if (!resolvedDir.startsWith(contentsBase)) {
+        throw new Error('잘못된 콘텐츠 경로가 생성되었습니다')
+      }
 
       await fs.mkdir(contentDir, { recursive: true })
 
@@ -219,6 +264,11 @@ export async function handleGenerateRoute(
         catalog = JSON.parse(catalogData)
       } catch {
         // 카탈로그가 없으면 새로 생성
+      }
+
+      // 중복 ID 확인
+      if (catalog.contents.some((c) => c.id === contentId)) {
+        throw new Error('생성된 콘텐츠 ID가 이미 존재합니다')
       }
 
       catalog.contents.push(manifest)
