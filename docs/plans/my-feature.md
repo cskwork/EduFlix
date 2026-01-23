@@ -52,10 +52,10 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 4: 홈 화면 (보기 모드)
-- [ ] `HomeView.vue` - 메인 홈 페이지
-- [ ] `ContentRow.vue` - 가로 스크롤 콘텐츠 행 (과목별)
-- [ ] `ContentCard.vue` - 정사각형 카드 (호버 시 확대/미리보기)
-- [ ] `stores/content.ts` - Pinia 콘텐츠 상태 관리
+- [x] `HomeView.vue` - 메인 홈 페이지
+- [x] `ContentRow.vue` - 가로 스크롤 콘텐츠 행 (과목별)
+- [x] `ContentCard.vue` - 정사각형 카드 (호버 시 확대/미리보기)
+- [x] `stores/content.ts` - Pinia 콘텐츠 상태 관리
 
 **Files**: `src/views/HomeView.vue`, `src/components/home/*.vue`, `src/stores/content.ts`
 
