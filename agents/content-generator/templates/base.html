@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TITLE}}</title>
+  <style>
+    /* 리셋 및 기본 스타일 */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    /* 메인 컨테이너 */
+    .content-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    /* 헤더 영역 */
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .content-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .content-score {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      color: #ffd700;
+    }
+
+    /* 메인 콘텐츠 영역 */
+    .content-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+    }
+
+    /* 푸터 영역 */
+    .content-footer {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 20px;
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .content-container {
+        padding: 12px;
+      }
+
+      .content-title {
+        font-size: 18px;
+      }
+
+      .content-score {
+        font-size: 14px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="../../styles/game-ui.css">
+  <link rel="stylesheet" href="../../styles/animations.css">
+  <link rel="stylesheet" href="../../styles/utils.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="content-container">
+    <header class="content-header">
+      <h1 class="content-title">{{TITLE}}</h1>
+      <div class="content-score" id="score-display">
+        <span class="score-icon">&#9733;</span>
+        <span id="score-value">0</span>
+      </div>
+    </header>
+
+    <main class="content-main" id="main-content">
+      <!-- 콘텐츠 내용이 여기에 삽입됩니다 -->
+    </main>
+
+    <footer class="content-footer">
+      <button class="btn btn-secondary" id="btn-reset">다시 시작</button>
+      <button class="btn btn-primary" id="btn-next">다음</button>
+    </footer>
+  </div>
+
+  <script src="../../styles/interactions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

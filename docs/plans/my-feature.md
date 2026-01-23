@@ -72,10 +72,10 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 6: 샘플 콘텐츠 템플릿
-- [ ] 기본 HTML 템플릿 (`agents/content-generator/templates/base.html`)
-- [ ] 공통 CSS 스타일 (게임 UI, 버튼, 애니메이션)
-- [ ] 인터랙션 유틸리티 JS (드래그앤드롭, 퀴즈 로직)
-- [ ] `contents/index.json` 인덱스 파일
+- [x] 기본 HTML 템플릿 (`agents/content-generator/templates/base.html`)
+- [x] 공통 CSS 스타일 (게임 UI, 버튼, 애니메이션)
+- [x] 인터랙션 유틸리티 JS (드래그앤드롭, 퀴즈 로직)
+- [x] `contents/index.json` 인덱스 파일
 
 **Files**: `agents/content-generator/templates/*.html`, `contents/index.json`
 
