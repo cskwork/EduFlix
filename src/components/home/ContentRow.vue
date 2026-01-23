@@ -28,27 +28,28 @@ function scroll(direction: 'left' | 'right') {
 
 <template>
   <section class="content-row">
-    <div class="row-header">
-      <h2 class="row-title">{{ group.subjectLabel }}</h2>
-      <div class="row-controls">
-        <button
-          aria-label="왼쪽으로 스크롤"
-          class="scroll-btn scroll-left"
-          @click="scroll('left')"
-        >
-          <span class="arrow">&#10094;</span>
-        </button>
-        <button
-          aria-label="오른쪽으로 스크롤"
-          class="scroll-btn scroll-right"
-          @click="scroll('right')"
-        >
-          <span class="arrow">&#10095;</span>
-        </button>
+    <h2 class="row-title">{{ group.subjectLabel }}</h2>
+    
+    <div class="row-container group">
+      <button
+        aria-label="왼쪽으로 스크롤"
+        class="scroll-btn scroll-left"
+        @click="scroll('left')"
+      >
+        <span class="arrow">&#10094;</span>
+      </button>
+
+      <div ref="scrollContainer" class="row-content">
+        <ContentCard v-for="content in group.contents" :key="content.id" :content="content" />
       </div>
-    </div>
-    <div ref="scrollContainer" class="row-content">
-      <ContentCard v-for="content in group.contents" :key="content.id" :content="content" />
+
+      <button
+        aria-label="오른쪽으로 스크롤"
+        class="scroll-btn scroll-right"
+        @click="scroll('right')"
+      >
+        <span class="arrow">&#10095;</span>
+      </button>
     </div>
   </section>
 </template>
@@ -56,58 +57,85 @@ function scroll(direction: 'left' | 'right') {
 <style scoped>
 .content-row {
   margin-bottom: var(--spacing-2xl);
-}
-
-.row-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 var(--content-padding);
-  margin-bottom: var(--spacing-md);
+  position: relative;
 }
 
 .row-title {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: #e5e5e5;
+  margin-bottom: var(--spacing-sm);
+  padding: 0 var(--content-padding);
+  transition: color var(--transition-normal);
 }
 
-.row-controls {
-  display: flex;
-  gap: var(--spacing-sm);
+.content-row:hover .row-title {
+  color: white;
 }
 
+.row-container {
+  position: relative;
+}
+
+/* Scroll Buttons */
 .scroll-btn {
-  width: 36px;
-  height: 36px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4%;
+  min-width: 40px;
+  z-index: 20;
+  background: rgba(20, 20, 20, 0.5);
+  border: none;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-bg-card);
-  border-radius: 50%;
-  color: var(--color-text-primary);
-  transition:
-    background var(--transition-fast),
-    transform var(--transition-fast);
+  opacity: 0;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+.row-container:hover .scroll-btn {
+  opacity: 1;
 }
 
 .scroll-btn:hover {
-  background: var(--color-bg-card-hover);
-  transform: scale(1.1);
+  background: rgba(20, 20, 20, 0.7);
+  transform: scale(1.0); /* Override default transform */
+}
+
+.scroll-btn:hover .arrow {
+  transform: scale(1.2);
+}
+
+.scroll-left {
+  left: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.scroll-right {
+  right: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
 }
 
 .arrow {
-  font-size: var(--font-size-sm);
+  font-size: 2rem;
+  transition: transform var(--transition-fast);
 }
 
+/* Row Content */
 .row-content {
   display: flex;
-  gap: var(--spacing-md);
-  padding: var(--spacing-sm) var(--content-padding);
+  gap: var(--spacing-xs);
+  padding: 0 var(--content-padding);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  scroll-behavior: smooth;
 }
 
 .row-content::-webkit-scrollbar {
@@ -116,5 +144,6 @@ function scroll(direction: 'left' | 'right') {
 
 .row-content > :deep(.content-card) {
   scroll-snap-align: start;
+  margin-right: 4px; /* Tiny gap */
 }
 </style>

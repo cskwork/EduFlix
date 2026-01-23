@@ -25,12 +25,28 @@ function goToCreateMode() {
 <template>
   <div class="home-view">
     <!-- 히어로 섹션 -->
-    <section class="hero-section" aria-labelledby="hero-title">
+    <section class="hero-section">
+      <div class="hero-background">
+        <!-- Abstract gradient background representing "Learning Universe" -->
+        <div class="hero-gradient"></div>
+        <div class="hero-vignette"></div>
+      </div>
+      
       <div class="hero-content">
         <h1 id="hero-title" class="hero-title">배움이 재미있어지는 순간</h1>
         <p class="hero-subtitle">
-          게임, 시뮬레이션, 탐험으로 즐기는 인터랙티브 교육 콘텐츠
+          게임, 시뮬레이션, 탐험으로 즐기는 인터랙티브 교육 콘텐츠.<br>
+          EduFlix와 함께 새로운 세상으로 떠나보세요.
         </p>
+        
+        <div class="hero-actions">
+          <button class="btn-hero btn-play">
+            <span class="icon">▶</span> 재생
+          </button>
+          <button class="btn-hero btn-info">
+            <span class="icon">ⓘ</span> 상세 정보
+          </button>
+        </div>
       </div>
     </section>
 
@@ -74,37 +90,128 @@ function goToCreateMode() {
 <style scoped>
 .home-view {
   min-height: 100%;
+  padding-bottom: 50px;
 }
 
 /* 히어로 섹션 */
 .hero-section {
-  padding: var(--spacing-2xl) var(--content-padding);
+  position: relative;
+  height: 85vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--content-padding);
+  margin-top: calc(var(--header-height) * -1); /* Pull up behind header */
+  overflow: hidden;
+}
+
+.hero-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-gradient {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 70% 20%, #2a2a4e 0%, #141414 70%);
+  filter: blur(20px);
+}
+
+.hero-vignette {
+  position: absolute;
+  inset: 0;
   background: linear-gradient(
-    180deg,
-    var(--color-bg-secondary) 0%,
-    var(--color-bg-primary) 100%
+    to bottom,
+    rgba(20, 20, 20, 0.3) 0%,
+    rgba(20, 20, 20, 0.1) 60%,
+    #141414 100%
+  );
+}
+
+/* Add left vignette */
+.hero-vignette::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(20, 20, 20, 0.8) 0%,
+    transparent 50%
   );
 }
 
 .hero-content {
-  max-width: var(--content-max-width);
-  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+  max-width: 600px;
+  margin-top: 100px; /* Offset for visual balance */
 }
 
 .hero-title {
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-sm);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: var(--spacing-md);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.1;
 }
 
 .hero-subtitle {
   font-size: var(--font-size-lg);
-  color: var(--color-text-secondary);
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  margin-bottom: var(--spacing-xl);
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.hero-actions {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.btn-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.6rem;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-normal);
+}
+
+.btn-play {
+  background-color: white;
+  color: black;
+}
+
+.btn-play:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.btn-info {
+  background-color: rgba(109, 109, 110, 0.7);
+  color: white;
+}
+
+.btn-info:hover {
+  background-color: rgba(109, 109, 110, 0.4);
+}
+
+.icon {
+  font-size: 1.2em;
 }
 
 /* 콘텐츠 섹션 */
 .content-sections {
-  padding: var(--spacing-xl) 0;
+  position: relative;
+  z-index: 20;
+  margin-top: -10vh; /* Overlap hero */
+  background: transparent;
 }
 </style>

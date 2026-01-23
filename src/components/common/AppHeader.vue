@@ -1,9 +1,22 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import ModeToggle from './ModeToggle.vue'
 
 const route = useRoute()
+const isScrolled = ref(false)
+
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 50
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 
 // 현재 페이지 타이틀 결정
 const pageTitle = computed(() => {
@@ -29,7 +42,7 @@ const isNavActive = (path: string) => {
 </script>
 
 <template>
-  <header class="app-header">
+  <header class="app-header" :class="{ scrolled: isScrolled }">
     <div class="header-content">
       <!-- 로고 -->
       <router-link to="/" class="logo">
@@ -74,7 +87,7 @@ const isNavActive = (path: string) => {
   left: 0;
   right: 0;
   height: var(--header-height);
-  background: linear-gradient(180deg, rgba(20, 20, 20, 1) 0%, rgba(20, 20, 20, 0.9) 50%, rgba(20, 20, 20, 0) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 10%, rgba(0, 0, 0, 0) 100%);
   z-index: var(--z-fixed);
   transition: background-color var(--transition-normal);
 }

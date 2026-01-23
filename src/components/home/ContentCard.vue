@@ -50,7 +50,7 @@ const gradeLevelLabel = computed(() => GRADE_LEVEL_LABELS[props.content.gradeLev
 .content-card {
   display: block;
   flex-shrink: 0;
-  width: 200px;
+  width: 280px;
   border-radius: var(--card-border-radius);
   background: var(--color-bg-card);
   overflow: hidden;
@@ -58,6 +58,7 @@ const gradeLevelLabel = computed(() => GRADE_LEVEL_LABELS[props.content.gradeLev
     transform var(--transition-normal),
     box-shadow var(--transition-normal);
   cursor: pointer;
+  position: relative;
 }
 
 .content-card:hover {
@@ -74,7 +75,7 @@ const gradeLevelLabel = computed(() => GRADE_LEVEL_LABELS[props.content.gradeLev
 .card-thumbnail {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
 }
 
@@ -90,6 +91,11 @@ const gradeLevelLabel = computed(() => GRADE_LEVEL_LABELS[props.content.gradeLev
 .thumbnail-icon {
   font-size: 3rem;
   opacity: 0.8;
+  transition: transform var(--transition-normal);
+}
+
+.content-card:hover .thumbnail-icon {
+  transform: scale(1.1);
 }
 
 .card-overlay {
@@ -98,7 +104,7 @@ const gradeLevelLabel = computed(() => GRADE_LEVEL_LABELS[props.content.gradeLev
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   opacity: 0;
   transition: opacity var(--transition-normal);
 }
@@ -108,77 +114,69 @@ const gradeLevelLabel = computed(() => GRADE_LEVEL_LABELS[props.content.gradeLev
 }
 
 .play-icon {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.8);
   border-radius: 50%;
   font-size: 1.25rem;
-  color: var(--color-bg-primary);
-  transition: transform var(--transition-fast);
+  color: #fff;
+  transition:
+    transform var(--transition-fast),
+    background var(--transition-fast);
+  backdrop-filter: blur(4px);
 }
 
 .content-card:hover .play-icon {
   transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .card-badges {
   position: absolute;
-  top: var(--spacing-sm);
-  left: var(--spacing-sm);
+  bottom: var(--spacing-xs);
+  left: var(--spacing-xs);
   display: flex;
   gap: var(--spacing-xs);
+  z-index: 2;
 }
 
 .badge {
   padding: 2px 6px;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
   border-radius: 2px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.6);
   color: var(--color-text-primary);
+  backdrop-filter: blur(4px);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .badge-type {
   background: var(--color-brand-primary);
 }
 
-/* 과목별 그라데이션 */
-.subject-math .card-thumbnail {
-  border-top: 3px solid var(--color-subject-math);
-}
-
-.subject-science .card-thumbnail {
-  border-top: 3px solid var(--color-subject-science);
-}
-
-.subject-english .card-thumbnail {
-  border-top: 3px solid var(--color-subject-english);
-}
-
+/* Remove subject colored borders for cleaner look */
 .card-info {
   padding: var(--spacing-sm);
+  background: #181818;
 }
 
 .card-title {
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: 2px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .card-description {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  display: none; /* Hide description in grid for cleaner look, show on hover maybe? Or just hide like Netflix */
 }
 </style>
