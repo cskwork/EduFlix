@@ -62,10 +62,10 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 5: 콘텐츠 뷰어
-- [ ] `ContentView.vue` - 콘텐츠 상세 페이지
-- [ ] `ContentViewer.vue` - iframe 샌드박스 뷰어
-- [ ] `services/content/loader.ts` - 콘텐츠 로딩 서비스
-- [ ] 전체화면 모드 지원
+- [x] `ContentView.vue` - 콘텐츠 상세 페이지
+- [x] `ContentViewer.vue` - iframe 샌드박스 뷰어
+- [x] `services/content/loader.ts` - 콘텐츠 로딩 서비스
+- [x] 전체화면 모드 지원
 
 **Files**: `src/views/ContentView.vue`, `src/components/viewer/*.vue`, `src/services/content/loader.ts`
 
