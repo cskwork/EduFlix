@@ -1,0 +1,201 @@
+/* Common Styles for EduFlix Content */
+
+:root {
+  --primary-color: #e50914;
+  --secondary-color: #ffffff;
+  --background-color: #141414;
+  --text-color: #ffffff;
+  --accent-color: #ffd700;
+  --correct-color: #28a745;
+  --incorrect-color: #dc3545;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Scene Container */
+#scene-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  padding: 2rem;
+}
+
+.scene.active {
+  opacity: 1;
+  pointer-events: all;
+  z-index: 10;
+}
+
+/* Common Typography */
+.scene-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: var(--secondary-color);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.scene-text {
+  font-size: 1.5rem;
+  line-height: 1.6;
+  text-align: center;
+  max-width: 800px;
+  margin-bottom: 2rem;
+  color: #e0e0e0;
+}
+
+/* Components */
+.btn-primary-large {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 1rem 3rem;
+  font-size: 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.btn-primary-large:hover {
+  transform: scale(1.05);
+  background-color: #f40612;
+}
+
+/* Scene Specifics */
+
+/* Hook Scene */
+.scene-hook {
+  background: radial-gradient(circle at center, #2a2a2a 0%, #141414 100%);
+}
+
+.hook-question {
+  font-size: 4rem;
+  font-weight: 800;
+  color: var(--accent-color);
+  margin-bottom: 3rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Story Scene */
+.scene-story {
+  justify-content: flex-start;
+  padding-top: 4rem;
+}
+
+.story-stage {
+  width: 100%;
+  height: 60%;
+  position: relative;
+  /* border: 1px dashed rgba(255,255,255,0.2); For debug */
+  margin-bottom: 2rem;
+}
+
+.story-character {
+  position: absolute;
+  bottom: 0;
+  transition: all 0.5s ease;
+}
+
+/* Core Scene (Interaction) */
+.scene-core {
+  display: flex;
+  flex-direction: column;
+}
+
+.interactive-area {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Quiz Scene */
+.quiz-container {
+  width: 100%;
+  max-width: 800px;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.quiz-option {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 12px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+}
+
+.quiz-option:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.quiz-option.selected {
+  border-color: var(--accent-color);
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.quiz-option.correct {
+  border-color: var(--correct-color);
+  background: rgba(40, 167, 69, 0.2);
+}
+
+.quiz-option.incorrect {
+  border-color: var(--incorrect-color);
+  background: rgba(220, 53, 69, 0.2);
+}
+
+/* Wrap Scene */
+.wrap-summary {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 16px;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}

@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import {
   createInitialState,
   getContentHtmlPath,
+  getIframeSandboxAttrs,
   IFRAME_SANDBOX_ATTRS,
   IFRAME_ALLOW_ATTRS,
 } from '../../src/services/content/loader'
@@ -82,11 +83,17 @@ describe('content-loader', () => {
 
   // 보안 속성 테스트
   describe('iframe 보안 속성', () => {
+    it('개발 환경에서는 allow-same-origin을 포함한다', () => {
+      expect(getIframeSandboxAttrs(true)).toContain('allow-same-origin')
+    })
+
+    it('운영 환경에서는 allow-same-origin을 포함하지 않는다', () => {
+      expect(getIframeSandboxAttrs(false)).not.toContain('allow-same-origin')
+    })
+
     it('IFRAME_SANDBOX_ATTRS가 필수 보안 설정을 포함한다', () => {
       expect(IFRAME_SANDBOX_ATTRS).toContain('allow-scripts')
       expect(IFRAME_SANDBOX_ATTRS).toContain('allow-forms')
-      // allow-same-origin은 allow-scripts와 함께 사용 시 샌드박스 보호를 무효화하므로 제외됨
-      expect(IFRAME_SANDBOX_ATTRS).not.toContain('allow-same-origin')
     })
 
     it('IFRAME_ALLOW_ATTRS가 필요한 권한을 포함한다', () => {

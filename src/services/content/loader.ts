@@ -87,8 +87,15 @@ export async function loadContentById(id: string): Promise<{
 }
 
 // iframe sandbox 속성 설정 (보안)
-// 주의: allow-same-origin 제거 - allow-scripts와 함께 사용 시 샌드박스 보호 무효화됨
-export const IFRAME_SANDBOX_ATTRS = 'allow-scripts allow-forms allow-popups allow-modals'
+// 주의: allow-same-origin은 allow-scripts와 함께 사용 시 샌드박스 보호를 약화시킴
+const BASE_IFRAME_SANDBOX_ATTRS = 'allow-scripts allow-forms allow-popups allow-modals'
+
+export function getIframeSandboxAttrs(isDev: boolean): string {
+  // 개발 환경에서만 로컬 콘텐츠 미리보기 문제를 피하기 위해 허용
+  return isDev ? `${BASE_IFRAME_SANDBOX_ATTRS} allow-same-origin` : BASE_IFRAME_SANDBOX_ATTRS
+}
+
+export const IFRAME_SANDBOX_ATTRS = getIframeSandboxAttrs(import.meta.env.DEV)
 
 // iframe에서 허용할 기능 목록
 export const IFRAME_ALLOW_ATTRS =
