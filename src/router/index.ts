@@ -44,8 +44,17 @@ const router = createRouter({
   },
 })
 
-// 페이지 타이틀 업데이트
+// 정적 모드 확인
+const isStaticMode = import.meta.env.VITE_STATIC_MODE === 'true'
+
+// 페이지 타이틀 업데이트 및 정적 모드 리다이렉트
 router.beforeEach((to, _from, next) => {
+  // 정적 모드에서 /create 경로 접근 시 홈으로 리다이렉트
+  if (isStaticMode && to.path === '/create') {
+    next({ path: '/' })
+    return
+  }
+
   const title = to.meta.title as string | undefined
   document.title = title ? `${title} - EduFlix` : 'EduFlix'
   next()

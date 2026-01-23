@@ -6,6 +6,9 @@ import ModeToggle from './ModeToggle.vue'
 const route = useRoute()
 const isScrolled = ref(false)
 
+// 정적 배포 모드 확인
+const isStaticMode = computed(() => import.meta.env.VITE_STATIC_MODE === 'true')
+
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 50
 }
@@ -73,8 +76,8 @@ const isNavActive = (path: string) => {
           </svg>
         </button>
 
-        <!-- 모드 토글 -->
-        <ModeToggle />
+        <!-- 모드 토글 (정적 모드에서는 숨김) -->
+        <ModeToggle v-if="!isStaticMode" />
       </div>
     </div>
   </header>

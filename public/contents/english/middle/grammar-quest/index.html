@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grammar Quest</title>
+  <link rel="stylesheet" href="../../../common/style.css">
+  <style>
+    /* Quest Specific */
+    .quest-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background: url('data:image/svg+xml;utf8,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="%232c3e50" opacity="0.05"/><rect x="20" y="20" width="20" height="20" fill="%232c3e50" opacity="0.05"/></svg>');
+        border-radius: 10px;
+        border: 2px solid #34495e;
+    }
+    
+    .sentence-box {
+        font-size: 1.5rem;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        line-height: 2;
+    }
+    
+    .word-token {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 2px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .word-token:hover {
+        background-color: #e0f7fa;
+    }
+    
+    .word-token.selected {
+        background-color: #fff176;
+        box-shadow: 0 0 5px #fbc02d;
+    }
+    
+    .word-token.correct {
+        background-color: #a5d6a7;
+        color: #1b5e20;
+    }
+    
+    .word-token.incorrect {
+        background-color: #ef9a9a;
+        color: #b71c1c;
+    }
+    
+    .instruction-text {
+        font-size: 1.2rem;
+        color: #ffd700;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="scene-container"></div>
+  <script src="../../../common/engine.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

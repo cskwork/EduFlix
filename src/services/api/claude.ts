@@ -12,6 +12,9 @@ import type { Subject, Grade, Language } from '../../types/content'
 // API 엔드포인트 설정
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
+// 정적 배포 모드 확인
+const isStaticMode = import.meta.env.VITE_STATIC_MODE === 'true'
+
 // 생성 요청 타입
 export interface ContentGenerationOptions {
   interests: string[]
@@ -37,6 +40,22 @@ export class ClaudeApiClient {
     options: ContentGenerationOptions,
     onProgress?: ProgressCallback
   ): Promise<GenerationResponse> {
+    // 정적 배포 모드에서는 AI 생성 기능 비활성화
+    if (isStaticMode) {
+      if (onProgress) {
+        onProgress({
+          status: 'error',
+          progress: 0,
+          message: '정적 배포 모드에서는 AI 생성 기능을 사용할 수 없습니다',
+          error: '정적 배포 모드에서는 AI 생성 기능을 사용할 수 없습니다',
+        })
+      }
+      return {
+        success: false,
+        error: '정적 배포 모드에서는 AI 생성 기능을 사용할 수 없습니다. 추후 백엔드 연결 시 활성화됩니다.',
+      }
+    }
+
     // 생성 시작 알림
     if (onProgress) {
       onProgress({

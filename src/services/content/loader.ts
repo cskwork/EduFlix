@@ -1,5 +1,13 @@
 // 콘텐츠 로딩 서비스
-import type { ContentManifest } from '../../types/content'
+import type { ContentManifest, Subject, GradeLevel } from '../../types/content'
+
+// 콘텐츠 HTML 경로 생성에 필요한 최소 타입
+interface ContentPathInfo {
+  id: string
+  subject: Subject
+  gradeLevel: GradeLevel
+  path?: string
+}
 
 // 콘텐츠 로딩 상태
 export interface ContentLoadState {
@@ -32,7 +40,7 @@ export async function loadContentManifest(contentPath: string): Promise<ContentM
 }
 
 // 콘텐츠 HTML 경로 생성
-export function getContentHtmlPath(content: ContentManifest): string {
+export function getContentHtmlPath(content: ContentPathInfo): string {
   // path 필드가 있으면 사용, 없으면 기본 경로 생성
   if (content.path) {
     // 상대경로면 절대경로로 변환

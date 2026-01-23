@@ -36,8 +36,7 @@ function goToCreateMode() {
         <h1 id="hero-title" class="hero-title">배움이 재미있어지는 순간</h1>
         <p class="hero-subtitle">
           게임, 시뮬레이션, 탐험으로 즐기는 인터랙티브 교육 콘텐츠.<br>
-          EduFlix와 함께 새로운 세상으로 떠나보세요.
-        </p>
+          EduFlix와 함께 새로운 세상으로 떠나보세요.</p>
         
         <div class="hero-actions">
           <button class="btn-hero btn-play">
