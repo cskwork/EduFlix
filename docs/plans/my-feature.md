@@ -22,10 +22,10 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 1: 프로젝트 초기화
-- [ ] Vite + Vue 3 + TypeScript 프로젝트 생성
-- [ ] 디렉토리 구조 생성 (`src/`, `contents/`, `agents/`, `server/`)
-- [ ] ESLint, Prettier 설정
-- [ ] `.env.example` 생성 (ANTHROPIC_API_KEY, GEMINI_API_KEY)
+- [x] Vite + Vue 3 + TypeScript 프로젝트 생성
+- [x] 디렉토리 구조 생성 (`src/`, `contents/`, `agents/`, `server/`)
+- [x] ESLint, Prettier 설정
+- [x] `.env.example` 생성 (ANTHROPIC_API_KEY, GEMINI_API_KEY)
 
 **Files**: `package.json`, `vite.config.ts`, `tsconfig.json`
 
