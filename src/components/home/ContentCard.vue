@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { ContentCardData, Subject } from '../../types/content'
 import { CONTENT_TYPE_LABELS, GRADE_LEVEL_LABELS } from '../../types/content'
+import { getContentHtmlPath, IFRAME_SANDBOX_ATTRS } from '../../services/content/loader'
 
 // Props 정의
 const props = defineProps<{
@@ -23,13 +24,23 @@ const typeLabel = computed(() => CONTENT_TYPE_LABELS[props.content.type])
 
 // 학년 레벨 라벨
 const gradeLevelLabel = computed(() => GRADE_LEVEL_LABELS[props.content.gradeLevel])
+
+// 콘텐츠 미리보기 URL
+const previewUrl = computed(() => getContentHtmlPath(props.content))
 </script>
 
 <template>
   <router-link :to="`/content/${content.id}`" class="content-card" :class="subjectColorClass">
     <div class="card-thumbnail">
-      <div class="thumbnail-placeholder">
-        <span class="thumbnail-icon">{{ content.subject === 'math' ? '📐' : content.subject === 'science' ? '🔬' : '📚' }}</span>
+      <div class="iframe-container">
+        <iframe
+          v-if="previewUrl"
+          :src="previewUrl"
+          class="preview-iframe"
+          :sandbox="IFRAME_SANDBOX_ATTRS"
+          tabindex="-1"
+          aria-hidden="true"
+        ></iframe>
       </div>
       <div class="card-overlay">
         <span class="play-icon">▶</span>
@@ -77,25 +88,34 @@ const gradeLevelLabel = computed(() => GRADE_LEVEL_LABELS[props.content.gradeLev
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
+  background: #000;
 }
 
-.thumbnail-placeholder {
+.iframe-container {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-card) 100%);
+  overflow: hidden;
+  position: relative;
 }
 
-.thumbnail-icon {
-  font-size: 3rem;
-  opacity: 0.8;
-  transition: transform var(--transition-normal);
+.preview-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1280px; /* Base resolution width */
+  height: 720px; /* Base resolution height */
+  border: none;
+  /* Scale down from 1280x720 to 280x157.5 */
+  transform: scale(0.21875);
+  transform-origin: 0 0;
+  pointer-events: none; /* Disable interaction */
+  background-color: #fff;
+  opacity: 0.9;
+  transition: opacity var(--transition-normal);
 }
 
-.content-card:hover .thumbnail-icon {
-  transform: scale(1.1);
+.content-card:hover .preview-iframe {
+  opacity: 1;
 }
 
 .card-overlay {
@@ -177,6 +197,6 @@ const gradeLevelLabel = computed(() => GRADE_LEVEL_LABELS[props.content.gradeLev
 }
 
 .card-description {
-  display: none; /* Hide description in grid for cleaner look, show on hover maybe? Or just hide like Netflix */
+  display: none; /* Hide description in grid for cleaner look */
 }
 </style>
