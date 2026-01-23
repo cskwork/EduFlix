@@ -254,13 +254,13 @@ export async function handleGenerateRoute(
       const gradeLevel = gradeToGradeLevel(body.grade)
 
       // 콘텐츠 파일 저장
-      const contentDir = `contents/${body.subject}/${gradeLevel}/${contentId}`
+      const contentDir = `public/contents/${body.subject}/${gradeLevel}/${contentId}`
       const fs = await import('fs/promises')
       const pathModule = await import('path')
 
       // Path traversal 방지
       const resolvedDir = pathModule.resolve(contentDir)
-      const contentsBase = pathModule.resolve('contents')
+      const contentsBase = pathModule.resolve('public/contents')
       if (!resolvedDir.startsWith(contentsBase)) {
         throw new Error('잘못된 콘텐츠 경로가 생성되었습니다')
       }
@@ -281,7 +281,7 @@ export async function handleGenerateRoute(
         language: body.language,
         description: generatedContent.description,
         thumbnail: '',
-        path: `${contentDir}/index.html`,
+        path: `/contents/${body.subject}/${gradeLevel}/${contentId}/index.html`,
         tags: body.interests,
         createdAt: new Date().toISOString(),
       }
@@ -289,7 +289,7 @@ export async function handleGenerateRoute(
       await fs.writeFile(`${contentDir}/manifest.json`, JSON.stringify(manifest, null, 2), 'utf-8')
 
       // 카탈로그 업데이트
-      const catalogPath = 'contents/index.json'
+      const catalogPath = 'public/contents/index.json'
       let catalog = { version: '1.0.0', lastUpdated: '', contents: [] as ContentManifest[] }
 
       try {

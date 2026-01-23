@@ -179,6 +179,7 @@ function resetWizard() {
         <div v-else-if="currentStep === 'generating'" key="generating" class="step-content">
           <GenerationProgressVue
             :progress="generationProgress"
+            :content-id="generatedContentId"
             @cancel="cancelGeneration"
             @retry="retryGeneration"
             @view-content="viewContent"

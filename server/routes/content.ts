@@ -14,7 +14,7 @@ export async function handleContentRoute(
   const pathname = url.pathname
   const fs = await import('fs/promises')
 
-  const CATALOG_PATH = 'contents/index.json'
+  const CATALOG_PATH = 'public/contents/index.json'
 
   // 카탈로그 로드 헬퍼
   async function loadCatalog(): Promise<ContentCatalog> {
@@ -186,9 +186,9 @@ export async function handleContentRoute(
       if (deleteFiles && deletedContent.path) {
         try {
           const path = await import('path')
-          const contentDir = deletedContent.path.replace('/index.html', '').replace(/^\//, '')
+          const contentDir = 'public' + deletedContent.path.replace('/index.html', '')
           const resolvedPath = path.resolve(contentDir)
-          const contentsDir = path.resolve('contents')
+          const contentsDir = path.resolve('public/contents')
 
           // Path traversal 방지: contents 디렉토리 내부인지 확인
           if (!resolvedPath.startsWith(contentsDir)) {

@@ -5,6 +5,7 @@ import type { GenerationStatus, GenerationProgress as ProgressType } from '../..
 // Props
 const props = defineProps<{
   progress: ProgressType
+  contentId?: string | null
 }>()
 
 // Emits
@@ -98,10 +99,10 @@ function handleViewContent(contentId: string) {
         </button>
 
         <button
-          v-if="isCompleted"
+          v-if="isCompleted && props.contentId"
           type="button"
           class="btn btn-primary"
-          @click="handleViewContent('generated-content')"
+          @click="handleViewContent(props.contentId)"
         >
           콘텐츠 보기
         </button>
