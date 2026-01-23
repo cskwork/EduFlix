@@ -117,12 +117,12 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 10: AI 생성 파이프라인
-- [ ] `services/api/claude.ts` - Claude API 래퍼
-- [ ] `services/api/gemini.ts` - Gemini 이미지 API 래퍼
-- [ ] `agents/content-generator/prompts/system.md` - 시스템 프롬프트
-- [ ] 과목별 특화 프롬프트 (math.md, science.md, english.md)
-- [ ] `stores/generation.ts` - 생성 상태 관리
-- [ ] `useAIGeneration.ts` - 생성 컴포저블
+- [x] `services/api/claude.ts` - Claude API 래퍼
+- [x] `services/api/gemini.ts` - Gemini 이미지 API 래퍼
+- [x] `agents/content-generator/prompts/system.md` - 시스템 프롬프트
+- [x] 과목별 특화 프롬프트 (math.md, science.md, english.md)
+- [x] `stores/generation.ts` - 생성 상태 관리
+- [x] `useAIGeneration.ts` - 생성 컴포저블
 
 **Files**: `src/services/api/*.ts`, `agents/content-generator/prompts/*.md`, `src/stores/generation.ts`
 
