@@ -1,5 +1,7 @@
 // Gemini 이미지 API 래퍼
 // 프론트엔드에서 백엔드 프록시를 통해 Gemini API를 호출하여 이미지 생성
+// TODO: /api/generate/image 엔드포인트는 아직 서버에 구현되지 않음.
+// 이미지 생성 기능이 필요하면 server/routes/generate.ts에 엔드포인트 추가 필요.
 
 import type { GeminiImageRequest, GeminiImageResponse } from '../../types/generation'
 

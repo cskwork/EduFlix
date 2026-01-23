@@ -25,7 +25,6 @@
     "vue-router": "4"
   },
   "devDependencies": {
-    "@esbuild/darwin-arm64": "^0.27.2",
     "@eslint/js": "^9.39.2",
     "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.1",

@@ -33,3 +33,4 @@ progress*.txt
 
 # temp directories
 temp-vite
+.vercel

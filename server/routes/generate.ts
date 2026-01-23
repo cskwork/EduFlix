@@ -216,6 +216,29 @@ export async function handleGenerateRoute(
         throw new Error(`Claude 응답 JSON 파싱 실패: ${jsonStr.substring(0, 200)}...`)
       }
 
+      // Claude 응답 필드 검증
+      if (
+        typeof generatedContent.title !== 'string' ||
+        !generatedContent.title.trim()
+      ) {
+        throw new Error('Claude 응답에 유효한 title이 없습니다')
+      }
+      if (
+        typeof generatedContent.description !== 'string' ||
+        !generatedContent.description.trim()
+      ) {
+        throw new Error('Claude 응답에 유효한 description이 없습니다')
+      }
+      if (typeof generatedContent.html !== 'string' || !generatedContent.html.trim()) {
+        throw new Error('Claude 응답에 유효한 html이 없습니다')
+      }
+      const validTypes: ContentType[] = ['game', 'quiz', 'exploration', 'simulation', 'story']
+      if (!validTypes.includes(generatedContent.type)) {
+        throw new Error(
+          `Claude 응답의 type이 유효하지 않습니다: ${generatedContent.type}. 허용값: ${validTypes.join(', ')}`
+        )
+      }
+
       // 콘텐츠 ID 생성
       const contentId = generateContentId(body.subject, generatedContent.title)
       const gradeLevel = gradeToGradeLevel(body.grade)

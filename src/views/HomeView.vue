@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useContentStore } from '../stores/content'
 import ContentRow from '../components/home/ContentRow.vue'
@@ -15,6 +15,25 @@ const router = useRouter()
 onMounted(() => {
   contentStore.loadContents()
 })
+
+// 콘텐츠 존재 여부
+const hasContents = computed(() => contentStore.contents.length > 0)
+
+// 첫 번째 콘텐츠 재생
+function playFirstContent() {
+  const firstContent = contentStore.contents[0]
+  if (firstContent) {
+    router.push(`/content/${firstContent.id}`)
+  }
+}
+
+// 콘텐츠 섹션으로 스크롤
+function scrollToContent() {
+  const contentSection = document.querySelector('.content-sections')
+  if (contentSection) {
+    contentSection.scrollIntoView({ behavior: 'smooth' })
+  }
+}
 
 // 창조 모드로 이동
 function goToCreateMode() {
@@ -39,10 +58,10 @@ function goToCreateMode() {
           EduFlix와 함께 새로운 세상으로 떠나보세요.</p>
         
         <div class="hero-actions">
-          <button class="btn-hero btn-play">
+          <button class="btn-hero btn-play" :disabled="!hasContents" @click="playFirstContent">
             <span class="icon">▶</span> 재생
           </button>
-          <button class="btn-hero btn-info">
+          <button class="btn-hero btn-info" @click="scrollToContent">
             <span class="icon">ⓘ</span> 상세 정보
           </button>
         </div>
@@ -189,8 +208,14 @@ function goToCreateMode() {
   color: black;
 }
 
-.btn-play:hover {
+.btn-play:hover:not(:disabled) {
   background-color: rgba(255, 255, 255, 0.75);
+}
+
+.btn-play:disabled {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.5);
+  cursor: not-allowed;
 }
 
 .btn-info {

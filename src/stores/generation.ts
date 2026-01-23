@@ -103,6 +103,13 @@ export const useGenerationStore = defineStore('generation', () => {
 
       // 성공 시 콘텐츠 스토어에 추가
       if (result.success && result.manifest) {
+        // contentId 검증: 필수 값이 없으면 스토어에 추가하지 않음
+        const contentId = result.contentId || result.manifest.id
+        if (!contentId) {
+          console.error('콘텐츠 ID가 누락되었습니다')
+          return result
+        }
+
         const gradeLevel = options.grade.startsWith('elementary')
           ? 'elementary'
           : options.grade.startsWith('middle')
@@ -110,7 +117,7 @@ export const useGenerationStore = defineStore('generation', () => {
             : 'high'
 
         const newContent: ContentManifest = {
-          id: result.contentId || result.manifest.id,
+          id: contentId,
           title: result.manifest.title,
           subject: options.subject,
           gradeLevel,
@@ -119,7 +126,7 @@ export const useGenerationStore = defineStore('generation', () => {
           language: options.language || 'ko',
           description: result.manifest.description,
           thumbnail: '',
-          path: `/contents/${options.subject}/${gradeLevel}/${result.contentId}/index.html`,
+          path: `/contents/${options.subject}/${gradeLevel}/${contentId}/index.html`,
           createdAt: new Date().toISOString(),
           tags: options.interests,
         }
