@@ -32,10 +32,10 @@ bun run lint         # 린트 검사
 ---
 
 ### Task 2: 타입 정의 및 기본 구조
-- [ ] `src/types/content.ts` - 콘텐츠 매니페스트 스키마
-- [ ] `src/types/knowledge-map.ts` - 지식맵 타입
-- [ ] `src/types/generation.ts` - AI 생성 관련 타입
-- [ ] Vue Router 설정 (`/`, `/content/:id`, `/create`)
+- [x] `src/types/content.ts` - 콘텐츠 매니페스트 스키마
+- [x] `src/types/knowledge-map.ts` - 지식맵 타입
+- [x] `src/types/generation.ts` - AI 생성 관련 타입
+- [x] Vue Router 설정 (`/`, `/content/:id`, `/create`)
 
 **Files**: `src/types/*.ts`, `src/router/index.ts`
 
