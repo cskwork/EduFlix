@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises'
 
 async function loadEngine(): Promise<void> {
-  const engineCode = await readFile(`${process.cwd()}/contents/common/engine.js`, 'utf-8')
+  const engineCode = await readFile(`${process.cwd()}/public/contents/common/engine.js`, 'utf-8')
   const run = new Function(engineCode)
   run()
 }

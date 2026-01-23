@@ -3,8 +3,8 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 
-// 콘텐츠 디렉토리 경로
-const CONTENTS_DIR = join(__dirname, '../../contents')
+// 콘텐츠 디렉토리 경로 (Vite에서 public/에서 서빙하므로 public/contents 사용)
+const CONTENTS_DIR = join(__dirname, '../../public/contents')
 
 // 필수 콘텐츠 목록
 const REQUIRED_CONTENTS = [
