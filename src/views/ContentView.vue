@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import { useContentStore } from '../stores/content'
 import ContentViewer from '../components/viewer/ContentViewer.vue'
 import { getContentHtmlPath } from '../services/content/loader'
+import { useViewportHeight } from '../composables/useViewportHeight'
 import {
   SUBJECT_LABELS,
   GRADE_LEVEL_LABELS,
@@ -24,6 +25,7 @@ const isLoading = ref(true)
 const error = ref<string | null>(null)
 const content = ref<ContentManifest | null>(null)
 const viewerRef = ref<InstanceType<typeof ContentViewer> | null>(null)
+useViewportHeight()
 
 // 콘텐츠 HTML 경로
 const contentSrc = computed(() => {
@@ -404,7 +406,7 @@ onMounted(() => {
 .viewer-container {
   flex: 1;
   margin-top: var(--header-height);
-  height: calc(100vh - var(--header-height));
+  height: calc(var(--app-vh, 1vh) * 100 - var(--header-height));
 }
 
 /* 사이드바 (큰 화면에서 표시) */

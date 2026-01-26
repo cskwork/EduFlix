@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import AppHeader from './components/common/AppHeader.vue'
 import { useKeyboardNavigation } from './composables/useKeyboardNavigation'
 
 // 키보드 네비게이션 활성화
 const { handleSkipLink } = useKeyboardNavigation()
+const route = useRoute()
+const isContentPage = computed(() => route.path.startsWith('/content/'))
 </script>
 
 <template>
@@ -17,8 +21,13 @@ const { handleSkipLink } = useKeyboardNavigation()
       메인 콘텐츠로 건너뛰기
     </a>
 
-    <AppHeader />
-    <main id="main-content" class="main-content" role="main">
+    <AppHeader v-if="!isContentPage" />
+    <main
+      id="main-content"
+      class="main-content"
+      :class="{ 'content-page': isContentPage }"
+      role="main"
+    >
       <router-view />
     </main>
   </div>
@@ -34,6 +43,12 @@ const { handleSkipLink } = useKeyboardNavigation()
 .main-content {
   padding-top: var(--header-height);
   min-height: calc(100vh - var(--header-height));
+}
+
+.main-content.content-page {
+  padding-top: 0;
+  min-height: 100vh;
+  min-height: calc(var(--app-vh, 1vh) * 100);
 }
 
 /* 스킵 링크 (키보드 사용자를 위한 접근성) */

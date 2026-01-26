@@ -116,6 +116,17 @@
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: var(--font-size-sm);
   }
+
+  /* 모바일 뷰포트 높이 (dvh 폴백) */
+  .viewer-container {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-top: 0;
+    height: auto;
+  }
 }
 
 /* 스마트폰 가로 / 소형 태블릿 (480px - 767px) */
@@ -137,6 +148,17 @@
   /* 스크롤 버튼 숨기기 */
   .scroll-btn {
     display: none;
+  }
+
+  /* 콘텐츠 뷰어 고정 배치 */
+  .viewer-container {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-top: 0;
+    height: auto;
   }
 }
 
@@ -219,9 +241,15 @@
     font-size: var(--font-size-sm);
   }
 
-  /* 콘텐츠 뷰어 전체화면 최적화 */
+  /* 콘텐츠 뷰어 전체화면 최적화 (dvh 폴백) */
   .viewer-container {
-    height: calc(100vh - 48px);
+    position: fixed;
+    top: 48px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-top: 0;
+    height: auto;
   }
 }
 
