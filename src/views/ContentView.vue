@@ -407,6 +407,21 @@ onMounted(() => {
   flex: 1;
   margin-top: var(--header-height);
   height: calc(var(--app-vh, 1vh) * 100 - var(--header-height));
+  height: calc(100dvh - var(--header-height));
+  min-height: calc(100dvh - var(--header-height));
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .viewer-container {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-top: 0;
+    height: auto;
+    min-height: 0;
+  }
 }
 
 /* 사이드바 (큰 화면에서 표시) */
@@ -425,8 +440,17 @@ onMounted(() => {
   }
 
   .viewer-container {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 300px;
+    bottom: 0;
     flex: 1;
     min-width: 0;
+    margin-top: 0;
+    margin-right: 0;
+    height: auto;
+    min-height: 0;
   }
 
   .content-sidebar {

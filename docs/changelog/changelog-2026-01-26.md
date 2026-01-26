@@ -148,3 +148,30 @@ OrbitControls 호환성 문제 해결 (THREE.OrbitControls is not a constructor 
   - `html, body`: `overflow: hidden` -> `overflow: auto` (스크롤 허용)
   - `#scene-container`: `height: 100vh` -> `height: 100dvh` + 폴백 (동적 뷰포트 높이)
   - `.scene`: `position: absolute` -> `position: relative`, `height: auto` + `min-height: 100%`
+
+---
+
+## 콘텐츠 뷰어 높이 보정 (중간 해상도 검은 영역 방지)
+
+### 변경 사항
+- `src/composables/useViewportHeight.ts`: `visualViewport`가 작게 계산될 때 `innerHeight` 기준으로 CSS 변수 설정
+- `src/views/ContentView.vue`: `viewer-container`에 `100dvh` 기반 높이/최소 높이 추가
+- `src/App.vue`: 콘텐츠 페이지 최소 높이에 `100dvh` 추가
+- `tests/unit/viewport-height.test.ts`: 작은 `visualViewport` fallback 테스트 추가
+- `tests/unit/content-view-height.test.ts`: 콘텐츠 뷰어/레이아웃 dvh 규칙 테스트 추가
+
+---
+
+## 중간 해상도 뷰어 하단 여백 제거
+
+### 변경 사항
+- `src/assets/styles/responsive.css`: 768px-1023px 구간에서도 `viewer-container` 고정 배치
+- `tests/unit/mobile-viewer-layout.test.ts`: 태블릿 구간 fixed 배치 테스트 추가
+
+---
+
+## Chrome 90% 줌 하단 여백 보정
+
+### 변경 사항
+- `src/views/ContentView.vue`: 768px-1199px 및 1200px+ 구간에서 `viewer-container` 고정 배치로 계산 오차 방지
+- `tests/unit/content-view-height.test.ts`: 중간/대형 화면 고정 배치 규칙 테스트 추가

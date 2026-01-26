@@ -1,7 +1,8 @@
 import { onMounted, onUnmounted } from 'vue'
 
 export function setViewportHeightVar() {
-  const height = window.visualViewport?.height ?? window.innerHeight
+  const visualHeight = window.visualViewport?.height ?? 0
+  const height = Math.max(window.innerHeight, visualHeight)
   document.documentElement.style.setProperty('--app-vh', `${height * 0.01}px`)
 }
 

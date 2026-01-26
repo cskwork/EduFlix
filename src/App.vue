@@ -49,6 +49,7 @@ const isContentPage = computed(() => route.path.startsWith('/content/'))
   padding-top: 0;
   min-height: 100vh;
   min-height: calc(var(--app-vh, 1vh) * 100);
+  min-height: 100dvh;
 }
 
 /* 스킵 링크 (키보드 사용자를 위한 접근성) */
