@@ -199,4 +199,74 @@ const previewUrl = computed(() => getContentHtmlPath(props.content))
 .card-description {
   display: none; /* Hide description in grid for cleaner look */
 }
+
+/* 모바일 반응형 스타일 */
+@media (max-width: 479px) {
+  .content-card {
+    width: 140px;
+  }
+  
+  .preview-iframe {
+    transform: scale(0.109375); /* 1280 -> 140 */
+  }
+  
+  .card-info {
+    padding: var(--spacing-xs);
+  }
+  
+  .card-title {
+    font-size: var(--font-size-xs);
+  }
+  
+  .play-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+  
+  .badge {
+    font-size: 8px;
+    padding: 1px 4px;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .content-card {
+    width: 160px;
+  }
+  
+  .preview-iframe {
+    transform: scale(0.125); /* 1280 -> 160 */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .content-card {
+    width: 200px;
+  }
+  
+  .preview-iframe {
+    transform: scale(0.15625); /* 1280 -> 200 */
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .content-card {
+    width: 220px;
+  }
+  
+  .preview-iframe {
+    transform: scale(0.171875); /* 1280 -> 220 */
+  }
+}
+
+@media (min-width: 1200px) {
+  .content-card {
+    width: 260px;
+  }
+  
+  .preview-iframe {
+    transform: scale(0.203125); /* 1280 -> 260 */
+  }
+}
 </style>

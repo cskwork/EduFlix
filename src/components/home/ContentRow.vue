@@ -187,4 +187,26 @@ function scroll(direction: 'left' | 'right') {
     cursor: default;
   }
 }
+
+@media (max-width: 479px) {
+  .content-row {
+    margin-bottom: var(--spacing-xl);
+  }
+  
+  .row-title {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .row-content {
+    gap: var(--spacing-xs);
+    padding: 0 var(--spacing-sm);
+  }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .row-title {
+    font-size: var(--font-size-lg);
+  }
+}
 </style>

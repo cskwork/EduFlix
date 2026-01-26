@@ -179,6 +179,10 @@ const isNavActive = (path: string) => {
 
 /* 반응형 - 태블릿 이하 */
 @media (max-width: 768px) {
+  .header-content {
+    gap: var(--spacing-md);
+  }
+  
   .main-nav {
     display: none;
   }
@@ -187,6 +191,26 @@ const isNavActive = (path: string) => {
     display: block;
     flex: 1;
     text-align: center;
+  }
+  
+  .logo-text {
+    font-size: var(--font-size-xl);
+  }
+}
+
+@media (max-width: 479px) {
+  .header-content {
+    padding: 0 var(--spacing-sm);
+  }
+  
+  .icon-button {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .icon-button svg {
+    width: 18px;
+    height: 18px;
   }
 }
 </style>

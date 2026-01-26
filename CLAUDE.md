@@ -100,7 +100,8 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
 - Types: `game`, `quiz`, `exploration`, `simulation`, `story`
 - Subjects: `math`, `science`, `english`
 - **Content Catalog** (indexed in `/public/contents/index.json`, last updated 2026-01-26):
-  - Math Elementary: fractions-pizza (game, gr.3), shapes-explorer (exploration, gr.5), 3d-shapes-discovery (exploration, gr.3), volume-explorer (simulation, gr.5), box-volume (simulation, gr.5), circle-area (simulation, gr.5), decimal-multiplication (simulation, gr.5), fraction-division (simulation, gr.6), ratio-proportion (simulation, gr.6)
+  - **Summary**: 21 contents total (vs 16 before)
+  - Math Elementary: fractions-pizza (game, gr.3), shapes-explorer (exploration, gr.5), 3d-shapes-discovery (exploration, gr.3), volume-explorer (simulation, gr.5), **box-volume (simulation, gr.5)**, **circle-area (simulation, gr.5)**, **decimal-multiplication (simulation, gr.5)**, **fraction-division (simulation, gr.6)**, **ratio-proportion (simulation, gr.6)** [4->9 contents]
   - Math Middle: equation-puzzle (quiz, gr.2), pythagoras-theorem (simulation, gr.3), pythagorean-squares (simulation, gr.3), probability-coin (simulation, gr.2), linear-slope (simulation, gr.2), negative-addition (simulation, gr.1), 3d-coordinate-system (simulation, gr.1), space-diagonal (simulation, gr.3)
   - Math High: quadratic-graph (simulation, gr.1), 3d-vectors (simulation, gr.1)
   - Science Middle: cell-explorer (exploration, gr.1)
@@ -110,10 +111,17 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
   - Grade format: "elementary-N", "middle-N", "high-N" where N ∈ [1-6] for grade specificity
   - 3D Content (Three.js): All Three.js-based content uses CDN links (v0.128.0) + common engine.js pattern (OrbitControls compatibility)
 
+**Shared Art Assets** (imported 2026-01-26):
+- **Icons** (5+): `icon-arithmetic-basic-color`, `icon-help-question-cute`, `icon-home-cute`, `icon-lightbulb-idea-bright`, `icon-star-reward-cute`, `icon-trophy-achievement-cute` (stored in `public/contents/icons/`)
+- **Diagrams** (5+): `diagram-circle-anatomy-parts`, `diagram-fraction-pie-thirds`, `diagram-prism-net-unfolded`, `diagram-pythagorean-theorem`, `diagram-ratio-proportion-blocks` (stored in `public/contents/diagrams/`)
+- **Illustrations**: `illust-calculator-math-simple` (new directory `public/contents/illustrations/`)
+- **Backgrounds** (8+): `bg-geometric-shapes-*`, `bg-grid-paper-*`, `bg-math-formulas-overlay`, `bg-numbers-pattern`, `bg-science-*-pattern` (stored in `public/contents/backgrounds/`)
+- Naming convention: `{type}-{description}-{YYYYMMDD}.{ext}` (allows versioning and search)
+
 **Three.js Content Pattern**:
 - 3D 모듈: Three.js + OrbitControls CDN 링크 (script.js에서 `engine.js` 활용)
-- 공유 리소스: `public/contents/common/engine.js` (기본 엔진), `style.css` (공통 스타일)
-- 모각 콘텐츠는 자체 `style.css` 추가 (UI, 컨트롤 패널)
+- 공유 리소스: `public/contents/common/engine.js` (기본 엔진), `mobile.css` (모바일 반응형 스타일: 폰트 크기, 간격, 터치 타겟 CSS 커스텀 프로퍼티 정의)
+- 각 콘텐츠 로드: 자체 `style.css` (콘텐츠별 스타일) → `../../../common/mobile.css` (모바일 반응형 오버라이드)
 - Three.js 초기화: Scene, PerspectiveCamera, WebGLRenderer 기본 설정
 
 **Content Styling Pattern** (모든 수학/과학 콘텐츠 - 표준화):
@@ -131,7 +139,8 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
   - `.hook-subtext`: color #666, font-size 1.1rem, margin-top 0.5rem
   - `.hook-visual svg`: width 100%, height auto (반응형)
 - **Glassmorphism 패턴**: 패널/컨테이너에 `backdrop-filter: blur()` + `border: 1px solid var(--glass-border)`, `background: var(--glass-bg)`
-- **반응형 브레이크포인트**: `@media (max-width: 768px, 600px, 480px)` (3D 콘텐츠 768px 우선, 모바일 480px)
+- **CSS 로드 순서**: 각 콘텐츠 `index.html`에서 `<link rel="stylesheet" href="style.css">` 다음 `<link rel="stylesheet" href="../../../common/mobile.css">` 로드 (style.css 우선 적용 후 mobile.css로 모바일 반응형 오버라이드)
+- **반응형 브레이크포인트**: `mobile.css`에서 정의 - min-width 기반 프로그레시브 강화 (기본: 0-575px mobile, 576px+ sm, 768px+ md, 992px+ lg, 1200px+ xl)
 - **애니메이션 정의**: `@keyframes fadeIn`, `bounce`, `bounceIn`, `sceneEnter` 기본 제공 (필요시 추가)
 - **인터랙티브 요소**: `.control-point`, `.slider-input`, `.coin` (hover/active 상태 + 필터 효과)
 - **3D 콘텐츠 패턴**: `.three-container` (고정 크기 + border-radius + shadow), `.control-panel` (glassmorphic), `.size-controls`, `.step-buttons`
@@ -174,7 +183,33 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
 - `success: true` + `manifest` + 누락된 `contentId` + `warning` → 소프트 워닝 (히스토리 기록, 카탈로그 제외, UI 경고)
 - `success: false` → 에러 (UI에 에러 메시지 표시)
 
+## Deployment
+
+**Vercel** (Primary):
+- URL: https://eduflix.vercel.app
+- 설정: `vercel.json` SPA 라우팅 + 콘텐츠 캐싱
+- 배포: `vercel --prod` (일일 100회 무료 한도)
+
+**Cloudflare Tunnel** (Backup - Vercel 한도 초과 시):
+- URL: https://eduflix.agentic-worker.store
+- 터널 ID: `90cc3e76-2361-49e4-972f-fd94cdd33cd8`
+- 설정 파일: `~/.cloudflared/eduflix-config.yml`
+- 배포 순서:
+  ```bash
+  # 1. 빌드
+  bun run build
+
+  # 2. serve.json 생성 (cleanUrls 비활성화 필수)
+  echo '{"cleanUrls": false, "trailingSlash": true}' > dist/serve.json
+
+  # 3. 정적 서버 시작 (SPA 모드)
+  npx serve dist -p 9888 --single &
+
+  # 4. 터널 시작
+  cloudflared tunnel --config ~/.cloudflared/eduflix-config.yml run eduflix &
+  ```
+- **중요**: `cleanUrls: false` 필수 - iframe 콘텐츠 경로 `.html` 확장자 유지
+
 ## Notes
 - API 키는 `.env`에만 저장 (git 제외)
 - 콘텐츠는 `/public/contents/` 디렉토리에서 정적 제공
-- Vercel 배포: `vercel.json` SPA 라우팅 + 콘텐츠 캐싱 설정

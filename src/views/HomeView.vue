@@ -167,13 +167,14 @@ function goToCreateMode() {
 }
 
 .hero-title {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(1.75rem, 5vw, 4rem);
   font-weight: 800;
   color: #fff;
   margin-bottom: var(--spacing-md);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  line-height: 1.1;
-  white-space: nowrap;
+  line-height: 1.2;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .hero-subtitle {
@@ -238,5 +239,61 @@ function goToCreateMode() {
   z-index: 20;
   margin-top: -10vh; /* Overlap hero */
   background: transparent;
+}
+
+/* 모바일 반응형 스타일 */
+@media (max-width: 767px) {
+  .hero-section {
+    height: auto;
+    min-height: 60vh;
+    padding-top: calc(var(--header-height) + var(--spacing-xl));
+    padding-bottom: var(--spacing-2xl);
+  }
+  
+  .hero-content {
+    margin-top: 0;
+    max-width: 100%;
+  }
+  
+  .hero-title {
+    font-size: clamp(1.5rem, 7vw, 2.5rem);
+  }
+  
+  .hero-subtitle {
+    font-size: var(--font-size-base);
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  
+  .btn-hero {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .content-sections {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 479px) {
+  .hero-section {
+    min-height: 55vh;
+  }
+  
+  .hero-title {
+    font-size: 1.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: var(--font-size-sm);
+  }
+  
+  .btn-hero {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+  }
 }
 </style>

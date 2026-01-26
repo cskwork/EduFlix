@@ -281,6 +281,8 @@ Prerequisite concept that must be connected when covering each new concept:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[Content Title]</title>
+    <!-- 모바일 반응형 CSS 필수 포함 -->
+    <link rel="stylesheet" href="../../../common/mobile.css">
     /* css relative path */
 </head>
 <body>

@@ -4,7 +4,7 @@ const ContentApp = {
     
     init() {
         this.updateProgress();
-        this.setupHookScene();
+        this.initHookScene();
         this.bindEvents();
     },
 
