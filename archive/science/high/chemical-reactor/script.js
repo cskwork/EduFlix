@@ -1,0 +1,167 @@
+/**
+ * 화학 반응 시뮬레이터 (Recreated with Shared Engine)
+ */
+
+const contentData = {
+    title: "화학 반응 시뮬레이터",
+    hook: {
+        question: "색깔이 변하고 거품이 나는 마법같은 변화!"
+    },
+    story: {
+        character: { image: "assets/character.svg" },
+        situation: "화학자는 미지의 용액을 연구하고 있습니다.<br>안전하게 실험하여 용액의 성질을 밝혀내세요!"
+    },
+    interaction: {
+        title: "중화 반응 실험",
+        instruction: "비커에 시약을 넣어 반응을 관찰하세요.<br>산성 용액에 염기성 용액을 넣으면 어떻게 될까요?",
+        onInit: (container, engine) => {
+             container.innerHTML = `
+                <div class="lab-bench">
+                    <div class="reaction-info">pH: <span id="ph-val">7.0</span> <span id="status-text">(중성)</span></div>
+                    
+                    <div class="shelf">
+                        <div class="reagent acid" data-type="acid" data-strength="1">
+                            <div class="reagent-cap"></div>
+                            <div class="reagent-bottle">HCl</div>
+                        </div>
+                         <div class="reagent base" data-type="base" data-strength="1">
+                            <div class="reagent-cap"></div>
+                            <div class="reagent-bottle">NaOH</div>
+                        </div>
+                        <div class="reagent indicator" data-type="indicator">
+                            <div class="reagent-cap"></div>
+                            <div class="reagent-bottle">지시약</div>
+                        </div>
+                    </div>
+                    
+                    <div class="beaker">
+                        <div class="liquid" id="liquid"></div>
+                        <div class="bubbles" id="bubbles"></div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-secondary" id="reset-btn">비커 비우기</button>
+                </div>
+             `;
+             
+             const liquid = container.querySelector('#liquid');
+             const bubbles = container.querySelector('#bubbles');
+             const phVal = container.querySelector('#ph-val');
+             const statusText = container.querySelector('#status-text');
+             
+             let ph = 7.0;
+             let hasIndicator = false;
+             let volume = 50; // %
+             
+             const updateVisuals = () => {
+                 // Color based on pH and Indicator
+                 let color = "#aadaff"; // Water default
+                 
+                 if (hasIndicator) {
+                     // Universal indicator approx colors
+                     if (ph < 3) color = "#ff0000";
+                     else if (ph < 5) color = "#ff9900";
+                     else if (ph < 7) color = "#ffff00";
+                     else if (ph == 7) color = "#00ff00";
+                     else if (ph < 9) color = "#00ffff";
+                     else if (ph < 11) color = "#0000ff";
+                     else color = "#8b00ff";
+                 } else {
+                     // Without indicator, maybe slight tint?
+                     if (ph < 2) color = "#fff0f0"; // Slight acid tint
+                     if (ph > 12) color = "#f0f0ff"; // Slight base tint
+                 }
+                 
+                 liquid.style.backgroundColor = color;
+                 liquid.style.height = volume + "%";
+                 
+                 phVal.textContent = ph.toFixed(1);
+                 
+                 let status = "중성";
+                 if (ph < 7) status = "산성";
+                 if (ph > 7) status = "염기성";
+                 statusText.textContent = `(${status})`;
+                 statusText.style.color = (ph < 7) ? "red" : (ph > 7 ? "blue" : "green");
+                 
+                 // Bubble animation if reaction happened (simplification: generic bubble toggle)
+             };
+             
+             const addReagent = (type) => {
+                 if (volume >= 90) {
+                     engine.showFeedback("비커가 가득 찼습니다!", "negative");
+                     return;
+                 }
+                 
+                 volume += 10;
+                 
+                 if (type === 'acid') {
+                     // Decrease pH
+                     // Proper calculation is complex (-log[H+]), simplified here:
+                     if (ph > 1) ph -= 1.5;
+                     
+                     // Reaction visual
+                     if (ph > 7) { // Neutralizing
+                         showReaction();
+                     }
+                 } else if (type === 'base') {
+                     if (ph < 13) ph += 1.5;
+                     if (ph < 7) { // Neutralizing
+                         showReaction();
+                     }
+                 } else if (type === 'indicator') {
+                     hasIndicator = true;
+                     volume -= 10; // Indicator volume negligible
+                 }
+                 
+                 // Clamp
+                 if (ph < 1) ph = 1;
+                 if (ph > 14) ph = 14;
+                 
+                 updateVisuals();
+                 
+                 // Check Goal (Neutralize)
+                 if (hasIndicator && Math.abs(ph - 7.0) < 0.5) {
+                     engine.showFeedback("중화 적정 성공! 완벽한 초록색입니다.", "positive");
+                     engine.enableNext();
+                 }
+             };
+             
+             const showReaction = () => {
+                 bubbles.style.display = 'block';
+                 bubbles.innerHTML = '';
+                 for(let i=0; i<5; i++) {
+                     bubbles.innerHTML += `<div class="bubble" style="left:${Math.random()*80+10}%; width:${Math.random()*10+5}px; height:${Math.random()*10+5}px; animation-duration:${Math.random()+1}s"></div>`;
+                 }
+                 setTimeout(() => bubbles.style.display = 'none', 1000);
+             };
+             
+             container.querySelectorAll('.reagent').forEach(el => {
+                 el.onclick = () => addReagent(el.dataset.type);
+             });
+             
+             container.querySelector('#reset-btn').onclick = () => {
+                 ph = 7.0;
+                 hasIndicator = false;
+                 volume = 50;
+                 updateVisuals();
+                 engine.showFeedback("비커를 비웠습니다.", "neutral");
+             };
+             
+             updateVisuals();
+        }
+    },
+    quiz: [
+        {
+            question: "산성 용액의 pH 범위는?",
+            options: ["7보다 작다", "7이다", "7보다 크다", "14이다"],
+            answer: 0
+        },
+        {
+            question: "산성과 염기성이 만나 물과 염이 생성되는 반응은?",
+            options: ["산화 반응", "중화 반응", "연소 반응", "분해 반응"],
+            answer: 1
+        }
+    ]
+};
+
+Engine.init(contentData);

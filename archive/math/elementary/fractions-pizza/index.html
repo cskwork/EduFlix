@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>피자로 배우는 분수</title>
+  <link rel="stylesheet" href="../../../common/style.css">
+  <style>
+    /* Content Specific Styles */
+    .pizza-container {
+      width: 300px;
+      height: 300px;
+      position: relative;
+      margin: 2rem auto;
+      cursor: pointer;
+    }
+    
+    .pizza {
+      width: 100%;
+      height: 100%;
+      background: #f5d0a9;
+      border-radius: 50%;
+      border: 8px solid #e6a15c;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transition: transform 0.3s;
+    }
+
+    .pizza:hover {
+      transform: scale(1.05);
+    }
+
+    .pizza-slice {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-right: 2px solid rgba(0,0,0,0.1);
+      transform-origin: 50% 50%;
+      pointer-events: none;
+    }
+
+    .topping {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #d32f2f; /* Pepperoni */
+        border-radius: 50%;
+        box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .fraction-display {
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
+        margin-top: 1rem;
+        background: rgba(0,0,0,0.5);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="scene-container"></div>
+  <script src="../../../common/engine.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

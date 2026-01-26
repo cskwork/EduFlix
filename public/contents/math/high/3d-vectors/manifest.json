@@ -1,0 +1,12 @@
+{
+  "id": "3d-vectors",
+  "title": "3D 벡터: 힘의 합성",
+  "subject": "math",
+  "gradeLevel": "high",
+  "grade": "high-1",
+  "type": "simulation",
+  "language": "ko",
+  "description": "3D 공간에서 두 벡터를 합성하며 벡터 덧셈의 원리를 배워보세요!",
+  "thumbnail": "/contents/math/high/3d-vectors/assets/thumbnail.svg",
+  "path": "/contents/math/high/3d-vectors/index.html"
+}

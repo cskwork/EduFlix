@@ -81,10 +81,24 @@ agents/content-generator/
 - `grade`: formatted string like `elementary-3`, `middle-1`, `high-2` (학년 세부정보)
 - Types: `game`, `quiz`, `exploration`, `simulation`, `story`
 - Subjects: `math`, `science`, `english`
+- **Content Catalog** (indexed in `/public/contents/index.json`, last updated 2026-01-26):
+  - Math Elementary: fractions-pizza (game, gr.3), shapes-explorer (exploration, gr.5), 3d-shapes-discovery (exploration, gr.3), volume-explorer (simulation, gr.5)
+  - Math Middle: equation-puzzle (quiz, gr.2), pythagoras-theorem (simulation, gr.3), probability-coin (simulation, gr.2), linear-slope (simulation, gr.2), negative-addition (simulation, gr.1), 3d-coordinate-system (simulation, gr.1), space-diagonal (simulation, gr.3), pythagorean-squares (simulation, gr.3)
+  - Math High: quadratic-graph (simulation, gr.1), 3d-vectors (simulation, gr.1)
+  - Science Middle: cell-explorer (exploration, gr.1)
+  - Science High: chemical-reactor (simulation, gr.1)
+  - All manifests follow schema: `id`, `title`, `subject`, `gradeLevel`, `grade`, `type`, `language`, `description`, `thumbnail`, `path`
+  - Grade format: "elementary-N", "middle-N", "high-N" where N ∈ [1-6] for grade specificity
+
+**Three.js Content Pattern**:
+- 3D 모듈: Three.js + OrbitControls CDN 링크 (script.js에서 `engine.js` 활용)
+- 공유 리소스: `public/contents/common/engine.js` (기본 엔진), `style.css` (공통 스타일)
+- 모각 콘텐츠는 자체 `style.css` 추가 (UI, 컨트롤 패널)
+- Three.js 초기화: Scene, PerspectiveCamera, WebGLRenderer 기본 설정
 
 **iframe Security** (loader.ts):
 - `IFRAME_SANDBOX_ATTRS` = 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals'
-- `allow-same-origin` 포함: 외부 CSS/JS 파일 로드에 필요 (solar-system 등)
+- `allow-same-origin` 포함: 외부 CSS/JS 파일 로드에 필요 (Three.js CDN 등)
 - 콘텐츠는 신뢰할 수 있는 정적 파일이므로 보안상 허용
 - `allow-same-origin` 제외 시 sandbox 우회 방지 (allow-scripts와 조합 시 보안 이슈)
 

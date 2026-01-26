@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-01-23T00:00:00.000Z",
+  "lastUpdated": "2026-01-26T00:00:00.000Z",
   "contents": [
     {
       "id": "fractions-pizza",
@@ -39,30 +39,6 @@
       "path": "/contents/math/middle/equation-puzzle/index.html"
     },
     {
-      "id": "solar-system",
-      "title": "태양계 여행",
-      "subject": "science",
-      "gradeLevel": "elementary",
-      "grade": "elementary-4",
-      "type": "simulation",
-      "language": "ko",
-      "description": "우주선을 타고 태양계를 여행하며 각 행성의 특징을 알아보세요!",
-      "thumbnail": "/contents/science/elementary/solar-system/assets/thumbnail.svg",
-      "path": "/contents/science/elementary/solar-system/index.html"
-    },
-    {
-      "id": "circuit-lab",
-      "title": "전기회로 실험실",
-      "subject": "science",
-      "gradeLevel": "elementary",
-      "grade": "elementary-6",
-      "type": "simulation",
-      "language": "ko",
-      "description": "전기회로를 직접 만들며 전기의 흐름과 원리를 배워보세요!",
-      "thumbnail": "/contents/science/elementary/circuit-lab/assets/thumbnail.svg",
-      "path": "/contents/science/elementary/circuit-lab/index.html"
-    },
-    {
       "id": "cell-explorer",
       "title": "세포 탐험",
       "subject": "science",
@@ -87,40 +63,136 @@
       "path": "/contents/science/high/chemical-reactor/index.html"
     },
     {
-      "id": "word-safari",
-      "title": "Word Safari",
-      "subject": "english",
-      "gradeLevel": "elementary",
-      "grade": "elementary-3",
-      "type": "game",
-      "language": "en",
-      "description": "Go on a word adventure! Match pictures with English words and learn new vocabulary.",
-      "thumbnail": "/contents/english/elementary/word-safari/assets/thumbnail.svg",
-      "path": "/contents/english/elementary/word-safari/index.html"
+      "id": "pythagoras-theorem",
+      "title": "피타고라스의 정리",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-3",
+      "type": "simulation",
+      "language": "ko",
+      "description": "직각삼각형의 변들 사이에는 어떤 비밀이 있을까요? 직접 움직여보며 피타고라스의 정리를 발견해보세요.",
+      "thumbnail": "/contents/math/middle/pythagoras-theorem/assets/thumbnail.svg",
+      "path": "/contents/math/middle/pythagoras-theorem/index.html"
     },
     {
-      "id": "grammar-quest",
-      "title": "Grammar Quest",
-      "subject": "english",
+      "id": "probability-coin",
+      "title": "확률의 세계: 동전 던지기",
+      "subject": "math",
       "gradeLevel": "middle",
       "grade": "middle-2",
-      "type": "quiz",
-      "language": "en",
-      "description": "Embark on a quest to master English grammar! Learn tenses, articles, and sentence structures.",
-      "thumbnail": "/contents/english/middle/grammar-quest/assets/thumbnail.svg",
-      "path": "/contents/english/middle/grammar-quest/index.html"
+      "type": "simulation",
+      "language": "ko",
+      "description": "동전을 많이 던지면 앞면과 뒷면의 비율은 어떻게 변할까요? 큰 수의 법칙을 실험해보세요.",
+      "thumbnail": "/contents/math/middle/probability-coin/assets/thumbnail.svg",
+      "path": "/contents/math/middle/probability-coin/index.html"
     },
     {
-      "id": "debate-arena",
-      "title": "Debate Arena",
-      "subject": "english",
+      "id": "linear-slope",
+      "title": "일차함수와 기울기",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-2",
+      "type": "simulation",
+      "language": "ko",
+      "description": "스키장의 슬로프처럼 직선의 기울어진 정도를 숫자로 나타내볼까요?",
+      "thumbnail": "/contents/math/middle/linear-slope/assets/thumbnail.svg",
+      "path": "/contents/math/middle/linear-slope/index.html"
+    },
+    {
+      "id": "negative-addition",
+      "title": "정수의 덧셈과 뺄셈",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-1",
+      "type": "simulation",
+      "language": "ko",
+      "description": "수직선 위를 움직이며 음수와 양수의 덧셈, 뺄셈 원리를 배워보세요.",
+      "thumbnail": "/contents/math/middle/negative-addition/assets/thumbnail.svg",
+      "path": "/contents/math/middle/negative-addition/index.html"
+    },
+    {
+      "id": "quadratic-graph",
+      "title": "이차함수 그래프",
+      "subject": "math",
       "gradeLevel": "high",
       "grade": "high-1",
-      "type": "story",
-      "language": "en",
-      "description": "Enter the arena and practice your persuasive writing and debate skills through interactive scenarios!",
-      "thumbnail": "/contents/english/high/debate-arena/assets/thumbnail.svg",
-      "path": "/contents/english/high/debate-arena/index.html"
+      "type": "simulation",
+      "language": "ko",
+      "description": "이차함수 y = ax² + bx + c 그래프가 계수에 따라 어떻게 변하는지 확인해보세요.",
+      "thumbnail": "/contents/math/high/quadratic-graph/assets/thumbnail.svg",
+      "path": "/contents/math/high/quadratic-graph/index.html"
+    },
+    {
+      "id": "3d-shapes-discovery",
+      "title": "입체도형 탐험대",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-3",
+      "type": "exploration",
+      "language": "ko",
+      "description": "정육면체, 구, 원기둥, 삼각뿔을 360도로 돌려보며 면, 모서리, 꼭짓점을 알아보세요!",
+      "thumbnail": "/contents/math/elementary/3d-shapes-discovery/assets/thumbnail.svg",
+      "path": "/contents/math/elementary/3d-shapes-discovery/index.html"
+    },
+    {
+      "id": "volume-explorer",
+      "title": "부피 탐험가",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "type": "simulation",
+      "language": "ko",
+      "description": "단위 큐브로 상자를 채우면서 부피 = 가로 x 세로 x 높이를 발견해보세요!",
+      "thumbnail": "/contents/math/elementary/volume-explorer/assets/thumbnail.svg",
+      "path": "/contents/math/elementary/volume-explorer/index.html"
+    },
+    {
+      "id": "3d-coordinate-system",
+      "title": "3D 좌표계: 드론 파일럿",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-1",
+      "type": "simulation",
+      "language": "ko",
+      "description": "드론을 조종하며 3D 좌표계 (x, y, z)의 개념을 익혀보세요!",
+      "thumbnail": "/contents/math/middle/3d-coordinate-system/assets/thumbnail.svg",
+      "path": "/contents/math/middle/3d-coordinate-system/index.html"
+    },
+    {
+      "id": "space-diagonal",
+      "title": "공간 대각선",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-3",
+      "type": "simulation",
+      "language": "ko",
+      "description": "피타고라스를 두 번 적용해서 공간 대각선의 길이를 구해보세요!",
+      "thumbnail": "/contents/math/middle/space-diagonal/assets/thumbnail.svg",
+      "path": "/contents/math/middle/space-diagonal/index.html"
+    },
+    {
+      "id": "3d-vectors",
+      "title": "3D 벡터: 힘의 합성",
+      "subject": "math",
+      "gradeLevel": "high",
+      "grade": "high-1",
+      "type": "simulation",
+      "language": "ko",
+      "description": "3D 공간에서 두 벡터를 합성하며 벡터 덧셈의 원리를 배워보세요!",
+      "thumbnail": "/contents/math/high/3d-vectors/assets/thumbnail.svg",
+      "path": "/contents/math/high/3d-vectors/index.html"
+    },
+    {
+      "id": "pythagorean-squares",
+      "title": "피타고라스 정리: 제곱의 비밀",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-3",
+      "type": "simulation",
+      "language": "ko",
+      "description": "정사각형의 넓이를 활용하여 피타고라스의 정리 a² + b² = c²를 시각적으로 발견하고 실생활 문제에 적용해보세요!",
+      "thumbnail": "/contents/math/middle/20260125-pythagorean/assets/thumbnail.svg",
+      "path": "/contents/math/middle/20260125-pythagorean/index.html"
     }
   ]
 }

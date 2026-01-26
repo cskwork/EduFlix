@@ -1,0 +1,12 @@
+{
+  "id": "3d-shapes-discovery",
+  "title": "입체도형 탐험대",
+  "subject": "math",
+  "gradeLevel": "elementary",
+  "grade": "elementary-3",
+  "type": "exploration",
+  "language": "ko",
+  "description": "정육면체, 구, 원기둥, 삼각뿔을 360도로 돌려보며 면, 모서리, 꼭짓점을 알아보세요!",
+  "thumbnail": "/contents/math/elementary/3d-shapes-discovery/assets/thumbnail.svg",
+  "path": "/contents/math/elementary/3d-shapes-discovery/index.html"
+}

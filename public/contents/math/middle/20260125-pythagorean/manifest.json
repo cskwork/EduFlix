@@ -1,0 +1,12 @@
+{
+  "id": "pythagorean-squares",
+  "title": "피타고라스 정리: 제곱의 비밀",
+  "subject": "math",
+  "gradeLevel": "middle",
+  "grade": "middle-3",
+  "type": "simulation",
+  "language": "ko",
+  "description": "정사각형의 넓이를 활용하여 피타고라스의 정리 a² + b² = c²를 시각적으로 발견하고 실생활 문제에 적용해보세요!",
+  "thumbnail": "/contents/math/middle/20260125-pythagorean/assets/thumbnail.svg",
+  "path": "/contents/math/middle/20260125-pythagorean/index.html"
+}

@@ -4,64 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>세포 탐험</title>
-  <link rel="stylesheet" href="../../../common/style.css">
-  <style>
-    /* Cell Specific Styles */
-    .cell-container {
-        width: 300px;
-        height: 300px;
-        margin: 20px auto;
-        position: relative;
-    }
-    
-    .cell {
-        width: 100%;
-        height: 100%;
-        border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; /* Organic shape */
-        background: radial-gradient(circle at 30% 30%, #e8f5e9, #a5d6a7);
-        border: 4px solid #4caf50;
-        position: relative;
-        box-shadow: 0 0 20px rgba(76,175,80,0.3);
-        animation: breathe 5s ease-in-out infinite;
-    }
-    
-    @keyframes breathe {
-        0%, 100% { transform: scale(1); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
-        50% { transform: scale(1.02); border-radius: 45% 55% 65% 35% / 45% 55% 65% 45%; }
-    }
-    
-    .organelle {
-        position: absolute;
-        cursor: pointer;
-        transition: transform 0.2s;
-    }
-    .organelle:hover { transform: scale(1.2); z-index: 10; filter: brightness(1.2); }
-    
-    /* Nucleus */
-    .nucleus { top: 40%; left: 40%; width: 60px; height: 60px; background: #9c27b0; border-radius: 50%; box-shadow: 0 0 10px rgba(156,39,176,0.5); }
-    /* Mitochondria */
-    .mitochondria { width: 30px; height: 15px; background: #f44336; border-radius: 10px; border: 1px solid #b71c1c; }
-    .mito-1 { top: 20%; left: 30%; transform: rotate(45deg); }
-    .mito-2 { top: 70%; left: 60%; transform: rotate(-30deg); }
-    /* Ribosomes */
-    .ribosome { width: 6px; height: 6px; background: #333; border-radius: 50%; }
-    
-    .info-box {
-        background: rgba(0,0,0,0.8);
-        padding: 15px;
-        border-radius: 8px;
-        color: white;
-        margin-top: 20px;
-        min-height: 80px;
-        display: none;
-    }
-    
-    .info-box.active { display: block; animation: fadeIn 0.3s; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="scene-container"></div>
-  <script src="../../../common/engine.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

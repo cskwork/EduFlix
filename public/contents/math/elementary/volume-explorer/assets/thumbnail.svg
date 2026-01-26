@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#11998e"/>
+      <stop offset="100%" style="stop-color:#38ef7d"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 배경 -->
+  <rect width="400" height="300" fill="url(#bgGrad)"/>
+
+  <!-- 단위 큐브들 -->
+  <g transform="translate(100, 80)">
+    <!-- 첫 번째 층 -->
+    <g>
+      <path d="M0 60 L30 45 L60 60 L60 90 L30 105 L0 90 Z" fill="#E91E63"/>
+      <path d="M30 45 L60 60 L60 90 L30 75 Z" fill="#c2185b"/>
+      <path d="M0 60 L30 75 L30 105 L0 90 Z" fill="#f48fb1"/>
+    </g>
+    <g transform="translate(60, 0)">
+      <path d="M0 60 L30 45 L60 60 L60 90 L30 105 L0 90 Z" fill="#4CAF50"/>
+      <path d="M30 45 L60 60 L60 90 L30 75 Z" fill="#388E3C"/>
+      <path d="M0 60 L30 75 L30 105 L0 90 Z" fill="#81C784"/>
+    </g>
+    <g transform="translate(120, 0)">
+      <path d="M0 60 L30 45 L60 60 L60 90 L30 105 L0 90 Z" fill="#2196F3"/>
+      <path d="M30 45 L60 60 L60 90 L30 75 Z" fill="#1565C0"/>
+      <path d="M0 60 L30 75 L30 105 L0 90 Z" fill="#64B5F6"/>
+    </g>
+
+    <!-- 두 번째 층 -->
+    <g transform="translate(30, -30)">
+      <path d="M0 60 L30 45 L60 60 L60 90 L30 105 L0 90 Z" fill="#FF9800"/>
+      <path d="M30 45 L60 60 L60 90 L30 75 Z" fill="#EF6C00"/>
+      <path d="M0 60 L30 75 L30 105 L0 90 Z" fill="#FFB74D"/>
+    </g>
+    <g transform="translate(90, -30)">
+      <path d="M0 60 L30 45 L60 60 L60 90 L30 105 L0 90 Z" fill="#9C27B0"/>
+      <path d="M30 45 L60 60 L60 90 L30 75 Z" fill="#6A1B9A"/>
+      <path d="M0 60 L30 75 L30 105 L0 90 Z" fill="#CE93D8"/>
+    </g>
+  </g>
+
+  <!-- 수식 -->
+  <text x="200" y="250" text-anchor="middle" fill="#fff" font-size="20" font-weight="bold">
+    가로 x 세로 x 높이 = 부피
+  </text>
+
+  <!-- 제목 -->
+  <text x="200" y="45" text-anchor="middle" fill="#fff" font-size="28" font-weight="bold">부피 탐험가</text>
+</svg>

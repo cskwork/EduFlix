@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- 민준 - 건축가 캐릭터 -->
+  <defs>
+    <linearGradient id="shirtGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A90D9"/>
+      <stop offset="100%" style="stop-color:#2E5B8A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 설계도 (배경) -->
+  <g transform="translate(120, 60)">
+    <rect x="0" y="0" rx="3" width="60" height="80" fill="#fff"/>
+    <rect x="5" y="5" width="50" height="35" fill="none" stroke="#ddd" stroke-width="1"/>
+    <line x1="5" y1="5" x2="55" y2="40" stroke="#64B5F6" stroke-width="1"/>
+    <line x1="5" y1="40" x2="55" y2="5" stroke="#64B5F6" stroke-width="1"/>
+    <rect x="5" y="45" width="50" height="3" fill="#ddd"/>
+    <rect x="5" y="52" width="40" height="3" fill="#ddd"/>
+    <rect x="5" y="59" width="45" height="3" fill="#ddd"/>
+    <rect x="5" y="66" width="35" height="3" fill="#ddd"/>
+  </g>
+
+  <!-- 몸통 (셔츠) -->
+  <ellipse cx="90" cy="155" rx="45" ry="40" fill="url(#shirtGrad)"/>
+
+  <!-- 넥타이 -->
+  <path d="M90 115 L85 130 L90 160 L95 130 Z" fill="#E91E63"/>
+
+  <!-- 머리 -->
+  <circle cx="90" cy="80" r="40" fill="#FFDAB9"/>
+
+  <!-- 머리카락 -->
+  <path d="M55 65 Q60 40 90 35 Q120 40 125 65 Q120 50 90 48 Q60 50 55 65" fill="#333"/>
+  <path d="M60 55 Q65 48 75 50" stroke="#333" stroke-width="3" fill="none"/>
+
+  <!-- 안경 -->
+  <rect x="65" y="70" rx="5" width="22" height="18" fill="none" stroke="#333" stroke-width="2"/>
+  <rect x="93" y="70" rx="5" width="22" height="18" fill="none" stroke="#333" stroke-width="2"/>
+  <line x1="87" y1="78" x2="93" y2="78" stroke="#333" stroke-width="2"/>
+  <line x1="55" y1="78" x2="65" y2="78" stroke="#333" stroke-width="2"/>
+  <line x1="115" y1="78" x2="125" y2="78" stroke="#333" stroke-width="2"/>
+
+  <!-- 눈 -->
+  <circle cx="76" cy="80" r="4" fill="#333"/>
+  <circle cx="104" cy="80" r="4" fill="#333"/>
+  <circle cx="77" cy="79" r="1.5" fill="#fff"/>
+  <circle cx="105" cy="79" r="1.5" fill="#fff"/>
+
+  <!-- 입 (미소) -->
+  <path d="M80 98 Q90 105 100 98" stroke="#333" stroke-width="2" fill="none"/>
+
+  <!-- 손에 든 자 -->
+  <g transform="translate(30, 110)">
+    <rect x="0" y="0" width="8" height="60" fill="#FFC107"/>
+    <line x1="2" y1="5" x2="6" y2="5" stroke="#333" stroke-width="1"/>
+    <line x1="2" y1="15" x2="6" y2="15" stroke="#333" stroke-width="1"/>
+    <line x1="2" y1="25" x2="6" y2="25" stroke="#333" stroke-width="1"/>
+    <line x1="2" y1="35" x2="6" y2="35" stroke="#333" stroke-width="1"/>
+    <line x1="2" y1="45" x2="6" y2="45" stroke="#333" stroke-width="1"/>
+    <line x1="2" y1="55" x2="6" y2="55" stroke="#333" stroke-width="1"/>
+  </g>
+
+  <!-- 이름표 -->
+  <rect x="65" y="130" rx="3" width="50" height="18" fill="rgba(255,255,255,0.9)"/>
+  <text x="90" y="143" text-anchor="middle" fill="#2E5B8A" font-size="10" font-weight="bold">건축가 민준</text>
+</svg>

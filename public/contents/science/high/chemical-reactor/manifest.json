@@ -3,19 +3,10 @@
   "title": "화학 반응 시뮬레이터",
   "subject": "science",
   "gradeLevel": "high",
-  "grade": 1,
+  "grade": "high-1",
   "type": "simulation",
   "language": "ko",
   "description": "다양한 화학 반응을 시뮬레이션하며 반응식과 원리를 배워보세요!",
-  "thumbnail": "",
-  "path": "contents/science/high/chemical-reactor/index.html",
-  "learningObjectives": [
-    "화학 반응식의 균형 맞추기",
-    "산화-환원 반응 이해하기",
-    "발열/흡열 반응 구분하기"
-  ],
-  "prerequisites": ["원소와 화합물", "화학 반응식 기초"],
-  "estimatedTime": 20,
-  "createdAt": "2026-01-23T00:00:00.000Z",
-  "updatedAt": "2026-01-23T00:00:00.000Z"
+  "thumbnail": "/contents/science/high/chemical-reactor/assets/thumbnail.svg",
+  "path": "/contents/science/high/chemical-reactor/index.html"
 }

@@ -3,19 +3,10 @@
   "title": "세포 탐험",
   "subject": "science",
   "gradeLevel": "middle",
-  "grade": 1,
+  "grade": "middle-1",
   "type": "exploration",
   "language": "ko",
   "description": "현미경으로 세포를 관찰하고 각 세포소기관의 역할을 탐험해보세요!",
-  "thumbnail": "",
-  "path": "contents/science/middle/cell-explorer/index.html",
-  "learningObjectives": [
-    "동물세포와 식물세포의 구조 이해하기",
-    "핵, 미토콘드리아, 엽록체 등 세포소기관의 기능 알기",
-    "세포의 기본 단위 개념 이해하기"
-  ],
-  "prerequisites": ["생물의 기초 개념"],
-  "estimatedTime": 15,
-  "createdAt": "2026-01-23T00:00:00.000Z",
-  "updatedAt": "2026-01-23T00:00:00.000Z"
+  "thumbnail": "/contents/science/middle/cell-explorer/assets/thumbnail.svg",
+  "path": "/contents/science/middle/cell-explorer/index.html"
 }

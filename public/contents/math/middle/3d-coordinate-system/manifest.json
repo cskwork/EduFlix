@@ -1,0 +1,12 @@
+{
+  "id": "3d-coordinate-system",
+  "title": "3D 좌표계: 드론 파일럿",
+  "subject": "math",
+  "gradeLevel": "middle",
+  "grade": "middle-1",
+  "type": "simulation",
+  "language": "ko",
+  "description": "드론을 조종하며 3D 좌표계 (x, y, z)의 개념을 익혀보세요!",
+  "thumbnail": "/contents/math/middle/3d-coordinate-system/assets/thumbnail.svg",
+  "path": "/contents/math/middle/3d-coordinate-system/index.html"
+}

@@ -1,0 +1,409 @@
+/* ========================================
+   독립형 스타일 - Base Reset & Scene
+   ======================================== */
+
+:root {
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --primary-color: #2196F3;
+  --accent-color: #4CAF50;
+  --bg-color: #f5f5f5;
+  --text-color: #333;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+#scene-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: var(--bg-color);
+}
+
+.scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease-in-out;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.scene.active {
+  opacity: 1;
+  pointer-events: all;
+  z-index: 10;
+}
+
+.scene-title, .hook-question {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: var(--primary-color);
+}
+
+.scene-text {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  text-align: center;
+  max-width: 600px;
+  margin-bottom: 2rem;
+}
+
+.story-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.story-character-image {
+  max-width: 200px;
+  height: auto;
+}
+
+.story-character-emoji {
+  font-size: 80px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.typing-effect, .animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.interactive-area {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn, .btn-primary, .btn-primary-large {
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  border-radius: 25px;
+  border: none;
+  background: var(--primary-color);
+  color: white;
+  transition: all 0.3s var(--ease-spring);
+}
+
+.btn:hover, .btn-primary:hover, .btn-primary-large:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+}
+
+.btn-secondary, .btn-secondary-large {
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  border-radius: 25px;
+  background: white;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.hidden { display: none !important; }
+
+.quiz-container {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quiz-option {
+  padding: 18px 24px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  cursor: pointer;
+  background: white;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+}
+
+.quiz-option:hover {
+  border-color: var(--primary-color);
+}
+
+.quiz-option.correct {
+  background: #d4edda;
+  border-color: #28a745;
+}
+
+.quiz-option.incorrect {
+  background: #f8d7da;
+  border-color: #dc3545;
+}
+
+.feedback-positive { color: #28a745; font-weight: bold; }
+.feedback-negative { color: #dc3545; font-weight: bold; }
+.feedback-neutral { color: #666; }
+
+.wrap-summary {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.wrap-summary h3 {
+  color: var(--primary-color);
+  margin-top: 0.5rem;
+}
+
+/* ========================================
+   Content Specific Styles
+   ======================================== */
+
+/* 부피 탐험가 스타일 */
+
+#scene-container {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.hook-question {
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 2rem;
+    text-align: center;
+    max-width: 600px;
+}
+
+/* 3D 컨테이너 */
+.three-container {
+    width: 100%;
+    max-width: 500px;
+    height: 320px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    margin: 15px auto;
+}
+
+.three-container canvas {
+    display: block;
+}
+
+/* 컨트롤 패널 */
+.control-panel {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.slider-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.slider-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.slider-label {
+    width: 60px;
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+}
+
+.slider-label.width { color: #E91E63; }
+.slider-label.height { color: #4CAF50; }
+.slider-label.depth { color: #2196F3; }
+
+.slider-row input[type="range"] {
+    flex: 1;
+    height: 8px;
+    -webkit-appearance: none;
+    background: #e0e0e0;
+    border-radius: 4px;
+    outline: none;
+}
+
+.slider-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    background: #333;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.slider-value {
+    width: 40px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+/* 부피 표시 */
+.volume-display {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+    color: #fff;
+}
+
+.volume-formula {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    opacity: 0.9;
+}
+
+.volume-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.volume-unit {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+/* 큐브 카운터 */
+.cube-counter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.cube-icon {
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 2px solid #fff;
+}
+
+/* 힌트 */
+.hint-text {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* 애니메이션 버튼 */
+.fill-btn {
+    background: #fff;
+    color: #11998e;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.fill-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.fill-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 발견 메시지 */
+.discovery-message {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 15px 25px;
+    color: #fff;
+    font-weight: 600;
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .three-container {
+        height: 260px;
+    }
+
+    .control-panel {
+        padding: 15px;
+    }
+
+    .volume-value {
+        font-size: 2rem;
+    }
+
+    .hook-question {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .slider-label {
+        width: 50px;
+        font-size: 0.9rem;
+    }
+
+    .slider-value {
+        width: 35px;
+        font-size: 1rem;
+    }
+
+    .three-container {
+        height: 220px;
+    }
+}

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- 배달이 - 택배기사 캐릭터 -->
+  <defs>
+    <linearGradient id="uniformGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#11998e"/>
+      <stop offset="100%" style="stop-color:#38ef7d"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 택배 상자 (손에 들고 있음) -->
+  <g transform="translate(120, 100)">
+    <path d="M0 20 L25 5 L60 20 L60 55 L25 70 L0 55 Z" fill="#8B5A2B"/>
+    <path d="M25 5 L60 20 L60 55 L25 40 Z" fill="#6B4423"/>
+    <path d="M0 20 L25 40 L25 70 L0 55 Z" fill="#A0522D"/>
+    <!-- 테이프 -->
+    <rect x="22" y="5" width="6" height="65" fill="#D2B48C"/>
+  </g>
+
+  <!-- 몸통 (유니폼) -->
+  <ellipse cx="85" cy="155" rx="40" ry="35" fill="url(#uniformGrad)"/>
+
+  <!-- 머리 -->
+  <circle cx="85" cy="80" r="40" fill="#FFDAB9"/>
+
+  <!-- 모자 -->
+  <ellipse cx="85" cy="55" rx="45" ry="15" fill="#11998e"/>
+  <rect x="50" y="40" width="70" height="15" fill="#11998e"/>
+  <rect x="60" y="35" width="50" height="10" fill="#0d7d74"/>
+
+  <!-- 눈 -->
+  <circle cx="70" cy="75" r="8" fill="#333"/>
+  <circle cx="100" cy="75" r="8" fill="#333"/>
+  <circle cx="73" cy="72" r="3" fill="#fff"/>
+  <circle cx="103" cy="72" r="3" fill="#fff"/>
+
+  <!-- 웃는 입 -->
+  <path d="M70 95 Q85 110 100 95" stroke="#333" stroke-width="3" fill="none"/>
+
+  <!-- 볼터치 -->
+  <ellipse cx="55" cy="85" rx="8" ry="5" fill="#FFB6C1" opacity="0.5"/>
+  <ellipse cx="115" cy="85" rx="8" ry="5" fill="#FFB6C1" opacity="0.5"/>
+
+  <!-- 이름표 -->
+  <rect x="65" y="130" rx="3" width="40" height="20" fill="#fff"/>
+  <text x="85" y="144" text-anchor="middle" fill="#11998e" font-size="9" font-weight="bold">배달이</text>
+
+  <!-- 왼손 -->
+  <ellipse cx="45" cy="140" rx="12" ry="10" fill="#FFDAB9"/>
+</svg>

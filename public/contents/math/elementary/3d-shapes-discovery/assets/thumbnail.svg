@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 배경 -->
+  <rect width="400" height="300" fill="url(#bgGrad)"/>
+
+  <!-- 정육면체 -->
+  <g transform="translate(80, 100)">
+    <path d="M0 30 L40 0 L80 30 L80 90 L40 120 L0 90 Z" fill="#E91E63"/>
+    <path d="M40 0 L80 30 L80 90 L40 60 Z" fill="#c2185b"/>
+    <path d="M0 30 L40 60 L40 120 L0 90 Z" fill="#f48fb1"/>
+  </g>
+
+  <!-- 구 -->
+  <circle cx="200" cy="150" r="45" fill="#4CAF50"/>
+  <ellipse cx="185" cy="135" rx="15" ry="10" fill="#81C784" opacity="0.6"/>
+
+  <!-- 원기둥 -->
+  <g transform="translate(260, 100)">
+    <ellipse cx="35" cy="100" rx="35" ry="12" fill="#1565C0"/>
+    <rect x="0" y="0" width="70" height="100" fill="#2196F3"/>
+    <ellipse cx="35" cy="0" rx="35" ry="12" fill="#64B5F6"/>
+  </g>
+
+  <!-- 제목 -->
+  <text x="200" y="50" text-anchor="middle" fill="#fff" font-size="28" font-weight="bold">입체도형 탐험대</text>
+  <text x="200" y="280" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="14">360도로 돌려보며 알아보자!</text>
+</svg>

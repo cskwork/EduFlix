@@ -1,0 +1,21 @@
+{
+  "id": "fractions-pizza",
+  "title": "피자로 배우는 분수",
+  "subject": "math",
+  "gradeLevel": "elementary",
+  "grade": 3,
+  "type": "game",
+  "language": "ko",
+  "description": "맛있는 피자를 통해 분수의 개념을 배워보세요! 피자 조각을 나누고 분수를 만들어 봅니다.",
+  "thumbnail": "",
+  "path": "contents/math/elementary/fractions-pizza/index.html",
+  "learningObjectives": [
+    "분수의 개념 이해하기",
+    "분모와 분자의 의미 알기",
+    "같은 크기의 조각으로 나누기"
+  ],
+  "prerequisites": [],
+  "estimatedTime": 10,
+  "createdAt": "2026-01-23T00:00:00.000Z",
+  "updatedAt": "2026-01-23T00:00:00.000Z"
+}

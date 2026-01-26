@@ -3,19 +3,10 @@
   "title": "도형 탐험가",
   "subject": "math",
   "gradeLevel": "elementary",
-  "grade": 5,
+  "grade": "elementary-5",
   "type": "exploration",
   "language": "ko",
   "description": "다양한 평면도형과 입체도형을 탐험하며 도형의 성질을 배워보세요!",
-  "thumbnail": "",
-  "path": "contents/math/elementary/shapes-explorer/index.html",
-  "learningObjectives": [
-    "평면도형의 종류와 특징 이해하기",
-    "입체도형의 구성 요소(면, 모서리, 꼭짓점) 알기",
-    "도형의 대칭과 회전 이해하기"
-  ],
-  "prerequisites": ["기본 도형 개념"],
-  "estimatedTime": 15,
-  "createdAt": "2026-01-23T00:00:00.000Z",
-  "updatedAt": "2026-01-23T00:00:00.000Z"
+  "thumbnail": "/contents/math/elementary/shapes-explorer/assets/thumbnail.svg",
+  "path": "/contents/math/elementary/shapes-explorer/index.html"
 }

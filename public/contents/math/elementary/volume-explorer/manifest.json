@@ -1,0 +1,12 @@
+{
+  "id": "volume-explorer",
+  "title": "부피 탐험가",
+  "subject": "math",
+  "gradeLevel": "elementary",
+  "grade": "elementary-5",
+  "type": "simulation",
+  "language": "ko",
+  "description": "단위 큐브로 상자를 채우면서 부피 = 가로 x 세로 x 높이를 발견해보세요!",
+  "thumbnail": "/contents/math/elementary/volume-explorer/assets/thumbnail.svg",
+  "path": "/contents/math/elementary/volume-explorer/index.html"
+}

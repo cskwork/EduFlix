@@ -1,0 +1,324 @@
+:root {
+    --primary-color: #4A90D9;
+    --secondary-color: #7ED321;
+    --accent-color: #F5A623;
+    --text-color: #333;
+    --text-light: #666;
+    --bg-color: #FAFAFA;
+    --card-bg: #FFFFFF;
+    --error-color: #D0021B;
+    --success-color: #4CAF50;
+    --shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
+    --shadow-md: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg-color);
+    background-image: url('../../backgrounds/bg-grid-paper-blue-textured-20260124.png');
+    background-size: cover;
+    color: var(--text-color);
+    min-height: 100vh;
+    overflow: hidden; /* Prevent scrolling during interactive scenes */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#app {
+    width: 100%;
+    max-width: 800px;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+/* Progress Bar */
+.progress-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: #eee;
+    z-index: 100;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+/* Scenes */
+.scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.scene.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+}
+
+.content-wrapper {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+h1, h2, h3 {
+    font-family: 'Jua', sans-serif; /* Friendly font for titles */
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+h1 { font-size: 2.5rem; color: var(--primary-color); }
+h2 { font-size: 2rem; color: var(--primary-color); }
+h3 { font-size: 1.5rem; }
+p { font-size: 1.1rem; color: var(--text-light); line-height: 1.6; }
+
+/* Buttons */
+button {
+    cursor: pointer;
+    font-family: 'Jua', sans-serif;
+    border: none;
+    outline: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 32px;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(74, 144, 217, 0.3);
+}
+
+.btn-primary:active {
+    transform: scale(0.95);
+}
+
+.btn-secondary {
+    background: white;
+    color: var(--text-light);
+    border: 2px solid #eee;
+    padding: 10px 24px;
+    font-size: 1rem;
+    border-radius: 50px;
+}
+
+/* 1. Hook Scene Animations */
+.field {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+
+#character {
+    transition: all 0.1s linear;
+}
+
+.path-line {
+    transition: stroke-dashoffset 2s linear;
+}
+
+/* 2. Anchor Scene */
+.grid-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.square-visual {
+    background: #FFF;
+    border: 2px solid var(--primary-color);
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.grid-cells div {
+    width: 33.33%;
+    height: 33.33%;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    float: left;
+}
+.grid-cells {
+    width: 100%;
+    height: 100%;
+}
+
+.side-label {
+    position: absolute;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+.side-label.left { left: -20px; top: 50%; transform: translateY(-50%); }
+.side-label.bottom { bottom: -25px; left: 50%; transform: translateX(-50%); }
+
+.area-text {
+    font-size: 1.5rem;
+}
+
+/* 3. Story Scene */
+.story-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: left;
+    width: 100%;
+}
+
+.character-img {
+    width: 80px;
+    height: 80px;
+}
+
+.bounce {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* 4. Core Scene */
+.puzzle-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 400px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    margin: 0 auto;
+    overflow: hidden; /* For flying blocks */
+}
+
+.grid-block {
+    position: absolute;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.block-a {
+    background-color: #FF7043;
+    border: 1px solid #D84315;
+}
+
+.block-b {
+    background-color: #42A5F5;
+    border: 1px solid #1565C0;
+}
+
+.feedback {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--secondary-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    z-index: 200;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hidden { display: none !important; }
+
+/* 5. Visualize */
+.visual-formula-container {
+    font-size: 2.5rem;
+    font-weight: bold;
+    font-family: 'Times New Roman', serif;
+    margin: 1rem 0;
+}
+.term-a { color: #FF7043; }
+.term-b { color: #42A5F5; }
+.term-c { color: #2196F3; }
+
+.main-diagram {
+    max-width: 300px;
+    height: auto;
+}
+
+/* 6. Quiz */
+.options {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+.opt-btn {
+    background: white;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 15px;
+}
+.opt-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* 7. Wrap */
+.trophy-anim {
+    width: 120px;
+    animation: spinPop 1s ease-out;
+}
+@keyframes spinPop {
+    0% { transform: scale(0) rotate(-180deg); }
+    70% { transform: scale(1.2) rotate(10deg); }
+    100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes popIn {
+    from { transform: translateX(-50%) scale(0.5); opacity: 0; }
+    to { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    h1 { font-size: 1.8rem; }
+    .story-card { flex-direction: column; text-align: center; }
+    .square-visual { width: 100px !important; height: 100px !important; }
+}

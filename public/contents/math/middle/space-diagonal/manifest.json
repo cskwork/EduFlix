@@ -1,0 +1,12 @@
+{
+  "id": "space-diagonal",
+  "title": "공간 대각선",
+  "subject": "math",
+  "gradeLevel": "middle",
+  "grade": "middle-3",
+  "type": "simulation",
+  "language": "ko",
+  "description": "피타고라스를 두 번 적용해서 공간 대각선의 길이를 구해보세요!",
+  "thumbnail": "/contents/math/middle/space-diagonal/assets/thumbnail.svg",
+  "path": "/contents/math/middle/space-diagonal/index.html"
+}

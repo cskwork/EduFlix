@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- 뉴턴 박사 - 물리학자 캐릭터 -->
+  <defs>
+    <linearGradient id="labCoatGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5f5f5"/>
+      <stop offset="100%" style="stop-color:#e0e0e0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 수식 배경 (장식) -->
+  <g opacity="0.1">
+    <text x="20" y="30" fill="#fff" font-size="12">F = ma</text>
+    <text x="140" y="50" fill="#fff" font-size="12">E = mc^2</text>
+    <text x="30" y="180" fill="#fff" font-size="12">v = v0 + at</text>
+  </g>
+
+  <!-- 몸통 (연구복) -->
+  <ellipse cx="100" cy="160" rx="50" ry="40" fill="url(#labCoatGrad)"/>
+
+  <!-- 연구복 디테일 -->
+  <line x1="100" y1="120" x2="100" y2="180" stroke="#ccc" stroke-width="2"/>
+  <circle cx="100" cy="135" r="4" fill="#667eea"/>
+  <circle cx="100" cy="150" r="4" fill="#667eea"/>
+  <circle cx="100" cy="165" r="4" fill="#667eea"/>
+
+  <!-- 머리 -->
+  <circle cx="100" cy="75" r="45" fill="#FFDAB9"/>
+
+  <!-- 백발 (아인슈타인 스타일) -->
+  <ellipse cx="60" cy="55" rx="20" ry="25" fill="#ddd"/>
+  <ellipse cx="140" cy="55" rx="20" ry="25" fill="#ddd"/>
+  <ellipse cx="100" cy="40" rx="35" ry="20" fill="#ddd"/>
+  <ellipse cx="70" cy="45" rx="15" ry="20" fill="#eee"/>
+  <ellipse cx="130" cy="45" rx="15" ry="20" fill="#eee"/>
+
+  <!-- 안경 -->
+  <circle cx="80" cy="75" r="15" fill="none" stroke="#333" stroke-width="3"/>
+  <circle cx="120" cy="75" r="15" fill="none" stroke="#333" stroke-width="3"/>
+  <line x1="95" y1="75" x2="105" y2="75" stroke="#333" stroke-width="3"/>
+  <line x1="55" y1="70" x2="65" y2="73" stroke="#333" stroke-width="2"/>
+  <line x1="135" y1="73" x2="145" y2="70" stroke="#333" stroke-width="2"/>
+
+  <!-- 눈 (호기심 가득) -->
+  <circle cx="80" cy="75" r="5" fill="#333"/>
+  <circle cx="120" cy="75" r="5" fill="#333"/>
+  <circle cx="82" cy="73" r="2" fill="#fff"/>
+  <circle cx="122" cy="73" r="2" fill="#fff"/>
+
+  <!-- 눈썹 (사색) -->
+  <path d="M70 62 Q80 58 90 62" stroke="#999" stroke-width="2" fill="none"/>
+  <path d="M110 62 Q120 58 130 62" stroke="#999" stroke-width="2" fill="none"/>
+
+  <!-- 콧수염 -->
+  <path d="M85 95 Q100 105 115 95" stroke="#999" stroke-width="3" fill="none"/>
+
+  <!-- 입 -->
+  <path d="M90 105 Q100 110 110 105" stroke="#333" stroke-width="2" fill="none"/>
+
+  <!-- 손에 든 화살표 (벡터) -->
+  <g transform="translate(140, 130)">
+    <line x1="0" y1="30" x2="30" y2="0" stroke="#E91E63" stroke-width="4"/>
+    <polygon points="30,0 20,5 25,10" fill="#E91E63"/>
+  </g>
+
+  <!-- 이름표 -->
+  <rect x="70" y="125" rx="3" width="60" height="18" fill="rgba(102,126,234,0.2)"/>
+  <text x="100" y="138" text-anchor="middle" fill="#667eea" font-size="9" font-weight="bold">Dr. Newton</text>
+</svg>

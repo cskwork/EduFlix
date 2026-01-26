@@ -1,4 +1,4 @@
-# English Content Generation Guide
+<!-- # English Content Generation Guide
 
 ## Subject Characteristics
 English learning focuses on **vocabulary**, **grammar**, and **communication**.
@@ -174,4 +174,4 @@ function checkAnswer(blank, answer) {
 3. Use American English spelling by default
 4. Include pronunciation guides where helpful
 5. Avoid cultural bias in examples
-6. Make content globally relatable
+6. Make content globally relatable -->

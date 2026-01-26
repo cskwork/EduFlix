@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vercel:*)",
+      "Skill(vercel-deploy)",
+      "mcp__context7__query-docs"
+    ]
+  }
+}

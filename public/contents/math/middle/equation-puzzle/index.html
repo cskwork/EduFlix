@@ -4,84 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>방정식 퍼즐</title>
-  <link rel="stylesheet" href="../../../common/style.css">
-  <style>
-    /* Puzzle Specific Styles */
-    .balance-container {
-      width: 100%;
-      height: 300px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      padding-bottom: 50px;
-    }
-    
-    .balance-scale {
-        width: 400px;
-        height: 200px;
-        position: relative;
-    }
-    
-    .balance-bar {
-        width: 300px;
-        height: 8px;
-        background: #ffd700;
-        position: absolute;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        transition: transform 0.5s;
-    }
-
-    .plate {
-        width: 80px;
-        height: 80px;
-        background: rgba(255,255,255,0.1);
-        border: 2px solid white;
-        position: absolute;
-        top: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #333;
-        font-size: 1.5rem;
-    }
-    .plate.left { left: 0; }
-    .plate.right { right: 0; }
-    
-    .value-box {
-        font-family: monospace;
-    }
-
-    .equation-display {
-        font-size: 2rem;
-        margin-bottom: 2rem;
-        font-family: monospace;
-        letter-spacing: 2px;
-    }
-    
-    .input-area {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    input[type="number"] {
-        padding: 10px;
-        font-size: 1.5rem;
-        width: 100px;
-        border-radius: 8px;
-        border: none;
-        text-align: center;
-    }
-
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="scene-container"></div>
-  <script src="../../../common/engine.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

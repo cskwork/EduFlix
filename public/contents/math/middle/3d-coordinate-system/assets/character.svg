@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- 하늘이 - 드론 파일럿 캐릭터 -->
+  <defs>
+    <linearGradient id="pilotGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#302b63"/>
+      <stop offset="100%" style="stop-color:#24243e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 드론 (위에 떠있음) -->
+  <g transform="translate(130, 30)">
+    <rect x="0" y="15" width="40" height="8" rx="2" fill="#333"/>
+    <rect x="15" y="10" width="10" height="18" rx="2" fill="#444"/>
+    <circle cx="5" cy="15" r="8" fill="#64B5F6" opacity="0.5"/>
+    <circle cx="35" cy="15" r="8" fill="#64B5F6" opacity="0.5"/>
+    <circle cx="20" cy="8" r="3" fill="#4CAF50"/>
+  </g>
+
+  <!-- 몸통 (조종사 점퍼) -->
+  <ellipse cx="100" cy="155" rx="45" ry="40" fill="url(#pilotGrad)"/>
+
+  <!-- 머리 -->
+  <circle cx="100" cy="85" r="42" fill="#FFDAB9"/>
+
+  <!-- 헤드셋 -->
+  <path d="M55 80 Q55 55 100 55 Q145 55 145 80" stroke="#333" stroke-width="8" fill="none"/>
+  <ellipse cx="55" cy="85" rx="10" ry="15" fill="#333"/>
+  <ellipse cx="145" cy="85" rx="10" ry="15" fill="#333"/>
+  <rect x="52" y="80" rx="3" width="16" height="10" fill="#4CAF50"/>
+  <rect x="132" y="80" rx="3" width="16" height="10" fill="#4CAF50"/>
+
+  <!-- 마이크 -->
+  <path d="M62 95 L80 105" stroke="#333" stroke-width="3"/>
+  <ellipse cx="82" cy="107" rx="6" ry="4" fill="#333"/>
+
+  <!-- 눈 (집중하는 표정) -->
+  <ellipse cx="85" cy="85" rx="7" ry="8" fill="#333"/>
+  <ellipse cx="115" cy="85" rx="7" ry="8" fill="#333"/>
+  <circle cx="87" cy="83" r="2" fill="#fff"/>
+  <circle cx="117" cy="83" r="2" fill="#fff"/>
+
+  <!-- 눈썹 (집중) -->
+  <path d="M75 72 L95 75" stroke="#333" stroke-width="3" stroke-linecap="round"/>
+  <path d="M105 75 L125 72" stroke="#333" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- 입 -->
+  <path d="M90 105 Q100 110 110 105" stroke="#333" stroke-width="2" fill="none"/>
+
+  <!-- 조종기 (손에) -->
+  <g transform="translate(60, 145)">
+    <rect x="0" y="0" rx="5" width="80" height="30" fill="#222"/>
+    <circle cx="20" cy="15" r="8" fill="#444"/>
+    <circle cx="60" cy="15" r="8" fill="#444"/>
+    <rect x="35" y="8" rx="2" width="10" height="14" fill="#1a1a1a"/>
+    <rect x="37" y="10" rx="1" width="6" height="10" fill="#4CAF50"/>
+  </g>
+
+  <!-- 이름표 -->
+  <rect x="75" y="125" rx="3" width="50" height="18" fill="rgba(255,255,255,0.1)"/>
+  <text x="100" y="138" text-anchor="middle" fill="#64B5F6" font-size="10" font-weight="bold">하늘이</text>
+</svg>
