@@ -18,4 +18,9 @@ describe('mobile.css', () => {
     expect(content).toMatch(/#app[\s\S]*height\s*:\s*auto\s*!important/i)
     expect(content).toMatch(/#app[\s\S]*overflow-y\s*:\s*auto\s*!important/i)
   })
+
+  it('짧은 콘텐츠는 중앙 정렬을 위해 scene 보조 요소를 추가한다', () => {
+    expect(content).toMatch(/\.scene::before[\s\S]*flex\s*:\s*1\s+0\s+auto/i)
+    expect(content).toMatch(/\.scene::after[\s\S]*flex\s*:\s*1\s+0\s+auto/i)
+  })
 })

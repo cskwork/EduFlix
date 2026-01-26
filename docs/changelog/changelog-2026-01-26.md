@@ -175,3 +175,11 @@ OrbitControls 호환성 문제 해결 (THREE.OrbitControls is not a constructor 
 ### 변경 사항
 - `src/views/ContentView.vue`: 768px-1199px 및 1200px+ 구간에서 `viewer-container` 고정 배치로 계산 오차 방지
 - `tests/unit/content-view-height.test.ts`: 중간/대형 화면 고정 배치 규칙 테스트 추가
+
+---
+
+## iframe 콘텐츠 중앙 정렬 보정 (짧은 콘텐츠만)
+
+### 변경 사항
+- `public/contents/common/mobile.css`: 짧은 콘텐츠는 중앙 정렬, 긴 콘텐츠는 상단부터 스크롤되도록 `scene` 보조 요소 추가
+- `tests/unit/mobile-css.test.ts`: `scene` 보조 요소 적용 테스트 추가

@@ -61,6 +61,29 @@ body {
   overflow-x: hidden;
 }
 
+/* ========================================
+   전역 씬 규칙 (모든 화면 크기)
+   ======================================== */
+/* 비활성 씬 완전히 숨김 - 모든 화면 크기에서 일관되게 적용 */
+.scene:not(.active) {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* 짧은 콘텐츠는 중앙, 긴 콘텐츠는 상단부터 스크롤 */
+.scene {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.scene::before,
+.scene::after {
+  content: "";
+  flex: 1 0 auto;
+}
+
 /* 모바일/태블릿: 전체 화면 커버 + 스크롤 가능 (!important로 콘텐츠 style.css 덮어쓰기) */
 @media (max-width: 1023px) {
   html {
@@ -110,7 +133,7 @@ body {
     height: auto !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     align-items: center !important;
     padding: var(--spacing-md);
   }
@@ -349,10 +372,19 @@ img, svg, video, canvas {
     height: 100% !important;
   }
 
+  body {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  #app,
   #scene-container {
     min-height: 100% !important;
-    height: 100vh;  /* dvh 미지원 브라우저 폴백 */
-    height: 100dvh !important;  /* 동적 뷰포트 높이 (브라우저 UI 고려) */
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
     max-width: var(--container-max);
     margin: 0 auto;
   }
@@ -368,9 +400,7 @@ img, svg, video, canvas {
   }
 
   .scene:not(.active) {
-    display: flex !important;
-    opacity: 0;
-    pointer-events: none;
+    display: none !important;  /* 비활성 씬 완전히 숨김 - 공간 차지 방지 */
   }
 
   .shape-display,
@@ -419,9 +449,11 @@ img, svg, video, canvas {
     align-items: center !important;
   }
 
+  #app,
   #scene-container {
     height: 100vh !important;
     max-width: 800px !important;
+    overflow: hidden !important;
   }
 
   .scene {
@@ -432,8 +464,15 @@ img, svg, video, canvas {
     height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     align-items: center !important;
+    overflow-y: auto !important;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .scene:not(.active) {
+    display: none !important;
   }
 }
 
