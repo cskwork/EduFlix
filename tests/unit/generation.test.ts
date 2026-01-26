@@ -208,6 +208,48 @@ describe('content store', () => {
       expect(store.selectedSubject).toBeNull()
       expect(store.selectedGradeLevel).toBeNull()
     })
+
+    it('검색어 필터가 적용된다', () => {
+      const store = useContentStore()
+
+      store.addContent({
+        id: 'math-1',
+        title: '분수의 기초',
+        subject: 'math',
+        gradeLevel: 'elementary',
+        grade: 'elementary-3',
+        type: 'game',
+        language: 'ko',
+        description: '피자를 나누며 분수를 배워요',
+        thumbnail: '',
+        path: '',
+        createdAt: new Date().toISOString(),
+        tags: ['분수', '피자'],
+      })
+
+      store.addContent({
+        id: 'science-1',
+        title: '세포 탐험',
+        subject: 'science',
+        gradeLevel: 'middle',
+        grade: 'middle-1',
+        type: 'simulation',
+        language: 'ko',
+        description: '현미경으로 세포를 관찰해요',
+        thumbnail: '',
+        path: '',
+        createdAt: new Date().toISOString(),
+        tags: ['세포', '현미경'],
+      })
+
+      store.setSearchQuery('피자')
+      expect(store.filteredContents).toHaveLength(1)
+      expect(store.filteredContents[0].id).toBe('math-1')
+
+      store.setSearchQuery('세포')
+      expect(store.filteredContents).toHaveLength(1)
+      expect(store.filteredContents[0].id).toBe('science-1')
+    })
   })
 
   describe('콘텐츠 추가', () => {

@@ -17,7 +17,10 @@
       "Bash(jq:*)",
       "Bash(vercel whoami:*)",
       "Bash(vercel rm:*)",
-      "Skill(commit)"
+      "Skill(commit)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(python3:*)"
     ]
   }
 }

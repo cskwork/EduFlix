@@ -11,7 +11,7 @@
 ## Commands
 ```bash
 bun install              # 의존성 설치
-bun run dev              # Vite dev (localhost:5173)
+bun run dev              # Vite dev (localhost:5173, Cloudflare Tunnel 지원)
 bun run dev:server       # Bun API 서버 (localhost:3001)
 bun run dev:all          # 둘 다 실행
 bun run build            # 프로덕션 빌드 (dist/)
@@ -20,6 +20,9 @@ bun run lint:fix         # ESLint + 자동 수정
 ./start.sh               # Unix/Linux 개발 서버 시작 (bun run dev:all)
 start.bat                # Windows 개발 서버 시작 (bun run dev:all)
 ```
+
+**Vite Configuration** (vite.config.ts):
+- `server.allowedHosts: ['eduflix.agentic-worker.store']` - Cloudflare Tunnel 도메인에서 dev 서버 접근 허용
 
 ## Environment
 ```bash
@@ -44,22 +47,25 @@ src/
 ├── services/api/       # claude.ts, gemini.ts
 ├── composables/        # useAIGeneration.ts, useDragScroll.ts
 ├── types/              # content.ts, generation.ts, knowledge-map.ts
-└── assets/styles/      # theme.css (Netflix dark theme)
+└── assets/styles/      # theme.css (Netflix dark theme), responsive.css (mobile-first UI styles)
 
 server/
 ├── index.ts            # Bun HTTP 서버 (CORS, 라우팅)
 └── routes/             # generate.ts, content.ts
 
 public/contents/        # 생성된 교육 콘텐츠
+├── common/             # 공유 리소스 (mobile.css, engine.js)
 ├── index.json          # 콘텐츠 카탈로그
 ├── knowledge-map.json  # 지식 그래프
 └── {subject}/{level}/{id}/  # math|science|english / elementary|middle|high
     ├── index.html
+    ├── style.css
+    ├── script.js
     └── manifest.json
 
 agents/content-generator/
 ├── templates/          # base.html, game.html, quiz.html...
-├── prompts/            # system.md, math.md, science.md, english.md (system-2.md 삭제됨)
+├── prompts/            # system.md, math.md (mobile-first 가이드라인 포함), science.md, english.md (system-2.md 삭제됨)
 └── styles/             # game-ui.css, animations.css, utils.css
 
 archive/                # 더 이상 제공하지 않는 콘텐츠
@@ -118,9 +124,22 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
 - **Backgrounds** (8+): `bg-geometric-shapes-*`, `bg-grid-paper-*`, `bg-math-formulas-overlay`, `bg-numbers-pattern`, `bg-science-*-pattern` (stored in `public/contents/backgrounds/`)
 - Naming convention: `{type}-{description}-{YYYYMMDD}.{ext}` (allows versioning and search)
 
+**Mobile-First Responsive Framework**:
+- **공유 mobile.css**: `public/contents/common/mobile.css` (모든 콘텐츠에 로드)
+  - Mobile-first 접근: 기본=모바일(0-575px), min-width 미디어 쿼리로 프로그레시브 강화
+  - CSS 커스텀 프로퍼티: clamp() 기반 유동 폰트/간격 (xs~3xl, spacing xs~xl)
+  - 터치 타겟 최소 크기: 44px (iOS HIG 준수)
+  - 반응형 브레이크포인트: 0-575px (mobile), 576px+ (sm), 768px+ (md), 992px+ (lg), 1200px+ (xl)
+  - 모바일 오버라이드: html/body height 100%, overflow-y auto, scene position relative
+- **로드 순서**: 각 콘텐츠 index.html에서 `<link rel="stylesheet" href="style.css">` → `<link rel="stylesheet" href="../../../common/mobile.css">` (style.css 우선, mobile.css 오버라이드)
+- **responsive.css**: src/assets/styles/responsive.css (메인 UI 반응형)
+  - 터치 장치 최적화: @media (hover: none) 호버 효과 제거, 스크롤바 숨김
+  - 브레이크포인트: <480px (모바일 세로), 480-767px (모바일 가로), 768-1023px (태블릿), 1024px+ (데스크톱)
+  - 모바일 뷰어: viewer-container position fixed, dvh 폴백
+
 **Three.js Content Pattern**:
 - 3D 모듈: Three.js + OrbitControls CDN 링크 (script.js에서 `engine.js` 활용)
-- 공유 리소스: `public/contents/common/engine.js` (기본 엔진), `mobile.css` (모바일 반응형 스타일: 폰트 크기, 간격, 터치 타겟 CSS 커스텀 프로퍼티 정의)
+- 공유 리소스: `public/contents/common/engine.js` (기본 엔진), `mobile.css` (모바일 반응형 스타일)
 - 각 콘텐츠 로드: 자체 `style.css` (콘텐츠별 스타일) → `../../../common/mobile.css` (모바일 반응형 오버라이드)
 - Three.js 초기화: Scene, PerspectiveCamera, WebGLRenderer 기본 설정
 
@@ -139,8 +158,8 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
   - `.hook-subtext`: color #666, font-size 1.1rem, margin-top 0.5rem
   - `.hook-visual svg`: width 100%, height auto (반응형)
 - **Glassmorphism 패턴**: 패널/컨테이너에 `backdrop-filter: blur()` + `border: 1px solid var(--glass-border)`, `background: var(--glass-bg)`
-- **CSS 로드 순서**: 각 콘텐츠 `index.html`에서 `<link rel="stylesheet" href="style.css">` 다음 `<link rel="stylesheet" href="../../../common/mobile.css">` 로드 (style.css 우선 적용 후 mobile.css로 모바일 반응형 오버라이드)
-- **반응형 브레이크포인트**: `mobile.css`에서 정의 - min-width 기반 프로그레시브 강화 (기본: 0-575px mobile, 576px+ sm, 768px+ md, 992px+ lg, 1200px+ xl)
+- **CSS 로드 순서**: 각 콘텐츠 `index.html`에서 `<link rel="stylesheet" href="style.css">` 다음 `<link rel="stylesheet" href="../../../common/mobile.css">` 로드
+- **반응형 브레이크포인트**: mobile.css (콘텐츠) 0-575px/576px+/768px+/992px+/1200px+, responsive.css (UI) <480px/480-767px/768-1023px/1024px+
 - **애니메이션 정의**: `@keyframes fadeIn`, `bounce`, `bounceIn`, `sceneEnter` 기본 제공 (필요시 추가)
 - **인터랙티브 요소**: `.control-point`, `.slider-input`, `.coin` (hover/active 상태 + 필터 효과)
 - **3D 콘텐츠 패턴**: `.three-container` (고정 크기 + border-radius + shadow), `.control-panel` (glassmorphic), `.size-controls`, `.step-buttons`
@@ -155,8 +174,11 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
   - 상태 관리: `isDragging`, `startDrag`, `endDrag`, `preventClickIfDragged`
   - 스타일링: `.row-content.is-dragging` → `cursor: grabbing`, `scroll-snap-type: none` (모바일 제외)
   - 접근성: `@media (hover: none)` 터치 장치에서 스크롤 버튼 숨김
+- **ContentCard**: iframe 프리뷰 + 반응형 카드 (width 140px-220px 브레이크포인트별)
+  - iframe sandbox: IFRAME_SANDBOX_ATTRS (allow-scripts allow-same-origin allow-forms allow-popups allow-modals)
+  - 모바일: card-description 숨김, 배지 축소
 - **히어로 섹션**: 텍스트 정렬 (`white-space: nowrap`) - 단일 행 오버플로우 방지
-- **반응형 스타일**: `.scroll-btn` CSS 클래스명 통일 (responsive.css에서 사용)
+- **반응형 스타일**: responsive.css에서 `.scroll-btn` 표시/숨김 제어 (모바일에서 숨김)
 
 **iframe Security** (loader.ts):
 - `IFRAME_SANDBOX_ATTRS` = 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals'
@@ -182,6 +204,11 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
 - `success: true` + `manifest` + `contentId` → 정상 (콘텐츠 스토어에 추가)
 - `success: true` + `manifest` + 누락된 `contentId` + `warning` → 소프트 워닝 (히스토리 기록, 카탈로그 제외, UI 경고)
 - `success: false` → 에러 (UI에 에러 메시지 표시)
+
+**Content Generation Prompts** (agents/content-generator/prompts/):
+- **math.md**: 수학 콘텐츠 생성 가이드라인 (7-scene 구조, 발견 기반 학습, 스토리텔링)
+  - Mobile-first 스타일링 요구사항 포함: clamp() 폰트, 터치 타겟 44px, 반응형 브레이크포인트
+  - 모든 생성 콘텐츠는 mobile.css 링크 포함 필수
 
 ## Deployment
 

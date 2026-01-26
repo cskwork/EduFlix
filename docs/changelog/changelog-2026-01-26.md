@@ -68,6 +68,25 @@ OrbitControls 호환성 문제 해결 (THREE.OrbitControls is not a constructor 
 
 ---
 
+## iframe 콘텐츠 스크롤 개선
+
+### 변경 사항
+- `public/contents/common/mobile.css`: `#app` 높이를 콘텐츠에 맞게 확장하고 세로 스크롤 허용, body flex 정렬 해제
+- `src/components/viewer/ContentViewer.vue`: iframe `scrolling="auto"` 속성 추가
+
+긴 콘텐츠가 iframe 안에서 잘리지 않고 스크롤 가능하도록 처리
+
+---
+
+## linear-slope 스토리 텍스트 레이아웃 수정
+
+### 변경 사항
+- `public/contents/common/mobile.css`: 모바일/태블릿 전용 레이아웃 오버라이드 범위를 `max-width: 1023px`로 제한
+
+데스크톱 환경에서 스토리 텍스트가 메인 콘텐츠 영역 밖으로 밀리는 현상을 방지
+
+---
+
 ## 메인 검색 기능 추가
 
 ### 변경 사항

@@ -1,20 +1,39 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useContentStore } from '../stores/content'
 import ContentRow from '../components/home/ContentRow.vue'
 import LoadingSpinner from '../components/common/LoadingSpinner.vue'
 import ErrorMessage from '../components/common/ErrorMessage.vue'
 import EmptyState from '../components/common/EmptyState.vue'
+import type { Subject } from '../types/content'
 
 // 콘텐츠 스토어 사용
 const contentStore = useContentStore()
 const router = useRouter()
+const route = useRoute()
 
 // 컴포넌트 마운트 시 콘텐츠 로드
 onMounted(() => {
   contentStore.loadContents()
 })
+
+const subjectOptions: Subject[] = ['math', 'science', 'english']
+
+function applyRouteFilters() {
+  const subjectParam = route.query.subject
+  const subject =
+    typeof subjectParam === 'string' && subjectOptions.includes(subjectParam as Subject)
+      ? (subjectParam as Subject)
+      : null
+  contentStore.setSubjectFilter(subject)
+
+  const queryParam = route.query.q
+  const query = typeof queryParam === 'string' ? queryParam : ''
+  contentStore.setSearchQuery(query)
+}
+
+watch(() => route.query, applyRouteFilters, { immediate: true, deep: true })
 
 // 콘텐츠 존재 여부
 const hasContents = computed(() => contentStore.contents.length > 0)

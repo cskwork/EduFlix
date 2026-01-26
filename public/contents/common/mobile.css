@@ -61,39 +61,63 @@ body {
   overflow-x: hidden;
 }
 
-/* 모바일 기본: 전체 화면 커버 + 스크롤 가능 (!important로 콘텐츠 style.css 덮어쓰기) */
-html {
-  height: 100% !important;
-  overflow: auto !important;
-}
+/* 모바일/태블릿: 전체 화면 커버 + 스크롤 가능 (!important로 콘텐츠 style.css 덮어쓰기) */
+@media (max-width: 1023px) {
+  html {
+    height: 100% !important;
+    overflow: auto !important;
+  }
 
-body {
-  /* body가 뷰포트를 자연스럽게 채우도록 설정 */
-  position: relative !important;
-  width: 100% !important;
-  min-height: 100% !important;
-  height: 100% !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  /* 배경이 전체 화면을 커버 */
-  background-size: cover !important;
-  background-position: center !important;
-}
+  body {
+    /* body가 뷰포트를 자연스럽게 채우도록 설정 */
+    position: relative !important;
+    width: 100% !important;
+    min-height: 100% !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    /* flex 유지하되 수직 상단 정렬 */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    /* 배경이 전체 화면을 커버 */
+    background-size: cover !important;
+    background-position: center !important;
+  }
 
-#scene-container {
-  min-height: 100% !important;
-  height: 100% !important;
-}
+  /* 앱 컨테이너는 콘텐츠 높이에 맞게 확장 */
+  #app {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    margin: 0 auto !important;
+  }
 
-.scene {
-  position: relative !important;
-  min-height: 100% !important;
-  height: 100% !important;
-  padding: var(--spacing-md);
-}
+  #scene-container {
+    width: 100% !important;
+    max-width: 800px !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    height: auto !important;
+  }
 
-.scene:not(.active) {
-  display: none !important;
+  .scene {
+    position: relative !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: var(--spacing-md);
+  }
+
+  .scene:not(.active) {
+    display: none !important;
+  }
 }
 
 /* ========================================
@@ -301,30 +325,45 @@ img, svg, video, canvas {
   .story-character-image {
     max-width: 160px;
   }
+
+  /* 576px+ dvh 처리 */
+  #scene-container {
+    min-height: 100% !important;
+    height: 100vh;
+    height: 100dvh !important;
+  }
+
+  .scene {
+    min-height: 100% !important;
+    height: auto !important;
+  }
 }
 
 /* ========================================
    Tablets (768px+)
    ======================================== */
 @media screen and (min-width: 768px) {
-  /* 태블릿+: 고정 높이 레이아웃 복원 (!important로 일관성 유지) */
+  /* 태블릿+: 스크롤 허용 + dvh로 브라우저 UI 고려 */
   html, body {
-    overflow: hidden !important;
+    overflow: auto !important;
     height: 100% !important;
   }
 
   #scene-container {
-    height: 100vh !important;
+    min-height: 100% !important;
+    height: 100vh;  /* dvh 미지원 브라우저 폴백 */
+    height: 100dvh !important;  /* 동적 뷰포트 높이 (브라우저 UI 고려) */
     max-width: var(--container-max);
     margin: 0 auto;
   }
 
   .scene {
-    position: absolute !important;
+    position: relative !important;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100% !important;
+    min-height: 100% !important;
+    height: auto !important;
     padding: var(--spacing-xl);
   }
 
@@ -366,6 +405,39 @@ img, svg, video, canvas {
 }
 
 /* ========================================
+   Desktops (1024px+): 원래 style.css 보존
+   ======================================== */
+@media screen and (min-width: 1024px) {
+  html, body {
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  body {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  #scene-container {
+    height: 100vh !important;
+    max-width: 800px !important;
+  }
+
+  .scene {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+}
+
+/* ========================================
    Desktops (1200px+)
    ======================================== */
 @media screen and (min-width: 1200px) {
@@ -384,6 +456,13 @@ img, svg, video, canvas {
     flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
+    min-height: 100% !important;
+    height: auto !important;
+  }
+
+  #scene-container {
+    height: 100vh;
+    height: 100dvh !important;
   }
 
   .scene-title,
@@ -448,5 +527,37 @@ img, svg, video, canvas {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========================================
+   모바일 네비게이션 버튼 고정
+   ======================================== */
+@media screen and (max-width: 767px) {
+  .nav-buttons {
+    position: sticky !important;
+    bottom: 0 !important;
+    margin-top: auto !important;
+    padding: var(--spacing-md) !important;
+    background: linear-gradient(to top, rgba(255,255,255,0.98) 80%, transparent) !important;
+    z-index: 100 !important;
+  }
+
+  .scene.active {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .scene-content {
+    flex: 1 !important;
+    min-height: 0 !important;
+  }
+}
+
+/* 태블릿 이상: 기존 방식 유지 */
+@media screen and (min-width: 768px) {
+  .nav-buttons {
+    position: static !important;
+    background: transparent !important;
   }
 }

@@ -105,6 +105,7 @@ defineExpose({
       :title="title"
       :sandbox="sandboxAttrs"
       :allow="allowAttrs"
+      scrolling="auto"
       class="viewer-iframe"
       @load="handleLoad"
       @error="handleError"

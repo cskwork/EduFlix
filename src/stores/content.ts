@@ -17,6 +17,7 @@ export const useContentStore = defineStore('content', () => {
   const error = ref<string | null>(null)
   const selectedSubject = ref<Subject | null>(null)
   const selectedGradeLevel = ref<GradeLevel | null>(null)
+  const searchQuery = ref('')
 
   // 계산된 속성: 필터링된 콘텐츠
   const filteredContents = computed(() => {
@@ -28,6 +29,11 @@ export const useContentStore = defineStore('content', () => {
 
     if (selectedGradeLevel.value) {
       result = result.filter((c) => c.gradeLevel === selectedGradeLevel.value)
+    }
+
+    const query = normalizeSearchText(searchQuery.value)
+    if (query) {
+      result = result.filter((content) => matchesSearchQuery(content, query))
     }
 
     return result
@@ -109,6 +115,10 @@ export const useContentStore = defineStore('content', () => {
     selectedGradeLevel.value = gradeLevel
   }
 
+  function setSearchQuery(query: string) {
+    searchQuery.value = query
+  }
+
   function clearFilters() {
     selectedSubject.value = null
     selectedGradeLevel.value = null
@@ -126,6 +136,7 @@ export const useContentStore = defineStore('content', () => {
     error,
     selectedSubject,
     selectedGradeLevel,
+    searchQuery,
     // 계산된 속성
     filteredContents,
     contentCards,
@@ -135,10 +146,27 @@ export const useContentStore = defineStore('content', () => {
     loadContents,
     setSubjectFilter,
     setGradeLevelFilter,
+    setSearchQuery,
     clearFilters,
     addContent,
   }
 })
+
+function normalizeSearchText(value: string) {
+  return value.trim().toLowerCase()
+}
+
+function matchesSearchQuery(content: ContentManifest, query: string) {
+  const parts = [
+    content.title,
+    content.description ?? '',
+    content.subject ?? '',
+    SUBJECT_LABELS[content.subject] ?? '',
+    (content.tags ?? []).join(' '),
+  ]
+
+  return normalizeSearchText(parts.join(' ')).includes(query)
+}
 
 // 개발용 더미 데이터
 function getDummyContents(): ContentManifest[] {

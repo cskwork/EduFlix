@@ -38,12 +38,24 @@ export function useKeyboardNavigation(options: KeyboardNavigationOptions = {}) {
           break
 
         case '/': {
-          // /: 검색 포커스 (미구현 - placeholder)
+          // /: 검색 포커스
           event.preventDefault()
           const searchButton = document.querySelector(
             '.icon-button[aria-label="검색"]'
           ) as HTMLElement
-          searchButton?.focus()
+          const searchInput = document.querySelector('.search-input') as
+            | { focus?: () => void; offsetWidth?: number }
+            | null
+          if (searchInput?.focus) {
+            if (searchInput.offsetWidth === 0) {
+              searchButton?.click()
+            }
+            setTimeout(() => {
+              searchInput.focus?.()
+            }, 0)
+          } else {
+            searchButton?.focus()
+          }
           break
         }
 
