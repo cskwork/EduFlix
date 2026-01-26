@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>분수의 나눗셈: 똑같이 나누기</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Jua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- 1. Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-wrapper">
+                <div class="question-box">
+                    <h1 class="main-title">3/4 피자를 2명이 나누면?</h1>
+                    <p class="sub-text">각자 얼마나 먹을 수 있을까요?</p>
+                </div>
+                <div class="visual-area">
+                    <div id="hook-3d-container" class="model-container">
+                        <!-- Three.js 3D 피자 모델 렌더링 영역 -->
+                    </div>
+                    <div class="hook-hint">
+                        <img src="../../icons/icon-help-question-cute-20260124.svg" alt="힌트" class="hint-icon bounce">
+                        <span>피자 3/4가 남았어요!</span>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button class="btn-primary" onclick="ContentApp.nextScene()">알아보러 가기</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="anchor-content">
+                    <img src="../../icons/icon-arithmetic-basic-color-20260124.svg" alt="수학" class="section-icon">
+                    <h2>분수의 곱셈, 기억나요?</h2>
+                    <div class="formula-review">
+                        <div class="formula-card">
+                            <div class="formula-text">
+                                <span class="frac"><span class="num">a</span><span class="denom">b</span></span>
+                                <span class="operator">x</span>
+                                <span class="frac"><span class="num">c</span><span class="denom">d</span></span>
+                                <span class="operator">=</span>
+                                <span class="frac"><span class="num">a x c</span><span class="denom">b x d</span></span>
+                            </div>
+                        </div>
+                        <p class="example-text">예: <span class="highlight">2/3 x 1/4 = 2/12 = 1/6</span></p>
+                    </div>
+                    <div class="anchor-visual">
+                        <img src="../../diagrams/diagram-fraction-pie-thirds-20260124.svg" alt="분수 파이" class="diagram-img">
+                    </div>
+                    <p class="intro-text">이제 나눗셈을 배워볼까요?</p>
+                    <button class="btn-primary fade-in-delay" onclick="ContentApp.nextScene()">좋아요!</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="story-card">
+                    <div class="character-area">
+                        <div class="character-badge">유튜버</div>
+                        <div class="character-avatar">
+                            <svg viewBox="0 0 80 80" class="chef-avatar">
+                                <circle cx="40" cy="40" r="38" fill="#FFE0B2"/>
+                                <circle cx="30" cy="35" r="4" fill="#333"/>
+                                <circle cx="50" cy="35" r="4" fill="#333"/>
+                                <path d="M 30 50 Q 40 60 50 50" stroke="#333" stroke-width="3" fill="none"/>
+                                <ellipse cx="40" cy="10" rx="30" ry="10" fill="#FFF" stroke="#333" stroke-width="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="dialogue-box">
+                        <h3>쿡왕 민수의 먹방 촬영</h3>
+                        <p id="typewriter-text"></p>
+                    </div>
+                </div>
+                <div class="story-visual">
+                    <div class="pizza-situation">
+                        <svg viewBox="0 0 200 200" class="pizza-svg">
+                            <!-- 피자 전체 (3/4만 남음) -->
+                            <circle cx="100" cy="100" r="80" fill="#FFCC80" stroke="#E65100" stroke-width="3"/>
+                            <!-- 토핑 -->
+                            <circle cx="80" cy="70" r="8" fill="#D32F2F"/>
+                            <circle cx="120" cy="90" r="8" fill="#D32F2F"/>
+                            <circle cx="90" cy="120" r="8" fill="#D32F2F"/>
+                            <circle cx="130" cy="130" r="7" fill="#388E3C"/>
+                            <circle cx="70" cy="110" r="7" fill="#388E3C"/>
+                            <!-- 먹은 조각 (1/4) -->
+                            <path d="M 100 100 L 100 20 A 80 80 0 0 1 180 100 Z" fill="#FAFAFA" stroke="#ddd" stroke-width="2" stroke-dasharray="5"/>
+                            <text x="140" y="60" fill="#999" font-size="12">먹음</text>
+                            <!-- 나눔선 -->
+                            <line x1="100" y1="100" x2="100" y2="20" stroke="#333" stroke-width="1" stroke-dasharray="3"/>
+                            <line x1="100" y1="100" x2="180" y2="100" stroke="#333" stroke-width="1" stroke-dasharray="3"/>
+                            <line x1="100" y1="100" x2="20" y2="100" stroke="#333" stroke-width="1" stroke-dasharray="3"/>
+                            <line x1="100" y1="100" x2="100" y2="180" stroke="#333" stroke-width="1" stroke-dasharray="3"/>
+                        </svg>
+                        <div class="situation-label">
+                            <span class="fraction-big">3/4</span> 피자
+                            <span class="arrow-icon">-></span>
+                            <span class="person-count">2명</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="ContentApp.nextScene()">직접 나눠보기</button>
+            </div>
+        </section>
+
+        <!-- 4. Core Scene (Drag Interaction) -->
+        <section id="core-scene" class="scene">
+            <div class="content-wrapper">
+                <h2>피자를 나눠 담아보세요!</h2>
+                <p class="instruction">피자 조각을 드래그해서 접시에 나눠 담으세요</p>
+
+                <div class="interaction-area" id="interaction-area">
+                    <!-- 피자 영역 -->
+                    <div class="pizza-source" id="pizza-source">
+                        <svg viewBox="0 0 240 240" class="pizza-interactive" id="pizza-svg">
+                            <!-- 피자 베이스 -->
+                            <circle cx="120" cy="120" r="100" fill="#FFCC80" stroke="#E65100" stroke-width="4"/>
+                            <!-- 먹은 조각 배경 -->
+                            <path d="M 120 120 L 120 20 A 100 100 0 0 1 220 120 Z" fill="#f5f5f5" stroke="#ddd" stroke-width="2"/>
+                            <!-- 드래그 가능한 조각들 (3개) -->
+                            <g id="slice-1" class="pizza-slice draggable" data-slice="1">
+                                <path d="M 120 120 L 20 120 A 100 100 0 0 0 120 220 Z" fill="#FFB74D" stroke="#E65100" stroke-width="2"/>
+                                <circle cx="70" cy="150" r="10" fill="#D32F2F"/>
+                                <circle cx="90" cy="180" r="8" fill="#388E3C"/>
+                            </g>
+                            <g id="slice-2" class="pizza-slice draggable" data-slice="2">
+                                <path d="M 120 120 L 120 220 A 100 100 0 0 0 220 120 Z" fill="#FFB74D" stroke="#E65100" stroke-width="2"/>
+                                <circle cx="170" cy="150" r="10" fill="#D32F2F"/>
+                                <circle cx="150" cy="180" r="8" fill="#388E3C"/>
+                            </g>
+                            <g id="slice-3" class="pizza-slice draggable" data-slice="3">
+                                <path d="M 120 120 L 20 120 A 100 100 0 0 1 120 20 Z" fill="#FFB74D" stroke="#E65100" stroke-width="2"/>
+                                <circle cx="70" cy="70" r="10" fill="#D32F2F"/>
+                                <circle cx="90" cy="50" r="8" fill="#388E3C"/>
+                            </g>
+                        </svg>
+                        <div class="source-label">3/4 피자</div>
+                    </div>
+
+                    <!-- 접시 영역 -->
+                    <div class="plates-container">
+                        <div class="plate" id="plate-1" data-plate="1">
+                            <div class="plate-visual">
+                                <svg viewBox="0 0 120 120" class="plate-svg">
+                                    <ellipse cx="60" cy="60" rx="55" ry="50" fill="#FFF" stroke="#ddd" stroke-width="3"/>
+                                    <ellipse cx="60" cy="60" rx="45" ry="40" fill="none" stroke="#eee" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <div class="plate-slices" id="plate-1-slices"></div>
+                            <div class="plate-label">친구 1</div>
+                            <div class="plate-fraction" id="plate-1-fraction">0/4</div>
+                        </div>
+                        <div class="plate" id="plate-2" data-plate="2">
+                            <div class="plate-visual">
+                                <svg viewBox="0 0 120 120" class="plate-svg">
+                                    <ellipse cx="60" cy="60" rx="55" ry="50" fill="#FFF" stroke="#ddd" stroke-width="3"/>
+                                    <ellipse cx="60" cy="60" rx="45" ry="40" fill="none" stroke="#eee" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <div class="plate-slices" id="plate-2-slices"></div>
+                            <div class="plate-label">친구 2</div>
+                            <div class="plate-fraction" id="plate-2-fraction">0/4</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="feedback-area" class="feedback-area hidden">
+                    <div class="feedback-content">
+                        <img src="../../icons/icon-star-reward-cute-20260124.svg" alt="별" class="feedback-icon">
+                        <p id="feedback-text"></p>
+                    </div>
+                </div>
+
+                <div class="core-buttons">
+                    <button id="reset-btn" class="btn-secondary" onclick="ContentApp.resetCore()">다시 하기</button>
+                    <button id="core-next-btn" class="btn-primary hidden" onclick="ContentApp.nextScene()">원리 확인하기</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-wrapper">
+                <h2>분수 나누기의 비밀</h2>
+                <div class="visualize-content">
+                    <div class="formula-reveal">
+                        <div class="formula-step step-1">
+                            <span class="frac big"><span class="num">a</span><span class="denom">b</span></span>
+                            <span class="operator big">나누기</span>
+                            <span class="whole big">c</span>
+                        </div>
+                        <div class="arrow-down">
+                            <svg viewBox="0 0 24 24" width="40" height="40">
+                                <path d="M12 4 L12 20 M6 14 L12 20 L18 14" stroke="var(--primary-color)" stroke-width="3" fill="none"/>
+                            </svg>
+                        </div>
+                        <div class="formula-step step-2">
+                            <span class="frac big"><span class="num">a</span><span class="denom">b</span></span>
+                            <span class="operator big">x</span>
+                            <span class="frac big"><span class="num">1</span><span class="denom">c</span></span>
+                        </div>
+                        <div class="arrow-down">
+                            <svg viewBox="0 0 24 24" width="40" height="40">
+                                <path d="M12 4 L12 20 M6 14 L12 20 L18 14" stroke="var(--primary-color)" stroke-width="3" fill="none"/>
+                            </svg>
+                        </div>
+                        <div class="formula-step step-3 highlight-box">
+                            <span class="frac big"><span class="num">a</span><span class="denom">b x c</span></span>
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <h3>아까 나눈 피자로 확인해볼까요?</h3>
+                        <div class="example-calculation">
+                            <div class="calc-row">
+                                <span class="frac"><span class="num">3</span><span class="denom">4</span></span>
+                                <span class="operator">나누기</span>
+                                <span class="whole">2</span>
+                            </div>
+                            <div class="calc-row">
+                                <span class="operator">=</span>
+                                <span class="frac"><span class="num">3</span><span class="denom">4</span></span>
+                                <span class="operator">x</span>
+                                <span class="frac"><span class="num">1</span><span class="denom">2</span></span>
+                            </div>
+                            <div class="calc-row result">
+                                <span class="operator">=</span>
+                                <span class="frac"><span class="num">3</span><span class="denom">8</span></span>
+                            </div>
+                        </div>
+                        <p class="result-text">각자 <strong>3/8</strong> 피자씩 먹을 수 있어요!</p>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="ContentApp.nextScene()">문제 풀어보기</button>
+            </div>
+        </section>
+
+        <!-- 6. Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="quiz-header">
+                    <span class="badge">퀴즈</span>
+                    <h3>2/3 케이크를 4명이 나누면?</h3>
+                </div>
+                <div class="quiz-visual">
+                    <svg viewBox="0 0 200 150" class="cake-svg">
+                        <!-- 케이크 -->
+                        <ellipse cx="100" cy="120" rx="80" ry="20" fill="#8D6E63"/>
+                        <rect x="20" y="60" width="160" height="60" fill="#FFCC80"/>
+                        <ellipse cx="100" cy="60" rx="80" ry="20" fill="#FFE0B2"/>
+                        <!-- 초코 장식 -->
+                        <rect x="30" y="70" width="140" height="10" fill="#5D4037"/>
+                        <rect x="30" y="100" width="140" height="10" fill="#5D4037"/>
+                        <!-- 2/3 표시 -->
+                        <line x1="100" y1="40" x2="100" y2="140" stroke="#333" stroke-width="2" stroke-dasharray="5"/>
+                        <line x1="155" y1="40" x2="155" y2="140" stroke="#333" stroke-width="2" stroke-dasharray="5"/>
+                        <text x="50" y="95" fill="#333" font-size="14" font-weight="bold">2/3</text>
+                        <path d="M 100 60 L 100 120 L 180 120 L 180 60 A 80 20 0 0 0 100 60" fill="rgba(0,0,0,0.1)"/>
+                    </svg>
+                    <div class="quiz-equation">
+                        <span class="frac"><span class="num">2</span><span class="denom">3</span></span>
+                        <span class="operator">나누기</span>
+                        <span class="whole">4</span>
+                        <span class="operator">=</span>
+                        <span class="answer-box">?</span>
+                    </div>
+                </div>
+                <div class="quiz-interaction">
+                    <p class="quiz-hint">힌트: 2/3 x 1/4 를 계산해보세요!</p>
+                    <div class="options">
+                        <button class="opt-btn" onclick="ContentApp.checkAnswer('2/7')">2/7</button>
+                        <button class="opt-btn" onclick="ContentApp.checkAnswer('2/12')">2/12</button>
+                        <button class="opt-btn" onclick="ContentApp.checkAnswer('8/3')">8/3</button>
+                    </div>
+                </div>
+                <div id="quiz-feedback" class="quiz-feedback hidden"></div>
+            </div>
+        </section>
+
+        <!-- 7. Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="reward-area">
+                    <img src="../../icons/icon-trophy-achievement-cute-20260124.svg" alt="트로피" class="trophy-anim">
+                    <h2>축하합니다!</h2>
+                </div>
+                <div class="summary-card">
+                    <h3>오늘 배운 내용</h3>
+                    <ul>
+                        <li>분수를 자연수로 나누는 방법을 배웠어요.</li>
+                        <li><strong>a/b 나누기 c = a/b x 1/c = a/(b x c)</strong></li>
+                        <li>피자와 케이크를 공평하게 나눌 수 있어요!</li>
+                    </ul>
+                </div>
+                <div class="star-rating">
+                    <img src="../../icons/icon-star-reward-cute-20260124.svg" alt="별" class="star filled">
+                    <img src="../../icons/icon-star-reward-cute-20260124.svg" alt="별" class="star filled">
+                    <img src="../../icons/icon-star-reward-cute-20260124.svg" alt="별" class="star filled">
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-secondary" onclick="location.reload()">다시 하기</button>
+                    <button class="btn-primary">다음 주제로</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

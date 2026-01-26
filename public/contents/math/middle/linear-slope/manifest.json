@@ -1,0 +1,12 @@
+{
+  "id": "linear-slope",
+  "title": "일차함수와 기울기",
+  "subject": "math",
+  "gradeLevel": "middle",
+  "grade": "middle-2",
+  "type": "simulation",
+  "language": "ko",
+  "description": "스키장의 슬로프처럼 직선의 기울어진 정도를 숫자로 나타내볼까요?",
+  "thumbnail": "/contents/math/middle/linear-slope/assets/thumbnail.svg",
+  "path": "/contents/math/middle/linear-slope/index.html"
+}

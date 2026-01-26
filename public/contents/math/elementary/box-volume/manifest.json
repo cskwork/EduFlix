@@ -1,0 +1,12 @@
+{
+  "id": "box-volume",
+  "title": "직육면체의 부피: 상자 속 비밀",
+  "subject": "math",
+  "gradeLevel": "elementary",
+  "grade": "elementary-5",
+  "type": "simulation",
+  "language": "ko",
+  "description": "단위 큐브를 쌓아 직육면체의 부피 공식(가로x세로x높이)을 직관적으로 이해하는 인터랙티브 콘텐츠",
+  "thumbnail": "/contents/math/elementary/box-volume/assets/thumbnail.svg",
+  "path": "/contents/math/elementary/box-volume/index.html"
+}

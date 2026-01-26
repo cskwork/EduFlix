@@ -59,7 +59,18 @@ class EduFlixEngine {
 
     createScenes() {
         this.createScene('hook', (scene) => {
-            scene.innerHTML = `<h1 class="hook-question">${this.data.hook.question}</h1><button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>`;
+            const { question, subText, visual } = this.data.hook;
+            scene.innerHTML = `
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
+            `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         this.createScene('story', (scene) => {
@@ -157,7 +168,40 @@ window.Engine = new EduFlixEngine();
 const vectorData = {
     title: "3D 벡터: 힘의 합성",
     hook: {
-        question: "우주에서 로켓에 여러 방향으로 힘이 가해지면, 로켓은 어느 방향으로 움직일까요?"
+        question: "우주에서 로켓에 여러 방향으로 힘이 가해지면, 로켓은 어느 방향으로 움직일까요?",
+        subText: "두 힘을 합치면 어떤 방향이 될까요?",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 220" class="hook-svg">
+                    <!-- 원점 -->
+                    <circle cx="150" cy="150" r="5" fill="#333"/>
+                    <text x="140" y="170" font-size="12" fill="#666">O</text>
+                    <!-- 벡터 A (빨강) -->
+                    <line x1="150" y1="150" x2="280" y2="100" stroke="#E91E63" stroke-width="4"/>
+                    <polygon points="280,100 265,98 268,112" fill="#E91E63"/>
+                    <text x="220" y="110" font-size="14" fill="#E91E63" font-weight="bold">A</text>
+                    <!-- 벡터 B (파랑) -->
+                    <line x1="150" y1="150" x2="200" y2="50" stroke="#2196F3" stroke-width="4"/>
+                    <polygon points="200,50 190,60 205,62" fill="#2196F3"/>
+                    <text x="165" y="90" font-size="14" fill="#2196F3" font-weight="bold">B</text>
+                    <!-- 합벡터 (초록, 점선 보조선) -->
+                    <line x1="280" y1="100" x2="330" y2="0" stroke="#4CAF50" stroke-width="2" stroke-dasharray="5,3"/>
+                    <line x1="200" y1="50" x2="330" y2="0" stroke="#4CAF50" stroke-width="2" stroke-dasharray="5,3"/>
+                    <!-- 합벡터 (보라) -->
+                    <line x1="150" y1="150" x2="330" y2="0" stroke="#9C27B0" stroke-width="5"/>
+                    <polygon points="330,0 315,5 320,18" fill="#9C27B0"/>
+                    <text x="250" y="60" font-size="14" fill="#9C27B0" font-weight="bold">A + B</text>
+                    <!-- 로켓 아이콘 -->
+                    <g transform="translate(340, -10) rotate(45)">
+                        <polygon points="0,-15 5,10 0,5 -5,10" fill="#FF5722"/>
+                        <rect x="-3" y="5" width="6" height="8" fill="#333"/>
+                    </g>
+                    <!-- 설명 -->
+                    <text x="200" y="200" text-anchor="middle" font-size="14" fill="#333">벡터의 합: 각 성분을 더하면 돼요!</text>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" },

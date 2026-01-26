@@ -1,0 +1,12 @@
+{
+  "id": "probability-coin",
+  "title": "확률의 세계: 동전 던지기",
+  "subject": "math",
+  "gradeLevel": "middle",
+  "grade": "middle-2",
+  "type": "simulation",
+  "language": "ko",
+  "description": "동전을 많이 던지면 앞면과 뒷면의 비율은 어떻게 변할까요? 큰 수의 법칙을 실험해보세요.",
+  "thumbnail": "/contents/math/middle/probability-coin/assets/thumbnail.svg",
+  "path": "/contents/math/middle/probability-coin/index.html"
+}

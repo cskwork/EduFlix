@@ -59,7 +59,18 @@ class EduFlixEngine {
 
     createScenes() {
         this.createScene('hook', (scene) => {
-            scene.innerHTML = `<h1 class="hook-question">${this.data.hook.question}</h1><button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>`;
+            const { question, subText, visual } = this.data.hook;
+            scene.innerHTML = `
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
+            `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         this.createScene('story', (scene) => {
@@ -156,7 +167,36 @@ window.Engine = new EduFlixEngine();
 const probabilityData = {
     title: "확률의 세계",
     hook: {
-        question: "동전을 10번 던지면 앞면이 딱 5번 나올까요?"
+        question: "동전을 10번 던지면 앞면이 딱 5번 나올까요?",
+        subText: "반반이니까 꼭 5번 나와야 하지 않나요?",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 200" class="hook-svg">
+                    <!-- 동전들 -->
+                    <g class="coin-flip-1">
+                        <circle cx="80" cy="100" r="35" fill="#FFD700" stroke="#DAA520" stroke-width="3"/>
+                        <text x="80" y="108" text-anchor="middle" font-size="24" font-weight="bold" fill="#8B4513">H</text>
+                    </g>
+                    <g class="coin-flip-2">
+                        <circle cx="160" cy="100" r="35" fill="#C0C0C0" stroke="#808080" stroke-width="3"/>
+                        <text x="160" y="108" text-anchor="middle" font-size="24" font-weight="bold" fill="#333">T</text>
+                    </g>
+                    <g class="coin-flip-3">
+                        <circle cx="240" cy="100" r="35" fill="#FFD700" stroke="#DAA520" stroke-width="3"/>
+                        <text x="240" y="108" text-anchor="middle" font-size="24" font-weight="bold" fill="#8B4513">H</text>
+                    </g>
+                    <g class="coin-flip-4">
+                        <circle cx="320" cy="100" r="35" fill="#FFD700" stroke="#DAA520" stroke-width="3"/>
+                        <text x="320" y="108" text-anchor="middle" font-size="24" font-weight="bold" fill="#8B4513">H</text>
+                    </g>
+                    <!-- 물음표 -->
+                    <text x="200" y="180" text-anchor="middle" font-size="20" fill="#2196F3" font-weight="bold">1/2 확률이면 정확히 반반?</text>
+                    <!-- 애니메이션 동전 -->
+                    <circle cx="200" cy="40" r="20" fill="#FFD700" class="bounce-coin"/>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" },

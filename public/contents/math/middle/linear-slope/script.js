@@ -59,7 +59,18 @@ class EduFlixEngine {
 
     createScenes() {
         this.createScene('hook', (scene) => {
-            scene.innerHTML = `<h1 class="hook-question">${this.data.hook.question}</h1><button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>`;
+            const { question, subText, visual } = this.data.hook;
+            scene.innerHTML = `
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
+            `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         this.createScene('story', (scene) => {
@@ -156,7 +167,57 @@ window.Engine = new EduFlixEngine();
 const slopeData = {
     title: "일차함수와 기울기",
     hook: {
-        question: "스키장의 가파른 정도를 숫자로 어떻게 나타낼까요?"
+        question: "스키장의 가파른 정도를 숫자로 어떻게 나타낼까요?",
+        subText: "겨울에 스키장 가본 적 있나요?",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 250" class="ski-slope-svg">
+                    <!-- 배경: 하늘 그라데이션 -->
+                    <defs>
+                        <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#87CEEB"/>
+                            <stop offset="100%" style="stop-color:#E0F4FF"/>
+                        </linearGradient>
+                        <linearGradient id="snowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#FFFFFF"/>
+                            <stop offset="100%" style="stop-color:#E8E8E8"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="400" height="250" fill="url(#skyGradient)"/>
+
+                    <!-- 완만한 슬로프 (왼쪽) -->
+                    <polygon points="20,220 180,220 20,160" fill="url(#snowGradient)" stroke="#B0BEC5" stroke-width="2"/>
+                    <text x="60" y="200" font-size="12" fill="#666">완만</text>
+
+                    <!-- 가파른 슬로프 (오른쪽) -->
+                    <polygon points="220,220 380,220 220,80" fill="url(#snowGradient)" stroke="#B0BEC5" stroke-width="2"/>
+                    <text x="260" y="160" font-size="12" fill="#666">가파름</text>
+
+                    <!-- 스키어 1 (완만한 슬로프) -->
+                    <g class="skier skier-slow">
+                        <circle cx="0" cy="0" r="8" fill="#FF5722"/>
+                        <line x1="0" y1="8" x2="0" y2="20" stroke="#333" stroke-width="2"/>
+                        <line x1="-6" y1="20" x2="6" y2="20" stroke="#333" stroke-width="3"/>
+                    </g>
+
+                    <!-- 스키어 2 (가파른 슬로프) -->
+                    <g class="skier skier-fast">
+                        <circle cx="0" cy="0" r="8" fill="#2196F3"/>
+                        <line x1="0" y1="8" x2="0" y2="20" stroke="#333" stroke-width="2"/>
+                        <line x1="-6" y1="20" x2="6" y2="20" stroke="#333" stroke-width="3"/>
+                    </g>
+
+                    <!-- 기울기 표시선 -->
+                    <line x1="20" y1="160" x2="180" y2="220" stroke="#FF9800" stroke-width="2" stroke-dasharray="5,3"/>
+                    <line x1="220" y1="80" x2="380" y2="220" stroke="#FF9800" stroke-width="2" stroke-dasharray="5,3"/>
+
+                    <!-- 레이블 -->
+                    <text x="100" y="245" font-size="14" fill="#333" text-anchor="middle" font-weight="bold">기울기 = ?</text>
+                    <text x="300" y="245" font-size="14" fill="#333" text-anchor="middle" font-weight="bold">기울기 = ?</text>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" },

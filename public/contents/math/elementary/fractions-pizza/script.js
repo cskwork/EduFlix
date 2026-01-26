@@ -75,10 +75,18 @@ class EduFlixEngine {
     createScenes() {
         // 1. Hook Scene
         this.createScene('hook', (scene) => {
+            const { question, subText, visual } = this.data.hook;
             scene.innerHTML = `
-                <h1 class="hook-question">${this.data.hook.question}</h1>
-                <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
             `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         // 2. Story Scene
@@ -234,7 +242,33 @@ window.Engine = new EduFlixEngine();
 const pizzaContentData = {
     title: "피자로 배우는 분수",
     hook: {
-        question: "피자를 똑같이 나누려면 어떻게 해야 할까?"
+        question: "피자를 똑같이 나누려면 어떻게 해야 할까?",
+        subText: "친구들과 사이좋게 나눠 먹으려면요!",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 200" class="hook-svg">
+                    <!-- 피자 -->
+                    <circle cx="200" cy="100" r="80" fill="#F5D0A9" stroke="#8B4513" stroke-width="4"/>
+                    <!-- 토핑들 -->
+                    <circle cx="180" cy="80" r="8" fill="#E53935"/>
+                    <circle cx="220" cy="70" r="8" fill="#E53935"/>
+                    <circle cx="200" cy="110" r="8" fill="#E53935"/>
+                    <circle cx="170" cy="120" r="8" fill="#E53935"/>
+                    <circle cx="230" cy="115" r="8" fill="#E53935"/>
+                    <circle cx="190" cy="140" r="6" fill="#43A047"/>
+                    <circle cx="210" cy="90" r="6" fill="#43A047"/>
+                    <!-- 나누는 선 (점선) -->
+                    <line x1="200" y1="20" x2="200" y2="180" stroke="#333" stroke-width="2" stroke-dasharray="8,4"/>
+                    <line x1="120" y1="100" x2="280" y2="100" stroke="#333" stroke-width="2" stroke-dasharray="8,4"/>
+                    <!-- 레이블 -->
+                    <text x="150" y="60" font-size="20" fill="#2196F3" font-weight="bold">1/4</text>
+                    <text x="230" y="60" font-size="20" fill="#2196F3" font-weight="bold">1/4</text>
+                    <text x="150" y="160" font-size="20" fill="#2196F3" font-weight="bold">1/4</text>
+                    <text x="230" y="160" font-size="20" fill="#2196F3" font-weight="bold">1/4</text>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" }, 

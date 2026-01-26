@@ -59,7 +59,18 @@ class EduFlixEngine {
 
     createScenes() {
         this.createScene('hook', (scene) => {
-            scene.innerHTML = `<h1 class="hook-question">${this.data.hook.question}</h1><button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>`;
+            const { question, subText, visual } = this.data.hook;
+            scene.innerHTML = `
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
+            `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         this.createScene('story', (scene) => {
@@ -157,7 +168,41 @@ window.Engine = new EduFlixEngine();
 const volumeData = {
     title: "부피 탐험가",
     hook: {
-        question: "택배 상자 안에 물건을 가득 채우려면, 상자 크기를 어떻게 알 수 있을까요?"
+        question: "택배 상자 안에 물건을 가득 채우려면, 상자 크기를 어떻게 알 수 있을까요?",
+        subText: "상자 안에 작은 큐브를 쌓아볼까요?",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 200" class="hook-svg">
+                    <!-- 상자 외형 -->
+                    <g transform="translate(100, 30)">
+                        <!-- 뒷면 -->
+                        <rect x="30" y="10" width="120" height="100" fill="#D7CCC8" stroke="#8D6E63" stroke-width="2"/>
+                        <!-- 옆면 -->
+                        <polygon points="30,10 0,40 0,140 30,110" fill="#BCAAA4" stroke="#8D6E63" stroke-width="2"/>
+                        <!-- 밑면 -->
+                        <polygon points="0,140 30,110 150,110 120,140" fill="#A1887F" stroke="#8D6E63" stroke-width="2"/>
+
+                        <!-- 단위 큐브들 (3x3x2) -->
+                        <g fill="#64B5F6" stroke="#1976D2" stroke-width="1">
+                            <!-- 첫번째 층 -->
+                            <rect x="35" y="75" width="25" height="25"/>
+                            <rect x="65" y="75" width="25" height="25"/>
+                            <rect x="95" y="75" width="25" height="25"/>
+                            <rect x="125" y="75" width="25" height="25"/>
+                            <!-- 두번째 층 -->
+                            <rect x="35" y="45" width="25" height="25"/>
+                            <rect x="65" y="45" width="25" height="25"/>
+                            <rect x="95" y="45" width="25" height="25" fill="#90CAF9"/>
+                            <rect x="125" y="45" width="25" height="25" fill="#90CAF9"/>
+                        </g>
+                    </g>
+                    <!-- 공식 -->
+                    <text x="300" y="100" text-anchor="middle" font-size="16" fill="#333" font-weight="bold">가로 x 세로 x 높이</text>
+                    <text x="300" y="130" text-anchor="middle" font-size="20" fill="#2196F3" font-weight="bold">= 부피</text>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" },

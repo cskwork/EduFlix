@@ -2,6 +2,7 @@
 import { ref, type Ref } from 'vue'
 import type { ContentGroup } from '../../types/content'
 import ContentCard from './ContentCard.vue'
+import { useDragScroll } from '../../composables/useDragScroll'
 
 // Props 정의
 defineProps<{
@@ -10,6 +11,9 @@ defineProps<{
 
 // 스크롤 컨테이너 참조
 const scrollContainer: Ref<HTMLElement | null> = ref(null)
+
+// 드래그 스크롤
+const { isDragging, startDrag, endDrag } = useDragScroll(scrollContainer)
 
 // 스크롤 함수
 function scroll(direction: 'left' | 'right') {
@@ -39,7 +43,13 @@ function scroll(direction: 'left' | 'right') {
         <span class="arrow">&#10094;</span>
       </button>
 
-      <div ref="scrollContainer" class="row-content">
+      <div
+        ref="scrollContainer"
+        class="row-content"
+        :class="{ 'is-dragging': isDragging }"
+        @mousedown="startDrag"
+        @mouseleave="endDrag"
+      >
         <ContentCard v-for="content in group.contents" :key="content.id" :content="content" />
       </div>
 
@@ -145,5 +155,36 @@ function scroll(direction: 'left' | 'right') {
 .row-content > :deep(.content-card) {
   scroll-snap-align: start;
   margin-right: 4px; /* Tiny gap */
+}
+
+/* 드래그 스크롤 */
+.row-content {
+  cursor: grab;
+}
+
+.row-content.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+.row-content.is-dragging :deep(.content-card) {
+  pointer-events: none;
+}
+
+/* 모바일에서 스크롤 버튼 숨기기 */
+@media (max-width: 767px) {
+  .scroll-btn {
+    display: none;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .scroll-btn {
+    display: none;
+  }
+
+  .row-content {
+    cursor: default;
+  }
 }
 </style>

@@ -1,0 +1,12 @@
+{
+  "id": "pythagoras-theorem",
+  "title": "피타고라스의 정리",
+  "subject": "math",
+  "gradeLevel": "middle",
+  "grade": "middle-3",
+  "type": "simulation",
+  "language": "ko",
+  "description": "직각삼각형의 변들 사이에는 어떤 비밀이 있을까요? 직접 움직여보며 피타고라스의 정리를 발견해보세요.",
+  "thumbnail": "/contents/math/middle/pythagoras-theorem/assets/thumbnail.svg",
+  "path": "/contents/math/middle/pythagoras-theorem/index.html"
+}

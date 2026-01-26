@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00C9FF"/>
+      <stop offset="100%" style="stop-color:#92FE9D"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 배경 -->
+  <rect width="400" height="300" fill="url(#bgGrad)"/>
+
+  <!-- 계산기 모양 -->
+  <g transform="translate(130, 70)">
+    <rect x="0" y="0" width="140" height="160" rx="10" fill="#37474F" stroke="#263238" stroke-width="3"/>
+
+    <!-- 화면 -->
+    <rect x="15" y="15" width="110" height="40" rx="5" fill="#90A4AE"/>
+    <text x="115" y="45" text-anchor="end" fill="#263238" font-size="24" font-weight="bold">1.2 x 0.8</text>
+
+    <!-- 버튼들 -->
+    <g fill="#78909C">
+      <rect x="15" y="65" width="30" height="25" rx="3"/>
+      <rect x="55" y="65" width="30" height="25" rx="3"/>
+      <rect x="95" y="65" width="30" height="25" rx="3"/>
+      <rect x="15" y="100" width="30" height="25" rx="3"/>
+      <rect x="55" y="100" width="30" height="25" rx="3"/>
+      <rect x="95" y="100" width="30" height="25" rx="3"/>
+      <rect x="15" y="130" width="30" height="20" rx="3"/>
+      <rect x="55" y="130" width="30" height="20" rx="3" fill="#FF7043"/>
+    </g>
+
+    <!-- 소수점 강조 -->
+    <circle cx="40" cy="142" r="5" fill="#FFD54F"/>
+  </g>
+
+  <!-- 화살표와 결과 -->
+  <g transform="translate(280, 140)">
+    <polygon points="0,0 20,15 0,30" fill="#fff"/>
+  </g>
+  <text x="330" y="160" text-anchor="middle" fill="#fff" font-size="28" font-weight="bold">0.96</text>
+
+  <!-- 수식 -->
+  <text x="200" y="260" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">
+    소수점 자리수의 합 = 결과의 소수점 자리수
+  </text>
+
+  <!-- 제목 -->
+  <text x="200" y="40" text-anchor="middle" fill="#fff" font-size="24" font-weight="bold">소수의 곱셈</text>
+</svg>

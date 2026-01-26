@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>소수의 곱셈 - 초등 5학년 수학</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 배경 패턴 -->
+  <div class="background-pattern"></div>
+
+  <!-- 메인 컨테이너 -->
+  <div class="app-container">
+    <!-- 헤더 -->
+    <header class="app-header">
+      <div class="header-left">
+        <img src="../../icons/icon-arithmetic-basic-color-20260124.svg" alt="산수" class="header-icon">
+        <h1>소수의 곱셈</h1>
+      </div>
+      <div class="progress-indicator">
+        <span class="current-scene">1</span> / <span class="total-scenes">7</span>
+      </div>
+    </header>
+
+    <!-- 씬 컨테이너 -->
+    <main class="scene-container">
+
+      <!-- Scene 1: Hook Scene -->
+      <section class="scene scene-hook active" data-scene="1">
+        <div class="scene-content">
+          <div class="hook-visual">
+            <div class="coin-3d-container" id="coin-container"></div>
+            <div class="price-tag">
+              <span class="price-label">1kg당</span>
+              <span class="price-value">2,400원</span>
+            </div>
+          </div>
+          <div class="hook-question">
+            <h2 class="question-title">생각해 보세요!</h2>
+            <div class="question-box">
+              <p class="main-question">
+                <strong>1.5kg</strong> 사과가<br>
+                kg당 <strong>2,400원</strong>이면<br>
+                총 <strong>얼마</strong>일까요?
+              </p>
+            </div>
+            <div class="hook-hint">
+              <img src="../../icons/icon-help-question-cute-20260124.svg" alt="힌트" class="hint-icon">
+              <span>소수점이 있는 곱셈, 어떻게 할까요?</span>
+            </div>
+          </div>
+        </div>
+        <button class="nav-btn next-btn" data-next="2">
+          알아보러 가기
+          <svg viewBox="0 0 24 24" class="arrow-icon"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+        </button>
+      </section>
+
+      <!-- Scene 2: Anchor Scene -->
+      <section class="scene scene-anchor" data-scene="2">
+        <div class="scene-content">
+          <h2 class="scene-title">잠깐, 기억나나요?</h2>
+          <div class="anchor-card">
+            <div class="anchor-review">
+              <p class="anchor-label">자연수의 곱셈</p>
+              <div class="anchor-equation">
+                <span class="num">15</span>
+                <span class="op">x</span>
+                <span class="num">24</span>
+                <span class="op">=</span>
+                <span class="result">360</span>
+              </div>
+            </div>
+            <div class="anchor-method">
+              <div class="method-step">
+                <span class="step-num">1</span>
+                <span>15 x 4 = 60</span>
+              </div>
+              <div class="method-step">
+                <span class="step-num">2</span>
+                <span>15 x 20 = 300</span>
+              </div>
+              <div class="method-step">
+                <span class="step-num">3</span>
+                <span>60 + 300 = 360</span>
+              </div>
+            </div>
+          </div>
+          <div class="anchor-connection">
+            <img src="../../icons/icon-lightbulb-idea-bright-20260124.svg" alt="아이디어" class="idea-icon">
+            <p>이 방법을 <strong>소수</strong>에도 적용할 수 있어요!</p>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <button class="nav-btn prev-btn" data-prev="1">
+            <svg viewBox="0 0 24 24" class="arrow-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            이전
+          </button>
+          <button class="nav-btn next-btn" data-next="3">
+            다음
+            <svg viewBox="0 0 24 24" class="arrow-icon"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Scene 3: Story Scene -->
+      <section class="scene scene-story" data-scene="3">
+        <div class="scene-content">
+          <h2 class="scene-title">하나의 편의점 이야기</h2>
+          <div class="story-container">
+            <div class="character">
+              <div class="character-avatar">
+                <div class="avatar-circle">
+                  <span class="avatar-text">하나</span>
+                </div>
+                <img src="../../illustrations/illust-calculator-math-simple-20260125.svg" alt="계산기" class="character-item">
+              </div>
+              <div class="character-info">
+                <span class="character-name">알바생 하나</span>
+                <span class="character-role">편의점 계산 담당</span>
+              </div>
+            </div>
+            <div class="story-bubble">
+              <div class="bubble-content">
+                <p class="story-text">
+                  "손님이 <strong>사과 1.5kg</strong>을 사셨어요.<br>
+                  kg당 <strong>2,400원</strong>인데...<br>
+                  <br>
+                  소수점이 있는 계산, 어떻게 하지?"
+                </p>
+              </div>
+              <div class="bubble-tail"></div>
+            </div>
+            <div class="story-visual">
+              <div class="apple-display">
+                <div class="apple-weight">1.5kg</div>
+                <div class="apple-price">?원</div>
+              </div>
+            </div>
+          </div>
+          <div class="story-cta">
+            <p>하나와 함께 소수의 곱셈을 배워볼까요?</p>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <button class="nav-btn prev-btn" data-prev="2">
+            <svg viewBox="0 0 24 24" class="arrow-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            이전
+          </button>
+          <button class="nav-btn next-btn" data-next="4">
+            배우러 가기
+            <svg viewBox="0 0 24 24" class="arrow-icon"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Scene 4: Core Scene - Interactive Simulator -->
+      <section class="scene scene-core" data-scene="4">
+        <div class="scene-content">
+          <h2 class="scene-title">소수점 위치 이동 시뮬레이터</h2>
+          <div class="simulator-container">
+            <!-- 격자 시각화 -->
+            <div class="grid-visualization">
+              <svg id="multiplication-grid" viewBox="0 0 400 300" class="grid-svg">
+                <!-- 격자 그리드는 JS로 동적 생성 -->
+              </svg>
+            </div>
+
+            <!-- 조작 패널 -->
+            <div class="control-panel">
+              <div class="input-group">
+                <label>첫 번째 수</label>
+                <div class="decimal-input">
+                  <input type="number" id="num1-int" value="1" min="0" max="99" step="1">
+                  <span class="decimal-point">.</span>
+                  <input type="number" id="num1-dec" value="5" min="0" max="9" step="1">
+                </div>
+                <div class="decimal-places" id="places1">소수점 아래 1자리</div>
+              </div>
+
+              <div class="multiply-sign">x</div>
+
+              <div class="input-group">
+                <label>두 번째 수</label>
+                <div class="decimal-input">
+                  <input type="number" id="num2-int" value="2" min="0" max="99" step="1">
+                  <span class="decimal-point">.</span>
+                  <input type="number" id="num2-dec" value="4" min="0" max="9" step="1">
+                </div>
+                <div class="decimal-places" id="places2">소수점 아래 1자리</div>
+              </div>
+            </div>
+
+            <!-- 계산 과정 표시 -->
+            <div class="calculation-display">
+              <div class="calc-step step-1">
+                <span class="step-label">1단계: 자연수로 바꾸기</span>
+                <div class="step-content" id="step1-content">
+                  1.5 x 10 = 15, 2.4 x 10 = 24
+                </div>
+              </div>
+              <div class="calc-step step-2">
+                <span class="step-label">2단계: 자연수 곱셈</span>
+                <div class="step-content" id="step2-content">
+                  15 x 24 = 360
+                </div>
+              </div>
+              <div class="calc-step step-3">
+                <span class="step-label">3단계: 소수점 위치 정하기</span>
+                <div class="step-content" id="step3-content">
+                  소수점 아래 자릿수: 1 + 1 = 2자리
+                </div>
+              </div>
+              <div class="calc-result">
+                <span class="result-label">결과</span>
+                <div class="result-value" id="result-value">
+                  <span class="result-number">3.60</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 애니메이션 버튼 -->
+            <button class="animate-btn" id="animate-calc">
+              <svg viewBox="0 0 24 24" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
+              계산 과정 보기
+            </button>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <button class="nav-btn prev-btn" data-prev="3">
+            <svg viewBox="0 0 24 24" class="arrow-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            이전
+          </button>
+          <button class="nav-btn next-btn" data-next="5">
+            원리 이해하기
+            <svg viewBox="0 0 24 24" class="arrow-icon"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Scene 5: Visualize Scene -->
+      <section class="scene scene-visualize" data-scene="5">
+        <div class="scene-content">
+          <h2 class="scene-title">왜 이렇게 계산할까요?</h2>
+
+          <div class="principle-container">
+            <!-- 시각적 설명 -->
+            <div class="principle-visual">
+              <svg id="principle-svg" viewBox="0 0 400 250" class="principle-svg">
+                <!-- 원리 시각화 SVG -->
+              </svg>
+            </div>
+
+            <!-- 단계별 설명 -->
+            <div class="principle-steps">
+              <div class="principle-step" data-step="1">
+                <div class="step-header">
+                  <span class="step-badge">핵심</span>
+                </div>
+                <div class="step-body">
+                  <div class="formula-box">
+                    <span class="formula">1.5 x 2.4</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="principle-step" data-step="2">
+                <div class="step-header">
+                  <span class="step-badge">변환</span>
+                </div>
+                <div class="step-body">
+                  <div class="formula-box">
+                    <span class="formula">= (15 / 10) x (24 / 10)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="principle-step" data-step="3">
+                <div class="step-header">
+                  <span class="step-badge">계산</span>
+                </div>
+                <div class="step-body">
+                  <div class="formula-box">
+                    <span class="formula">= (15 x 24) / (10 x 10)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="principle-step" data-step="4">
+                <div class="step-header">
+                  <span class="step-badge">결과</span>
+                </div>
+                <div class="step-body">
+                  <div class="formula-box highlight">
+                    <span class="formula">= 360 / 100 = <strong>3.6</strong></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 규칙 정리 -->
+            <div class="rule-box">
+              <img src="../../icons/icon-lightbulb-idea-bright-20260124.svg" alt="규칙" class="rule-icon">
+              <div class="rule-content">
+                <p class="rule-title">소수 곱셈의 규칙</p>
+                <p class="rule-text">
+                  <strong>소수점 아래 자릿수</strong>를 모두 더한 만큼<br>
+                  결과에서 소수점을 왼쪽으로 이동해요!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <button class="nav-btn prev-btn" data-prev="4">
+            <svg viewBox="0 0 24 24" class="arrow-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            이전
+          </button>
+          <button class="nav-btn next-btn" data-next="6">
+            퀴즈 풀기
+            <svg viewBox="0 0 24 24" class="arrow-icon"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Scene 6: Quiz Scene -->
+      <section class="scene scene-quiz" data-scene="6">
+        <div class="scene-content">
+          <h2 class="scene-title">퀴즈 타임!</h2>
+
+          <div class="quiz-container">
+            <div class="quiz-question">
+              <div class="quiz-problem">
+                <span class="quiz-num">0.8</span>
+                <span class="quiz-op">x</span>
+                <span class="quiz-num">1.2</span>
+                <span class="quiz-op">=</span>
+                <span class="quiz-num">?</span>
+              </div>
+              <p class="quiz-instruction">아래 숫자에서 소수점을 올바른 위치에 드래그하세요!</p>
+            </div>
+
+            <div class="quiz-interaction">
+              <!-- 드래그 가능한 소수점 -->
+              <div class="decimal-point-draggable" id="draggable-point" draggable="true">
+                <span class="point">.</span>
+              </div>
+
+              <!-- 정답 영역 -->
+              <div class="answer-area">
+                <div class="answer-digits">
+                  <span class="digit" data-position="0">0</span>
+                  <span class="drop-zone" data-position="1"></span>
+                  <span class="digit" data-position="2">9</span>
+                  <span class="drop-zone" data-position="3"></span>
+                  <span class="digit" data-position="4">6</span>
+                </div>
+                <div class="answer-hint">96을 어디에 소수점을 찍을까요?</div>
+              </div>
+
+              <!-- 힌트 -->
+              <div class="quiz-hint">
+                <button class="hint-btn" id="show-hint">
+                  <img src="../../icons/icon-help-question-cute-20260124.svg" alt="힌트" class="hint-icon">
+                  힌트 보기
+                </button>
+                <div class="hint-content" id="hint-content">
+                  0.8은 소수점 아래 1자리, 1.2도 소수점 아래 1자리<br>
+                  1 + 1 = 2자리이므로, 96에서 왼쪽으로 2칸!
+                </div>
+              </div>
+            </div>
+
+            <!-- 결과 표시 -->
+            <div class="quiz-result" id="quiz-result">
+              <div class="result-correct">
+                <img src="../../icons/icon-trophy-achievement-cute-20260124.svg" alt="정답" class="result-icon">
+                <p>정답입니다! 0.8 x 1.2 = <strong>0.96</strong></p>
+              </div>
+              <div class="result-incorrect">
+                <p>다시 한번 생각해 보세요!</p>
+              </div>
+            </div>
+
+            <button class="check-btn" id="check-answer">정답 확인</button>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <button class="nav-btn prev-btn" data-prev="5">
+            <svg viewBox="0 0 24 24" class="arrow-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            이전
+          </button>
+          <button class="nav-btn next-btn" data-next="7">
+            마무리
+            <svg viewBox="0 0 24 24" class="arrow-icon"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Scene 7: Wrap Scene -->
+      <section class="scene scene-wrap" data-scene="7">
+        <div class="scene-content">
+          <div class="wrap-header">
+            <img src="../../icons/icon-trophy-achievement-cute-20260124.svg" alt="완료" class="trophy-icon">
+            <h2 class="scene-title">소수의 곱셈 완료!</h2>
+          </div>
+
+          <div class="summary-container">
+            <h3 class="summary-title">핵심 정리</h3>
+
+            <div class="summary-cards">
+              <div class="summary-card">
+                <span class="card-number">1</span>
+                <p class="card-text">소수를 <strong>자연수</strong>로 바꿔서 곱해요</p>
+              </div>
+              <div class="summary-card">
+                <span class="card-number">2</span>
+                <p class="card-text">소수점 아래 <strong>자릿수를 더해요</strong></p>
+              </div>
+              <div class="summary-card">
+                <span class="card-number">3</span>
+                <p class="card-text">결과에서 소수점을 <strong>왼쪽으로 이동</strong>해요</p>
+              </div>
+            </div>
+
+            <!-- 처음 문제 답 -->
+            <div class="initial-answer">
+              <p class="answer-label">처음 질문의 답:</p>
+              <div class="answer-box">
+                <span class="problem">1.5kg x 2,400원</span>
+                <span class="equals">=</span>
+                <span class="answer">3,600원</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wrap-actions">
+            <button class="action-btn restart-btn" id="restart-btn">
+              <svg viewBox="0 0 24 24" class="action-icon"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+              다시 학습하기
+            </button>
+            <button class="action-btn next-lesson-btn" id="next-lesson-btn">
+              <svg viewBox="0 0 24 24" class="action-icon"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+              다음 학습으로
+            </button>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <button class="nav-btn prev-btn" data-prev="6">
+            <svg viewBox="0 0 24 24" class="arrow-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            이전
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 프로그레스 바 -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

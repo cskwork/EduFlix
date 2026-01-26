@@ -59,7 +59,18 @@ class EduFlixEngine {
 
     createScenes() {
         this.createScene('hook', (scene) => {
-            scene.innerHTML = `<h1 class="hook-question">${this.data.hook.question}</h1><button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>`;
+            const { question, subText, visual } = this.data.hook;
+            scene.innerHTML = `
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
+            `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         this.createScene('story', (scene) => {
@@ -163,7 +174,36 @@ const problems = [
 const contentData = {
     title: "방정식 퍼즐",
     hook: {
-        question: "양팔 저울의 균형을 맞추려면 x는 얼마일까요?"
+        question: "양팔 저울의 균형을 맞추려면 x는 얼마일까요?",
+        subText: "무게가 같으면 저울이 수평이 되겠죠?",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 200" class="hook-svg">
+                    <defs>
+                        <linearGradient id="metalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#B0BEC5"/>
+                            <stop offset="100%" style="stop-color:#78909C"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- 받침대 -->
+                    <polygon points="200,180 150,200 250,200" fill="url(#metalGrad)"/>
+                    <rect x="195" y="80" width="10" height="100" fill="url(#metalGrad)"/>
+                    <!-- 저울대 (기울어진 상태) -->
+                    <g class="balance-beam">
+                        <rect x="50" y="75" width="300" height="8" fill="url(#metalGrad)" rx="4" transform="rotate(-8 200 80)"/>
+                        <!-- 왼쪽 접시 -->
+                        <ellipse cx="80" cy="95" rx="50" ry="10" fill="#FFE082"/>
+                        <text x="80" y="85" text-anchor="middle" font-size="20" font-weight="bold" fill="#E91E63">2x</text>
+                        <!-- 오른쪽 접시 -->
+                        <ellipse cx="320" cy="65" rx="50" ry="10" fill="#FFE082"/>
+                        <text x="320" y="55" text-anchor="middle" font-size="20" font-weight="bold" fill="#4CAF50">6</text>
+                    </g>
+                    <!-- 물음표 -->
+                    <text x="200" y="150" text-anchor="middle" font-size="24" fill="#FF5722" class="pulse-text">x = ?</text>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" },

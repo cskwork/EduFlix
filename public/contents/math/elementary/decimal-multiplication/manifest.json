@@ -1,0 +1,12 @@
+{
+  "id": "decimal-multiplication",
+  "title": "소수의 곱셈",
+  "subject": "math",
+  "gradeLevel": "elementary",
+  "grade": "elementary-5",
+  "type": "simulation",
+  "language": "ko",
+  "description": "소수점 위치 변화를 시각화하여 소수 곱셈의 원리를 이해하는 인터랙티브 콘텐츠",
+  "thumbnail": "/contents/math/elementary/decimal-multiplication/assets/thumbnail.svg",
+  "path": "/contents/math/elementary/decimal-multiplication/index.html"
+}

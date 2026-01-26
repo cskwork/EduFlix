@@ -103,9 +103,7 @@ const isNavActive = (path: string) => {
   display: flex;
   align-items: center;
   gap: var(--spacing-xl);
-  max-width: var(--content-max-width);
   height: 100%;
-  margin: 0 auto;
   padding: 0 var(--content-padding);
 }
 
@@ -117,7 +115,7 @@ const isNavActive = (path: string) => {
 }
 
 .logo-text {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-brand-primary);
   letter-spacing: -0.5px;
@@ -134,7 +132,7 @@ const isNavActive = (path: string) => {
 }
 
 .nav-link {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-normal);
   color: var(--color-text-secondary);
   transition: color var(--transition-fast);

@@ -1,0 +1,12 @@
+{
+  "id": "ratio-proportion",
+  "title": "비와 비율: 레시피의 비밀",
+  "subject": "math",
+  "gradeLevel": "elementary",
+  "grade": "elementary-6",
+  "type": "simulation",
+  "language": "ko",
+  "description": "떡볶이 레시피 조절을 통해 비와 비율의 개념을 실생활에서 이해하는 인터랙티브 콘텐츠",
+  "thumbnail": "/contents/math/elementary/ratio-proportion/assets/thumbnail.svg",
+  "path": "/contents/math/elementary/ratio-proportion/index.html"
+}

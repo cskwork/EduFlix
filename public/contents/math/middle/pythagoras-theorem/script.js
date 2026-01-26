@@ -59,7 +59,18 @@ class EduFlixEngine {
 
     createScenes() {
         this.createScene('hook', (scene) => {
-            scene.innerHTML = `<h1 class="hook-question">${this.data.hook.question}</h1><button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>`;
+            const { question, subText, visual } = this.data.hook;
+            scene.innerHTML = `
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
+            `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         this.createScene('story', (scene) => {
@@ -156,7 +167,32 @@ window.Engine = new EduFlixEngine();
 const pythagorasData = {
     title: "피타고라스의 정리",
     hook: {
-        question: "직각삼각형의 세 변 사이에는 어떤 비밀이 숨겨져 있을까요?"
+        question: "직각삼각형의 세 변 사이에는 어떤 비밀이 숨겨져 있을까요?",
+        subText: "고대 그리스의 수학자가 타일 바닥에서 발견한 비밀!",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 250" class="hook-svg">
+                    <!-- 직각삼각형 -->
+                    <polygon points="50,200 200,200 200,80" fill="rgba(33, 150, 243, 0.3)" stroke="#2196F3" stroke-width="3"/>
+                    <!-- 직각 표시 -->
+                    <rect x="180" y="180" width="20" height="20" fill="none" stroke="#333" stroke-width="2"/>
+                    <!-- 변 a의 정사각형 -->
+                    <rect x="200" y="80" width="120" height="120" fill="rgba(233, 30, 99, 0.3)" stroke="#E91E63" stroke-width="2"/>
+                    <text x="260" y="150" text-anchor="middle" font-size="16" fill="#E91E63" font-weight="bold">a^2</text>
+                    <!-- 변 b의 정사각형 -->
+                    <rect x="50" y="200" width="150" height="150" fill="rgba(76, 175, 80, 0.3)" stroke="#4CAF50" stroke-width="2" transform="translate(0,-150)"/>
+                    <text x="125" y="275" text-anchor="middle" font-size="16" fill="#4CAF50" font-weight="bold">b^2</text>
+                    <!-- 변 c의 정사각형 (빗변) -->
+                    <g transform="rotate(-53 50 200)">
+                        <rect x="50" y="200" width="180" height="180" fill="rgba(156, 39, 176, 0.2)" stroke="#9C27B0" stroke-width="2" transform="translate(0,-180)"/>
+                    </g>
+                    <text x="80" y="120" text-anchor="middle" font-size="16" fill="#9C27B0" font-weight="bold">c^2</text>
+                    <!-- 공식 -->
+                    <text x="320" y="230" text-anchor="middle" font-size="18" fill="#333" font-weight="bold">a^2 + b^2 = c^2</text>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" }, // Placeholder, engine might use default if missing

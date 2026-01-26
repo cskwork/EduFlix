@@ -22,7 +22,7 @@
 body {
     font-family: 'Noto Sans KR', sans-serif;
     background: var(--bg-color);
-    background-image: url('../../backgrounds/bg-grid-paper-blue-textured-20260124.png');
+    background-image: url('../../../backgrounds/bg-grid-paper-blue-textured-20260124.png');
     background-size: cover;
     color: var(--text-color);
     min-height: 100vh;

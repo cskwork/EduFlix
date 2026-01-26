@@ -59,7 +59,18 @@ class EduFlixEngine {
 
     createScenes() {
         this.createScene('hook', (scene) => {
-            scene.innerHTML = `<h1 class="hook-question">${this.data.hook.question}</h1><button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>`;
+            const { question, subText, visual } = this.data.hook;
+            scene.innerHTML = `
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
+            `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         this.createScene('story', (scene) => {
@@ -156,7 +167,35 @@ window.Engine = new EduFlixEngine();
 const quadraticData = {
     title: "이차함수 그래프 탐구",
     hook: {
-        question: "농구공이 날아가는 경로는 어떤 모양일까요?"
+        question: "농구공이 날아가는 경로는 어떤 모양일까요?",
+        subText: "포물선의 비밀을 알아봐요!",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 220" class="hook-svg">
+                    <!-- 좌표축 -->
+                    <line x1="50" y1="180" x2="350" y2="180" stroke="#333" stroke-width="2"/>
+                    <line x1="200" y1="20" x2="200" y2="180" stroke="#333" stroke-width="2"/>
+                    <!-- 축 레이블 -->
+                    <text x="360" y="185" font-size="14" fill="#333">x</text>
+                    <text x="205" y="25" font-size="14" fill="#333">y</text>
+                    <!-- 포물선 -->
+                    <path d="M 80,170 Q 200,20 320,170" fill="none" stroke="#2196F3" stroke-width="3"/>
+                    <!-- 꼭짓점 -->
+                    <circle cx="200" cy="40" r="6" fill="#E91E63"/>
+                    <text x="215" y="45" font-size="12" fill="#E91E63">꼭짓점</text>
+                    <!-- 농구공 -->
+                    <g class="ball-trajectory">
+                        <circle cx="120" cy="130" r="12" fill="#FF9800" stroke="#E65100" stroke-width="2"/>
+                        <path d="M108,130 Q120,118 132,130" fill="none" stroke="#E65100" stroke-width="1.5"/>
+                        <path d="M108,130 Q120,142 132,130" fill="none" stroke="#E65100" stroke-width="1.5"/>
+                        <line x1="120" y1="118" x2="120" y2="142" stroke="#E65100" stroke-width="1.5"/>
+                    </g>
+                    <!-- 공식 -->
+                    <text x="200" y="210" text-anchor="middle" font-size="16" fill="#333" font-weight="bold">y = ax^2 + bx + c</text>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" },

@@ -59,7 +59,18 @@ class EduFlixEngine {
 
     createScenes() {
         this.createScene('hook', (scene) => {
-            scene.innerHTML = `<h1 class="hook-question">${this.data.hook.question}</h1><button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>`;
+            const { question, subText, visual } = this.data.hook;
+            scene.innerHTML = `
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
+            `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         this.createScene('story', (scene) => {
@@ -157,7 +168,44 @@ window.Engine = new EduFlixEngine();
 const shapesData = {
     title: "입체도형 탐험대",
     hook: {
-        question: "상자, 공, 캔... 우리 주변의 물건들은 어떤 모양으로 이루어져 있을까요?"
+        question: "상자, 공, 캔... 우리 주변의 물건들은 어떤 모양으로 이루어져 있을까요?",
+        subText: "평면이 아닌 입체로 된 도형들이에요!",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 180" class="hook-svg">
+                    <!-- 정육면체 -->
+                    <g transform="translate(50, 30)">
+                        <polygon points="20,20 70,20 70,70 20,70" fill="#E91E63" opacity="0.8"/>
+                        <polygon points="20,20 35,5 85,5 70,20" fill="#F48FB1"/>
+                        <polygon points="70,20 85,5 85,55 70,70" fill="#AD1457"/>
+                        <text x="45" y="90" text-anchor="middle" font-size="10" fill="#333">정육면체</text>
+                    </g>
+                    <!-- 구 -->
+                    <g transform="translate(140, 30)">
+                        <circle cx="40" cy="40" r="35" fill="#4CAF50"/>
+                        <ellipse cx="40" cy="40" rx="35" ry="10" fill="#81C784" opacity="0.5"/>
+                        <ellipse cx="30" cy="30" rx="8" ry="5" fill="#fff" opacity="0.4"/>
+                        <text x="40" y="90" text-anchor="middle" font-size="10" fill="#333">구</text>
+                    </g>
+                    <!-- 원기둥 -->
+                    <g transform="translate(230, 30)">
+                        <ellipse cx="40" cy="65" rx="30" ry="10" fill="#1565C0"/>
+                        <rect x="10" y="15" width="60" height="50" fill="#2196F3"/>
+                        <ellipse cx="40" cy="15" rx="30" ry="10" fill="#64B5F6"/>
+                        <text x="40" y="90" text-anchor="middle" font-size="10" fill="#333">원기둥</text>
+                    </g>
+                    <!-- 삼각뿔 -->
+                    <g transform="translate(320, 30)">
+                        <polygon points="40,5 10,70 70,70" fill="#FF9800"/>
+                        <polygon points="40,5 70,70 55,65" fill="#F57C00"/>
+                        <text x="40" y="90" text-anchor="middle" font-size="10" fill="#333">삼각뿔</text>
+                    </g>
+                    <!-- 설명 -->
+                    <text x="200" y="130" text-anchor="middle" font-size="14" fill="#666">면, 모서리, 꼭짓점을 세어볼까요?</text>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" },

@@ -59,7 +59,18 @@ class EduFlixEngine {
 
     createScenes() {
         this.createScene('hook', (scene) => {
-            scene.innerHTML = `<h1 class="hook-question">${this.data.hook.question}</h1><button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>`;
+            const { question, subText, visual } = this.data.hook;
+            scene.innerHTML = `
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
+            `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         this.createScene('story', (scene) => {
@@ -157,7 +168,39 @@ window.Engine = new EduFlixEngine();
 const diagonalData = {
     title: "공간 대각선",
     hook: {
-        question: "방 한쪽 모서리에서 대각선 반대쪽 모서리까지 줄을 달면, 줄의 길이는 얼마일까요?"
+        question: "방 한쪽 모서리에서 대각선 반대쪽 모서리까지 줄을 달면, 줄의 길이는 얼마일까요?",
+        subText: "3D 공간에서 가장 긴 대각선을 찾아보세요!",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 250" class="hook-svg">
+                    <!-- 직육면체 -->
+                    <g transform="translate(100, 50)">
+                        <!-- 뒷면 -->
+                        <polygon points="60,20 180,20 180,140 60,140" fill="rgba(33, 150, 243, 0.1)" stroke="#90CAF9" stroke-width="1"/>
+                        <!-- 밑면 -->
+                        <polygon points="0,80 120,80 180,140 60,140" fill="rgba(33, 150, 243, 0.2)" stroke="#64B5F6" stroke-width="1"/>
+                        <!-- 옆면 -->
+                        <polygon points="0,80 0,200 60,140 60,20" fill="rgba(33, 150, 243, 0.15)" stroke="#64B5F6" stroke-width="1"/>
+                        <!-- 앞면 -->
+                        <polygon points="0,80 120,80 120,200 0,200" fill="rgba(33, 150, 243, 0.25)" stroke="#2196F3" stroke-width="2"/>
+                        <!-- 윗면 -->
+                        <polygon points="60,20 180,20 120,80 0,80" fill="rgba(33, 150, 243, 0.3)" stroke="#2196F3" stroke-width="2"/>
+                        <!-- 오른쪽 옆면 -->
+                        <polygon points="120,80 180,20 180,140 120,200" fill="rgba(33, 150, 243, 0.2)" stroke="#2196F3" stroke-width="2"/>
+                        <!-- 바닥 대각선 (노랑) -->
+                        <line x1="0" y1="200" x2="120" y2="80" stroke="#FFC107" stroke-width="3" stroke-dasharray="5,3"/>
+                        <!-- 공간 대각선 (보라) -->
+                        <line x1="0" y1="200" x2="180" y2="20" stroke="#9C27B0" stroke-width="4" class="pulse-line"/>
+                        <!-- 꼭짓점 표시 -->
+                        <circle cx="0" cy="200" r="6" fill="#4CAF50"/>
+                        <circle cx="180" cy="20" r="6" fill="#E91E63"/>
+                    </g>
+                    <!-- 레이블 -->
+                    <text x="320" y="220" font-size="14" fill="#333">피타고라스를 두 번!</text>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" },

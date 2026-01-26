@@ -63,7 +63,18 @@ class EduFlixEngine {
 
     createScenes() {
         this.createScene('hook', (scene) => {
-            scene.innerHTML = `<h1 class="hook-question">${this.data.hook.question}</h1><button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>`;
+            const { question, subText, visual } = this.data.hook;
+            scene.innerHTML = `
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
+            `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         this.createScene('story', (scene) => {
@@ -237,7 +248,29 @@ const shapesData = {
 const contentData = {
     title: "도형 탐험가",
     hook: {
-        question: "네모, 세모, 동그라미... 이름이 뭘까요?"
+        question: "네모, 세모, 동그라미... 이름이 뭘까요?",
+        subText: "주변에서 찾을 수 있는 모양들이에요!",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 180" class="hook-svg">
+                    <!-- 삼각형 -->
+                    <polygon points="80,140 40,60 120,60" fill="#FF6B6B" stroke="#fff" stroke-width="3"/>
+                    <text x="80" y="110" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">3</text>
+                    <!-- 사각형 -->
+                    <rect x="150" y="60" width="80" height="80" fill="#4ECDC4" stroke="#fff" stroke-width="3"/>
+                    <text x="190" y="105" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">4</text>
+                    <!-- 오각형 -->
+                    <polygon points="290,65 325,90 310,130 270,130 255,90" fill="#45B7D1" stroke="#fff" stroke-width="3"/>
+                    <text x="290" y="105" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">5</text>
+                    <!-- 원 -->
+                    <circle cx="370" cy="100" r="40" fill="#FFEAA7" stroke="#fff" stroke-width="3"/>
+                    <text x="370" y="105" text-anchor="middle" font-size="12" fill="#333" font-weight="bold">0</text>
+                    <!-- 레이블 -->
+                    <text x="200" y="170" text-anchor="middle" font-size="14" fill="#333">변의 개수가 이름이 돼요!</text>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" },

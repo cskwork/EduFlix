@@ -22,14 +22,21 @@ html, body {
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--bg-color);
+  background-image: url('../../../backgrounds/bg-geometric-shapes-20260125.png');
+  background-size: cover;
   color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #scene-container {
   width: 100%;
-  height: 100%;
+  max-width: 800px;
+  height: 100vh;
   position: relative;
-  background: var(--bg-color);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
 }
 
 .scene {
@@ -53,6 +60,43 @@ html, body {
   opacity: 1;
   pointer-events: all;
   z-index: 10;
+}
+
+/* Hook Scene Styles */
+.hook-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.question-box {
+    text-align: center;
+}
+
+.hook-subtext {
+    color: #666;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+}
+
+.hook-visual {
+    width: 100%;
+    max-width: 400px;
+}
+
+.hook-visual svg {
+    width: 100%;
+    height: auto;
+}
+
+.hook-svg .pulse-line {
+    animation: line-pulse 2s ease-in-out infinite;
+}
+
+@keyframes line-pulse {
+    0%, 100% { stroke-width: 4; }
+    50% { stroke-width: 6; }
 }
 
 .scene-title, .hook-question {
@@ -200,6 +244,61 @@ button {
 
 #scene-container {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+/* 어두운 배경용 텍스트 색상 오버라이드 */
+.scene-text {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.hook-subtext {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.scene-title {
+    color: #64B5F6;
+}
+
+.story-character-emoji {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.feedback-neutral {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.wrap-summary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.wrap-summary h3 {
+    color: #64B5F6;
+}
+
+.wrap-summary p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.quiz-option {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+.quiz-option:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #64B5F6;
+}
+
+.quiz-option.correct {
+    background: rgba(76, 175, 80, 0.3);
+    border-color: #4CAF50;
+}
+
+.quiz-option.incorrect {
+    background: rgba(244, 67, 54, 0.3);
+    border-color: #f44336;
 }
 
 .hook-question {

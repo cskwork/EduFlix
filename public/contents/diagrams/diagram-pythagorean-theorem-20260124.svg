@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 280">
+  <!-- Right triangle -->
+  <polygon points="50,230 200,230 200,80" fill="none" stroke="#333" stroke-width="3"/>
+
+  <!-- Right angle marker -->
+  <path d="M 185 230 L 185 215 L 200 215" fill="none" stroke="#333" stroke-width="2"/>
+
+  <!-- Square on side a (bottom) -->
+  <rect x="50" y="230" width="150" height="50" fill="#FF7043" fill-opacity="0.3" stroke="#FF7043" stroke-width="2"/>
+  <text x="125" y="260" text-anchor="middle" font-size="16" font-weight="bold" fill="#D84315">a = 4</text>
+
+  <!-- Square on side b (right) -->
+  <rect x="200" y="80" width="50" height="150" fill="#42A5F5" fill-opacity="0.3" stroke="#42A5F5" stroke-width="2"/>
+  <text x="225" y="160" text-anchor="middle" font-size="16" font-weight="bold" fill="#1565C0">b = 3</text>
+
+  <!-- Hypotenuse label -->
+  <text x="100" y="140" text-anchor="middle" font-size="18" font-weight="bold" fill="#2196F3" transform="rotate(-45, 100, 140)">c = 5</text>
+
+  <!-- Formula -->
+  <text x="150" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#333">a + b = c</text>
+  <text x="150" y="50" text-anchor="middle" font-size="14" fill="#666">16 + 9 = 25</text>
+</svg>

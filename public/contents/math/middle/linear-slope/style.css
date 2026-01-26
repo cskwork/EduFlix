@@ -1,13 +1,32 @@
 /* ========================================
    독립형 스타일 - Base Reset & Scene
+   일차함수 기울기 - 스키 슬로프 테마
    ======================================== */
 
 :root {
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --primary-color: #2196F3;
-  --accent-color: #4CAF50;
-  --bg-color: #f5f5f5;
-  --text-color: #333;
+  --primary-dark: #1565C0;
+  --primary-light: #64B5F6;
+  --accent-color: #FF9800;
+  --accent-dark: #F57C00;
+  --accent-light: #FFB74D;
+  --bg-color: #f0f4f8;
+  --bg-gradient: linear-gradient(180deg, #e3f2fd 0%, #f5f5f5 100%);
+  --text-color: #1a2530;
+  --text-muted: #475569;
+  --card-bg: rgba(255, 255, 255, 0.96);
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+  /* 그래프 색상 */
+  --line-color: #2196F3;
+  --rise-run-color: #FF9800;
+  --grid-color: #e0e8f0;
+  --axis-color: #334155;
 }
 
 * {
@@ -21,15 +40,22 @@ html, body {
   height: 100%;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: var(--bg-color);
+  background: var(--bg-gradient);
+  background-image: url('../../../backgrounds/bg-grid-paper-math-subtle-20260125.png');
+  background-size: cover;
   color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #scene-container {
   width: 100%;
-  height: 100%;
+  max-width: 800px;
+  height: 100vh;
   position: relative;
-  background: var(--bg-color);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
 }
 
 .scene {
@@ -44,7 +70,7 @@ html, body {
   align-items: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.6s var(--ease-smooth);
   padding: 2rem;
   box-sizing: border-box;
 }
@@ -53,14 +79,37 @@ html, body {
   opacity: 1;
   pointer-events: all;
   z-index: 10;
+  animation: sceneEnter 0.5s var(--ease-smooth);
+}
+
+@keyframes sceneEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .scene-title, .hook-question {
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 2rem;
   text-align: center;
-  color: var(--primary-color);
+  color: var(--primary-dark);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+@supports not (-webkit-background-clip: text) {
+  .scene-title, .hook-question {
+    color: var(--primary-dark);
+  }
 }
 
 .scene-text {
@@ -69,6 +118,8 @@ html, body {
   text-align: center;
   max-width: 600px;
   margin-bottom: 2rem;
+  color: var(--text-color);
+  opacity: 0.8;
 }
 
 .story-stage {
@@ -86,6 +137,7 @@ html, body {
 .story-character-emoji {
   font-size: 80px;
   animation: bounce 2s infinite;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 @keyframes bounce {
@@ -117,27 +169,43 @@ button {
 }
 
 .btn, .btn-primary, .btn-primary-large {
-  padding: 12px 28px;
+  padding: 14px 32px;
   font-size: 1.1rem;
-  border-radius: 25px;
+  font-weight: 600;
+  border-radius: 30px;
   border: none;
-  background: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   color: white;
   transition: all 0.3s var(--ease-spring);
+  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+  letter-spacing: 0.02em;
 }
 
 .btn:hover, .btn-primary:hover, .btn-primary-large:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+}
+
+.btn:active, .btn-primary:active, .btn-primary-large:active {
+  transform: translateY(-1px);
 }
 
 .btn-secondary, .btn-secondary-large {
-  padding: 12px 28px;
+  padding: 14px 32px;
   font-size: 1.1rem;
-  border-radius: 25px;
-  background: white;
+  font-weight: 600;
+  border-radius: 30px;
+  background: var(--card-bg);
   color: var(--primary-color);
   border: 2px solid var(--primary-color);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s var(--ease-spring);
+}
+
+.btn-secondary:hover, .btn-secondary-large:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
 }
 
 .hidden { display: none !important; }
@@ -152,116 +220,318 @@ button {
 
 .quiz-option {
   padding: 18px 24px;
-  border: 2px solid #ddd;
-  border-radius: 12px;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
   cursor: pointer;
-  background: white;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
   font-size: 1.1rem;
-  transition: all 0.2s ease;
+  transition: all 0.25s var(--ease-smooth);
+  box-shadow: var(--shadow-sm);
 }
 
 .quiz-option:hover {
-  border-color: var(--primary-color);
+  border-color: var(--primary-light);
+  background: white;
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
 }
 
 .quiz-option.correct {
-  background: #d4edda;
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
   border-color: #28a745;
 }
 
 .quiz-option.incorrect {
-  background: #f8d7da;
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
   border-color: #dc3545;
 }
 
-.feedback-positive { color: #28a745; font-weight: bold; }
-.feedback-negative { color: #dc3545; font-weight: bold; }
-.feedback-neutral { color: #666; }
+.feedback-positive { color: #28a745; font-weight: 700; }
+.feedback-negative { color: #dc3545; font-weight: 700; }
+.feedback-neutral { color: var(--text-muted); }
 
 .wrap-summary {
-  background: white;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  padding: 2.5rem;
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
   margin-bottom: 2rem;
   text-align: center;
+  border: 1px solid var(--glass-border);
 }
 
 .wrap-summary h3 {
-  color: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-top: 0.5rem;
+  font-weight: 700;
 }
 
 /* ========================================
-   Content Specific Styles
+   Hook Scene Styles
    ======================================== */
 
-/* Linear Slope Specific Styles */
+.hook-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  animation: fadeSlideUp 0.6s var(--ease-smooth);
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.question-box {
+  text-align: center;
+}
+
+.hook-subtext {
+  color: var(--text-color);
+  font-size: 1.1rem;
+  margin-top: 0.75rem;
+  opacity: 0.85;
+  line-height: 1.6;
+}
+
+.hook-visual {
+  width: 100%;
+  max-width: 400px;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+}
+
+.hook-visual svg {
+  width: 100%;
+  height: auto;
+}
+
+/* 스키어 애니메이션 */
+.ski-slope-svg .skier-slow {
+  animation: ski-slow 4s ease-in-out infinite;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+}
+
+.ski-slope-svg .skier-fast {
+  animation: ski-fast 2.5s ease-in-out infinite;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+}
+
+@keyframes ski-slow {
+  0% { transform: translate(30px, 165px); }
+  50% { transform: translate(100px, 190px); }
+  100% { transform: translate(30px, 165px); }
+}
+
+@keyframes ski-fast {
+  0% { transform: translate(230px, 90px); }
+  50% { transform: translate(350px, 195px); }
+  100% { transform: translate(230px, 90px); }
+}
+
+/* ========================================
+   Content Specific Styles - 일차함수 기울기
+   ======================================== */
+
+/* 그래프 컨테이너 */
 .slope-container {
-    width: 100%;
-    max-width: 500px;
-    height: 400px;
-    position: relative;
-    margin: 0 auto;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    overflow: hidden;
+  width: 100%;
+  max-width: 520px;
+  height: 420px;
+  position: relative;
+  margin: 0 auto;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    var(--shadow-lg),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  animation: containerEnter 0.6s var(--ease-smooth);
+}
+
+@keyframes containerEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .slope-svg {
-    width: 100%;
-    height: 100%;
-    cursor: crosshair;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
 }
 
+/* 그리드 라인 */
 .grid-line {
-    stroke: #eee;
-    stroke-width: 1;
+  stroke: var(--grid-color);
+  stroke-width: 1;
 }
 
+/* 축 */
 .axis {
-    stroke: #333;
-    stroke-width: 2;
+  stroke: var(--axis-color);
+  stroke-width: 2.5;
+  stroke-linecap: round;
 }
 
+/* 기울기 라인 */
 .slope-line {
-    stroke: #2196F3;
-    stroke-width: 4;
+  stroke: var(--line-color);
+  stroke-width: 4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 2px 4px rgba(33, 150, 243, 0.3));
+  transition: stroke-width 0.2s ease;
 }
 
+.slope-line:hover {
+  stroke-width: 5;
+}
+
+/* Rise/Run 가이드 라인 */
 .rise-run-line {
-    stroke: #FF9800;
-    stroke-width: 2;
-    stroke-dasharray: 5,5;
+  stroke: var(--rise-run-color);
+  stroke-width: 2.5;
+  stroke-dasharray: 8, 4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 1px 2px rgba(255, 152, 0, 0.3));
 }
 
+/* 컨트롤 포인트 */
 .control-point {
-    cursor: grab;
-    fill: #2196F3;
-    stroke: white;
-    stroke-width: 2px;
+  cursor: grab;
+  fill: var(--primary-color);
+  stroke: white;
+  stroke-width: 3px;
+  filter: drop-shadow(0 3px 6px rgba(33, 150, 243, 0.4));
+  transition: all 0.2s var(--ease-smooth);
 }
+
+.control-point:hover {
+  fill: var(--primary-dark);
+  r: 12;
+  filter: drop-shadow(0 4px 10px rgba(33, 150, 243, 0.5));
+}
+
 .control-point:active {
-    cursor: grabbing;
+  cursor: grabbing;
+  fill: var(--primary-light);
 }
 
+/* 정보 박스 - Glassmorphism */
 .info-box {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(255,255,255,0.9);
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    font-family: monospace;
-    font-size: 1.2rem;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 14px 18px;
+  border-radius: 14px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--glass-border);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-color);
+  animation: infoBoxEnter 0.4s var(--ease-smooth) 0.2s both;
 }
 
+@keyframes infoBoxEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.info-box::before {
+  content: 'm = ';
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* 수식 디스플레이 */
 .formula-display {
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-color);
+  padding: 1rem 1.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--glass-border);
+  font-family: 'Times New Roman', 'Georgia', serif;
+  font-style: italic;
+  animation: formulaEnter 0.5s var(--ease-smooth) 0.3s both;
+}
+
+@keyframes formulaEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 기울기 값 하이라이트 */
+.formula-display .slope-value {
+  color: var(--primary-color);
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  background: rgba(33, 150, 243, 0.1);
+  border-radius: 6px;
+}
+
+.formula-display .intercept-value {
+  color: var(--accent-color);
+  font-weight: 800;
+}
+
+/* 추가: 반응형 조정 */
+@media (max-width: 600px) {
+  .slope-container {
+    height: 320px;
+    border-radius: 16px;
+  }
+
+  .info-box {
+    padding: 10px 14px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  .formula-display {
+    font-size: 1.3rem;
+    padding: 0.8rem 1.2rem;
+  }
+
+  .scene-title, .hook-question {
+    font-size: 2rem;
+  }
 }

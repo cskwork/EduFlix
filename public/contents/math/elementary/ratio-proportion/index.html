@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비와 비율: 레시피의 비밀</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Jua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- 1. Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-wrapper">
+                <div class="question-box">
+                    <h1 class="main-title">레시피의 비밀</h1>
+                    <p class="sub-text">레시피가 4인분인데, 6명이 먹으려면<br>재료를 얼마나 넣어야 할까요?</p>
+                </div>
+                <div class="visual-area">
+                    <div class="recipe-animation">
+                        <!-- 요리 재료 SVG -->
+                        <svg viewBox="0 0 300 200" class="recipe-svg">
+                            <!-- 냄비 -->
+                            <ellipse cx="150" cy="170" rx="80" ry="15" fill="#795548"/>
+                            <path d="M70 100 Q70 170 150 170 Q230 170 230 100 L230 80 L70 80 Z" fill="#FF7043" stroke="#E64A19" stroke-width="2"/>
+                            <ellipse cx="150" cy="80" rx="80" ry="15" fill="#FF8A65"/>
+                            <!-- 손잡이 -->
+                            <rect x="230" y="85" width="40" height="12" rx="3" fill="#5D4037"/>
+                            <!-- 재료들 (애니메이션) -->
+                            <g id="ingredients-group">
+                                <circle class="ingredient ing-1" cx="120" cy="50" r="12" fill="#FFEB3B"/>
+                                <circle class="ingredient ing-2" cx="150" cy="40" r="10" fill="#8BC34A"/>
+                                <circle class="ingredient ing-3" cx="180" cy="45" r="11" fill="#FF5722"/>
+                                <rect class="ingredient ing-4" x="130" y="30" width="15" height="15" rx="2" fill="#FFC107"/>
+                            </g>
+                            <!-- 물음표 -->
+                            <text x="150" y="130" class="question-mark" text-anchor="middle" font-size="40" fill="white" font-weight="bold">?</text>
+                        </svg>
+                    </div>
+                    <div class="person-icons">
+                        <span class="person-label">4인분</span>
+                        <div class="persons" id="persons-4">
+                            <span class="person">&#128100;</span>
+                            <span class="person">&#128100;</span>
+                            <span class="person">&#128100;</span>
+                            <span class="person">&#128100;</span>
+                        </div>
+                        <span class="arrow-icon">&#10132;</span>
+                        <div class="persons" id="persons-6">
+                            <span class="person">&#128100;</span>
+                            <span class="person">&#128100;</span>
+                            <span class="person">&#128100;</span>
+                            <span class="person">&#128100;</span>
+                            <span class="person highlight">&#128100;</span>
+                            <span class="person highlight">&#128100;</span>
+                        </div>
+                        <span class="person-label">6인분</span>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button class="btn-primary" onclick="ContentApp.nextScene()">알아보러 가기</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="anchor-content">
+                    <h2>곱셈과 나눗셈의 관계</h2>
+                    <p>기억하고 있나요?</p>
+                    <div class="multiplication-demo">
+                        <div class="equation-visual">
+                            <div class="eq-row">
+                                <span class="eq-num">3</span>
+                                <span class="eq-op">x</span>
+                                <span class="eq-num">4</span>
+                                <span class="eq-op">=</span>
+                                <span class="eq-num result">12</span>
+                            </div>
+                            <div class="eq-row reverse">
+                                <span class="eq-num">12</span>
+                                <span class="eq-op">/</span>
+                                <span class="eq-num">4</span>
+                                <span class="eq-op">=</span>
+                                <span class="eq-num result">3</span>
+                            </div>
+                        </div>
+                        <div class="block-visual" id="anchor-blocks">
+                            <!-- 3x4 블록 그리드 -->
+                        </div>
+                        <p class="insight-mini">곱셈과 나눗셈은 서로 역연산이에요!</p>
+                    </div>
+                    <button class="btn-primary fade-in-delay" onclick="ContentApp.nextScene()">다음으로</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="story-card">
+                    <div class="character-area">
+                        <!-- 쉐프 캐릭터 SVG -->
+                        <svg viewBox="0 0 100 100" class="chef-svg bounce">
+                            <!-- 쉐프 모자 -->
+                            <ellipse cx="50" cy="25" rx="30" ry="15" fill="white" stroke="#ddd" stroke-width="2"/>
+                            <rect x="35" y="25" width="30" height="20" fill="white"/>
+                            <ellipse cx="50" cy="45" rx="25" ry="8" fill="#FFE0B2"/>
+                            <!-- 얼굴 -->
+                            <circle cx="50" cy="55" r="20" fill="#FFE0B2"/>
+                            <!-- 눈 -->
+                            <circle cx="43" cy="52" r="3" fill="#5D4037"/>
+                            <circle cx="57" cy="52" r="3" fill="#5D4037"/>
+                            <circle cx="44" cy="51" r="1" fill="white"/>
+                            <circle cx="58" cy="51" r="1" fill="white"/>
+                            <!-- 미소 -->
+                            <path d="M43 62 Q50 68 57 62" fill="none" stroke="#5D4037" stroke-width="2" stroke-linecap="round"/>
+                            <!-- 볼터치 -->
+                            <ellipse cx="35" cy="58" rx="4" ry="2.5" fill="#FFAB91" opacity="0.6"/>
+                            <ellipse cx="65" cy="58" rx="4" ry="2.5" fill="#FFAB91" opacity="0.6"/>
+                            <!-- 몸 -->
+                            <rect x="35" y="75" width="30" height="25" rx="5" fill="white" stroke="#ddd"/>
+                            <!-- 앞치마 -->
+                            <rect x="40" y="78" width="20" height="18" fill="#E57373"/>
+                        </svg>
+                    </div>
+                    <div class="dialogue-box">
+                        <h3>요리 유튜버 쉐프 지민</h3>
+                        <p id="typewriter-text"></p>
+                    </div>
+                </div>
+                <div class="problem-visual">
+                    <div class="recipe-card-mini">
+                        <h4>떡볶이 레시피 (4인분)</h4>
+                        <ul class="recipe-list">
+                            <li><span class="ing-name">떡</span> <span class="ing-amount">400g</span></li>
+                            <li><span class="ing-name">고추장</span> <span class="ing-amount">3큰술</span></li>
+                            <li><span class="ing-name">설탕</span> <span class="ing-amount">2큰술</span></li>
+                            <li><span class="ing-name">어묵</span> <span class="ing-amount">200g</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="ContentApp.nextScene()">도와주기</button>
+            </div>
+        </section>
+
+        <!-- 4. Core Scene (Interaction) -->
+        <section id="core-scene" class="scene">
+            <div class="content-wrapper">
+                <h2>인원수에 맞게 재료 조절하기</h2>
+                <p class="instruction">슬라이더를 움직여 인원수를 바꿔보세요!</p>
+
+                <div class="slider-container">
+                    <label for="person-slider" class="slider-label">
+                        인원수: <span id="person-count" class="person-count-display">4</span>명
+                    </label>
+                    <input type="range" id="person-slider" min="1" max="10" value="4" class="styled-slider">
+                    <div class="slider-marks">
+                        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+                        <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                    </div>
+                </div>
+
+                <div class="ingredient-bars" id="ingredient-bars">
+                    <!-- 재료 막대 SVG가 여기 삽입됨 -->
+                </div>
+
+                <div class="ratio-display">
+                    <div class="ratio-formula">
+                        <span class="base-ratio">4인분 기준</span>
+                        <span class="ratio-arrow">:</span>
+                        <span id="current-ratio" class="current-ratio">4인분</span>
+                        <span class="ratio-equals">=</span>
+                        <span class="ratio-multiplier">x<span id="multiplier-value">1</span></span>
+                    </div>
+                </div>
+
+                <button id="core-next-btn" class="btn-primary" onclick="ContentApp.nextScene()">비례식 알아보기</button>
+            </div>
+        </section>
+
+        <!-- 5. Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-wrapper">
+                <h2>비례식의 성질</h2>
+                <div class="visualize-content">
+                    <div class="ratio-blocks-visual">
+                        <img src="../../diagrams/diagram-ratio-proportion-blocks-20260125.svg" alt="비율 블록" class="ratio-diagram">
+                    </div>
+
+                    <div class="proportion-formula">
+                        <div class="formula-row">
+                            <span class="term term-a">a</span>
+                            <span class="colon">:</span>
+                            <span class="term term-b">b</span>
+                            <span class="equals">=</span>
+                            <span class="term term-c">c</span>
+                            <span class="colon">:</span>
+                            <span class="term term-d">d</span>
+                        </div>
+                        <div class="formula-arrow">&#8595;</div>
+                        <div class="formula-row cross-multiply">
+                            <span class="term term-a">a</span>
+                            <span class="multiply">x</span>
+                            <span class="term term-d">d</span>
+                            <span class="equals">=</span>
+                            <span class="term term-b">b</span>
+                            <span class="multiply">x</span>
+                            <span class="term term-c">c</span>
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>예시</h4>
+                        <div class="example-content">
+                            <div class="example-row">
+                                <span>떡 400g : 4인분 = 떡 600g : 6인분</span>
+                            </div>
+                            <div class="example-row highlight">
+                                <span>400 x 6 = 4 x 600</span>
+                            </div>
+                            <div class="example-row result">
+                                <span>2400 = 2400</span> <span class="check-mark">&#10003;</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="key-insight">
+                        <p>"외항의 곱 = 내항의 곱" 이것이 비례식의 핵심이에요!</p>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="ContentApp.nextScene()">문제 풀어보기</button>
+            </div>
+        </section>
+
+        <!-- 6. Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="quiz-header">
+                    <span class="badge">Quiz</span>
+                    <h3>설탕은 얼마가 필요할까요?</h3>
+                </div>
+                <div class="quiz-visual">
+                    <!-- 막대 그래프 시각화 -->
+                    <svg viewBox="0 0 350 200" class="quiz-svg">
+                        <!-- 배경 그리드 -->
+                        <defs>
+                            <pattern id="grid" width="50" height="25" patternUnits="userSpaceOnUse">
+                                <line x1="0" y1="25" x2="50" y2="25" stroke="#eee" stroke-width="1"/>
+                            </pattern>
+                        </defs>
+                        <rect x="50" y="20" width="280" height="150" fill="url(#grid)"/>
+
+                        <!-- Y축 -->
+                        <line x1="50" y1="20" x2="50" y2="170" stroke="#333" stroke-width="2"/>
+                        <!-- X축 -->
+                        <line x1="50" y1="170" x2="330" y2="170" stroke="#333" stroke-width="2"/>
+
+                        <!-- Y축 레이블 -->
+                        <text x="40" y="170" text-anchor="end" font-size="12">0g</text>
+                        <text x="40" y="120" text-anchor="end" font-size="12">150g</text>
+                        <text x="40" y="70" text-anchor="end" font-size="12">300g</text>
+                        <text x="40" y="25" text-anchor="end" font-size="12">450g</text>
+
+                        <!-- 밀가루 막대 (300g) -->
+                        <rect x="80" y="70" width="60" height="100" fill="#FFB74D" stroke="#F57C00" stroke-width="2" rx="4"/>
+                        <text x="110" y="190" text-anchor="middle" font-size="12" font-weight="bold">밀가루</text>
+                        <text x="110" y="60" text-anchor="middle" font-size="14" font-weight="bold" fill="#F57C00">300g</text>
+
+                        <!-- 설탕 막대 (100g) -->
+                        <rect x="160" y="120" width="60" height="50" fill="#E57373" stroke="#D32F2F" stroke-width="2" rx="4"/>
+                        <text x="190" y="190" text-anchor="middle" font-size="12" font-weight="bold">설탕</text>
+                        <text x="190" y="110" text-anchor="middle" font-size="14" font-weight="bold" fill="#D32F2F">100g</text>
+
+                        <!-- 새로운 밀가루 막대 (450g) -->
+                        <rect x="240" y="20" width="60" height="150" fill="#FFB74D" stroke="#F57C00" stroke-width="2" rx="4" opacity="0.7"/>
+                        <text x="270" y="190" text-anchor="middle" font-size="12" font-weight="bold">밀가루</text>
+                        <text x="270" y="15" text-anchor="middle" font-size="14" font-weight="bold" fill="#F57C00">450g</text>
+
+                        <!-- 설탕 물음표 막대 -->
+                        <rect x="310" y="95" width="30" height="75" fill="#E57373" stroke="#D32F2F" stroke-width="2" stroke-dasharray="5,3" rx="4" opacity="0.5"/>
+                        <text x="325" y="140" text-anchor="middle" font-size="24" font-weight="bold" fill="#D32F2F">?</text>
+                    </svg>
+                </div>
+                <div class="quiz-problem">
+                    <p class="problem-text">밀가루 <strong>300g</strong>에 설탕 <strong>100g</strong>을 넣는 레시피가 있어요.</p>
+                    <p class="problem-text">밀가루를 <strong>450g</strong> 사용하면 설탕은 몇 g이 필요할까요?</p>
+                    <div class="proportion-hint">
+                        <span>300 : 100 = 450 : ?</span>
+                    </div>
+                </div>
+                <div class="quiz-interaction">
+                    <div class="options">
+                        <button class="opt-btn" onclick="ContentApp.checkAnswer(120)">120g</button>
+                        <button class="opt-btn" onclick="ContentApp.checkAnswer(150)">150g</button>
+                        <button class="opt-btn" onclick="ContentApp.checkAnswer(180)">180g</button>
+                    </div>
+                </div>
+                <div id="quiz-feedback" class="quiz-feedback hidden"></div>
+            </div>
+        </section>
+
+        <!-- 7. Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="reward-area">
+                    <img src="../../icons/icon-trophy-achievement-cute-20260124.svg" alt="트로피" class="trophy-anim">
+                    <h2>축하합니다!</h2>
+                </div>
+                <div class="summary-card">
+                    <h3>오늘 배운 내용</h3>
+                    <ul>
+                        <li><strong>비</strong>는 두 수의 관계를 나타내요. (예: 3:2)</li>
+                        <li><strong>비율</strong>은 비를 분수나 소수로 나타낸 것이에요.</li>
+                        <li><strong>비례식</strong>: a:b = c:d 일 때, <span class="formula-inline">ad = bc</span></li>
+                        <li>비례식을 이용하면 모르는 양을 구할 수 있어요!</li>
+                    </ul>
+                </div>
+                <div class="real-life-examples">
+                    <h4>실생활 속 비와 비율</h4>
+                    <div class="example-icons">
+                        <div class="example-item">
+                            <span class="icon-large">&#127859;</span>
+                            <span>레시피 조절</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="icon-large">&#128506;</span>
+                            <span>지도 축척</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="icon-large">&#128176;</span>
+                            <span>환율 계산</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-secondary" onclick="location.reload()">다시 하기</button>
+                    <button class="btn-primary">다음 주제로</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

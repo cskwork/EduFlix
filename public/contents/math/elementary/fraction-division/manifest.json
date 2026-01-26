@@ -1,0 +1,12 @@
+{
+  "id": "fraction-division",
+  "title": "분수의 나눗셈: 똑같이 나누기",
+  "subject": "math",
+  "gradeLevel": "elementary",
+  "grade": "elementary-6",
+  "type": "simulation",
+  "language": "ko",
+  "description": "피자 조각을 나누는 시각화를 통해 분수 나눗셈의 원리와 역수 곱셈 방법을 이해하는 인터랙티브 콘텐츠",
+  "thumbnail": "/contents/math/elementary/fraction-division/assets/thumbnail.svg",
+  "path": "/contents/math/elementary/fraction-division/index.html"
+}

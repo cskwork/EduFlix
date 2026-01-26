@@ -173,6 +173,7 @@ function goToCreateMode() {
   margin-bottom: var(--spacing-md);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   line-height: 1.1;
+  white-space: nowrap;
 }
 
 .hero-subtitle {

@@ -59,7 +59,18 @@ class EduFlixEngine {
 
     createScenes() {
         this.createScene('hook', (scene) => {
-            scene.innerHTML = `<h1 class="hook-question">${this.data.hook.question}</h1><button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>`;
+            const { question, subText, visual } = this.data.hook;
+            scene.innerHTML = `
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
+            `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         this.createScene('story', (scene) => {
@@ -157,7 +168,45 @@ window.Engine = new EduFlixEngine();
 const droneData = {
     title: "3D 좌표계: 드론 파일럿",
     hook: {
-        question: "드론이 3D 공간을 자유롭게 날아다니려면 어떤 정보가 필요할까요?"
+        question: "드론이 3D 공간을 자유롭게 날아다니려면 어떤 정보가 필요할까요?",
+        subText: "가로, 세로... 그리고 뭐가 더 필요할까요?",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 250" class="hook-svg">
+                    <!-- 3D 좌표축 -->
+                    <g transform="translate(150, 150)">
+                        <!-- X축 (빨강) -->
+                        <line x1="0" y1="0" x2="120" y2="60" stroke="#E91E63" stroke-width="3"/>
+                        <polygon points="120,60 110,55 110,65" fill="#E91E63"/>
+                        <text x="130" y="70" font-size="16" fill="#E91E63" font-weight="bold">x</text>
+                        <!-- Y축 (초록) -->
+                        <line x1="0" y1="0" x2="0" y2="-100" stroke="#4CAF50" stroke-width="3"/>
+                        <polygon points="0,-100 -5,-90 5,-90" fill="#4CAF50"/>
+                        <text x="10" y="-90" font-size="16" fill="#4CAF50" font-weight="bold">y</text>
+                        <!-- Z축 (파랑) -->
+                        <line x1="0" y1="0" x2="-80" y2="40" stroke="#2196F3" stroke-width="3"/>
+                        <polygon points="-80,40 -70,35 -70,45" fill="#2196F3"/>
+                        <text x="-95" y="50" font-size="16" fill="#2196F3" font-weight="bold">z</text>
+                        <!-- 원점 -->
+                        <circle cx="0" cy="0" r="5" fill="#333"/>
+                        <text x="10" y="15" font-size="12" fill="rgba(255, 255, 255, 0.7)">O</text>
+                    </g>
+                    <!-- 드론 -->
+                    <g class="drone-fly" transform="translate(280, 80)">
+                        <rect x="-20" y="-5" width="40" height="10" fill="#333" rx="3"/>
+                        <rect x="-30" y="-3" width="60" height="6" fill="#666" rx="2"/>
+                        <circle cx="-25" cy="-8" r="8" fill="#90CAF9" opacity="0.7"/>
+                        <circle cx="25" cy="-8" r="8" fill="#90CAF9" opacity="0.7"/>
+                        <circle cx="0" cy="8" r="4" fill="#4CAF50"/>
+                    </g>
+                    <!-- 좌표 표시 -->
+                    <text x="280" y="110" text-anchor="middle" font-size="14" fill="#FF5722">(3, 4, 2)</text>
+                    <!-- 점선 경로 -->
+                    <path d="M150,150 L280,80" stroke="#FF9800" stroke-width="2" stroke-dasharray="5,3"/>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" },

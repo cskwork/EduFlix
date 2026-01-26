@@ -22,14 +22,21 @@ html, body {
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--bg-color);
+  background-image: url('../../../backgrounds/bg-science-molecules-pattern-20260125.png');
+  background-size: cover;
   color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #scene-container {
   width: 100%;
-  height: 100%;
+  max-width: 800px;
+  height: 100vh;
   position: relative;
-  background: var(--bg-color);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
 }
 
 .scene {
@@ -597,4 +604,149 @@ button {
     padding: 10px 16px;
     font-size: 14px;
   }
+}
+
+/* ========================================
+   Cell Organelle Styles (DOM-based)
+   ======================================== */
+
+.cell-container {
+  width: 350px;
+  height: 350px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem auto;
+}
+
+.cell {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, 
+    rgba(200, 230, 255, 0.9) 0%, 
+    rgba(150, 200, 240, 0.7) 40%,
+    rgba(100, 150, 200, 0.5) 100%);
+  border: 3px solid rgba(80, 130, 180, 0.6);
+  position: relative;
+  box-shadow: 
+    inset 0 0 60px rgba(255, 255, 255, 0.3),
+    0 0 20px rgba(100, 150, 200, 0.3);
+  overflow: hidden;
+}
+
+.organelle {
+  position: absolute;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 5;
+}
+
+.organelle:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+.nucleus {
+  width: 90px;
+  height: 90px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%,
+    #ba68c8 0%,
+    #9c27b0 50%,
+    #7b1fa2 100%);
+  border: 2px solid #6a1b9a;
+  box-shadow: 
+    inset 0 0 20px rgba(0, 0, 0, 0.2),
+    0 4px 15px rgba(156, 39, 176, 0.4);
+}
+
+.nucleus:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.mitochondria {
+  width: 55px;
+  height: 28px;
+  border-radius: 14px;
+  background: linear-gradient(135deg,
+    #ffb74d 0%,
+    #ff9800 50%,
+    #f57c00 100%);
+  border: 2px solid #ef6c00;
+  box-shadow: 
+    inset 0 0 10px rgba(0, 0, 0, 0.15),
+    0 3px 10px rgba(255, 152, 0, 0.4);
+}
+
+.mitochondria::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  right: 5px;
+  height: 2px;
+  background: rgba(230, 81, 0, 0.5);
+  transform: translateY(-50%);
+}
+
+.mito-1 { 
+  top: 18%; 
+  left: 12%; 
+  transform: rotate(-20deg);
+}
+
+.mito-2 { 
+  top: 68%; 
+  left: 58%; 
+  transform: rotate(25deg);
+}
+
+.ribosome {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%,
+    #616161 0%,
+    #424242 50%,
+    #212121 100%);
+  border: 1px solid #000;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Info Box Styles */
+.info-box {
+  text-align: center;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  margin-top: 1rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.info-box.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#organelle-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+#organelle-desc {
+  font-size: 1rem;
+  color: var(--text-color);
+  line-height: 1.6;
 }

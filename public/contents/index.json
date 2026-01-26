@@ -191,8 +191,68 @@
       "type": "simulation",
       "language": "ko",
       "description": "정사각형의 넓이를 활용하여 피타고라스의 정리 a² + b² = c²를 시각적으로 발견하고 실생활 문제에 적용해보세요!",
-      "thumbnail": "/contents/math/middle/20260125-pythagorean/assets/thumbnail.svg",
-      "path": "/contents/math/middle/20260125-pythagorean/index.html"
+      "thumbnail": "/contents/math/middle/pythagorean-squares/assets/thumbnail.svg",
+      "path": "/contents/math/middle/pythagorean-squares/index.html"
+    },
+    {
+      "id": "box-volume",
+      "title": "직육면체의 부피: 상자 속 비밀",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "type": "simulation",
+      "language": "ko",
+      "description": "단위 큐브를 쌓아 직육면체의 부피 공식(가로x세로x높이)을 직관적으로 이해하는 인터랙티브 콘텐츠",
+      "thumbnail": "/contents/math/elementary/box-volume/assets/thumbnail.svg",
+      "path": "/contents/math/elementary/box-volume/index.html"
+    },
+    {
+      "id": "circle-area",
+      "title": "원의 넓이: 피자의 비밀",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "type": "simulation",
+      "language": "ko",
+      "description": "원을 부채꼴로 분할하여 직사각형으로 변환하는 과정을 통해 원의 넓이 공식을 발견하는 인터랙티브 콘텐츠",
+      "thumbnail": "/contents/math/elementary/circle-area/assets/thumbnail.svg",
+      "path": "/contents/math/elementary/circle-area/index.html"
+    },
+    {
+      "id": "decimal-multiplication",
+      "title": "소수의 곱셈",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "type": "simulation",
+      "language": "ko",
+      "description": "소수점 위치 변화를 시각화하여 소수 곱셈의 원리를 이해하는 인터랙티브 콘텐츠",
+      "thumbnail": "/contents/math/elementary/decimal-multiplication/assets/thumbnail.svg",
+      "path": "/contents/math/elementary/decimal-multiplication/index.html"
+    },
+    {
+      "id": "fraction-division",
+      "title": "분수의 나눗셈: 똑같이 나누기",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-6",
+      "type": "simulation",
+      "language": "ko",
+      "description": "피자 조각을 나누는 시각화를 통해 분수 나눗셈의 원리와 역수 곱셈 방법을 이해하는 인터랙티브 콘텐츠",
+      "thumbnail": "/contents/math/elementary/fraction-division/assets/thumbnail.svg",
+      "path": "/contents/math/elementary/fraction-division/index.html"
+    },
+    {
+      "id": "ratio-proportion",
+      "title": "비와 비율: 레시피의 비밀",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-6",
+      "type": "simulation",
+      "language": "ko",
+      "description": "떡볶이 레시피 조절을 통해 비와 비율의 개념을 실생활에서 이해하는 인터랙티브 콘텐츠",
+      "thumbnail": "/contents/math/elementary/ratio-proportion/assets/thumbnail.svg",
+      "path": "/contents/math/elementary/ratio-proportion/index.html"
     }
   ]
 }

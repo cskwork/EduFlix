@@ -59,7 +59,18 @@ class EduFlixEngine {
 
     createScenes() {
         this.createScene('hook', (scene) => {
-            scene.innerHTML = `<h1 class="hook-question">${this.data.hook.question}</h1><button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>`;
+            const { question, subText, visual } = this.data.hook;
+            scene.innerHTML = `
+                <div class="hook-content">
+                    <div class="question-box">
+                        <h1 class="hook-question">${question}</h1>
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                    </div>
+                    ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
+                    <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
+                </div>
+            `;
+            if (this.data.hook.onInit) this.data.hook.onInit(scene);
         });
 
         this.createScene('story', (scene) => {
@@ -156,7 +167,49 @@ window.Engine = new EduFlixEngine();
 const negativeData = {
     title: "정수의 덧셈과 뺄셈",
     hook: {
-        question: "용돈 5000원에서 7000원을 쓰면 어떻게 될까요?"
+        question: "용돈 5000원에서 7000원을 쓰면 어떻게 될까요?",
+        subText: "마이너스 통장이 된다고요?",
+        visual: {
+            type: "svg",
+            content: `
+                <svg viewBox="0 0 400 180" class="hook-svg">
+                    <!-- 수직선 배경 -->
+                    <rect x="0" y="70" width="400" height="40" fill="#E3F2FD" rx="5"/>
+                    <!-- 수직선 -->
+                    <line x1="20" y1="90" x2="380" y2="90" stroke="#333" stroke-width="2"/>
+                    <!-- 눈금과 숫자 -->
+                    <g font-size="12" text-anchor="middle">
+                        <line x1="60" y1="85" x2="60" y2="95" stroke="#333" stroke-width="2"/>
+                        <text x="60" y="120" fill="#E91E63">-3</text>
+                        <line x1="120" y1="85" x2="120" y2="95" stroke="#333" stroke-width="2"/>
+                        <text x="120" y="120" fill="#E91E63">-2</text>
+                        <line x1="180" y1="85" x2="180" y2="95" stroke="#333" stroke-width="2"/>
+                        <text x="180" y="120" fill="#E91E63">-1</text>
+                        <line x1="240" y1="85" x2="240" y2="95" stroke="#333" stroke-width="3"/>
+                        <text x="240" y="120" font-weight="bold">0</text>
+                        <line x1="300" y1="85" x2="300" y2="95" stroke="#333" stroke-width="2"/>
+                        <text x="300" y="120" fill="#4CAF50">+1</text>
+                        <line x1="360" y1="85" x2="360" y2="95" stroke="#333" stroke-width="2"/>
+                        <text x="360" y="120" fill="#4CAF50">+2</text>
+                    </g>
+                    <!-- 펭귄 캐릭터 (애니메이션) -->
+                    <g class="penguin-move">
+                        <circle cx="300" cy="60" r="15" fill="#333"/>
+                        <circle cx="300" cy="55" r="8" fill="#FFF"/>
+                        <circle cx="300" cy="54" r="3" fill="#333"/>
+                        <polygon points="300,60 295,70 305,70" fill="#FF9800"/>
+                    </g>
+                    <!-- 화살표 -->
+                    <path d="M300,45 L180,45" stroke="#E91E63" stroke-width="3" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,3"/>
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#E91E63"/>
+                        </marker>
+                    </defs>
+                    <text x="240" y="35" text-anchor="middle" font-size="14" fill="#E91E63">-2</text>
+                </svg>
+            `
+        }
     },
     story: {
         character: { image: "assets/character.svg" },
