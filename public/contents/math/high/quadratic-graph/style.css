@@ -42,7 +42,7 @@ html, body {
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--bg-gradient);
-  background-image: url('../../../backgrounds/bg-math-formulas-overlay-20260124.png');
+  background-image: url('/contents/backgrounds/bg-math-formulas-overlay-20260124.png');
   background-size: cover;
   color: var(--text-color);
   display: flex;

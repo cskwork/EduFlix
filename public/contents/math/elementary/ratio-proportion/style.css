@@ -25,7 +25,7 @@
 body {
     font-family: 'Noto Sans KR', sans-serif;
     background: var(--bg-color);
-    background-image: url('../../backgrounds/bg-grid-paper-20260125.png');
+    background-image: url('/contents/backgrounds/bg-grid-paper-20260125.png');
     background-size: 400px;
     background-repeat: repeat;
     color: var(--text-color);

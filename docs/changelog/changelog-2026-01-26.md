@@ -65,3 +65,67 @@ OrbitControls 호환성 문제 해결 (THREE.OrbitControls is not a constructor 
 - `src/assets/styles/responsive.css`: 모바일 구간에서 콘텐츠 뷰어 컨테이너를 fixed로 배치
 
 모바일 iframe 콘텐츠 하단에 발생하던 검은 여백을 제거하고 기본 화면이 전체 뷰포트를 채우도록 조정
+
+---
+
+## 메인 검색 기능 추가
+
+### 변경 사항
+- `src/components/common/AppHeader.vue`: 검색 입력 토글 UI와 쿼리 동기화 추가
+- `src/views/HomeView.vue`: URL 쿼리(q, subject) 기반 필터 동기화 추가
+- `src/stores/content.ts`: 검색어 필터 및 관련 액션 추가
+- `src/composables/useKeyboardNavigation.ts`: `/` 단축키로 검색 입력 포커스
+- `tests/unit/generation.test.ts`: 검색 필터 테스트 추가
+
+---
+
+## decimal-multiplication 이미지 경로 수정
+
+### 변경 사항
+- `public/contents/math/elementary/decimal-multiplication/index.html`: 아이콘/일러스트 경로를 `/contents` 절대 경로로 수정
+- `public/contents/math/elementary/decimal-multiplication/style.css`: 배경 이미지 경로를 `/contents` 절대 경로로 수정
+- `tests/unit/decimal-multiplication-assets.test.ts`: 이미지 경로 회귀 테스트 추가
+
+---
+
+## 콘텐츠 자산 경로 일괄 정리
+
+### 변경 사항
+- `public/contents/**/*.html`: 아이콘/다이어그램 경로를 `/contents` 절대 경로로 통일
+- `public/contents/**/*.css`: 배경 이미지 경로를 `/contents` 절대 경로로 통일
+- `tests/unit/content-asset-paths.test.ts`: 콘텐츠 자산 경로 회귀 테스트 추가
+
+---
+
+## 전체 화면 크기 반응형 수정 (하단 검은색 영역 완전 제거)
+
+### 문제
+- 0-767px (모바일/소형 태블릿) 및 가로 모드에서 iframe 콘텐츠 하단에 검은색 영역 발생
+- 근본 원인: `100%` 높이가 dvh 폴백 없음, iOS Safari 브라우저 UI 변경 시 빈 공간
+
+### 변경 사항
+
+**mobile.css**:
+- 기본 모바일 스타일: `#scene-container` height를 `100dvh`로 변경 (vh 폴백 포함)
+- 기본 모바일 스타일: `.scene` height를 `auto`로 변경 (콘텐츠에 맞게 조절)
+- 576px+ 브레이크포인트: dvh 처리 추가
+- 가로 모드: `.scene` 및 `#scene-container`에 dvh 처리 추가
+
+**responsive.css**:
+- <480px: `.viewer-container` height를 `calc(100dvh - var(--header-height))`로 변경
+- 480-767px: `.viewer-container` height를 `calc(100dvh - var(--header-height))`로 변경
+- 가로 모드: `.viewer-container` height를 `calc(100dvh - 48px)`로 변경
+
+---
+
+## 태블릿 iframe 콘텐츠 하단 검은색 화면 수정 (이전 작업)
+
+### 문제
+- 태블릿(768px-1023px)에서 iframe 콘텐츠 하단이 검은색으로 표시됨
+- 원인: `100vh`가 브라우저 UI(주소창/탭바)를 고려하지 않음 + `overflow: hidden`으로 콘텐츠 잘림
+
+### 변경 사항
+- `public/contents/common/mobile.css` (309-338번째 줄):
+  - `html, body`: `overflow: hidden` -> `overflow: auto` (스크롤 허용)
+  - `#scene-container`: `height: 100vh` -> `height: 100dvh` + 폴백 (동적 뷰포트 높이)
+  - `.scene`: `position: absolute` -> `position: relative`, `height: auto` + `min-height: 100%`

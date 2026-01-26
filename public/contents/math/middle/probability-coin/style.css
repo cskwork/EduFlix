@@ -39,7 +39,7 @@ html, body {
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: linear-gradient(180deg, #f5f7fa 0%, #e8edf2 100%);
-  background-image: url('../../../backgrounds/bg-numbers-pattern-20260125.png');
+  background-image: url('/contents/backgrounds/bg-numbers-pattern-20260125.png');
   background-size: cover;
   color: var(--text-color);
   display: flex;

@@ -24,7 +24,7 @@
 body {
     font-family: 'Noto Sans KR', sans-serif;
     background: var(--bg-color);
-    background-image: url('../../backgrounds/bg-geometric-shapes-20260125.svg');
+    background-image: url('/contents/backgrounds/bg-geometric-shapes-20260125.svg');
     background-size: cover;
     background-attachment: fixed;
     color: var(--text-color);
