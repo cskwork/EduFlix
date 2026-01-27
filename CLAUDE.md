@@ -15,6 +15,7 @@ bun run dev              # Vite dev (localhost:5173, Cloudflare Tunnel 지원)
 bun run dev:server       # Bun API 서버 (localhost:3001)
 bun run dev:all          # 둘 다 실행
 bun run build            # 프로덕션 빌드 (dist/)
+bun run start            # 프로덕션 서버 (정적 파일 + API 통합)
 bun run test             # Vitest 실행
 bun run lint:fix         # ESLint + 자동 수정
 ./start.sh               # Unix/Linux 개발 서버 시작 (bun run dev:all)
@@ -29,9 +30,7 @@ start.bat                # Windows 개발 서버 시작 (bun run dev:all)
 # .env (required)
 ANTHROPIC_API_KEY=sk-...
 GEMINI_API_KEY=...
-
-# .env.production
-VITE_STATIC_MODE=true    # 정적 호스팅 시 AI 기능 비활성화
+PORT=3001                # API 서버 포트 (기본값: 3001, Cloudflare Tunnel: 9888)
 ```
 
 ## Project Structure
@@ -226,16 +225,13 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
   # 1. 빌드
   bun run build
 
-  # 2. serve.json 생성 (cleanUrls 비활성화 필수)
-  echo '{"cleanUrls": false, "trailingSlash": true}' > dist/serve.json
+  # 2. API 서버 시작 (정적 파일 + API 통합 제공)
+  PORT=9888 bun run start &
 
-  # 3. 정적 서버 시작 (SPA 모드)
-  npx serve dist -p 9888 --single &
-
-  # 4. 터널 시작
+  # 3. 터널 시작
   cloudflared tunnel --config ~/.cloudflared/eduflix-config.yml run eduflix &
   ```
-- **중요**: `cleanUrls: false` 필수 - iframe 콘텐츠 경로 `.html` 확장자 유지
+- **중요**: `bun run start`가 dist/ 정적 파일 + API 엔드포인트 모두 제공 (정적 모드 미사용)
 
 ## Notes
 - API 키는 `.env`에만 저장 (git 제외)

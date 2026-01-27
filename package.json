@@ -11,6 +11,7 @@
     "dev:server": "bun run server/index.ts",
     "dev:all": "bun run dev & bun run dev:server",
     "build": "vue-tsc -b && vite build",
+    "start": "NODE_ENV=production bun run server/index.ts",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
