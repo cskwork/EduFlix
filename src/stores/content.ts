@@ -63,7 +63,7 @@ export const useContentStore = defineStore('content', () => {
 
   // 계산된 속성: 과목별 그룹화
   const contentGroups = computed<ContentGroup[]>(() => {
-    const subjects: Subject[] = ['math', 'science', 'english']
+    const subjects: Subject[] = ['math', 'english', 'science']
     const groups: ContentGroup[] = []
 
     for (const subject of subjects) {
