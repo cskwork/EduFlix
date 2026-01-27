@@ -4,6 +4,7 @@ import { handleGenerateRoute } from './routes/generate'
 import { handleContentRoute } from './routes/content'
 import { handleRecommendationsRoute } from './routes/recommendations'
 import { getServerPort } from './config'
+import { checkArtAssetsHealth } from './services/health'
 
 const PORT = getServerPort()
 
@@ -56,7 +57,12 @@ async function handleRequest(req: Request): Promise<Response> {
 
     // 헬스 체크
     if (pathname === '/api/health') {
-      return jsonResponse({ status: 'ok', timestamp: new Date().toISOString() })
+      const artAssets = await checkArtAssetsHealth()
+      return jsonResponse({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        artAssets,
+      })
     }
 
     // 404 처리

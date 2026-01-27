@@ -1,4 +1,5 @@
 // 추천 시스템 API 클라이언트
+import { buildApiUrl } from './url'
 
 // API 엔드포인트 설정 (상대 경로 사용 - Vite 프록시 활용)
 const API_BASE_URL = import.meta.env.VITE_API_URL || ''
@@ -41,7 +42,8 @@ export async function recordContentClick(contentId: string): Promise<ClickRespon
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/recommendations/click`, {
+    const clickUrl = buildApiUrl('/api/recommendations/click', API_BASE_URL)
+    const response = await fetch(clickUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -71,7 +73,9 @@ export async function getRecommendations(limit = 10): Promise<RecommendedContent
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/recommendations?limit=${limit}`)
+    const recommendationsUrl = new URL(buildApiUrl('/api/recommendations', API_BASE_URL))
+    recommendationsUrl.searchParams.set('limit', String(limit))
+    const response = await fetch(recommendationsUrl.toString())
 
     if (!response.ok) {
       throw new Error(`HTTP error: ${response.status}`)
@@ -94,7 +98,8 @@ export async function getRecommendationStats(): Promise<StatsResponse | null> {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/recommendations/stats`)
+    const statsUrl = buildApiUrl('/api/recommendations/stats', API_BASE_URL)
+    const response = await fetch(statsUrl)
 
     if (!response.ok) {
       throw new Error(`HTTP error: ${response.status}`)
@@ -116,9 +121,11 @@ export async function getContentClickCount(contentId: string): Promise<number> {
   }
 
   try {
-    const response = await fetch(
-      `${API_BASE_URL}/api/recommendations/${encodeURIComponent(contentId)}`
+    const detailUrl = buildApiUrl(
+      `/api/recommendations/${encodeURIComponent(contentId)}`,
+      API_BASE_URL
     )
+    const response = await fetch(detailUrl)
 
     if (!response.ok) {
       throw new Error(`HTTP error: ${response.status}`)

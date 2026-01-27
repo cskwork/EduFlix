@@ -13,6 +13,7 @@ import {
   type EduFlixGenerationRequest,
 } from '../services/art-assets'
 import { syncContent } from '../services/content-sync'
+import { buildArtAssetsUnavailableMessage, checkArtAssetsHealth } from '../services/health'
 
 type JsonResponse = (data: unknown, status?: number) => Response
 type ErrorResponse = (message: string, status?: number) => Response
@@ -116,6 +117,13 @@ export async function handleGenerateRoute(
         grade: body.grade,
         language: body.language,
         additionalContext: body.additionalContext,
+      }
+
+      // art-assets 연결 가능 여부를 먼저 진단하여 난해한 연결 오류를 방지
+      const artAssetsHealth = await checkArtAssetsHealth()
+      if (!artAssetsHealth.reachable) {
+        const message = buildArtAssetsUnavailableMessage(artAssetsHealth)
+        return errorResponse(message, 503)
       }
 
       // Art-assets 작업 생성

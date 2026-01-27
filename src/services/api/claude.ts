@@ -9,6 +9,7 @@ import type {
   JobStatusResponse,
 } from '../../types/generation'
 import type { Subject, Grade, Language } from '../../types/content'
+import { buildApiUrl } from './url'
 
 // API 엔드포인트 설정
 const API_BASE_URL = import.meta.env.VITE_API_URL || ''
@@ -105,7 +106,8 @@ export class ClaudeApiClient {
   // 백엔드 API 연결 상태 확인 (정적 index.html 응답 방어 포함)
   private async ensureApiAvailable(): Promise<void> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/health`)
+      const healthUrl = buildApiUrl('/api/health', this.baseUrl)
+      const response = await fetch(healthUrl)
 
       if (!response.ok) {
         throw new Error(`헬스 체크 실패: ${response.status}`)
@@ -178,7 +180,8 @@ export class ClaudeApiClient {
         })
       }
 
-      const createResponse = await fetch(`${this.baseUrl}/api/generate`, {
+      const createUrl = buildApiUrl('/api/generate', this.baseUrl)
+      const createResponse = await fetch(createUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -253,7 +256,8 @@ export class ClaudeApiClient {
 
     while (Date.now() - startTime < MAX_POLL_DURATION_MS) {
       // 상태 조회
-      const statusResponse = await fetch(`${this.baseUrl}/api/generate/status/${jobId}`)
+      const statusUrl = buildApiUrl(`/api/generate/status/${jobId}`, this.baseUrl)
+      const statusResponse = await fetch(statusUrl)
 
       if (!statusResponse.ok) {
         const errorMessage = await extractErrorMessage(
@@ -312,7 +316,8 @@ export class ClaudeApiClient {
   // 생성 상태 확인 (단일 조회)
   async checkGenerationStatus(jobId: string): Promise<GenerationProgress> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/generate/status/${jobId}`)
+      const statusUrl = buildApiUrl(`/api/generate/status/${jobId}`, this.baseUrl)
+      const response = await fetch(statusUrl)
 
       if (!response.ok) {
         throw new Error('상태 조회 실패')
@@ -335,7 +340,8 @@ export class ClaudeApiClient {
   // 건강 상태 확인
   async healthCheck(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/health`)
+      const healthUrl = buildApiUrl('/api/health', this.baseUrl)
+      const response = await fetch(healthUrl)
       if (!response.ok) {
         return false
       }

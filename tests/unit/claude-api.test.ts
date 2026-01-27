@@ -77,4 +77,39 @@ describe('ClaudeApiClient 방어 로직', () => {
     expect(mockFetch).toHaveBeenCalledTimes(2)
     expect(String(mockFetch.mock.calls[1][0])).toContain('/api/generate')
   })
+
+  it('상대 baseUrl이 주어져도 /api 경로를 루트로 유지한다', async () => {
+    const { ClaudeApiClient } = await import('../../src/services/api/claude')
+
+    mockFetch
+      // 헬스 체크
+      .mockResolvedValueOnce(createJsonResponse({ status: 'ok' }))
+      // 작업 생성
+      .mockResolvedValueOnce(createJsonResponse({ success: true, jobId: 'job-1' }, 202))
+      // 상태 완료
+      .mockResolvedValueOnce(
+        createJsonResponse({
+          jobId: 'job-1',
+          status: 'completed',
+          progress: 100,
+          message: '완료',
+          contentId: 'content-1',
+          manifest: {
+            id: 'content-1',
+            title: '테스트 콘텐츠',
+            description: '설명',
+            type: 'game',
+          },
+        })
+      )
+
+    const client = new ClaudeApiClient('/create')
+    const result = await client.generateContent(baseOptions)
+
+    expect(result.success).toBe(true)
+
+    const healthUrl = String(mockFetch.mock.calls[0][0])
+    expect(healthUrl).toContain('/api/health')
+    expect(healthUrl).not.toContain('/create/api')
+  })
 })

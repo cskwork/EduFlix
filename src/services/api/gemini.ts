@@ -4,6 +4,7 @@
 // 이미지 생성 기능이 필요하면 server/routes/generate.ts에 엔드포인트 추가 필요.
 
 import type { GeminiImageRequest, GeminiImageResponse } from '../../types/generation'
+import { buildApiUrl } from './url'
 
 // API 엔드포인트 설정
 const API_BASE_URL = import.meta.env.VITE_API_URL || ''
@@ -46,7 +47,8 @@ export class GeminiApiClient {
         aspectRatio: options.aspectRatio || '1:1',
       }
 
-      const response = await fetch(`${this.baseUrl}/api/generate/image`, {
+      const generateUrl = buildApiUrl('/api/generate/image', this.baseUrl)
+      const response = await fetch(generateUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +128,8 @@ export class GeminiApiClient {
   // 건강 상태 확인
   async healthCheck(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/health`)
+      const healthUrl = buildApiUrl('/api/health', this.baseUrl)
+      const response = await fetch(healthUrl)
       return response.ok
     } catch {
       return false
