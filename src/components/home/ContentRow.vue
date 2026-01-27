@@ -31,7 +31,7 @@ function scroll(direction: 'left' | 'right') {
 </script>
 
 <template>
-  <section class="content-row">
+  <section :id="`section-${group.subject}`" class="content-row">
     <h2 class="row-title">{{ group.subjectLabel }}</h2>
     
     <div class="row-container group">

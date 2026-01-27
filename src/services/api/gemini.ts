@@ -6,7 +6,7 @@
 import type { GeminiImageRequest, GeminiImageResponse } from '../../types/generation'
 
 // API 엔드포인트 설정
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
 
 // 이미지 스타일 타입
 export type ImageStyle = 'cartoon' | 'realistic' | 'flat' | 'pixel'

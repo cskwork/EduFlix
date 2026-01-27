@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useContentStore } from '../stores/content'
 import ContentRow from '../components/home/ContentRow.vue'
@@ -22,6 +22,21 @@ onMounted(async () => {
 
 const subjectOptions: Subject[] = ['math', 'science', 'english']
 
+// 해당 과목 섹션으로 스크롤 (콘텐츠 섹션 영역으로 이동)
+function scrollToSubjectSection(_subject: Subject) {
+  // DOM 렌더링 완료 후 스크롤 실행
+  nextTick(() => {
+    setTimeout(() => {
+      // subject 필터가 적용되면 해당 과목만 표시되므로,
+      // 콘텐츠 섹션 영역으로 스크롤하여 히어로를 지나감
+      const contentSections = document.querySelector('.content-sections')
+      if (contentSections) {
+        contentSections.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 100)
+  })
+}
+
 function applyRouteFilters() {
   const subjectParam = route.query.subject
   const subject =
@@ -35,7 +50,35 @@ function applyRouteFilters() {
   contentStore.setSearchQuery(query)
 }
 
+// 라우트 쿼리 변경 감지 및 스크롤
 watch(() => route.query, applyRouteFilters, { immediate: true, deep: true })
+
+// 콘텐츠가 로드되고 subject 필터가 있을 때 스크롤
+watch(
+  () => contentStore.contentGroups,
+  (groups) => {
+    if (groups.length > 0) {
+      const currentSubject = route.query.subject
+      if (typeof currentSubject === 'string' && subjectOptions.includes(currentSubject as Subject)) {
+        scrollToSubjectSection(currentSubject as Subject)
+      }
+    }
+  },
+  { immediate: true }
+)
+
+// subject 변경 시 해당 섹션으로 스크롤
+watch(
+  () => route.query.subject,
+  (newSubject) => {
+    if (typeof newSubject === 'string' && subjectOptions.includes(newSubject as Subject)) {
+      // 콘텐츠가 이미 로드된 경우에만 스크롤
+      if (contentStore.contentGroups.length > 0) {
+        scrollToSubjectSection(newSubject as Subject)
+      }
+    }
+  }
+)
 
 // 콘텐츠 존재 여부
 const hasContents = computed(() => contentStore.contents.length > 0)

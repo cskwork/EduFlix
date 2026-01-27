@@ -1,7 +1,7 @@
 // 추천 시스템 API 클라이언트
 
-// API 엔드포인트 설정
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+// API 엔드포인트 설정 (상대 경로 사용 - Vite 프록시 활용)
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
 
 // 정적 배포 모드 확인
 const isStaticMode = import.meta.env.VITE_STATIC_MODE === 'true'

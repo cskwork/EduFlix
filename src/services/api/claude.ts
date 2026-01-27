@@ -11,7 +11,7 @@ import type {
 import type { Subject, Grade, Language } from '../../types/content'
 
 // API 엔드포인트 설정
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
 
 // 정적 배포 모드 확인
 const isStaticMode = import.meta.env.VITE_STATIC_MODE === 'true'
