@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-01-27T01:16:00.000Z",
+  "lastUpdated": "2026-01-27T08:17:00.000Z",
   "contents": [
     {
       "id": "fractions-pizza",
@@ -461,6 +461,18 @@
       "description": "-tion/-sion 접미사로 동사를 명사로 바꾸는 단어 변환 학습",
       "thumbnail": "",
       "path": "/contents/english/elementary/word-families/index.html"
+    },
+    {
+      "id": "prepositions-3d",
+      "title": "3D 위치 전치사 - Where is it?",
+      "subject": "english",
+      "gradeLevel": "elementary",
+      "grade": "elementary-3",
+      "type": "simulation",
+      "language": "ko",
+      "description": "in, on, under, next to, between 등 위치 전치사를 Three.js 3D 시각화로 배우는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/english/elementary/prepositions-3d/index.html"
     }
   ]
 }

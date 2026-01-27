@@ -1,0 +1,16 @@
+{
+  "id": "prepositions-3d",
+  "title": "3D 위치 전치사 - Where is it?",
+  "subject": "english",
+  "gradeLevel": "elementary",
+  "grade": "elementary-3",
+  "type": "simulation",
+  "language": "ko",
+  "description": "in, on, under, next to, between 등 위치 전치사를 Three.js 3D 시각화로 배우는 인터랙티브 학습",
+  "thumbnail": "",
+  "path": "/contents/english/elementary/prepositions-3d/index.html",
+  "tags": ["grammar", "prepositions", "3d", "three.js"],
+  "prerequisites": ["기본 명사", "Where is...? 질문"],
+  "nextTopics": ["방향 전치사 (to, from, into)"],
+  "createdAt": "2026-01-27T08:17:00.000Z"
+}

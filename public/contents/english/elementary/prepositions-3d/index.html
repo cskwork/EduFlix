@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 위치 전치사 - Where is it?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../../common/mobile.css">
+</head>
+<body>
+    <div id="app">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- 1. Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-wrapper">
+                <h1 class="hook-title english-text">Where is the ball?</h1>
+                <p class="hook-subtitle">3D 공간에서 위치를 찾아보세요!</p>
+
+                <div class="three-container" id="hook-3d"></div>
+
+                <div class="hook-hints">
+                    <span class="hint-tag english-text" style="background:#FF6B6B;">in?</span>
+                    <span class="hint-tag english-text" style="background:#4ECDC4;">on?</span>
+                    <span class="hint-tag english-text" style="background:#A29BFE;">under?</span>
+                    <span class="hint-tag english-text" style="background:#FD79A8;">next to?</span>
+                </div>
+
+                <p class="drag-hint">마우스로 드래그하여 3D 뷰를 회전해보세요!</p>
+
+                <button class="btn-primary" onclick="ContentApp.nextScene()">위치 단어 배우기</button>
+            </div>
+        </section>
+
+        <!-- 2. Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="section-title">"어디에?"를 물을 때...</h2>
+
+                <div class="anchor-box">
+                    <p class="english-text big-question">Where is it?</p>
+                    <p class="korean-text">그것은 어디에 있나요?</p>
+                </div>
+
+                <div class="vocab-grid">
+                    <div class="vocab-card">
+                        <div class="three-mini" id="anchor-box-3d"></div>
+                        <p class="vocab-word">박스</p>
+                        <p class="english-text vocab-en">box</p>
+                    </div>
+                    <div class="vocab-card">
+                        <div class="three-mini" id="anchor-table-3d"></div>
+                        <p class="vocab-word">테이블</p>
+                        <p class="english-text vocab-en">table</p>
+                    </div>
+                    <div class="vocab-card">
+                        <div class="three-mini" id="anchor-chair-3d"></div>
+                        <p class="vocab-word">의자</p>
+                        <p class="english-text vocab-en">chair</p>
+                    </div>
+                    <div class="vocab-card">
+                        <div class="three-mini" id="anchor-ball-3d"></div>
+                        <p class="vocab-word">공</p>
+                        <p class="english-text vocab-en">ball</p>
+                    </div>
+                </div>
+
+                <div class="bridge-box">
+                    <p>물건들의 <strong>위치</strong>를 말하려면?</p>
+                    <p>특별한 위치 단어 <strong>"전치사"</strong>가 필요해요!</p>
+                </div>
+
+                <button class="btn-primary" onclick="ContentApp.nextScene()">다음으로</button>
+            </div>
+        </section>
+
+        <!-- 3. Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="story-container">
+                    <div class="character-3d" id="story-character-3d"></div>
+
+                    <div class="dialogue-bubble">
+                        <h3 class="english-text character-name">Robot "Rex"</h3>
+                        <p class="dialogue-text" id="story-dialogue">
+                            안녕! 나는 로봇 <strong>렉스(Rex)</strong>야!<br><br>
+                            우리 방에 여러 물건들이 있는데, 어디에 있는지 영어로 말하는 법을 모르겠어!<br><br>
+                            공이 박스 <strong>안에</strong> 있을 때, 테이블 <strong>위에</strong> 있을 때... 어떻게 말해야 할까?
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mission-box">
+                    <h4>렉스를 도와주세요!</h4>
+                    <div class="mission-items">
+                        <div class="mission-item">
+                            <span class="mission-icon">🔴</span>
+                            <span>빨간 공의 위치 찾기</span>
+                        </div>
+                        <div class="mission-item">
+                            <span class="mission-icon">📦</span>
+                            <span>박스 안팎 구분하기</span>
+                        </div>
+                        <div class="mission-item">
+                            <span class="mission-icon">🪑</span>
+                            <span>가구 위치 설명하기</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="ContentApp.nextScene()">위치 단어 배우기</button>
+            </div>
+        </section>
+
+        <!-- 4. Core Scene -->
+        <section id="core-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="section-title">Prepositions of Place</h2>
+                <p class="section-subtitle">전치사를 클릭하면 3D로 확인해보세요!</p>
+
+                <div class="core-layout">
+                    <div class="prep-buttons">
+                        <button class="prep-btn active" data-prep="in" style="--prep-color:#FF6B6B;" onclick="ContentApp.selectPreposition('in')">
+                            <span class="english-text">in</span>
+                            <span class="korean">안에</span>
+                        </button>
+                        <button class="prep-btn" data-prep="on" style="--prep-color:#4ECDC4;" onclick="ContentApp.selectPreposition('on')">
+                            <span class="english-text">on</span>
+                            <span class="korean">위에</span>
+                        </button>
+                        <button class="prep-btn" data-prep="under" style="--prep-color:#A29BFE;" onclick="ContentApp.selectPreposition('under')">
+                            <span class="english-text">under</span>
+                            <span class="korean">아래에</span>
+                        </button>
+                        <button class="prep-btn" data-prep="nextto" style="--prep-color:#FD79A8;" onclick="ContentApp.selectPreposition('nextto')">
+                            <span class="english-text">next to</span>
+                            <span class="korean">옆에</span>
+                        </button>
+                        <button class="prep-btn" data-prep="between" style="--prep-color:#74B9FF;" onclick="ContentApp.selectPreposition('between')">
+                            <span class="english-text">between</span>
+                            <span class="korean">사이에</span>
+                        </button>
+                    </div>
+
+                    <div class="three-main" id="core-3d"></div>
+                </div>
+
+                <div class="example-sentence" id="core-example">
+                    <p class="english-text">The ball is <span class="highlight" style="color:#FF6B6B;">in</span> the box.</p>
+                    <p class="korean-text">공이 박스 <span style="color:#FF6B6B;">안에</span> 있어요.</p>
+                </div>
+
+                <div class="pattern-box">
+                    <p><strong>패턴:</strong> <span class="english-text">The [물건] is [전치사] the [장소].</span></p>
+                </div>
+
+                <button class="btn-primary" onclick="ContentApp.nextScene()">규칙 정리하기</button>
+            </div>
+        </section>
+
+        <!-- 5. Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="section-title">위치 전치사 정리</h2>
+
+                <div class="three-visualize" id="visualize-3d"></div>
+
+                <div class="summary-cards">
+                    <div class="summary-card" style="--card-color:#FF6B6B;">
+                        <span class="english-text prep-word">in</span>
+                        <span class="prep-meaning">안에</span>
+                        <p class="english-text example">in the box</p>
+                    </div>
+                    <div class="summary-card" style="--card-color:#4ECDC4;">
+                        <span class="english-text prep-word">on</span>
+                        <span class="prep-meaning">위에</span>
+                        <p class="english-text example">on the table</p>
+                    </div>
+                    <div class="summary-card" style="--card-color:#A29BFE;">
+                        <span class="english-text prep-word">under</span>
+                        <span class="prep-meaning">아래에</span>
+                        <p class="english-text example">under the bed</p>
+                    </div>
+                    <div class="summary-card" style="--card-color:#FD79A8;">
+                        <span class="english-text prep-word">next to</span>
+                        <span class="prep-meaning">옆에</span>
+                        <p class="english-text example">next to the door</p>
+                    </div>
+                    <div class="summary-card" style="--card-color:#74B9FF;">
+                        <span class="english-text prep-word">between</span>
+                        <span class="prep-meaning">사이에</span>
+                        <p class="english-text example">between chairs</p>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="ContentApp.nextScene()">퀴즈 풀기</button>
+            </div>
+        </section>
+
+        <!-- 6. Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="section-title">Quiz Time!</h2>
+                <p class="section-subtitle">3D 장면을 보고 올바른 전치사를 선택하세요!</p>
+
+                <div class="quiz-progress">
+                    <span id="quiz-current">1</span> / <span id="quiz-total">5</span>
+                </div>
+
+                <div class="three-quiz" id="quiz-3d"></div>
+
+                <div class="quiz-question" id="quiz-question">
+                    <p class="english-text">The ball is ______ the box.</p>
+                </div>
+
+                <div class="quiz-options" id="quiz-options">
+                    <button class="quiz-option english-text" onclick="ContentApp.checkAnswer('in')">in</button>
+                    <button class="quiz-option english-text" onclick="ContentApp.checkAnswer('on')">on</button>
+                    <button class="quiz-option english-text" onclick="ContentApp.checkAnswer('under')">under</button>
+                    <button class="quiz-option english-text" onclick="ContentApp.checkAnswer('next to')">next to</button>
+                </div>
+
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+            </div>
+        </section>
+
+        <!-- 7. Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="wrap-header">
+                    <div class="three-trophy" id="wrap-3d"></div>
+                    <h2 class="english-text wrap-title">Great Job!</h2>
+                </div>
+
+                <div class="wrap-summary">
+                    <h3>오늘 배운 것</h3>
+                    <ul class="summary-list">
+                        <li><span class="english-text" style="color:#FF6B6B; font-weight:700;">in</span> = 안에 (3차원 공간 속)</li>
+                        <li><span class="english-text" style="color:#4ECDC4; font-weight:700;">on</span> = 위에 (표면에 닿아있음)</li>
+                        <li><span class="english-text" style="color:#A29BFE; font-weight:700;">under</span> = 아래에</li>
+                        <li><span class="english-text" style="color:#FD79A8; font-weight:700;">next to</span> = 옆에</li>
+                        <li><span class="english-text" style="color:#74B9FF; font-weight:700;">between</span> = 사이에</li>
+                    </ul>
+                </div>
+
+                <div class="real-life-examples">
+                    <h4>실생활에서 사용해보세요!</h4>
+                    <div class="example-list">
+                        <div class="example-item" style="border-left-color:#FF6B6B;">
+                            <p class="english-text">"My phone is in my bag."</p>
+                            <p class="korean-text">내 핸드폰은 가방 안에 있어.</p>
+                        </div>
+                        <div class="example-item" style="border-left-color:#4ECDC4;">
+                            <p class="english-text">"The book is on the desk."</p>
+                            <p class="korean-text">책은 책상 위에 있어.</p>
+                        </div>
+                        <div class="example-item" style="border-left-color:#A29BFE;">
+                            <p class="english-text">"The cat is under the sofa."</p>
+                            <p class="korean-text">고양이는 소파 아래에 있어.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-secondary" onclick="location.reload()">다시 학습하기</button>
+                    <button class="btn-primary">다음 주제로</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
