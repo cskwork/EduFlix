@@ -34,8 +34,10 @@ export const useGenerationStore = defineStore('generation', () => {
     const status = currentProgress.value.status
     return (
       status === 'preparing' ||
+      status === 'queued' ||
       status === 'generating' ||
       status === 'generating-images' ||
+      status === 'reviewing' ||
       status === 'finalizing'
     )
   })

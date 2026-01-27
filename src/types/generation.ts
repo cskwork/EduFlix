@@ -15,8 +15,10 @@ export interface GenerationRequest {
 export type GenerationStatus =
   | 'idle'
   | 'preparing'
+  | 'queued'      // 대기열에 추가됨 (art-assets pending)
   | 'generating'
   | 'generating-images'
+  | 'reviewing'   // 품질 검토 중 (art-assets review)
   | 'finalizing'
   | 'completed'
   | 'error'
@@ -34,6 +36,7 @@ export interface GenerationProgress {
 // AI 생성 응답 타입
 export interface GenerationResponse {
   success: boolean
+  jobId?: string    // 작업 ID (비동기 생성용)
   contentId?: string
   manifest?: {
     id: string
@@ -43,6 +46,22 @@ export interface GenerationResponse {
   }
   error?: string
   warning?: string // 소프트 워닝 (성공했으나 일부 문제 발생 시)
+}
+
+// 작업 상태 응답 타입 (art-assets 폴링용)
+export interface JobStatusResponse {
+  jobId: string
+  status: 'pending' | 'queued' | 'processing' | 'reviewing' | 'completed' | 'failed'
+  progress: number
+  message: string
+  contentId?: string
+  manifest?: {
+    id: string
+    title: string
+    description: string
+    type: string
+  }
+  error?: string
 }
 
 // Claude API 요청 타입

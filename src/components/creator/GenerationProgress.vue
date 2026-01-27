@@ -19,8 +19,10 @@ const emit = defineEmits<{
 const statusMessages: Record<GenerationStatus, string> = {
   idle: '대기 중...',
   preparing: '콘텐츠 준비 중...',
+  queued: '생성 대기열에 추가되었어요...',
   generating: 'AI가 콘텐츠를 만들고 있어요!',
   'generating-images': '이미지를 생성하고 있어요...',
+  reviewing: '콘텐츠 품질을 검토하고 있어요...',
   finalizing: '마무리 중...',
   completed: '완성되었어요!',
   error: '오류가 발생했어요',

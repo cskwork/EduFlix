@@ -12,9 +12,11 @@ const emit = defineEmits<{
 }>()
 
 // 과목 옵션
+// TODO: art-assets가 science를 지원하면 다시 활성화
+// 현재 art-assets는 math, english만 지원 (2026-01-27)
 const subjects: { value: Subject; label: string; icon: string; color: string }[] = [
   { value: 'math', label: '수학', icon: '📐', color: 'var(--color-subject-math)' },
-  { value: 'science', label: '과학', icon: '🔬', color: 'var(--color-subject-science)' },
+  // { value: 'science', label: '과학', icon: '🔬', color: 'var(--color-subject-science)' },
   { value: 'english', label: '영어', icon: '📚', color: 'var(--color-subject-english)' },
 ]
 
@@ -73,7 +75,8 @@ function isSelected(subject: Subject) {
 
 .subjects-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* TODO: art-assets가 science를 지원하면 repeat(3, 1fr)로 복원 */
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-md);
 }
 

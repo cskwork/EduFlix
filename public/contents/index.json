@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-01-26T00:00:00.000Z",
+  "lastUpdated": "2026-01-27T00:37:00.918Z",
   "contents": [
     {
       "id": "fractions-pizza",
@@ -253,6 +253,22 @@
       "description": "떡볶이 레시피 조절을 통해 비와 비율의 개념을 실생활에서 이해하는 인터랙티브 콘텐츠",
       "thumbnail": "/contents/math/elementary/ratio-proportion/assets/thumbnail.svg",
       "path": "/contents/math/elementary/ratio-proportion/index.html"
+    },
+    {
+      "id": "20260127-topic-105b382d",
+      "title": "영어 인사의 마법",
+      "subject": "english",
+      "gradeLevel": "elementary",
+      "grade": "elementary-3",
+      "type": "simulation",
+      "language": "ko",
+      "description": "인사에 관한 영어 학습 콘텐츠",
+      "thumbnail": "",
+      "path": "/contents/english/elementary/20260127-topic-105b382d/index.html",
+      "tags": [
+        "인사"
+      ],
+      "createdAt": "2026-01-27T00:37:00.913Z"
     }
   ]
 }

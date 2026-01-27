@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영어 인사의 마법</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../../common/mobile.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Scene 1: Hook -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-wrapper">
+                <h1 class="big-question">왜 우리는 시간마다 다르게 인사할까요?</h1>
+                <div class="visual-icon-container">
+                    <svg id="hook-sun" class="visual-icon" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="20" fill="#FFD700" />
+                        <g stroke="#FFD700" stroke-width="4" stroke-linecap="round">
+                            <line x1="50" y1="10" x2="50" y2="20" />
+                            <line x1="50" y1="80" x2="50" y2="90" />
+                            <line x1="10" y1="50" x2="20" y2="50" />
+                            <line x1="80" y1="50" x2="90" y2="50" />
+                            <line x1="22" y1="22" x2="29" y2="29" />
+                            <line x1="71" y1="71" x2="78" y2="78" />
+                            <line x1="22" y1="78" x2="29" y2="71" />
+                            <line x1="71" y1="29" x2="78" y2="22" />
+                        </g>
+                    </svg>
+                </div>
+                <button class="primary-btn" onclick="ContentApp.nextScene()">탐험 시작하기</button>
+            </div>
+        </section>
+
+        <!-- Scene 2: Anchor -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="anchor-card">
+                    <h2>우리는 무엇이라고 하나요?</h2>
+                    <p class="large-text">"안녕하세요?"</p>
+                    <p class="sub-text">언제든지 쓸 수 있는 마법의 말이죠!</p>
+                </div>
+                <div class="bridge-arrow">↓</div>
+                <div class="anchor-card highlight">
+                    <h2>영어는 어떨까요?</h2>
+                    <p class="sub-text">아침, 점심, 저녁에 따라 <br>사용하는 말이 달라요!</p>
+                </div>
+                <button class="primary-btn" onclick="ContentApp.nextScene()">어떻게 다를까요?</button>
+            </div>
+        </section>
+
+        <!-- Scene 3: Story -->
+        <section id="story-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="story-character">
+                    <svg viewBox="0 0 200 200">
+                        <!-- Alien Poro -->
+                        <path d="M50,150 Q50,50 100,50 Q150,50 150,150 Z" fill="#7ED321" stroke="#4CAF50" stroke-width="3"/>
+                        <ellipse cx="80" cy="100" rx="15" ry="20" fill="white"/>
+                        <ellipse cx="120" cy="100" rx="15" ry="20" fill="white"/>
+                        <circle cx="85" cy="100" r="5" fill="black"/>
+                        <circle cx="125" cy="100" r="5" fill="black"/>
+                        <path d="M90,130 Q100,140 110,130" stroke="black" stroke-width="3" fill="none"/>
+                        <path d="M60,60 Q40,40 60,20" fill="none" stroke="#7ED321" stroke-width="5"/>
+                        <path d="M140,60 Q160,40 140,20" fill="none" stroke="#7ED321" stroke-width="5"/>
+                    </svg>
+                    <div class="speech-bubble left">안녕! 난 포로야.</div>
+                </div>
+                <div class="story-text">
+                    <p>우주 여행자 <strong>포로</strong>가 지구에 왔어요.</p>
+                    <p>포로는 지구 친구들에게 인사를 하고 싶은데,</p>
+                    <p class="accent">언제 어떤 말을 써야 할지 모르겠어요!</p>
+                    <p>포로를 도와줄 수 있나요?</p>
+                </div>
+                <button class="primary-btn" onclick="ContentApp.nextScene()">도와주기</button>
+            </div>
+        </section>
+
+        <!-- Scene 4: Core Interaction -->
+        <section id="core-scene" class="scene">
+            <div class="content-wrapper full-height">
+                <h2>시간을 바꿔보고 알맞은 인사를 찾아요!</h2>
+                <div class="sky-container" id="sky-container">
+                    <div class="celestial-body" id="celestial-body">
+                        <!-- JS will inject Sun or Moon here -->
+                    </div>
+                    <div class="ground"></div>
+                </div>
+                
+                <div class="interaction-area">
+                    <input type="range" min="0" max="100" value="50" class="time-slider" id="time-slider">
+                    <div class="time-labels">
+                        <span>아침</span>
+                        <span>점심</span>
+                        <span>저녁</span>
+                    </div>
+                </div>
+
+                <div class="greeting-options" id="greeting-options">
+                    <button class="greeting-btn" onclick="ContentApp.checkGreeting('Good morning')">Good morning</button>
+                    <button class="greeting-btn" onclick="ContentApp.checkGreeting('Good afternoon')">Good afternoon</button>
+                    <button class="greeting-btn" onclick="ContentApp.checkGreeting('Good evening')">Good evening</button>
+                </div>
+                <div id="feedback-msg" class="feedback-msg"></div>
+            </div>
+        </section>
+
+        <!-- Scene 5: Visualize -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-wrapper">
+                <h2>인사의 법칙을 발견했어요!</h2>
+                <div class="visual-diagram">
+                    <div class="v-step morning">
+                        <svg class="v-icon" viewBox="0 0 50 50"><circle cx="25" cy="25" r="10" fill="#FFD700"/></svg>
+                        <h3>아침 (Morning)</h3>
+                        <p class="eng-text">Good morning</p>
+                    </div>
+                    <div class="v-arrow">→</div>
+                    <div class="v-step afternoon">
+                        <svg class="v-icon" viewBox="0 0 50 50"><circle cx="25" cy="25" r="12" fill="#F5A623"/></svg>
+                        <h3>점심/낮 (Afternoon)</h3>
+                        <p class="eng-text">Good afternoon</p>
+                    </div>
+                    <div class="v-arrow">→</div>
+                    <div class="v-step evening">
+                        <svg class="v-icon" viewBox="0 0 50 50"><path d="M25,10 A15,15 0 1,1 25,40 A12,12 0 1,0 25,10 Z" fill="#BDC3C7"/></svg>
+                        <h3>저녁 (Evening)</h3>
+                        <p class="eng-text">Good evening</p>
+                    </div>
+                </div>
+                <div class="key-insight">
+                    <p>💡 핵심: 하늘의 해와 달을 보고 알맞은 인사를 골라주세요!</p>
+                </div>
+                <button class="primary-btn" onclick="ContentApp.nextScene()">다음</button>
+            </div>
+        </section>
+
+        <!-- Scene 6: Quiz -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="quiz-header">
+                    <h2>Quiz: 포로의 인사 테스트</h2>
+                    <p>상황에 맞는 인사를 골라주세요.</p>
+                </div>
+                <div class="quiz-visual" id="quiz-visual">
+                    <!-- Dynamic Visual -->
+                </div>
+                <div class="quiz-question" id="quiz-question">
+                    <!-- Dynamic Question -->
+                </div>
+                <div class="quiz-options" id="quiz-options">
+                    <!-- Dynamic Options -->
+                </div>
+                <div id="quiz-feedback" class="feedback-msg"></div>
+                <button id="next-quiz-btn" class="primary-btn hidden" onclick="ContentApp.nextQuiz()">다음 문제</button>
+            </div>
+        </section>
+
+        <!-- Scene 7: Wrap -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-wrapper">
+                <h1>🎉 축하합니다!</h1>
+                <div class="summary-card">
+                    <p>오늘 우리는 배웠어요:</p>
+                    <ul>
+                        <li>☀️ 아침에는 <strong>Good morning</strong></li>
+                        <li>🌤️ 낮에는 <strong>Good afternoon</strong></li>
+                        <li>🌙 저녁에는 <strong>Good evening</strong></li>
+                    </ul>
+                </div>
+                <div class="poro-thanks">
+                    <svg viewBox="0 0 100 100" style="width: 80px; height: 80px; margin-bottom: 10px;">
+                         <path d="M25,75 Q25,25 50,25 Q75,25 75,75 Z" fill="#7ED321"/>
+                         <circle cx="40" cy="45" r="5" fill="black"/>
+                         <circle cx="60" cy="45" r="5" fill="black"/>
+                         <path d="M40,60 Q50,70 60,60" stroke="black" stroke-width="2" fill="none"/>
+                    </svg>
+                    <p>"덕분에 지구 친구들에게 인사할 수 있어!"</p>
+                </div>
+                <div class="action-buttons">
+                    <button class="secondary-btn" onclick="ContentApp.restart()">다시 보기</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
