@@ -473,6 +473,54 @@
       "description": "in, on, under, next to, between 등 위치 전치사를 Three.js 3D 시각화로 배우는 인터랙티브 학습",
       "thumbnail": "",
       "path": "/contents/english/elementary/prepositions-3d/index.html"
+    },
+    {
+      "id": "platonic-solids",
+      "title": "정다면체 탐구: 다섯 가지 완벽한 도형",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-1",
+      "type": "simulation",
+      "language": "ko",
+      "description": "정다면체가 왜 5가지뿐인지, 각 정다면체의 면/모서리/꼭짓점 관계와 오일러 공식을 탐구하는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/math/middle/platonic-solids/index.html"
+    },
+    {
+      "id": "volume-solids",
+      "title": "입체도형의 부피: 원기둥, 원뿔, 구",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-2",
+      "type": "simulation",
+      "language": "ko",
+      "description": "원기둥, 원뿔, 구의 부피 공식을 발견하고 원기둥=원뿔×3 관계를 시뮬레이션으로 이해하는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/math/middle/volume-solids/index.html"
+    },
+    {
+      "id": "3d-coordinates",
+      "title": "공간좌표계: 3차원 세계 탐험",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-3",
+      "type": "simulation",
+      "language": "ko",
+      "description": "3차원 좌표 (x, y, z)를 이해하고 공간에서 점의 위치와 두 점 사이 거리를 구하는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/math/middle/3d-coordinates/index.html"
+    },
+    {
+      "id": "angles-rocket",
+      "title": "로켓을 쏘아 올려라! 각도의 이해",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-4",
+      "type": "simulation",
+      "language": "ko",
+      "description": "로켓 발사를 통해 각도의 개념과 측정 방법을 배우는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/math/elementary/angles-rocket/index.html"
     }
   ]
 }

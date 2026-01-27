@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공간좌표계: 3D 세계의 주소</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 3D Canvas Container -->
+    <div id="three-container"></div>
+    
+    <!-- UI Overlay -->
+    <div id="ui-overlay">
+        <!-- Hook Scene -->
+        <div id="hook-ui" class="scene-ui active">
+            <div class="info-panel bottom-panel">
+                <h1 class="hook-title">친구를 어디서 만날까?</h1>
+                <p class="hook-subtitle">3D 세계에서 정확한 위치를 알려주려면?</p>
+            </div>
+        </div>
+        
+        <!-- Anchor Scene -->
+        <div id="anchor-ui" class="scene-ui">
+            <div class="info-panel bottom-panel">
+                <h2>이미 알고 있는 평면좌표</h2>
+                <div class="formula-mini">(x, y)</div>
+                <p class="bridge-text">여기에 높이 z를 추가하면?</p>
+                <div class="formula-result">(x, y, z)</div>
+            </div>
+        </div>
+        
+        <!-- Story Scene -->
+        <div id="story-ui" class="scene-ui">
+            <div class="info-panel bottom-panel story-panel">
+                <div class="character-badge">게임 속</div>
+                <h3>친구에게 위치 알려주기</h3>
+                <p id="story-text">"야, 나 지금 이 건물 위에 있어! 근데 어떻게 설명하지... 앞으로 3칸, 옆으로 2칸, 위로 4칸?"</p>
+            </div>
+        </div>
+        
+        <!-- Core Scene -->
+        <div id="core-ui" class="scene-ui">
+            <div class="info-panel top-panel">
+                <h2>3D 좌표 배치하기</h2>
+                <p class="instruction">점을 드래그해서 목표 위치로 이동시키세요!</p>
+            </div>
+            <div class="info-panel stats-panel">
+                <div class="stat-item">
+                    <span class="stat-label">X (가로)</span>
+                    <span class="stat-value" id="stat-x">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Y (높이)</span>
+                    <span class="stat-value" id="stat-y">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Z (깊이)</span>
+                    <span class="stat-value" id="stat-z">0</span>
+                </div>
+            </div>
+            <div class="target-display" id="target-display">
+                목표: (<span id="target-x">3</span>, <span id="target-y">2</span>, <span id="target-z">4</span>)
+            </div>
+            <div class="action-buttons core-actions">
+                <button class="action-btn" id="reset-point-btn">점 초기화</button>
+                <button class="action-btn" id="show-distance-btn">거리 측정</button>
+                <button class="action-btn primary" id="check-position-btn">위치 확인</button>
+            </div>
+        </div>
+        
+        <!-- Visualize Scene -->
+        <div id="visualize-ui" class="scene-ui">
+            <div class="info-panel center-panel">
+                <h2>두 점 사이의 거리</h2>
+                <div class="formula-display">
+                    <span class="formula-text">d = √[(x₂-x₁)² + (y₂-y₁)² + (z₂-z₁)²]</span>
+                </div>
+                <p class="formula-explain">피타고라스 정리를 3차원으로 확장!</p>
+                <div class="distance-example">
+                    <span>예: (0,0,0)에서 (3,4,0)까지</span>
+                    <span class="example-result">d = √(9+16+0) = 5</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quiz Scene -->
+        <div id="quiz-ui" class="scene-ui">
+            <div class="info-panel quiz-panel">
+                <div class="quiz-badge">퀴즈</div>
+                <h3 id="quiz-question">점 (3, 4, 0)과 원점 사이의 거리는?</h3>
+                <div class="quiz-options" id="quiz-options">
+                    <button class="quiz-option" data-answer="5">5</button>
+                    <button class="quiz-option" data-answer="7">7</button>
+                    <button class="quiz-option" data-answer="12">12</button>
+                </div>
+                <div id="quiz-feedback" class="quiz-feedback hidden"></div>
+            </div>
+        </div>
+        
+        <!-- Wrap Scene -->
+        <div id="wrap-ui" class="scene-ui">
+            <div class="info-panel wrap-panel">
+                <h2>오늘 배운 것</h2>
+                <ul class="summary-list">
+                    <li>3D 위치는 <strong>(x, y, z)</strong>로 표현해요</li>
+                    <li>x는 가로, y는 높이, z는 깊이</li>
+                    <li>거리 공식: <strong>√[(x₂-x₁)² + (y₂-y₁)² + (z₂-z₁)²]</strong></li>
+                </ul>
+                <div class="wrap-actions">
+                    <button class="action-btn primary" id="free-explore-btn">자유 탐색 모드</button>
+                    <button class="action-btn" id="restart-btn">처음부터</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="scene-nav">
+        <button id="prev-btn" class="nav-btn" disabled>이전</button>
+        <div id="progress-indicator"></div>
+        <button id="next-btn" class="nav-btn">다음</button>
+    </nav>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader"></div>
+        <p>3D 콘텐츠 로딩 중...</p>
+    </div>
+
+    <!-- Three.js -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="script.js"></script>
+</body>
+</html>

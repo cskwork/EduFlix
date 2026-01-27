@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로켓을 쏘아 올려라! - 각도의 이해</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 1. Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="space-background">
+                <div class="stars"></div>
+            </div>
+            <h1 class="hook-title">로켓이 똑바로만 가면
+            <br>행성에 도착할 수 있을까?</h1>
+            <div class="rocket-preview">
+                <svg width="100" height="200" viewBox="0 0 100 200">
+                    <g id="rocket-preview-group">
+                        <path d="M50 20 L70 80 L50 70 L30 80 Z" fill="#F5A623"/>
+                        <rect x="35" y="80" width="30" height="60" rx="5" fill="#E6E6E6"/>
+                        <path d="M35 140 L20 160 L35 150 Z" fill="#D0021B"/>
+                        <path d="M65 140 L80 160 L65 150 Z" fill="#D0021B"/>
+                        <circle cx="50" cy="100" r="8" fill="#4A90D9"/>
+                    </g>
+                </svg>
+            </div>
+            <button class="start-btn" onclick="ContentApp.nextScene()">탐험 시작하기</button>
+        </section>
+
+        <!-- 2. Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-card">
+                <h2>우리가 이미 알고 있는 것</h2>
+                <div class="concept-visual">
+                    <div class="line-horizontal"></div>
+                    <div class="point"></div>
+                </div>
+                <p>1학 때 우리는 <strong>점</strong>과 <strong>선</strong>을 배웠어요.</p>
+                <div class="arrow-down">↓</div>
+                <div class="concept-visual concept-visual-active">
+                    <div class="line-horizontal"></div>
+                    <div class="line-diagonal"></div>
+                    <div class="point"></div>
+                </div>
+                <p class="highlight">그런데 점에서 두 선이 벌어지면
+                <br>무슨 모양이 될까요?</p>
+            </div>
+            <div class="nav-btn-container">
+                <button class="nav-btn" onclick="ContentApp.nextScene()">알아보기</button>
+            </div>
+        </section>
+
+        <!-- 3. Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="character-box">
+                <div class="character-img">
+                    <svg width="120" height="120" viewBox="0 0 100 100">
+                        <!-- Cat Astronaut -->
+                        <circle cx="50" cy="50" r="40" fill="white" stroke="#333" stroke-width="2"/>
+                        <path d="M10 40 Q 10 10 30 10" stroke="white" stroke-width="4" fill="none"/>
+                        <path d="M70 10 Q 90 10 90 40" stroke="white" stroke-width="4" fill="none"/>
+                        <circle cx="35" cy="45" r="5" fill="#333"/>
+                        <circle cx="65" cy="45" r="5" fill="#333"/>
+                        <path d="M40 65 Q50 75 60 65" stroke="#333" stroke-width="2" fill="none"/>
+                        <rect x="30" y="85" width="40" height="5" fill="#ccc"/>
+                    </svg>
+                </div>
+                <div class="speech-bubble">
+                    반가워! 나는 <strong>우주 고양이 '보라'</strong>야.
+                    <br><br>
+                    저 멀리 있는 <strong>'수학성'</strong>에 가고 싶은데,
+                    로켓을 몇 도로 기울여야 할지 모르겠어.
+                    <br><br>
+                    <span class="highlight-text">도와줄 수 있어?</span>
+                </div>
+            </div>
+            <div class="nav-btn-container">
+                <button class="nav-btn" onclick="ContentApp.nextScene()">도와주기</button>
+            </div>
+        </section>
+
+        <!-- 4. Core Scene -->
+        <section id="core-scene" class="scene">
+            <h3>로켓을 조종해 보세요!</h3>
+            <div class="interaction-area">
+                <div class="protractor-container">
+                    <svg class="protractor-svg" viewBox="0 0 400 220">
+                        <!-- Protractor Base -->
+                        <path d="M20 200 A 180 180 0 0 1 380 200" fill="rgba(255,255,255,0.2)" stroke="#fff" stroke-width="2"/>
+                        <!-- Ticks (Simplified) -->
+                        <line x1="200" y1="200" x2="200" y2="25" stroke="#fff" stroke-width="2"/>
+                        <line x1="200" y1="200" x2="355.8" y2="110" stroke="#fff" stroke-width="2"/> <!-- 90 -->
+                        <line x1="200" y1="200" x2="44.2" y2="110" stroke="#fff" stroke-width="2"/> <!-- 90 other side -->
+                        
+                        <!-- Angle Arc (Dynamic) -->
+                        <path id="angle-arc" d="M200 200 L200 20 A 180 180 0 0 1 200 20 Z" fill="rgba(74, 144, 217, 0.5)" stroke="transparent"/>
+                    </svg>
+                    <div class="rocket-wrapper">
+                        <svg width="60" height="100" viewBox="0 0 100 200">
+                            <g id="rocket-group">
+                                <path d="M50 20 L70 80 L50 70 L30 80 Z" fill="#F5A623"/>
+                                <rect x="35" y="80" width="30" height="60" rx="5" fill="#E6E6E6"/>
+                                <circle cx="50" cy="100" r="8" fill="#4A90D9"/>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <div class="controls-panel">
+                    <div class="angle-display">
+                        <span class="value" id="angle-value">0</span>
+                        <span class="unit">°</span>
+                    </div>
+                    <input type="range" id="angle-slider" min="0" max="180" value="0" class="angle-slider">
+                    <p class="hint">슬라이더를 움직여 각도를 조절해 보세요!</p>
+                </div>
+            </div>
+            <button class="nav-btn" id="core-next-btn" disabled onclick="ContentApp.nextScene()">다음</button>
+        </section>
+
+        <!-- 5. Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <h3>각도의 원리</h3>
+            <div class="visualize-container">
+                <div class="principle-card">
+                    <h4>각도(Angle)란?</h4>
+                    <p>한 점에서 두 직선이 벌어진 <strong>정도</strong></p>
+                    <div class="formula-box">
+                        각도 = 회전하는 크기
+                    </div>
+                </div>
+                <div class="examples-row">
+                    <div class="example-item">
+                        <div class="angle-showcase" style="transform: rotate(15deg)">
+                            <div class="line-base"></div>
+                            <div class="line-arm"></div>
+                        </div>
+                        <span>15° (예각)</span>
+                    </div>
+                    <div class="example-item">
+                        <div class="angle-showcase">
+                            <div class="line-base"></div>
+                            <div class="line-arm" style="transform: rotate(-90deg)"></div>
+                        </div>
+                        <span>90° (직각)</span>
+                    </div>
+                    <div class="example-item">
+                        <div class="angle-showcase">
+                            <div class="line-base"></div>
+                            <div class="line-arm" style="transform: rotate(150deg)"></div>
+                        </div>
+                        <span>150° (둔각)</span>
+                    </div>
+                </div>
+                <p class="key-insight">두 선이 벌어질수록 각도는 <span class="accent">커집니다!</span></p>
+            </div>
+            <div class="nav-btn-container">
+                <button class="nav-btn" onclick="ContentApp.nextScene()">이해했어요</button>
+            </div>
+        </section>
+
+        <!-- 6. Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <h3>미션: 수학성에 도착하기</h3>
+            <div class="quiz-container">
+                <p class="quiz-question">수학성은 <span class="highlight">60°</span> 방향에 있어요.
+                <br>로켓을 올바른 각도로 조절하세요.</p>
+                
+                <div class="mini-game-area">
+                    <div class="target-planet" style="left: 50%; bottom: 60%; transform: translateX(-50%) rotate(-60deg)">
+                        <svg width="60" height="60" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" fill="#7ED321"/>
+                            <circle cx="35" cy="40" r="5" fill="#fff" opacity="0.5"/>
+                            <circle cx="65" cy="55" r="8" fill="#fff" opacity="0.5"/>
+                        </svg>
+                    </div>
+                    <div class="quiz-protractor">
+                        <div class="quiz-base-line"></div>
+                        <div id="quiz-rocket" class="quiz-rocket">
+                            <svg width="30" height="50" viewBox="0 0 100 200">
+                                <g>
+                                    <path d="M50 20 L70 80 L50 70 L30 80 Z" fill="#F5A623"/>
+                                    <rect x="35" y="80" width="30" height="60" rx="5" fill="#E6E6E6"/>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-controls">
+                    <input type="range" id="quiz-slider" min="0" max="180" value="0">
+                    <div class="current-quiz-angle">현재: <span id="quiz-angle-display">0</span>°</div>
+                </div>
+
+                <button class="check-btn" onclick="ContentApp.checkQuiz()">발사!</button>
+                <div id="quiz-feedback" class="feedback"></div>
+            </div>
+        </section>
+
+        <!-- 7. Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="completion-card">
+                <h2>탐험 성공!</h2>
+                <div class="success-icon">🚀</div>
+                <p>오늘 우리는 배웠어요:</p>
+                <ul class="summary-list">
+                    <li>✅ 각도는 한 점에서 두 선이 벌어진 정예요.</li>
+                    <li>✅ 각도가 클수록 로켓은 많이 회전해요.</li>
+                    <li>✅ 각도의 단위는 '도(°)'를 써요.</li>
+                </ul>
+            </div>
+            <div class="action-buttons">
+                <button class="action-btn secondary" onclick="ContentApp.showScene(0)">다시 보기</button>
+                <button class="action-btn primary" onclick="alert('다음 학습: 직각, 예각, 둔각 알아보기')">다음 학습</button>
+            </div>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
