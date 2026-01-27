@@ -14,8 +14,10 @@ const router = useRouter()
 const route = useRoute()
 
 // 컴포넌트 마운트 시 콘텐츠 로드
-onMounted(() => {
-  contentStore.loadContents()
+onMounted(async () => {
+  await contentStore.loadContents()
+  // 추천 목록 로드 (콘텐츠 로드 후)
+  contentStore.loadRecommendations()
 })
 
 const subjectOptions: Subject[] = ['math', 'science', 'english']
@@ -112,6 +114,13 @@ function goToCreateMode() {
         message="창조 모드에서 AI와 함께 새로운 학습 콘텐츠를 만들어보세요!"
         action-label="콘텐츠 만들기"
         @action="goToCreateMode"
+      />
+
+      <!-- 추천 콘텐츠 (인기순) -->
+      <ContentRow
+        v-if="contentStore.recommendedGroup"
+        :group="contentStore.recommendedGroup"
+        class="recommended-row"
       />
 
       <!-- 과목별 콘텐츠 행 -->

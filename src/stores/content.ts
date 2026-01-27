@@ -9,6 +9,11 @@ import type {
   GradeLevel,
 } from '../types/content'
 import { SUBJECT_LABELS } from '../types/content'
+import {
+  getRecommendations,
+  recordContentClick,
+  type RecommendedContent,
+} from '../services/api/recommendations'
 
 export const useContentStore = defineStore('content', () => {
   // 상태
@@ -18,6 +23,10 @@ export const useContentStore = defineStore('content', () => {
   const selectedSubject = ref<Subject | null>(null)
   const selectedGradeLevel = ref<GradeLevel | null>(null)
   const searchQuery = ref('')
+
+  // 추천 시스템 상태
+  const recommendations = ref<RecommendedContent[]>([])
+  const isLoadingRecommendations = ref(false)
 
   // 계산된 속성: 필터링된 콘텐츠
   const filteredContents = computed(() => {
@@ -85,6 +94,36 @@ export const useContentStore = defineStore('content', () => {
     return (id: string) => contents.value.find((c) => c.id === id) || null
   })
 
+  // 추천 콘텐츠 그룹 (인기순)
+  const recommendedGroup = computed<ContentGroup | null>(() => {
+    if (recommendations.value.length === 0) return null
+
+    const recommendedContents: ContentCardData[] = []
+
+    for (const rec of recommendations.value) {
+      const content = contents.value.find((c) => c.id === rec.contentId)
+      if (content) {
+        recommendedContents.push({
+          id: content.id,
+          title: content.title,
+          thumbnail: content.thumbnail,
+          subject: content.subject,
+          gradeLevel: content.gradeLevel,
+          type: content.type,
+          description: content.description,
+        })
+      }
+    }
+
+    if (recommendedContents.length === 0) return null
+
+    return {
+      subject: 'math', // 임시 - 실제로는 혼합 과목
+      subjectLabel: '🔥 인기 콘텐츠',
+      contents: recommendedContents,
+    }
+  })
+
   // 액션: 콘텐츠 카탈로그 로드
   async function loadContents() {
     isLoading.value = true
@@ -129,6 +168,30 @@ export const useContentStore = defineStore('content', () => {
     contents.value.push(content)
   }
 
+  // 액션: 추천 목록 로드
+  async function loadRecommendations(limit = 10) {
+    isLoadingRecommendations.value = true
+    try {
+      recommendations.value = await getRecommendations(limit)
+    } catch (e) {
+      console.error('Failed to load recommendations:', e)
+      recommendations.value = []
+    } finally {
+      isLoadingRecommendations.value = false
+    }
+  }
+
+  // 액션: 콘텐츠 클릭 기록
+  async function trackContentClick(contentId: string) {
+    try {
+      await recordContentClick(contentId)
+      // 추천 목록 갱신 (백그라운드)
+      loadRecommendations()
+    } catch (e) {
+      console.error('Failed to track click:', e)
+    }
+  }
+
   return {
     // 상태
     contents,
@@ -137,11 +200,14 @@ export const useContentStore = defineStore('content', () => {
     selectedSubject,
     selectedGradeLevel,
     searchQuery,
+    recommendations,
+    isLoadingRecommendations,
     // 계산된 속성
     filteredContents,
     contentCards,
     contentGroups,
     getContentById,
+    recommendedGroup,
     // 액션
     loadContents,
     setSubjectFilter,
@@ -149,6 +215,8 @@ export const useContentStore = defineStore('content', () => {
     setSearchQuery,
     clearFilters,
     addContent,
+    loadRecommendations,
+    trackContentClick,
   }
 })
 

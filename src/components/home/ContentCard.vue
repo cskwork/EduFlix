@@ -3,11 +3,20 @@ import { computed } from 'vue'
 import type { ContentCardData, Subject } from '../../types/content'
 import { CONTENT_TYPE_LABELS, GRADE_LEVEL_LABELS } from '../../types/content'
 import { getContentHtmlPath, IFRAME_SANDBOX_ATTRS } from '../../services/content/loader'
+import { useContentStore } from '../../stores/content'
 
 // Props 정의
 const props = defineProps<{
   content: ContentCardData
 }>()
+
+// 스토어
+const contentStore = useContentStore()
+
+// 클릭 추적
+function handleClick() {
+  contentStore.trackContentClick(props.content.id)
+}
 
 // 과목별 색상 클래스
 const subjectColorClass = computed(() => {
@@ -30,7 +39,7 @@ const previewUrl = computed(() => getContentHtmlPath(props.content))
 </script>
 
 <template>
-  <router-link :to="`/content/${content.id}`" class="content-card" :class="subjectColorClass">
+  <router-link :to="`/content/${content.id}`" class="content-card" :class="subjectColorClass" @click="handleClick">
     <div class="card-thumbnail">
       <div class="iframe-container">
         <iframe

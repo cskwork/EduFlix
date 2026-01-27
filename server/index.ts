@@ -2,6 +2,7 @@
 import { serve } from 'bun'
 import { handleGenerateRoute } from './routes/generate'
 import { handleContentRoute } from './routes/content'
+import { handleRecommendationsRoute } from './routes/recommendations'
 
 const PORT = Number(process.env.PORT) || 3000
 
@@ -46,6 +47,10 @@ async function handleRequest(req: Request): Promise<Response> {
 
     if (pathname.startsWith('/api/content')) {
       return await handleContentRoute(req, jsonResponse, errorResponse)
+    }
+
+    if (pathname.startsWith('/api/recommendations')) {
+      return await handleRecommendationsRoute(req, jsonResponse, errorResponse)
     }
 
     // 헬스 체크
