@@ -1,12 +1,24 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-01-23T00:00:00.000Z",
+  "version": "1.1.0",
+  "lastUpdated": "2026-01-27T00:00:00.000Z",
   "nodes": [
+    {
+      "id": "numbers-operations",
+      "name": "수와 연산",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-1",
+      "difficulty": 1,
+      "description": "덧셈, 뺄셈, 곱셈, 나눗셈의 기초",
+      "contentIds": []
+    },
     {
       "id": "fractions-basic",
       "name": "분수의 기초",
       "subject": "math",
       "gradeLevel": "elementary",
+      "grade": "elementary-3",
+      "difficulty": 2,
       "description": "분수의 개념, 분모와 분자 이해, 단위분수",
       "contentIds": ["fractions-pizza"]
     },
@@ -15,38 +27,158 @@
       "name": "평면도형과 입체도형",
       "subject": "math",
       "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "difficulty": 2,
       "description": "다각형, 원, 각기둥, 각뿔 등 도형의 성질",
-      "contentIds": ["shapes-explorer"]
+      "contentIds": ["shapes-explorer", "3d-shapes-discovery"]
+    },
+    {
+      "id": "volume-basics",
+      "name": "부피와 넓이",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "difficulty": 3,
+      "description": "직육면체의 부피, 원의 넓이 계산",
+      "contentIds": ["volume-explorer", "box-volume", "circle-area"]
+    },
+    {
+      "id": "decimal-fractions",
+      "name": "소수와 분수 연산",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "difficulty": 3,
+      "description": "소수의 곱셈, 분수의 나눗셈",
+      "contentIds": ["decimal-multiplication", "fraction-division"]
+    },
+    {
+      "id": "ratio-proportion",
+      "name": "비와 비율",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-6",
+      "difficulty": 3,
+      "description": "비의 개념, 비례식, 비율 문제 해결",
+      "contentIds": ["ratio-proportion"]
+    },
+    {
+      "id": "algebraic-expressions",
+      "name": "문자와 식",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-1",
+      "difficulty": 3,
+      "description": "변수, 상수, 다항식의 개념",
+      "contentIds": ["negative-addition"]
     },
     {
       "id": "linear-equations",
       "name": "일차방정식",
       "subject": "math",
       "gradeLevel": "middle",
+      "grade": "middle-2",
+      "difficulty": 3,
       "description": "일차방정식과 연립방정식의 풀이",
-      "contentIds": ["equation-puzzle"]
+      "contentIds": ["equation-puzzle", "linear-slope"]
+    },
+    {
+      "id": "probability-stats",
+      "name": "확률과 통계",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-2",
+      "difficulty": 3,
+      "description": "확률의 기초, 통계적 분석",
+      "contentIds": ["probability-coin"]
+    },
+    {
+      "id": "pythagorean-theorem",
+      "name": "피타고라스 정리",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-3",
+      "difficulty": 4,
+      "description": "직각삼각형의 성질, 피타고라스 정리 활용",
+      "contentIds": ["pythagoras-theorem", "pythagorean-squares"]
+    },
+    {
+      "id": "3d-geometry",
+      "name": "공간도형",
+      "subject": "math",
+      "gradeLevel": "middle",
+      "grade": "middle-1",
+      "difficulty": 4,
+      "description": "3차원 좌표계, 공간에서의 도형",
+      "contentIds": ["3d-coordinate-system", "space-diagonal"]
+    },
+    {
+      "id": "quadratic-functions",
+      "name": "이차함수",
+      "subject": "math",
+      "gradeLevel": "high",
+      "grade": "high-1",
+      "difficulty": 4,
+      "description": "이차함수의 그래프, 최대최소",
+      "contentIds": ["quadratic-graph"]
+    },
+    {
+      "id": "vectors",
+      "name": "벡터",
+      "subject": "math",
+      "gradeLevel": "high",
+      "grade": "high-1",
+      "difficulty": 5,
+      "description": "벡터의 연산, 3차원 벡터",
+      "contentIds": ["3d-vectors"]
+    },
+    {
+      "id": "matter-properties",
+      "name": "물질의 성질",
+      "subject": "science",
+      "gradeLevel": "elementary",
+      "grade": "elementary-3",
+      "difficulty": 1,
+      "description": "고체, 액체, 기체의 특성",
+      "contentIds": []
     },
     {
       "id": "solar-system-basics",
       "name": "태양계",
       "subject": "science",
       "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "difficulty": 2,
       "description": "태양계의 구성, 각 행성의 특징",
-      "contentIds": ["solar-system"]
+      "contentIds": []
     },
     {
       "id": "electric-circuits",
       "name": "전기회로",
       "subject": "science",
       "gradeLevel": "elementary",
+      "grade": "elementary-6",
+      "difficulty": 3,
       "description": "전기의 흐름, 직렬/병렬 회로, 전압과 전류",
-      "contentIds": ["circuit-lab"]
+      "contentIds": []
+    },
+    {
+      "id": "atoms-molecules",
+      "name": "원자와 분자",
+      "subject": "science",
+      "gradeLevel": "middle",
+      "grade": "middle-1",
+      "difficulty": 3,
+      "description": "물질의 구성 단위, 원소 기호",
+      "contentIds": []
     },
     {
       "id": "cell-structure",
       "name": "세포의 구조",
       "subject": "science",
       "gradeLevel": "middle",
+      "grade": "middle-1",
+      "difficulty": 3,
       "description": "세포의 구조, 세포소기관의 기능",
       "contentIds": ["cell-explorer"]
     },
@@ -55,6 +187,8 @@
       "name": "화학 반응",
       "subject": "science",
       "gradeLevel": "high",
+      "grade": "high-1",
+      "difficulty": 4,
       "description": "화학 반응식, 반응의 종류, 반응 속도",
       "contentIds": ["chemical-reactor"]
     },
@@ -63,55 +197,29 @@
       "name": "기초 영어 어휘",
       "subject": "english",
       "gradeLevel": "elementary",
+      "grade": "elementary-3",
+      "difficulty": 1,
       "description": "일상 사물, 동물, 색상 등 기초 단어",
-      "contentIds": ["word-safari"]
+      "contentIds": []
     },
     {
       "id": "english-grammar",
       "name": "영어 문법",
       "subject": "english",
       "gradeLevel": "middle",
+      "grade": "middle-2",
+      "difficulty": 3,
       "description": "시제, 관사, 문장 구조",
-      "contentIds": ["grammar-quest"]
+      "contentIds": []
     },
     {
       "id": "persuasive-writing",
       "name": "논증과 토론",
       "subject": "english",
       "gradeLevel": "high",
+      "grade": "high-1",
+      "difficulty": 5,
       "description": "논리적 글쓰기, 토론 기법, 설득력 있는 표현",
-      "contentIds": ["debate-arena"]
-    },
-    {
-      "id": "numbers-operations",
-      "name": "수와 연산",
-      "subject": "math",
-      "gradeLevel": "elementary",
-      "description": "덧셈, 뺄셈, 곱셈, 나눗셈의 기초",
-      "contentIds": []
-    },
-    {
-      "id": "algebraic-expressions",
-      "name": "문자와 식",
-      "subject": "math",
-      "gradeLevel": "middle",
-      "description": "변수, 상수, 다항식의 개념",
-      "contentIds": []
-    },
-    {
-      "id": "matter-properties",
-      "name": "물질의 성질",
-      "subject": "science",
-      "gradeLevel": "elementary",
-      "description": "고체, 액체, 기체의 특성",
-      "contentIds": []
-    },
-    {
-      "id": "atoms-molecules",
-      "name": "원자와 분자",
-      "subject": "science",
-      "gradeLevel": "middle",
-      "description": "물질의 구성 단위, 원소 기호",
       "contentIds": []
     }
   ],

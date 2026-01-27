@@ -3,8 +3,9 @@ import { serve } from 'bun'
 import { handleGenerateRoute } from './routes/generate'
 import { handleContentRoute } from './routes/content'
 import { handleRecommendationsRoute } from './routes/recommendations'
+import { getServerPort } from './config'
 
-const PORT = Number(process.env.PORT) || 3000
+const PORT = getServerPort()
 
 // CORS 헤더 설정
 const corsHeaders = {

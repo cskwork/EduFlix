@@ -2,12 +2,14 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import AppHeader from './components/common/AppHeader.vue'
+import TabNavigation from './components/tabs/TabNavigation.vue'
 import { useKeyboardNavigation } from './composables/useKeyboardNavigation'
 
 // 키보드 네비게이션 활성화
 const { handleSkipLink } = useKeyboardNavigation()
 const route = useRoute()
 const isContentPage = computed(() => route.path.startsWith('/content/'))
+const showTabs = computed(() => route.meta.showTabs === true)
 </script>
 
 <template>
@@ -25,11 +27,14 @@ const isContentPage = computed(() => route.path.startsWith('/content/'))
     <main
       id="main-content"
       class="main-content"
-      :class="{ 'content-page': isContentPage }"
+      :class="{ 'content-page': isContentPage, 'has-tabs': showTabs }"
       role="main"
     >
       <router-view />
     </main>
+
+    <!-- 탭 네비게이션 (모바일: 하단, 데스크톱: 상단) -->
+    <TabNavigation v-if="showTabs" />
   </div>
 </template>
 
@@ -50,6 +55,13 @@ const isContentPage = computed(() => route.path.startsWith('/content/'))
   min-height: 100vh;
   min-height: calc(var(--app-vh, 1vh) * 100);
   min-height: 100dvh;
+}
+
+/* 탭이 있는 페이지: 모바일에서 하단 여백 추가 */
+@media (max-width: 767px) {
+  .main-content.has-tabs {
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* 스킵 링크 (키보드 사용자를 위한 접근성) */

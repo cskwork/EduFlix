@@ -2,9 +2,10 @@
 // HTTP-based integration with art-assets server
 
 import type { Subject, Grade, Language } from '../../src/types/content'
+import { getArtAssetsUrl } from '../config'
 
-// Art-assets server URL (runs on port 3000)
-const ART_ASSETS_URL = process.env.ART_ASSETS_URL || 'http://localhost:3000'
+// art-assets 서버 URL (기본값은 3000을 사용하지 않음)
+const ART_ASSETS_URL = getArtAssetsUrl()
 
 // Art-assets types (mirrored from art-assets/api/src/types.ts)
 export type ArtAssetsSubject = 'math' | 'english'
