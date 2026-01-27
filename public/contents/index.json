@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-01-27T00:37:00.918Z",
+  "lastUpdated": "2026-01-27T01:16:00.000Z",
   "contents": [
     {
       "id": "fractions-pizza",
@@ -269,6 +269,78 @@
         "인사"
       ],
       "createdAt": "2026-01-27T00:37:00.913Z"
+    },
+    {
+      "id": "comparative-adjectives",
+      "title": "Who is Taller? Comparing with Adjectives",
+      "subject": "english",
+      "gradeLevel": "elementary",
+      "grade": "elementary-4",
+      "type": "quiz",
+      "language": "en",
+      "description": "비교급 형용사를 배우며 두 대상을 비교하는 방법을 익히는 인터랙티브 학습",
+      "thumbnail": "/contents/english/elementary/comparative-adjectives/assets/thumbnail.svg",
+      "path": "/contents/english/elementary/comparative-adjectives/index.html"
+    },
+    {
+      "id": "modal-can",
+      "title": "I Can Do It! Talking About Abilities",
+      "subject": "english",
+      "gradeLevel": "elementary",
+      "grade": "elementary-3",
+      "type": "quiz",
+      "language": "en",
+      "description": "조동사 can을 사용하여 능력과 가능성을 표현하는 방법을 배우는 인터랙티브 학습",
+      "thumbnail": "/contents/english/elementary/modal-can/assets/thumbnail.svg",
+      "path": "/contents/english/elementary/modal-can/index.html"
+    },
+    {
+      "id": "present-tenses",
+      "title": "I play vs I'm playing: What's the Difference?",
+      "subject": "english",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "type": "quiz",
+      "language": "en",
+      "description": "현재 단순형과 현재 진행형의 차이를 구분하고 올바르게 사용하는 방법을 배우는 인터랙티브 학습",
+      "thumbnail": "/contents/english/elementary/present-tenses/assets/thumbnail.svg",
+      "path": "/contents/english/elementary/present-tenses/index.html"
+    },
+    {
+      "id": "will-vs-going-to-library",
+      "title": "도서관 가는 계획: will과 going to의 비밀",
+      "subject": "english",
+      "gradeLevel": "middle",
+      "grade": "middle-1",
+      "type": "simulation",
+      "language": "ko",
+      "description": "will과 be going to의 차이를 도서관 방문 계획 상황에서 배우는 인터랙티브 학습",
+      "thumbnail": "/contents/english/middle/will-vs-going-to-library/assets/thumbnail.svg",
+      "path": "/contents/english/middle/will-vs-going-to-library/index.html"
+    },
+    {
+      "id": "will-vs-going-to-zoo",
+      "title": "Travel Plans: will vs going to - Zoo Visit Adventure",
+      "subject": "english",
+      "gradeLevel": "middle",
+      "grade": "middle-1",
+      "type": "simulation",
+      "language": "en",
+      "description": "will과 be going to의 차이를 동물원 방문 계획 상황에서 배우는 인터랙티브 학습",
+      "thumbnail": "/contents/english/middle/will-vs-going-to-zoo/assets/thumbnail.svg",
+      "path": "/contents/english/middle/will-vs-going-to-zoo/index.html"
+    },
+    {
+      "id": "fraction-addition",
+      "title": "분수의 덧셈: 서로 다른 분모 더하기",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "type": "simulation",
+      "language": "ko",
+      "description": "서로 다른 분모를 가진 분수의 덧셈 방법을 시각적으로 이해하는 인터랙티브 학습",
+      "thumbnail": "/contents/math/elementary/fraction-addition/assets/thumbnail.svg",
+      "path": "/contents/math/elementary/fraction-addition/index.html"
     }
   ]
 }

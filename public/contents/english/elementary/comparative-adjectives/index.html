@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who is Taller? Comparing with Adjectives</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- 1. Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-wrapper">
+                <div class="question-box">
+                    <h1 class="main-title english-text">bigger vs more beautiful</h1>
+                    <p class="sub-text">"bigger"라고 하면서 왜 "more beautifuler"라고 하지 않을까요?</p>
+                </div>
+                <div class="visual-area">
+                    <div class="comparison-visual">
+                        <svg viewBox="0 0 400 200" class="hook-svg">
+                            <!-- 작은 고양이 -->
+                            <g class="cat-small" transform="translate(50, 80)">
+                                <ellipse cx="30" cy="40" rx="25" ry="20" fill="#FFB74D"/>
+                                <circle cx="30" cy="20" r="18" fill="#FFB74D"/>
+                                <polygon points="15,8 22,20 8,20" fill="#FFB74D"/>
+                                <polygon points="45,8 38,20 52,20" fill="#FFB74D"/>
+                                <circle cx="24" cy="18" r="3" fill="#333"/>
+                                <circle cx="36" cy="18" r="3" fill="#333"/>
+                                <ellipse cx="30" cy="25" rx="3" ry="2" fill="#FF8A80"/>
+                                <path d="M20 28 Q30 32 40 28" fill="none" stroke="#333" stroke-width="1.5"/>
+                                <text x="30" y="75" text-anchor="middle" class="label-text">small</text>
+                            </g>
+                            <!-- 큰 고양이 -->
+                            <g class="cat-big" transform="translate(180, 50)">
+                                <ellipse cx="50" cy="70" rx="40" ry="35" fill="#FFA726"/>
+                                <circle cx="50" cy="35" r="30" fill="#FFA726"/>
+                                <polygon points="25,12 35,35 15,35" fill="#FFA726"/>
+                                <polygon points="75,12 65,35 85,35" fill="#FFA726"/>
+                                <circle cx="40" cy="32" r="4" fill="#333"/>
+                                <circle cx="60" cy="32" r="4" fill="#333"/>
+                                <ellipse cx="50" cy="42" rx="4" ry="3" fill="#FF8A80"/>
+                                <path d="M35 48 Q50 55 65 48" fill="none" stroke="#333" stroke-width="2"/>
+                                <text x="50" y="125" text-anchor="middle" class="label-text highlight-word">bigger!</text>
+                            </g>
+                            <!-- 화살표 -->
+                            <path d="M130 100 L160 100" stroke="#4CAF50" stroke-width="4" marker-end="url(#arrowhead)"/>
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#4CAF50"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="word-comparison">
+                        <div class="word-box correct">
+                            <span class="english-text">big</span>
+                            <span class="arrow">+</span>
+                            <span class="english-text">er</span>
+                            <span class="equals">=</span>
+                            <span class="english-text result">bigger</span>
+                        </div>
+                        <div class="word-box wrong">
+                            <span class="english-text">beautiful</span>
+                            <span class="arrow">+</span>
+                            <span class="english-text strikethrough">er</span>
+                            <span class="x-mark">X</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button class="btn-primary" onclick="ContentApp.nextScene()">비밀 알아보기</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="anchor-content">
+                    <h2>형용사, 기억하고 있죠?</h2>
+                    <p>사물이나 사람의 특징을 설명하는 단어예요</p>
+                    <div class="adjective-demo">
+                        <div class="adjective-examples">
+                            <div class="adj-card">
+                                <svg viewBox="0 0 80 80" class="adj-icon">
+                                    <circle cx="40" cy="40" r="35" fill="#FF5252"/>
+                                </svg>
+                                <span class="english-text adj-word">red</span>
+                                <span class="korean-text">빨간</span>
+                            </div>
+                            <div class="adj-card">
+                                <svg viewBox="0 0 80 80" class="adj-icon">
+                                    <circle cx="40" cy="40" r="30" fill="#64B5F6"/>
+                                </svg>
+                                <span class="english-text adj-word">small</span>
+                                <span class="korean-text">작은</span>
+                            </div>
+                            <div class="adj-card">
+                                <svg viewBox="0 0 80 80" class="adj-icon">
+                                    <rect x="10" y="35" width="60" height="20" rx="5" fill="#81C784"/>
+                                </svg>
+                                <span class="english-text adj-word">long</span>
+                                <span class="korean-text">긴</span>
+                            </div>
+                        </div>
+                        <div class="bridge-question">
+                            <p>그런데... 두 가지를 <strong>비교</strong>하고 싶을 땐 어떻게 할까요?</p>
+                        </div>
+                    </div>
+                    <button class="btn-primary fade-in-delay" onclick="ContentApp.nextScene()">다음으로</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="story-card">
+                    <div class="character-area">
+                        <!-- 게이머 캐릭터 SVG -->
+                        <svg viewBox="0 0 100 120" class="character-svg bounce">
+                            <!-- 헤드폰 -->
+                            <path d="M25 50 Q25 25 50 25 Q75 25 75 50" fill="none" stroke="#333" stroke-width="6"/>
+                            <circle cx="25" cy="55" r="10" fill="#7C4DFF"/>
+                            <circle cx="75" cy="55" r="10" fill="#7C4DFF"/>
+                            <!-- 얼굴 -->
+                            <circle cx="50" cy="55" r="25" fill="#FFE0B2"/>
+                            <!-- 눈 -->
+                            <circle cx="42" cy="52" r="4" fill="#333"/>
+                            <circle cx="58" cy="52" r="4" fill="#333"/>
+                            <circle cx="43" cy="51" r="1.5" fill="white"/>
+                            <circle cx="59" cy="51" r="1.5" fill="white"/>
+                            <!-- 미소 -->
+                            <path d="M40 62 Q50 70 60 62" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+                            <!-- 몸 (후드티) -->
+                            <rect x="30" y="80" width="40" height="35" rx="8" fill="#7C4DFF"/>
+                            <path d="M45 80 L45 95 Q50 100 55 95 L55 80" fill="#5E35B1"/>
+                        </svg>
+                    </div>
+                    <div class="dialogue-box">
+                        <h3 class="english-text">Gamer Alex</h3>
+                        <p id="typewriter-text"></p>
+                    </div>
+                </div>
+                <div class="problem-visual">
+                    <div class="game-review-card">
+                        <h4>Game Review Draft</h4>
+                        <div class="review-content english-text">
+                            <p>"This sword is <span class="blank">____</span> than the old one."</p>
+                            <p>"The graphics are <span class="blank">____</span> than before."</p>
+                            <p>"This game is <span class="blank">____</span> than the first one."</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="ContentApp.nextScene()">도와주기</button>
+            </div>
+        </section>
+
+        <!-- 4. Core Scene (Interaction) -->
+        <section id="core-scene" class="scene">
+            <div class="content-wrapper">
+                <h2>비교급 만들기 규칙</h2>
+                <p class="instruction">형용사를 비교급으로 바꿔보세요! 단어를 드래그해서 올바른 곳에 놓으세요.</p>
+
+                <div class="rule-tabs">
+                    <button class="tab-btn active" data-tab="short">짧은 단어 (-er)</button>
+                    <button class="tab-btn" data-tab="long">긴 단어 (more)</button>
+                </div>
+
+                <div class="interaction-area" id="short-words">
+                    <div class="word-transformer">
+                        <div class="source-words" id="source-short">
+                            <div class="word-block draggable" data-word="tall" draggable="true">tall</div>
+                            <div class="word-block draggable" data-word="fast" draggable="true">fast</div>
+                            <div class="word-block draggable" data-word="big" draggable="true">big</div>
+                            <div class="word-block draggable" data-word="happy" draggable="true">happy</div>
+                        </div>
+                        <div class="transform-zone">
+                            <div class="drop-zone" id="drop-short" data-accepts="short">
+                                <span class="placeholder">여기에 드래그</span>
+                            </div>
+                            <span class="suffix">+ er</span>
+                            <span class="equals">=</span>
+                            <div class="result-zone" id="result-short">
+                                <span class="result-word">?</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rules-display">
+                        <div class="rule-item">
+                            <span class="rule-badge">1</span>
+                            <span>대부분: 그냥 <strong>-er</strong> 붙이기</span>
+                            <span class="example english-text">tall → taller</span>
+                        </div>
+                        <div class="rule-item">
+                            <span class="rule-badge">2</span>
+                            <span>자음+모음+자음: 마지막 자음 <strong>두 번</strong></span>
+                            <span class="example english-text">big → bigger</span>
+                        </div>
+                        <div class="rule-item">
+                            <span class="rule-badge">3</span>
+                            <span>-y로 끝나면: y → <strong>ier</strong></span>
+                            <span class="example english-text">happy → happier</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="interaction-area hidden" id="long-words">
+                    <div class="word-transformer">
+                        <div class="source-words" id="source-long">
+                            <div class="word-block draggable" data-word="beautiful" draggable="true">beautiful</div>
+                            <div class="word-block draggable" data-word="interesting" draggable="true">interesting</div>
+                            <div class="word-block draggable" data-word="expensive" draggable="true">expensive</div>
+                        </div>
+                        <div class="transform-zone long-transform">
+                            <span class="prefix">more</span>
+                            <span class="plus-sign">+</span>
+                            <div class="drop-zone" id="drop-long" data-accepts="long">
+                                <span class="placeholder">여기에 드래그</span>
+                            </div>
+                            <span class="equals">=</span>
+                            <div class="result-zone" id="result-long">
+                                <span class="result-word">?</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rules-display">
+                        <div class="rule-item highlight-rule">
+                            <span class="rule-badge special">Key</span>
+                            <span>2음절 이상의 긴 단어: <strong>more + 형용사</strong></span>
+                        </div>
+                        <div class="example-row english-text">
+                            <span>beautiful → more beautiful</span>
+                        </div>
+                        <div class="example-row english-text">
+                            <span>interesting → more interesting</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="discovery-moment hidden" id="discovery">
+                    <div class="aha-box">
+                        <span class="aha-icon">💡</span>
+                        <p><strong>발견!</strong> 짧은 단어는 <span class="english-text">-er</span>, 긴 단어는 <span class="english-text">more</span>를 써요!</p>
+                    </div>
+                </div>
+
+                <button id="core-next-btn" class="btn-primary" onclick="ContentApp.nextScene()">규칙 정리하기</button>
+            </div>
+        </section>
+
+        <!-- 5. Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-wrapper">
+                <h2>비교급 규칙 정리</h2>
+                <div class="visualize-content">
+                    <div class="rule-chart">
+                        <svg viewBox="0 0 500 300" class="chart-svg">
+                            <!-- 배경 -->
+                            <rect x="10" y="10" width="480" height="280" rx="15" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="2"/>
+
+                            <!-- 제목 -->
+                            <text x="250" y="45" text-anchor="middle" font-size="18" font-weight="bold" fill="#333">Comparative Adjectives</text>
+
+                            <!-- 짧은 단어 박스 -->
+                            <rect x="30" y="70" width="200" height="200" rx="10" fill="#E3F2FD" stroke="#2196F3" stroke-width="2"/>
+                            <text x="130" y="100" text-anchor="middle" font-size="14" font-weight="bold" fill="#1976D2">Short Words (1-2 syllables)</text>
+                            <text x="130" y="130" text-anchor="middle" font-size="24" font-weight="bold" fill="#1976D2" class="english-text">+ er</text>
+                            <text x="130" y="165" text-anchor="middle" font-size="13" fill="#333" class="english-text">tall → taller</text>
+                            <text x="130" y="190" text-anchor="middle" font-size="13" fill="#333" class="english-text">big → bigger</text>
+                            <text x="130" y="215" text-anchor="middle" font-size="13" fill="#333" class="english-text">happy → happier</text>
+                            <text x="130" y="250" text-anchor="middle" font-size="11" fill="#666">음절이 1~2개인 짧은 단어</text>
+
+                            <!-- 긴 단어 박스 -->
+                            <rect x="270" y="70" width="200" height="200" rx="10" fill="#FCE4EC" stroke="#E91E63" stroke-width="2"/>
+                            <text x="370" y="100" text-anchor="middle" font-size="14" font-weight="bold" fill="#C2185B">Long Words (3+ syllables)</text>
+                            <text x="370" y="130" text-anchor="middle" font-size="24" font-weight="bold" fill="#C2185B" class="english-text">more +</text>
+                            <text x="370" y="165" text-anchor="middle" font-size="13" fill="#333" class="english-text">beautiful → more beautiful</text>
+                            <text x="370" y="190" text-anchor="middle" font-size="13" fill="#333" class="english-text">interesting → more interesting</text>
+                            <text x="370" y="215" text-anchor="middle" font-size="13" fill="#333" class="english-text">expensive → more expensive</text>
+                            <text x="370" y="250" text-anchor="middle" font-size="11" fill="#666">음절이 3개 이상인 긴 단어</text>
+                        </svg>
+                    </div>
+
+                    <div class="irregular-box">
+                        <h4>불규칙 비교급 (외워야 해요!)</h4>
+                        <div class="irregular-grid">
+                            <div class="irregular-item">
+                                <span class="english-text">good</span>
+                                <span class="arrow">→</span>
+                                <span class="english-text highlight-word">better</span>
+                            </div>
+                            <div class="irregular-item">
+                                <span class="english-text">bad</span>
+                                <span class="arrow">→</span>
+                                <span class="english-text highlight-word">worse</span>
+                            </div>
+                            <div class="irregular-item">
+                                <span class="english-text">many/much</span>
+                                <span class="arrow">→</span>
+                                <span class="english-text highlight-word">more</span>
+                            </div>
+                            <div class="irregular-item">
+                                <span class="english-text">little</span>
+                                <span class="arrow">→</span>
+                                <span class="english-text highlight-word">less</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="key-insight">
+                        <p>비교할 때는 항상 <span class="english-text">"than"</span>과 함께 써요!</p>
+                        <p class="example english-text">"She is taller <strong>than</strong> me."</p>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="ContentApp.nextScene()">문제 풀어보기</button>
+            </div>
+        </section>
+
+        <!-- 6. Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="quiz-header">
+                    <span class="badge">Quiz</span>
+                    <h3>올바른 비교급을 고르세요!</h3>
+                </div>
+
+                <div class="quiz-container" id="quiz-container">
+                    <!-- Quiz 1 -->
+                    <div class="quiz-item active" data-quiz="1">
+                        <div class="quiz-visual">
+                            <svg viewBox="0 0 300 150" class="quiz-svg">
+                                <!-- 두 명의 사람 비교 -->
+                                <rect x="60" y="100" width="30" height="40" rx="5" fill="#64B5F6"/>
+                                <circle cx="75" cy="85" r="15" fill="#FFE0B2"/>
+                                <text x="75" y="150" text-anchor="middle" font-size="12">Tom</text>
+
+                                <rect x="180" y="70" width="35" height="70" rx="5" fill="#81C784"/>
+                                <circle cx="197" cy="50" r="18" fill="#FFE0B2"/>
+                                <text x="197" y="150" text-anchor="middle" font-size="12">Mike</text>
+                            </svg>
+                        </div>
+                        <p class="quiz-sentence english-text">Mike is <span class="blank-inline">______</span> than Tom.</p>
+                        <div class="quiz-options">
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(1, 'taller')">taller</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(1, 'more tall')">more tall</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(1, 'tallest')">tallest</button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz 2 -->
+                    <div class="quiz-item" data-quiz="2">
+                        <div class="quiz-visual">
+                            <svg viewBox="0 0 300 150" class="quiz-svg">
+                                <!-- 두 개의 그림 비교 -->
+                                <rect x="30" y="30" width="80" height="100" rx="5" fill="#FFF9C4" stroke="#FBC02D" stroke-width="2"/>
+                                <circle cx="70" cy="60" r="20" fill="#FF7043"/>
+                                <rect x="50" y="90" width="40" height="30" fill="#4CAF50"/>
+                                <text x="70" y="145" text-anchor="middle" font-size="11">Simple Art</text>
+
+                                <rect x="160" y="20" width="110" height="115" rx="5" fill="#FFF9C4" stroke="#FBC02D" stroke-width="2"/>
+                                <circle cx="195" cy="50" r="15" fill="#FF7043"/>
+                                <ellipse cx="230" cy="70" rx="25" ry="20" fill="#64B5F6"/>
+                                <path d="M175 100 Q215 60 255 100" fill="#81C784"/>
+                                <circle cx="200" cy="90" r="8" fill="#E91E63"/>
+                                <text x="215" y="150" text-anchor="middle" font-size="11">Masterpiece</text>
+                            </svg>
+                        </div>
+                        <p class="quiz-sentence english-text">This painting is <span class="blank-inline">______</span> than that one.</p>
+                        <div class="quiz-options">
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(2, 'beautifuler')">beautifuler</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(2, 'more beautiful')">more beautiful</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(2, 'most beautiful')">most beautiful</button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz 3 -->
+                    <div class="quiz-item" data-quiz="3">
+                        <div class="quiz-visual">
+                            <svg viewBox="0 0 300 150" class="quiz-svg">
+                                <!-- 음식 비교 -->
+                                <ellipse cx="75" cy="100" rx="45" ry="15" fill="#8D6E63"/>
+                                <ellipse cx="75" cy="85" rx="40" ry="30" fill="#FFCC80"/>
+                                <circle cx="60" cy="80" r="8" fill="#F44336"/>
+                                <circle cx="85" cy="75" r="6" fill="#4CAF50"/>
+                                <text x="75" y="135" text-anchor="middle" font-size="11">OK Pizza</text>
+
+                                <ellipse cx="215" cy="100" rx="50" ry="18" fill="#8D6E63"/>
+                                <ellipse cx="215" cy="82" rx="45" ry="35" fill="#FFCC80"/>
+                                <circle cx="195" cy="75" r="10" fill="#F44336"/>
+                                <circle cx="220" cy="68" r="8" fill="#4CAF50"/>
+                                <circle cx="235" cy="80" r="7" fill="#FF9800"/>
+                                <circle cx="205" cy="90" r="6" fill="#9C27B0"/>
+                                <text x="215" y="140" text-anchor="middle" font-size="11">Amazing Pizza</text>
+                            </svg>
+                        </div>
+                        <p class="quiz-sentence english-text">Your pizza tastes <span class="blank-inline">______</span> than mine.</p>
+                        <div class="quiz-options">
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(3, 'gooder')">gooder</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(3, 'more good')">more good</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(3, 'better')">better</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="quiz-feedback" class="quiz-feedback hidden"></div>
+                <div class="quiz-progress">
+                    <span id="quiz-progress-text">1 / 3</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="reward-area">
+                    <svg viewBox="0 0 100 100" class="trophy-svg trophy-anim">
+                        <ellipse cx="50" cy="90" rx="25" ry="8" fill="#FFA000"/>
+                        <rect x="40" y="70" width="20" height="20" fill="#FFD54F"/>
+                        <path d="M25 30 Q25 60 50 70 Q75 60 75 30 L75 20 L25 20 Z" fill="#FFD54F" stroke="#FFA000" stroke-width="2"/>
+                        <ellipse cx="50" cy="20" rx="25" ry="8" fill="#FFECB3"/>
+                        <path d="M20 30 Q10 35 15 50 Q20 55 25 45" fill="none" stroke="#FFA000" stroke-width="4"/>
+                        <path d="M80 30 Q90 35 85 50 Q80 55 75 45" fill="none" stroke="#FFA000" stroke-width="4"/>
+                        <text x="50" y="50" text-anchor="middle" font-size="16" fill="#FF6F00">1</text>
+                    </svg>
+                    <h2>Excellent Work!</h2>
+                </div>
+                <div class="summary-card">
+                    <h3>Today's Key Points</h3>
+                    <ul>
+                        <li><strong class="english-text">Short words (1-2 syllables)</strong>: 형용사 + <span class="english-text">-er</span></li>
+                        <li><strong class="english-text">Long words (3+ syllables)</strong>: <span class="english-text">more</span> + 형용사</li>
+                        <li>비교할 때는 <span class="english-text">"than"</span>과 함께 사용해요</li>
+                        <li><strong>불규칙</strong>: <span class="english-text">good → better, bad → worse</span></li>
+                    </ul>
+                </div>
+                <div class="real-life-examples">
+                    <h4>실생활에서 사용해보세요!</h4>
+                    <div class="example-sentences">
+                        <div class="example-item">
+                            <span class="english-text">"This phone is cheaper than that one."</span>
+                            <span class="korean-small">이 폰이 저것보다 더 싸요.</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="english-text">"Math is more difficult than English."</span>
+                            <span class="korean-small">수학이 영어보다 더 어려워요.</span>
+                        </div>
+                        <div class="example-item">
+                            <span class="english-text">"My dog is bigger than yours."</span>
+                            <span class="korean-small">내 강아지가 네 것보다 더 커요.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-secondary" onclick="location.reload()">다시 하기</button>
+                    <button class="btn-primary">다음 주제로</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

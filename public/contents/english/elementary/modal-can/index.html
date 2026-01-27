@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Can Do It! Talking About Abilities</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- 1. Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-wrapper">
+                <div class="question-box">
+                    <h1 class="main-title english-text">What's Your Superpower?</h1>
+                    <p class="sub-text">수퍼히어로들은 자기 능력을 어떻게 말할까요?<br>"I <strong>can</strong> fly!" vs "I <strong>can't</strong> swim."</p>
+                </div>
+                <div class="visual-area">
+                    <div class="superpower-visual">
+                        <svg viewBox="0 0 400 220" class="hook-svg">
+                            <!-- 배경 구름 -->
+                            <ellipse cx="60" cy="40" rx="30" ry="15" fill="#E3F2FD"/>
+                            <ellipse cx="340" cy="50" rx="35" ry="18" fill="#E3F2FD"/>
+
+                            <!-- 히어로 1 - 날 수 있음 -->
+                            <g class="hero-fly" transform="translate(80, 60)">
+                                <!-- 망토 -->
+                                <path d="M30 35 Q15 80 25 100 L55 100 Q65 80 50 35" fill="#F44336"/>
+                                <!-- 몸 -->
+                                <ellipse cx="40" cy="60" rx="18" ry="25" fill="#2196F3"/>
+                                <!-- 머리 -->
+                                <circle cx="40" cy="25" r="20" fill="#FFE0B2"/>
+                                <!-- 마스크 -->
+                                <path d="M25 20 Q40 28 55 20 L55 30 Q40 35 25 30 Z" fill="#1976D2"/>
+                                <!-- 눈 (마스크 안) -->
+                                <circle cx="33" cy="25" r="3" fill="white"/>
+                                <circle cx="47" cy="25" r="3" fill="white"/>
+                                <!-- 미소 -->
+                                <path d="M33 35 Q40 42 47 35" fill="none" stroke="#333" stroke-width="2"/>
+                                <!-- 주먹 앞으로 -->
+                                <circle cx="15" cy="40" r="8" fill="#FFE0B2"/>
+                                <!-- 말풍선 -->
+                                <rect x="60" y="-10" width="90" height="35" rx="8" fill="white" stroke="#4CAF50" stroke-width="2"/>
+                                <polygon points="60,15 50,20 60,25" fill="white" stroke="#4CAF50" stroke-width="2"/>
+                                <text x="105" y="15" text-anchor="middle" font-size="14" font-weight="bold" fill="#4CAF50" class="english-text">I can fly!</text>
+                            </g>
+
+                            <!-- 히어로 2 - 수영 못함 -->
+                            <g class="hero-swim" transform="translate(230, 100)">
+                                <!-- 물 -->
+                                <ellipse cx="40" cy="90" rx="50" ry="15" fill="#81D4FA"/>
+                                <ellipse cx="40" cy="85" rx="45" ry="12" fill="#4FC3F7"/>
+                                <!-- 몸 (물에 빠진) -->
+                                <ellipse cx="40" cy="70" rx="15" ry="20" fill="#9C27B0"/>
+                                <!-- 머리 -->
+                                <circle cx="40" cy="45" r="18" fill="#FFE0B2"/>
+                                <!-- 머리카락 -->
+                                <ellipse cx="40" cy="32" rx="15" ry="8" fill="#5D4037"/>
+                                <!-- 눈 (놀란) -->
+                                <circle cx="34" cy="43" r="4" fill="white" stroke="#333" stroke-width="1"/>
+                                <circle cx="46" cy="43" r="4" fill="white" stroke="#333" stroke-width="1"/>
+                                <circle cx="34" cy="43" r="2" fill="#333"/>
+                                <circle cx="46" cy="43" r="2" fill="#333"/>
+                                <!-- 입 -->
+                                <ellipse cx="40" cy="55" rx="4" ry="3" fill="#333"/>
+                                <!-- 팔 (허우적) -->
+                                <line x1="20" y1="55" x2="5" y2="40" stroke="#FFE0B2" stroke-width="6" stroke-linecap="round"/>
+                                <line x1="60" y1="55" x2="75" y2="40" stroke="#FFE0B2" stroke-width="6" stroke-linecap="round"/>
+                                <!-- 말풍선 -->
+                                <rect x="70" y="10" width="100" height="35" rx="8" fill="white" stroke="#F44336" stroke-width="2"/>
+                                <polygon points="70,25 60,30 70,35" fill="white" stroke="#F44336" stroke-width="2"/>
+                                <text x="120" y="33" text-anchor="middle" font-size="13" font-weight="bold" fill="#F44336" class="english-text">I can't swim!</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button class="btn-primary" onclick="ContentApp.nextScene()">능력 표현 배우기</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="anchor-content">
+                    <h2>동사, 기억하죠?</h2>
+                    <p>행동을 나타내는 단어예요</p>
+                    <div class="verb-demo">
+                        <div class="verb-examples">
+                            <div class="verb-card">
+                                <svg viewBox="0 0 80 80" class="verb-icon">
+                                    <circle cx="40" cy="25" r="12" fill="#FFE0B2"/>
+                                    <ellipse cx="40" cy="50" rx="15" ry="20" fill="#64B5F6"/>
+                                    <line x1="20" y1="40" x2="10" y2="55" stroke="#FFE0B2" stroke-width="5"/>
+                                    <line x1="60" y1="40" x2="70" y2="55" stroke="#FFE0B2" stroke-width="5"/>
+                                </svg>
+                                <span class="english-text verb-word">swim</span>
+                                <span class="korean-text">수영하다</span>
+                            </div>
+                            <div class="verb-card">
+                                <svg viewBox="0 0 80 80" class="verb-icon">
+                                    <circle cx="40" cy="20" r="10" fill="#FFE0B2"/>
+                                    <ellipse cx="40" cy="40" rx="12" ry="15" fill="#E91E63"/>
+                                    <line x1="30" y1="55" x2="25" y2="75" stroke="#FFE0B2" stroke-width="5"/>
+                                    <line x1="50" y1="55" x2="55" y2="75" stroke="#FFE0B2" stroke-width="5"/>
+                                </svg>
+                                <span class="english-text verb-word">dance</span>
+                                <span class="korean-text">춤추다</span>
+                            </div>
+                            <div class="verb-card">
+                                <svg viewBox="0 0 80 80" class="verb-icon">
+                                    <rect x="20" y="35" width="40" height="25" rx="3" fill="#8D6E63"/>
+                                    <rect x="25" y="25" width="8" height="15" fill="#5D4037"/>
+                                    <rect x="47" y="25" width="8" height="15" fill="#5D4037"/>
+                                    <rect x="30" y="60" width="20" height="8" fill="#4CAF50"/>
+                                </svg>
+                                <span class="english-text verb-word">cook</span>
+                                <span class="korean-text">요리하다</span>
+                            </div>
+                        </div>
+                        <div class="bridge-question">
+                            <p>그런데... 이걸 <strong>"할 수 있다/없다"</strong>고 말하려면?</p>
+                            <p class="sub-hint">"나는 수영할 수 있어" vs "나는 요리 못해"</p>
+                        </div>
+                    </div>
+                    <button class="btn-primary fade-in-delay" onclick="ContentApp.nextScene()">다음으로</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="story-card">
+                    <div class="character-area">
+                        <!-- 탤런트쇼 캐릭터 SVG -->
+                        <svg viewBox="0 0 100 120" class="character-svg bounce">
+                            <!-- 스포트라이트 -->
+                            <ellipse cx="50" cy="110" rx="40" ry="8" fill="#FFF9C4" opacity="0.5"/>
+                            <!-- 마이크 -->
+                            <rect x="72" y="50" width="8" height="30" fill="#424242"/>
+                            <ellipse cx="76" cy="45" rx="8" ry="12" fill="#757575"/>
+                            <!-- 얼굴 -->
+                            <circle cx="45" cy="40" r="25" fill="#FFE0B2"/>
+                            <!-- 머리카락 -->
+                            <path d="M25 30 Q35 10 55 15 Q70 20 65 35" fill="#333"/>
+                            <!-- 눈 -->
+                            <circle cx="37" cy="38" r="4" fill="#333"/>
+                            <circle cx="53" cy="38" r="4" fill="#333"/>
+                            <circle cx="38" cy="37" r="1.5" fill="white"/>
+                            <circle cx="54" cy="37" r="1.5" fill="white"/>
+                            <!-- 큰 미소 -->
+                            <path d="M35 50 Q45 60 55 50" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+                            <!-- 몸 -->
+                            <rect x="30" y="68" width="30" height="35" rx="5" fill="#9C27B0"/>
+                            <!-- 별 장식 -->
+                            <polygon points="45,78 47,82 51,82 48,85 49,89 45,87 41,89 42,85 39,82 43,82" fill="#FFD54F"/>
+                        </svg>
+                    </div>
+                    <div class="dialogue-box">
+                        <h3 class="english-text">Star Jiwoo</h3>
+                        <p id="typewriter-text"></p>
+                    </div>
+                </div>
+                <div class="problem-visual">
+                    <div class="talent-card">
+                        <h4>Talent Show Application</h4>
+                        <div class="talent-content">
+                            <div class="talent-line">
+                                <span class="label-badge">Name</span>
+                                <span class="english-text">Jiwoo Park</span>
+                            </div>
+                            <div class="talent-line">
+                                <span class="label-badge">Talents</span>
+                                <span class="english-text">"I <span class="blank">____</span> sing very well."</span>
+                            </div>
+                            <div class="talent-line">
+                                <span class="label-badge">Weakness</span>
+                                <span class="english-text">"But I <span class="blank">____</span> dance."</span>
+                            </div>
+                            <div class="talent-line">
+                                <span class="label-badge">Question</span>
+                                <span class="english-text">"<span class="blank">____</span> you play any instruments?"</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="ContentApp.nextScene()">함께 완성하기</button>
+            </div>
+        </section>
+
+        <!-- 4. Core Scene (Interaction) -->
+        <section id="core-scene" class="scene">
+            <div class="content-wrapper">
+                <h2>Can / Can't 사용하기</h2>
+                <p class="instruction">그림을 보고 알맞은 버튼을 누르세요!</p>
+
+                <div class="can-formula">
+                    <div class="formula-box positive">
+                        <span class="label english-text">CAN (할 수 있다)</span>
+                        <span class="formula english-text">주어 + <strong>can</strong> + 동사원형</span>
+                        <span class="example english-text">"I can swim."</span>
+                    </div>
+                    <div class="formula-box negative">
+                        <span class="label english-text">CAN'T (할 수 없다)</span>
+                        <span class="formula english-text">주어 + <strong>can't</strong> + 동사원형</span>
+                        <span class="example english-text">"I can't cook."</span>
+                    </div>
+                    <div class="formula-box question">
+                        <span class="label english-text">CAN ~? (할 수 있니?)</span>
+                        <span class="formula english-text"><strong>Can</strong> + 주어 + 동사원형?</span>
+                        <span class="example english-text">"Can you dance?"</span>
+                    </div>
+                </div>
+
+                <div class="ability-game" id="ability-game">
+                    <div class="game-card active" data-card="1">
+                        <div class="card-visual">
+                            <svg viewBox="0 0 150 120" class="card-svg">
+                                <!-- 피아노 -->
+                                <rect x="25" y="60" width="100" height="50" rx="5" fill="#5D4037"/>
+                                <rect x="30" y="65" width="90" height="35" fill="#263238"/>
+                                <!-- 흰 건반 -->
+                                <rect x="35" y="70" width="10" height="25" fill="white" rx="2"/>
+                                <rect x="50" y="70" width="10" height="25" fill="white" rx="2"/>
+                                <rect x="65" y="70" width="10" height="25" fill="white" rx="2"/>
+                                <rect x="80" y="70" width="10" height="25" fill="white" rx="2"/>
+                                <rect x="95" y="70" width="10" height="25" fill="white" rx="2"/>
+                                <!-- 검은 건반 -->
+                                <rect x="42" y="70" width="8" height="15" fill="#333"/>
+                                <rect x="72" y="70" width="8" height="15" fill="#333"/>
+                                <rect x="87" y="70" width="8" height="15" fill="#333"/>
+                                <!-- 캐릭터 -->
+                                <circle cx="75" cy="35" r="15" fill="#FFE0B2"/>
+                                <circle cx="70" cy="33" r="2" fill="#333"/>
+                                <circle cx="80" cy="33" r="2" fill="#333"/>
+                                <path d="M70 40 Q75 44 80 40" fill="none" stroke="#333" stroke-width="1.5"/>
+                                <!-- 음표 -->
+                                <text x="45" y="30" font-size="16" fill="#4CAF50">♪</text>
+                                <text x="100" y="25" font-size="14" fill="#4CAF50">♫</text>
+                            </svg>
+                        </div>
+                        <p class="card-sentence english-text">She <span class="blank-answer" id="answer-1">______</span> play the piano.</p>
+                        <p class="card-hint">(그녀는 피아노를 잘 쳐요!)</p>
+                        <div class="card-buttons">
+                            <button class="can-btn" onclick="ContentApp.checkAbility(1, 'can')">can</button>
+                            <button class="cant-btn" onclick="ContentApp.checkAbility(1, 'can\\'t')">can't</button>
+                        </div>
+                    </div>
+
+                    <div class="game-card" data-card="2">
+                        <div class="card-visual">
+                            <svg viewBox="0 0 150 120" class="card-svg">
+                                <!-- 자전거 -->
+                                <circle cx="45" cy="85" r="20" fill="none" stroke="#333" stroke-width="3"/>
+                                <circle cx="105" cy="85" r="20" fill="none" stroke="#333" stroke-width="3"/>
+                                <line x1="45" y1="85" x2="70" y2="60" stroke="#333" stroke-width="3"/>
+                                <line x1="70" y1="60" x2="105" y2="85" stroke="#333" stroke-width="3"/>
+                                <line x1="70" y1="60" x2="85" y2="40" stroke="#333" stroke-width="3"/>
+                                <circle cx="85" cy="35" r="8" fill="#333"/>
+                                <!-- 넘어진 캐릭터 -->
+                                <g transform="rotate(30, 75, 50)">
+                                    <circle cx="130" cy="60" r="12" fill="#FFE0B2"/>
+                                    <circle cx="126" cy="58" r="2" fill="#333"/>
+                                    <circle cx="134" cy="58" r="2" fill="#333"/>
+                                    <path d="M126 66 Q130 63 134 66" fill="none" stroke="#333" stroke-width="1.5"/>
+                                    <ellipse cx="130" cy="80" rx="10" ry="12" fill="#2196F3"/>
+                                </g>
+                                <!-- X 표시 -->
+                                <text x="15" y="30" font-size="24" fill="#F44336">X</text>
+                            </svg>
+                        </div>
+                        <p class="card-sentence english-text">He <span class="blank-answer" id="answer-2">______</span> ride a bike.</p>
+                        <p class="card-hint">(아직 자전거를 못 타요)</p>
+                        <div class="card-buttons">
+                            <button class="can-btn" onclick="ContentApp.checkAbility(2, 'can')">can</button>
+                            <button class="cant-btn" onclick="ContentApp.checkAbility(2, 'can\\'t')">can't</button>
+                        </div>
+                    </div>
+
+                    <div class="game-card" data-card="3">
+                        <div class="card-visual">
+                            <svg viewBox="0 0 150 120" class="card-svg">
+                                <!-- 수영장 -->
+                                <rect x="15" y="70" width="120" height="40" rx="5" fill="#4FC3F7"/>
+                                <ellipse cx="75" cy="75" rx="55" ry="8" fill="#81D4FA"/>
+                                <!-- 수영하는 캐릭터 -->
+                                <ellipse cx="75" cy="80" rx="25" ry="10" fill="#FFE0B2"/>
+                                <circle cx="55" cy="75" r="12" fill="#FFE0B2"/>
+                                <circle cx="50" cy="73" r="2" fill="#333"/>
+                                <circle cx="58" cy="73" r="2" fill="#333"/>
+                                <path d="M50 78 Q54 82 58 78" fill="none" stroke="#333" stroke-width="1.5"/>
+                                <!-- 팔 동작 -->
+                                <line x1="70" y1="75" x2="85" y2="65" stroke="#FFE0B2" stroke-width="5"/>
+                                <line x1="95" y1="80" x2="115" y2="75" stroke="#FFE0B2" stroke-width="5"/>
+                                <!-- 물보라 -->
+                                <ellipse cx="30" cy="75" rx="8" ry="4" fill="white" opacity="0.7"/>
+                                <ellipse cx="120" cy="78" rx="6" ry="3" fill="white" opacity="0.7"/>
+                            </svg>
+                        </div>
+                        <p class="card-sentence english-text">They <span class="blank-answer" id="answer-3">______</span> swim very fast.</p>
+                        <p class="card-hint">(빠르게 수영해요!)</p>
+                        <div class="card-buttons">
+                            <button class="can-btn" onclick="ContentApp.checkAbility(3, 'can')">can</button>
+                            <button class="cant-btn" onclick="ContentApp.checkAbility(3, 'can\\'t')">can't</button>
+                        </div>
+                    </div>
+
+                    <div class="game-card" data-card="4">
+                        <div class="card-visual">
+                            <svg viewBox="0 0 150 120" class="card-svg">
+                                <!-- 한국어 책 -->
+                                <rect x="45" y="50" width="60" height="50" rx="3" fill="#F44336"/>
+                                <rect x="50" y="55" width="50" height="40" fill="#FFCDD2"/>
+                                <text x="75" y="78" text-anchor="middle" font-size="16" fill="#B71C1C">한글</text>
+                                <!-- 외국인 캐릭터 -->
+                                <circle cx="75" cy="25" r="18" fill="#FFE0B2"/>
+                                <ellipse cx="75" cy="12" rx="15" ry="8" fill="#FDD835"/>
+                                <circle cx="68" cy="23" r="3" fill="#333"/>
+                                <circle cx="82" cy="23" r="3" fill="#333"/>
+                                <!-- 물음표 -->
+                                <text x="100" y="25" font-size="20" fill="#F44336">?</text>
+                                <text x="50" y="30" font-size="20" fill="#F44336">?</text>
+                                <!-- 혼란스러운 표정 -->
+                                <path d="M68 33 L82 33" fill="none" stroke="#333" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <p class="card-sentence english-text">Tom <span class="blank-answer" id="answer-4">______</span> read Korean.</p>
+                        <p class="card-hint">(한국어를 모르는 외국인)</p>
+                        <div class="card-buttons">
+                            <button class="can-btn" onclick="ContentApp.checkAbility(4, 'can')">can</button>
+                            <button class="cant-btn" onclick="ContentApp.checkAbility(4, 'can\\'t')">can't</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-display">
+                    <span>진행: <span id="progress-count">1</span> / 4</span>
+                </div>
+
+                <div class="discovery-moment hidden" id="discovery">
+                    <div class="aha-box">
+                        <span class="aha-icon">💪</span>
+                        <p><strong>Great!</strong> can = 할 수 있다, can't = 할 수 없다!</p>
+                    </div>
+                </div>
+
+                <button id="core-next-btn" class="btn-primary hidden" onclick="ContentApp.nextScene()">규칙 정리하기</button>
+            </div>
+        </section>
+
+        <!-- 5. Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-wrapper">
+                <h2>Can / Can't / Can ~? 정리</h2>
+                <div class="visualize-content">
+                    <div class="can-chart">
+                        <svg viewBox="0 0 500 320" class="chart-svg">
+                            <!-- 배경 -->
+                            <rect x="10" y="10" width="480" height="300" rx="15" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="2"/>
+
+                            <!-- 제목 -->
+                            <text x="250" y="40" text-anchor="middle" font-size="18" font-weight="bold" fill="#333">Modal Verb: CAN</text>
+
+                            <!-- 긍정문 박스 -->
+                            <rect x="25" y="60" width="145" height="110" rx="10" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2"/>
+                            <text x="97" y="85" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E7D32">긍정문 (+)</text>
+                            <text x="97" y="110" text-anchor="middle" font-size="11" fill="#333">주어 + can + 동사</text>
+                            <text x="97" y="135" text-anchor="middle" font-size="12" fill="#4CAF50" font-style="italic">"I can sing."</text>
+                            <text x="97" y="158" text-anchor="middle" font-size="10" fill="#666">"나는 노래할 수 있어."</text>
+
+                            <!-- 부정문 박스 -->
+                            <rect x="180" y="60" width="145" height="110" rx="10" fill="#FFEBEE" stroke="#F44336" stroke-width="2"/>
+                            <text x="252" y="85" text-anchor="middle" font-size="13" font-weight="bold" fill="#C62828">부정문 (-)</text>
+                            <text x="252" y="110" text-anchor="middle" font-size="11" fill="#333">주어 + can't + 동사</text>
+                            <text x="252" y="135" text-anchor="middle" font-size="12" fill="#F44336" font-style="italic">"I can't dance."</text>
+                            <text x="252" y="158" text-anchor="middle" font-size="10" fill="#666">"나는 춤을 못 춰."</text>
+
+                            <!-- 의문문 박스 -->
+                            <rect x="335" y="60" width="145" height="110" rx="10" fill="#E3F2FD" stroke="#2196F3" stroke-width="2"/>
+                            <text x="407" y="85" text-anchor="middle" font-size="13" font-weight="bold" fill="#1565C0">의문문 (?)</text>
+                            <text x="407" y="110" text-anchor="middle" font-size="11" fill="#333">Can + 주어 + 동사?</text>
+                            <text x="407" y="135" text-anchor="middle" font-size="12" fill="#2196F3" font-style="italic">"Can you swim?"</text>
+                            <text x="407" y="158" text-anchor="middle" font-size="10" fill="#666">"너 수영할 수 있어?"</text>
+
+                            <!-- 중요 포인트 박스 -->
+                            <rect x="25" y="185" width="455" height="110" rx="10" fill="#FFF8E1" stroke="#FFA000" stroke-width="2"/>
+                            <text x="250" y="210" text-anchor="middle" font-size="14" font-weight="bold" fill="#E65100">중요 포인트!</text>
+
+                            <circle cx="60" cy="240" r="8" fill="#4CAF50"/>
+                            <text x="75" y="244" font-size="12" fill="#333">can 뒤에는 항상 <tspan font-weight="bold">동사원형</tspan> (to 없이!)</text>
+
+                            <circle cx="60" cy="270" r="8" fill="#2196F3"/>
+                            <text x="75" y="274" font-size="12" fill="#333">주어가 he/she/it여도 <tspan font-weight="bold">cans 아님!</tspan> 그냥 can</text>
+                        </svg>
+                    </div>
+
+                    <div class="answer-box">
+                        <h4>Can ~? 에 대답하기</h4>
+                        <div class="answer-grid">
+                            <div class="answer-item positive">
+                                <span class="q english-text">"Can you swim?"</span>
+                                <span class="a english-text">"Yes, I <strong>can</strong>." / "No, I <strong>can't</strong>."</span>
+                            </div>
+                            <div class="answer-item positive">
+                                <span class="q english-text">"Can she cook?"</span>
+                                <span class="a english-text">"Yes, she <strong>can</strong>." / "No, she <strong>can't</strong>."</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="key-insight">
+                        <p><strong>can</strong> = 능력 (할 수 있다) / 허락 (해도 된다)</p>
+                        <p class="english-text example">"I can run fast." / "Can I go now?"</p>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="ContentApp.nextScene()">문제 풀어보기</button>
+            </div>
+        </section>
+
+        <!-- 6. Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="quiz-header">
+                    <span class="badge">Quiz</span>
+                    <h3>알맞은 형태를 고르세요!</h3>
+                </div>
+
+                <div class="quiz-container" id="quiz-container">
+                    <!-- Quiz 1 -->
+                    <div class="quiz-item active" data-quiz="1">
+                        <div class="quiz-context">
+                            <svg viewBox="0 0 80 60" class="context-icon">
+                                <circle cx="40" cy="25" r="15" fill="#FFE0B2"/>
+                                <circle cx="35" cy="23" r="2" fill="#333"/>
+                                <circle cx="45" cy="23" r="2" fill="#333"/>
+                                <path d="M35 32 Q40 36 45 32" fill="none" stroke="#333" stroke-width="2"/>
+                                <path d="M25 25 Q30 15 35 20" fill="none" stroke="#5D4037" stroke-width="2"/>
+                                <path d="M55 25 Q50 15 45 20" fill="none" stroke="#5D4037" stroke-width="2"/>
+                            </svg>
+                            <span class="context-text">아기에 대해 말하고 있어요</span>
+                        </div>
+                        <p class="quiz-sentence english-text">The baby <span class="blank-inline">______</span> walk yet. She's only 6 months old.</p>
+                        <div class="quiz-options">
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(1, 'can')">can</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(1, 'can\\'t')">can't</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(1, 'cans')">cans</button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz 2 -->
+                    <div class="quiz-item" data-quiz="2">
+                        <div class="quiz-context">
+                            <svg viewBox="0 0 80 60" class="context-icon">
+                                <rect x="20" y="15" width="40" height="35" rx="3" fill="#78909C"/>
+                                <rect x="25" y="20" width="30" height="20" fill="#263238"/>
+                                <rect x="32" y="52" width="16" height="3" fill="#546E7A"/>
+                            </svg>
+                            <span class="context-text">컴퓨터 게임에 대해 묻고 있어요</span>
+                        </div>
+                        <p class="quiz-sentence english-text"><span class="blank-inline">______</span> you play computer games?</p>
+                        <div class="quiz-options">
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(2, 'Can')">Can</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(2, 'Do can')">Do can</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(2, 'Are can')">Are can</button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz 3 -->
+                    <div class="quiz-item" data-quiz="3">
+                        <div class="quiz-context">
+                            <svg viewBox="0 0 80 60" class="context-icon">
+                                <ellipse cx="40" cy="35" rx="25" ry="15" fill="#4CAF50"/>
+                                <circle cx="30" cy="25" r="8" fill="#F44336"/>
+                                <circle cx="50" cy="28" r="6" fill="#FF9800"/>
+                                <path d="M35 40 Q40 50 45 40" fill="#8BC34A"/>
+                            </svg>
+                            <span class="context-text">친구의 요리 실력에 대해 말해요</span>
+                        </div>
+                        <p class="quiz-sentence english-text">My friend <span class="blank-inline">______</span> cook delicious food.</p>
+                        <div class="quiz-options">
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(3, 'can')">can</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(3, 'cans')">cans</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(3, 'can to')">can to</button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz 4 -->
+                    <div class="quiz-item" data-quiz="4">
+                        <div class="quiz-context">
+                            <svg viewBox="0 0 80 60" class="context-icon">
+                                <rect x="15" y="25" width="50" height="30" rx="3" fill="#FFD54F"/>
+                                <rect x="20" y="30" width="40" height="8" fill="#333"/>
+                                <rect x="20" y="42" width="40" height="8" fill="#333"/>
+                                <text x="40" y="25" text-anchor="middle" font-size="10" fill="#E65100">KOREAN</text>
+                            </svg>
+                            <span class="context-text">언어 능력에 대한 질문에 대답해요</span>
+                        </div>
+                        <p class="quiz-sentence english-text">"Can you speak Korean?" - "Yes, I <span class="blank-inline">______</span>."</p>
+                        <div class="quiz-options">
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(4, 'can')">can</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(4, 'can speak')">can speak</button>
+                            <button class="opt-btn" onclick="ContentApp.checkAnswer(4, 'do')">do</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="quiz-feedback" class="quiz-feedback hidden"></div>
+                <div class="quiz-progress">
+                    <span id="quiz-progress-text">1 / 4</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="reward-area">
+                    <svg viewBox="0 0 100 100" class="trophy-svg trophy-anim">
+                        <!-- 메달 -->
+                        <circle cx="50" cy="55" r="35" fill="#FFD54F" stroke="#FFA000" stroke-width="3"/>
+                        <circle cx="50" cy="55" r="28" fill="#FFC107"/>
+                        <text x="50" y="45" text-anchor="middle" font-size="12" font-weight="bold" fill="#E65100">SUPER</text>
+                        <text x="50" y="62" text-anchor="middle" font-size="16" font-weight="bold" fill="#E65100">STAR</text>
+                        <!-- 리본 -->
+                        <polygon points="30,20 50,35 70,20 70,10 50,25 30,10" fill="#F44336"/>
+                        <polygon points="25,55 35,40 35,70" fill="#F44336"/>
+                        <polygon points="75,55 65,40 65,70" fill="#F44336"/>
+                    </svg>
+                    <h2>Super Star!</h2>
+                </div>
+                <div class="summary-card">
+                    <h3>Today's Key Points</h3>
+                    <ul>
+                        <li><strong class="can-color">can</strong>: ~할 수 있다 (능력/허락)
+                            <span class="english-text example-inline">"I can swim."</span>
+                        </li>
+                        <li><strong class="cant-color">can't</strong>: ~할 수 없다
+                            <span class="english-text example-inline">"I can't dance."</span>
+                        </li>
+                        <li><strong class="question-color">Can ~?</strong>: ~할 수 있니?
+                            <span class="english-text example-inline">"Can you help me?"</span>
+                        </li>
+                        <li><strong>주의!</strong> can 뒤에는 <strong>동사원형</strong> (to X, -s X)</li>
+                    </ul>
+                </div>
+                <div class="real-life-examples">
+                    <h4>오늘 바로 써보세요!</h4>
+                    <div class="example-sentences">
+                        <div class="example-item can-bg">
+                            <span class="english-text">"I can speak English!"</span>
+                            <span class="korean-small">나는 영어를 말할 수 있어!</span>
+                        </div>
+                        <div class="example-item cant-bg">
+                            <span class="english-text">"I can't eat spicy food."</span>
+                            <span class="korean-small">나는 매운 음식을 못 먹어.</span>
+                        </div>
+                        <div class="example-item question-bg">
+                            <span class="english-text">"Can I use your phone?"</span>
+                            <span class="korean-small">네 전화기 써도 돼?</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-secondary" onclick="location.reload()">다시 하기</button>
+                    <button class="btn-primary">다음 주제로</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

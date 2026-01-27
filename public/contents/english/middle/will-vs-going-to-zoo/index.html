@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Plans: will vs going to - Zoo Visit Adventure</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="hook-container">
+                <h1 class="hook-title">
+                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    같은 미래인데 왜 다르게 말할까?
+                </h1>
+                <div class="speech-bubbles">
+                    <div class="bubble bubble-left">
+                        <svg id="minho-char" class="character-img" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="#FFE0BD"/>
+                            <path d="M20 40 Q50 10 80 40" fill="#4A3B2A"/>
+                            <circle cx="35" cy="55" r="4" fill="#333"/>
+                            <circle cx="65" cy="55" r="4" fill="#333"/>
+                            <path d="M40 70 Q50 80 60 70" fill="none" stroke="#333" stroke-width="3"/>
+                        </svg>
+                        <div class="bubble-text english-text">I'm going to go to the zoo tomorrow!</div>
+                    </div>
+                    <div class="question-mark">
+                        <svg width="80" height="80" viewBox="0 0 80 80">
+                            <text x="40" y="60" font-size="60" text-anchor="middle" fill="#F5A623">?</text>
+                        </svg>
+                    </div>
+                    <div class="bubble bubble-right">
+                        <svg id="sarah-char" class="character-img" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="#FFE0BD"/>
+                            <path d="M10 50 Q50 0 90 50 L90 80 L10 80 Z" fill="#8B4513"/>
+                            <circle cx="35" cy="55" r="4" fill="#333"/>
+                            <circle cx="65" cy="55" r="4" fill="#333"/>
+                            <path d="M40 70 Q50 80 60 70" fill="none" stroke="#333" stroke-width="3"/>
+                        </svg>
+                        <div class="bubble-text english-text">I will go to the zoo too!</div>
+                    </div>
+                </div>
+                <p class="hook-question">둘 다 내일 동물원에 간다는 뜻인데, 왜 다르게 표현할까?</p>
+                <button class="btn-next" onclick="ContentApp.nextScene()">
+                    알아보기 
+                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="anchor-container">
+                <h2 class="scene-title">
+                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                    이미 배운 것과 연결하기
+                </h2>
+                <div class="anchor-content">
+                    <div class="prior-knowledge">
+                        <h3>
+                            <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            이미 알고 있어요
+                        </h3>
+                        <div class="knowledge-box">
+                            <p class="english-text">"I go to school <strong>tomorrow</strong>."</p>
+                            <p class="english-text">"We visit the zoo <strong>next week</strong>."</p>
+                            <p class="explanation">시간 표현으로 미래를 나타낼 수 있어요!</p>
+                        </div>
+                    </div>
+                    <div class="bridge-arrow">
+                        <svg width="100" height="60" viewBox="0 0 100 60">
+                            <path d="M 10 30 L 70 30 L 65 25 M 70 30 L 65 35" stroke="#4A90D9" stroke-width="3" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="new-concept">
+                        <h3>
+                            <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                            새로운 질문
+                        </h3>
+                        <div class="question-box">
+                            <p><strong>언제</strong> 동물원에 갈 거라고 결정했을까?</p>
+                            <ul>
+                                <li>
+                                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    어제 이미 계획했다면?
+                                </li>
+                                <li>
+                                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                    지금 막 결정한다면?
+                                </li>
+                            </ul>
+                            <p class="insight">영어는 <strong>결정한 시점</strong>에 따라 다른 표현을 써요!</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-next" onclick="ContentApp.nextScene()">
+                    계속하기 
+                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="story-container">
+                <h2 class="scene-title">
+                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    민호와 Sarah의 동물원 계획
+                </h2>
+                <div class="story-panel">
+                    <div class="story-image" id="zoo-scene">
+                        <svg class="illust-large" viewBox="0 0 400 300">
+                            <defs>
+                                <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#E0F7FA;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <rect width="400" height="200" fill="url(#skyGrad)"/>
+                            <circle cx="50" cy="50" r="30" fill="#FFD700" opacity="0.8"/>
+                            <rect y="200" width="400" height="100" fill="#7ED321"/>
+                            <path d="M50 300 L50 180 L80 150 L110 180 L140 160 L170 180 L200 140 L230 180 L260 160 L290 180 L320 150 L350 180 L350 300 Z" fill="#4CAF50"/>
+                            <!-- Elephant -->
+                            <path d="M280 250 Q270 220 300 210 Q330 210 340 230 Q350 250 340 280 L320 280 L320 270 L300 270 L300 280 L280 280 Z" fill="#A0A0A0"/>
+                            <circle cx="310" cy="220" r="5" fill="#333"/>
+                            <path d="M330 220 L350 210" stroke="#A0A0A0" stroke-width="8" stroke-linecap="round"/>
+                            <!-- Zebra -->
+                            <path d="M100 260 Q90 230 120 220 Q150 220 160 240 Q170 260 160 290 L80 290 Q70 260 100 260" fill="#FFFFFF" stroke="#000" stroke-width="2"/>
+                            <path d="M110 225 L110 240" stroke="#000" stroke-width="3"/>
+                            <path d="M130 225 L130 245" stroke="#000" stroke-width="3"/>
+                            <path d="M150 235 L150 250" stroke="#000" stroke-width="3"/>
+                        </svg>
+                    </div>
+                    <div class="story-text">
+                        <div class="story-bubble">
+                            <p><strong>금요일 방과 후</strong></p>
+                            <p class="dialogue">
+                                <span class="speaker">민호:</span>
+                                <span class="english-text">"I'm going to visit the zoo tomorrow. I bought tickets last week!"</span>
+                            </p>
+                            <p class="translation">→ 나 내일 동물원 갈 거야. 지난주에 티켓 샀어!</p>
+                        </div>
+
+                        <div class="story-bubble">
+                            <p><strong>Sarah는 처음 듣는 얘기</strong></p>
+                            <p class="dialogue">
+                                <span class="speaker">Sarah:</span>
+                                <span class="english-text">"Really? I will go with you!"</span>
+                            </p>
+                            <p class="translation">→ 정말? 나도 너랑 갈래!</p>
+                        </div>
+
+                        <div class="problem-box">
+                            <h4>
+                                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                문제 상황
+                            </h4>
+                            <p>민호는 <strong>"going to"</strong>를 썼고, Sarah는 <strong>"will"</strong>을 썼어요.</p>
+                            <p>같은 미래를 말하는데 왜 다를까요?</p>
+                            <p class="challenge">도와주세요: 둘의 차이를 발견해봐요!</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-next" onclick="ContentApp.nextScene()">
+                    발견하러 가기 
+                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Core Scene -->
+        <section id="core-scene" class="scene">
+            <div class="core-container">
+                <h2 class="scene-title">
+                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                    직접 발견하기: 계획 vs 즉석 결정
+                </h2>
+
+                <div class="instruction">
+                    <p>각 상황을 읽고, 문장을 알맞은 카테고리로 드래그하세요!</p>
+                    <p class="hint-toggle" onclick="ContentApp.toggleHint()">
+                        <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        힌트 보기
+                    </p>
+                    <div class="hint-box" id="hint-box" style="display: none;">
+                        <p><strong>힌트 1:</strong> 언제 결정했는지 생각해보세요.</p>
+                        <p><strong>힌트 2:</strong> "going to" = 이미 계획됨 / "will" = 지금 결정</p>
+                        <p><strong>힌트 3:</strong> 과거 시간 표현이 있으면 "going to"!</p>
+                    </div>
+                </div>
+
+                <div class="categories">
+                    <div class="category" id="planned-category">
+                        <h3>
+                            <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            미리 계획함
+                        </h3>
+                        <p class="category-desc">Already planned before</p>
+                        <div class="drop-zone" data-category="planned">
+                            <p class="drop-hint">여기로 드래그 
+                                <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="category" id="spontaneous-category">
+                        <h3>
+                            <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            지금 즉석 결정
+                        </h3>
+                        <p class="category-desc">Deciding now</p>
+                        <div class="drop-zone" data-category="spontaneous">
+                            <p class="drop-hint">여기로 드래그 
+                                <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sentence-cards" id="sentence-cards">
+                    <!-- Cards will be generated by JS -->
+                </div>
+
+                <div class="feedback-area" id="feedback-area"></div>
+
+                <button class="btn-check" onclick="ContentApp.checkAnswers()" style="display: none;">정답 확인</button>
+                <button class="btn-next" onclick="ContentApp.nextScene()" style="display: none;">다음 단계 
+                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="visualize-container">
+                <h2 class="scene-title">
+                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    패턴 시각화: 결정 시점이 핵심!
+                </h2>
+
+                <div class="timeline-diagram">
+                    <h3>Timeline: 언제 결정했나?</h3>
+                    <div class="timeline">
+                        <div class="timeline-section going-to-section">
+                            <div class="timeline-label">GOING TO</div>
+                            <div class="timeline-visual">
+                                <div class="time-point past">
+                                    <div class="point"></div>
+                                    <p>과거<br/>Decision made</p>
+                                </div>
+                                <div class="arrow-right"></div>
+                                <div class="time-point now">
+                                    <div class="point"></div>
+                                    <p>지금<br/>Now</p>
+                                </div>
+                                <div class="arrow-right"></div>
+                                <div class="time-point future">
+                                    <div class="point"></div>
+                                    <p>미래<br/>Action happens</p>
+                                </div>
+                            </div>
+                            <div class="example-box">
+                                <p class="english-text">"I'm <strong>going to</strong> visit the zoo."</p>
+                                <p class="explanation">
+                                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    이미 결정되고 계획된 일
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-section will-section">
+                            <div class="timeline-label">WILL</div>
+                            <div class="timeline-visual">
+                                <div class="time-point past inactive">
+                                    <div class="point"></div>
+                                    <p>과거<br/>—</p>
+                                </div>
+                                <div class="arrow-right"></div>
+                                <div class="time-point now highlight">
+                                    <div class="point"></div>
+                                    <p>지금<br/>Decision NOW!</p>
+                                </div>
+                                <div class="arrow-right"></div>
+                                <div class="time-point future">
+                                    <div class="point"></div>
+                                    <p>미래<br/>Action happens</p>
+                                </div>
+                            </div>
+                            <div class="example-box">
+                                <p class="english-text">"I <strong>will</strong> go with you!"</p>
+                                <p class="explanation">
+                                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    지금 이 순간 결정하는 일
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pattern-summary">
+                    <h3>
+                        <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                        핵심 패턴
+                    </h3>
+                    <div class="pattern-cards">
+                        <div class="pattern-card">
+                            <h4>BE GOING TO</h4>
+                            <ul>
+                                <li>
+                                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    미리 계획한 일
+                                </li>
+                                <li>
+                                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    준비나 증거가 있음
+                                </li>
+                                <li>
+                                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    확실한 미래 계획
+                                </li>
+                            </ul>
+                            <p class="example english-text">"I bought tickets, so I'm going to visit the zoo."</p>
+                        </div>
+                        <div class="pattern-card">
+                            <h4>WILL</h4>
+                            <ul>
+                                <li>
+                                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    지금 즉석에서 결정
+                                </li>
+                                <li>
+                                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    약속, 제안, 자발적 행동
+                                </li>
+                                <li>
+                                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="#7ED321" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    예측이나 추측
+                                </li>
+                            </ul>
+                            <p class="example english-text">"It looks fun! I will join you."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-insight">
+                    <h3>
+                        <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        Key Insight
+                    </h3>
+                    <p class="insight-text">
+                        <strong>결정 시점</strong>이 핵심! 이미 계획했다면 <span class="highlight-going">going to</span>,
+                        지금 결정한다면 <span class="highlight-will">will</span>!
+                    </p>
+                </div>
+
+                <button class="btn-next" onclick="ContentApp.nextScene()">
+                    퀴즈 풀기 
+                    <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+</section>
+
+        <!-- Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="quiz-container">
+                <h2 class="scene-title">
+                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    실전 퀴즈: 동물원에서 벌어지는 일들
+                </h2>
+
+                <div class="quiz-progress">
+                    <p>문제 <span id="current-question">1</span> / 3</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" id="quiz-question">
+                    <!-- Question content will be inserted by JS -->
+                </div>
+
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+
+                <div class="quiz-buttons">
+                    <button class="btn-hint" onclick="ContentApp.showQuizHint()">
+                        <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        힌트
+                    </button>
+                    <button class="btn-submit" onclick="ContentApp.submitQuizAnswer()">제출하기</button>
+                    <button class="btn-next-quiz" onclick="ContentApp.nextQuiz()" style="display: none;">
+                        다음 문제 
+                        <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="wrap-container">
+                <h2 class="scene-title">
+                    <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    축하합니다! Will vs Going to 마스터!
+                </h2>
+
+                <div class="summary-section">
+                    <h3>
+                        <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        오늘 발견한 3가지 핵심 패턴
+                    </h3>
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <div class="card-number">1</div>
+                            <h4>Going to = 미리 계획</h4>
+                            <p class="english-text">"I'm going to visit the zoo tomorrow."</p>
+                            <p class="explanation">이미 결정되고 준비된 계획</p>
+                        </div>
+                        <div class="summary-card">
+                            <div class="card-number">2</div>
+                            <h4>Will = 즉석 결정</h4>
+                            <p class="english-text">"I will go with you!"</p>
+                            <p class="explanation">지금 이 순간 결정하는 일</p>
+                        </div>
+                        <div class="summary-card">
+                            <div class="card-number">3</div>
+                            <h4>결정 시점이 핵심</h4>
+                            <p class="english-text">When did you decide?</p>
+                            <p class="explanation">언제 결정했는지가 어떤 표현을 쓸지 결정해요</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="next-learning">
+                    <h3>
+                        <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        다음에 배울 내용
+                    </h3>
+                    <div class="next-box">
+                        <h4>Present Continuous for Future</h4>
+                        <p class="english-text">"I'm visiting the zoo tomorrow."</p>
+                        <p>현재진행형으로도 미래를 표현할 수 있어요! 언제 쓸까요?</p>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-action" onclick="ContentApp.restart()">
+                        <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                        처음부터 다시
+                    </button>
+                    <button class="btn-action" onclick="ContentApp.practiceMode()">
+                        <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        자유 연습 모드
+                    </button>
+                    <button class="btn-action primary" onclick="alert('다음 레슨으로 이동!')">
+                        <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        다음 레슨
+                    </button>
+                </div>
+
+                <div class="encouragement">
+                    <p>
+                        <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        Great job! 이제 여러분은 미래 계획을 자연스럽게 표현할 수 있어요!
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

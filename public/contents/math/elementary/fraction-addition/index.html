@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>분수의 덧셈 - 서로 다른 분모 더하기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Scene 1: Hook -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-container">
+                <h1 class="big-title">사과 1개에 오렌지 1개를 더하면?</h1>
+                <div class="visual-area">
+                    <svg width="200" height="200" viewBox="0 0 200 200">
+                        <circle cx="60" cy="100" r="40" fill="#FF6B6B" class="shake-anim"/>
+                        <text x="60" y="105" text-anchor="middle" fill="white" font-size="24" font-weight="bold">1</text>
+                        <text x="150" y="105" text-anchor="middle" fill="#333" font-size="40">+</text>
+                    </svg>
+                    <svg width="200" height="200" viewBox="0 0 200 200">
+                        <circle cx="140" cy="100" r="40" fill="#FFD93D" class="shake-anim"/>
+                        <text x="140" y="105" text-anchor="middle" fill="white" font-size="24" font-weight="bold">1</text>
+                        <text x="50" y="105" text-anchor="middle" fill="#333" font-size="40">= ?</text>
+                    </svg>
+                </div>
+                <p class="question-text">그럼 1/2에 1/3을 더하면 그냥 2/5일까요?</p>
+                <button class="primary-btn" onclick="ContentApp.nextScene()">알아보기</button>
+            </div>
+        </section>
+
+        <!-- Scene 2: Anchor -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-container">
+                <h2>기억하기: 자연수 덧셈</h2>
+                <div class="comparison-box">
+                    <div class="item">
+                        <p><strong>사과 2개</strong> + <strong>사과 3개</strong> = <strong>사과 5개</strong></p>
+                        <div class="fruit-row">🍎🍎 + 🍎🍎🍎 = 5</div>
+                    </div>
+                </div>
+                <div class="bridge-arrow">⬇️ 분수는 조각 크기가 다를 수 있어요!</div>
+                <div class="comparison-box">
+                    <div class="item">
+                        <p><strong>1/2</strong> + <strong>1/3</strong> = ?</p>
+                        <div class="fraction-visuals">
+                            <div class="pie half"></div>
+                            <span>+</span>
+                            <div class="pie third"></div>
+                            <span>=</span>
+                            <div class="pie question">?</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="primary-btn" onclick="ContentApp.nextScene()">계속하기</button>
+            </div>
+        </section>
+
+        <!-- Scene 3: Story -->
+        <section id="story-scene" class="scene">
+            <div class="content-container">
+                <div class="character-card">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="#FFD700" stroke="#DAA520" stroke-width="3"/>
+                        <circle cx="35" cy="40" r="5" fill="#333"/>
+                        <circle cx="65" cy="40" r="5" fill="#333"/>
+                        <path d="M 30 65 Q 50 80 70 65" stroke="#333" stroke-width="3" fill="none"/>
+                        <rect x="20" y="10" width="60" height="20" rx="5" fill="#FFF" stroke="#DAA520"/>
+                        <text x="50" y="25" text-anchor="middle" font-size="10" fill="#333">요리사 쿠키</text>
+                    </svg>
+                    <div class="bubble">
+                        <p>"배달하다 남은 도우가 있어! 피자를 만들어볼까?"</p>
+                    </div>
+                </div>
+                <div class="story-problem">
+                    <p>🍕 <strong>빵 도우:</strong> 전체의 1/2만 남았어.</p>
+                    <p>🍕 <strong>토마토 소스:</strong> 전체의 1/3만 남았어.</p>
+                    <p>이 두 재료를 합치면 도우 전체의 몇 분의 몇이 될까?</p>
+                </div>
+                <button class="primary-btn" onclick="ContentApp.nextScene()">도와주기</button>
+            </div>
+        </section>
+
+        <!-- Scene 4: Core (Interaction) -->
+        <section id="core-scene" class="scene">
+            <div class="content-container">
+                <h2>직접 조각 합쳐보기</h2>
+                <p class="instruction">분모(조각 크기)를 같게 만들어야 더할 수 있어요!</p>
+                
+                <div class="fraction-lab">
+                    <div class="fraction-block" id="f1">
+                        <div class="bar-container">
+                            <div class="bar half"></div>
+                            <div class="bar half active"></div>
+                        </div>
+                        <span class="label">1/2</span>
+                    </div>
+                    <div class="plus-sign">+</div>
+                    <div class="fraction-block" id="f2">
+                        <div class="bar-container">
+                            <div class="bar third active"></div>
+                            <div class="bar third"></div>
+                            <div class="bar third"></div>
+                        </div>
+                        <span class="label">1/3</span>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="transform-btn" class="action-btn" onclick="ContentApp.transformFractions()">
+                        🔪 조각 크기 같게 만들기 (통분하기)
+                    </button>
+                    <button id="merge-btn" class="action-btn disabled" onclick="ContentApp.mergeFractions()">
+                        🤝 합치기
+                    </button>
+                </div>
+
+                <div id="feedback-area" class="feedback-box"></div>
+            </div>
+        </section>
+
+        <!-- Scene 5: Visualize -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-container">
+                <h2>원리 발견! 통분</h2>
+                <div class="formula-card">
+                    <div class="step">
+                        <p>1. 두 분수의 공통된 크기(공통분모)를 찾아요.</p>
+                        <p>2와 3의 최소공배수는 <strong>6</strong>입니다.</p>
+                    </div>
+                    <div class="equation-row">
+                        <span class="frac">1/2</span>
+                        <span>+</span>
+                        <span class="frac">1/3</span>
+                        <span>=</span>
+                        <span class="transform">
+                            (<span class="num">1×3</span>)/(<span class="den">2×3</span>) + (<span class="num">1×2</span>)/(<span class="den">3×2</span>)
+                        </span>
+                    </div>
+                    <div class="equation-row">
+                        <span>=</span>
+                        <span class="frac">3/6</span>
+                        <span>+</span>
+                        <span class="frac">2/6</span>
+                        <span>=</span>
+                        <span class="result">5/6</span>
+                    </div>
+                </div>
+                <div class="visual-proof">
+                    <div class="bar-full">
+                        <div class="segment p3" style="width: 50%; background: #4A90D9;">1/2 (3/6)</div>
+                        <div class="segment p2" style="width: 33.33%; background: #7ED321;">1/3 (2/6)</div>
+                    </div>
+                    <p>총 6조각 중 5조각을 채웠네요!</p>
+                </div>
+                <button class="primary-btn" onclick="ContentApp.nextScene()">이해했어요</button>
+            </div>
+        </section>
+
+        <!-- Scene 6: Quiz -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-container">
+                <h2>실전 퀴즈</h2>
+                <div class="quiz-card">
+                    <p class="quiz-q">초콜릿 케이크의 2/5와 딸기 케이크의 1/10을 합치면?</p>
+                    
+                    <div class="quiz-options">
+                        <button class="option-btn" onclick="ContentApp.checkAnswer(this, false)">3/15</button>
+                        <button class="option-btn" onclick="ContentApp.checkAnswer(this, true)">5/10</button>
+                        <button class="option-btn" onclick="ContentApp.checkAnswer(this, false)">1/2</button>
+                    </div>
+                    <div id="quiz-feedback" class="feedback-msg"></div>
+                    <button id="quiz-next" class="primary-btn" style="display:none;" onclick="ContentApp.nextScene()">다음</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scene 7: Wrap -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-container">
+                <h2>🎉 오늘의 발견</h2>
+                <ul class="summary-list">
+                    <li>👉 분모가 다른 분수는 바로 더할 수 없어요.</li>
+                    <li>👉 통분하여 분모를 먼저 같게 만들어야 해요.</li>
+                    <li>👉 분모는 그대로 두고, 분자만 더하면 됩니다.</li>
+                </ul>
+                <div class="next-topic">
+                    <p>다음 시간: <strong>분수의 뺄셈</strong>은 어떻게 할까요?</p>
+                </div>
+                <div class="action-buttons">
+                    <button class="secondary-btn" onclick="ContentApp.showScene(0)">다시 보기</button>
+                    <button class="primary-btn" onclick="alert('다음 레벨로 이동합니다! (데모)')">다음 학습</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Controls (Visible on all scenes) -->
+        <nav class="nav-dots">
+            <!-- Dots generated by JS -->
+        </nav>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
