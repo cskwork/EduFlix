@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>물질의 상태 변화 - 분자의 비밀</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        
+        <!-- Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="scene-content">
+                <div class="phenomenon-container">
+                    <svg id="water-animation" viewBox="0 0 300 200" class="main-visual">
+                        <!-- 물컵 -->
+                        <rect x="100" y="80" width="100" height="100" rx="5" fill="none" stroke="#4A90D9" stroke-width="3"/>
+                        <!-- 물 -->
+                        <rect id="water-body" x="103" y="100" width="94" height="77" fill="#87CEEB" opacity="0.7"/>
+                        <!-- 수증기 파티클 -->
+                        <g id="steam-particles">
+                            <circle class="steam" cx="120" cy="70" r="8" fill="#E0E0E0" opacity="0"/>
+                            <circle class="steam" cx="150" cy="60" r="10" fill="#E0E0E0" opacity="0"/>
+                            <circle class="steam" cx="180" cy="65" r="7" fill="#E0E0E0" opacity="0"/>
+                        </g>
+                        <!-- 열 표시 -->
+                        <g id="heat-indicator">
+                            <path d="M130 190 L150 170 L170 190" stroke="#F5A623" stroke-width="3" fill="none"/>
+                            <text x="150" y="205" text-anchor="middle" fill="#F5A623" font-size="12">열</text>
+                        </g>
+                    </svg>
+                </div>
+                <h1 class="hook-question">물이 갑자기 사라졌다?</h1>
+                <p class="hook-subtext">뜨거운 물에서 올라오는 김... 어디로 가는 걸까?</p>
+                <button class="next-btn pulse" onclick="ScienceApp.nextScene()">알아보기</button>
+            </div>
+        </section>
+        
+        <!-- Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="scene-content">
+                <h2 class="section-title">잠깐! 이미 알고 있는 것부터</h2>
+                <div class="anchor-cards">
+                    <div class="state-card" data-state="solid">
+                        <svg viewBox="0 0 80 80">
+                            <rect x="20" y="20" width="40" height="40" rx="5" fill="#5DADE2"/>
+                            <g class="molecules solid-molecules">
+                                <circle cx="30" cy="30" r="5" fill="#2874A6"/>
+                                <circle cx="50" cy="30" r="5" fill="#2874A6"/>
+                                <circle cx="30" cy="50" r="5" fill="#2874A6"/>
+                                <circle cx="50" cy="50" r="5" fill="#2874A6"/>
+                            </g>
+                        </svg>
+                        <span>고체 (얼음)</span>
+                    </div>
+                    <div class="state-card" data-state="liquid">
+                        <svg viewBox="0 0 80 80">
+                            <ellipse cx="40" cy="50" rx="30" ry="20" fill="#85C1E9"/>
+                            <g class="molecules liquid-molecules">
+                                <circle cx="25" cy="45" r="5" fill="#2874A6"/>
+                                <circle cx="40" cy="55" r="5" fill="#2874A6"/>
+                                <circle cx="55" cy="48" r="5" fill="#2874A6"/>
+                            </g>
+                        </svg>
+                        <span>액체 (물)</span>
+                    </div>
+                    <div class="state-card" data-state="gas">
+                        <svg viewBox="0 0 80 80">
+                            <g class="molecules gas-molecules">
+                                <circle cx="20" cy="20" r="5" fill="#AED6F1"/>
+                                <circle cx="60" cy="30" r="5" fill="#AED6F1"/>
+                                <circle cx="35" cy="60" r="5" fill="#AED6F1"/>
+                                <circle cx="55" cy="55" r="5" fill="#AED6F1"/>
+                            </g>
+                        </svg>
+                        <span>기체 (수증기)</span>
+                    </div>
+                </div>
+                <div class="bridge-question">
+                    <p>물질은 <strong>고체, 액체, 기체</strong> 세 가지 상태가 있어!</p>
+                    <p class="highlight-text">그런데... 왜 같은 물이 상태가 바뀔까? 🤔</p>
+                </div>
+                <button class="next-btn" onclick="ScienceApp.nextScene()">비밀을 알아보자!</button>
+            </div>
+        </section>
+        
+        <!-- Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="scene-content">
+                <div class="character-container">
+                    <svg viewBox="0 0 150 200" class="character">
+                        <!-- 캐릭터: 과학 유튜버 지우 -->
+                        <circle cx="75" cy="50" r="35" fill="#FFE4C4"/>
+                        <circle cx="60" cy="45" r="5" fill="#333"/>
+                        <circle cx="90" cy="45" r="5" fill="#333"/>
+                        <path d="M65 60 Q75 70 85 60" stroke="#333" stroke-width="2" fill="none"/>
+                        <rect x="40" y="85" width="70" height="80" rx="10" fill="#4A90D9"/>
+                        <text x="75" y="130" text-anchor="middle" fill="white" font-size="12" font-weight="bold">실험왕</text>
+                        <!-- 헤드셋 -->
+                        <path d="M35 45 Q30 30 45 25" stroke="#333" stroke-width="3" fill="none"/>
+                        <path d="M115 45 Q120 30 105 25" stroke="#333" stroke-width="3" fill="none"/>
+                        <circle cx="35" cy="50" r="8" fill="#333"/>
+                    </svg>
+                </div>
+                <div class="story-bubble">
+                    <h2>안녕! 나는 과학 유튜버 <span class="highlight">실험왕 지우</span>야!</h2>
+                    <p>오늘 구독자에게 질문이 왔어:</p>
+                    <div class="question-card">
+                        <p>"지우야, 왜 겨울에는 입김이 보이는데 여름에는 안 보여?"</p>
+                    </div>
+                    <p>이 질문에 답하려면 <strong>분자의 비밀</strong>을 알아야 해!</p>
+                    <p>나랑 같이 실험해볼래?</p>
+                </div>
+                <button class="next-btn" onclick="ScienceApp.nextScene()">실험 시작!</button>
+            </div>
+        </section>
+        
+        <!-- Core Scene -->
+        <section id="core-scene" class="scene">
+            <div class="scene-content wide">
+                <h2 class="section-title">분자 운동 실험실</h2>
+                <p class="instruction">온도를 조절해서 분자들이 어떻게 움직이는지 관찰해봐!</p>
+                
+                <div class="experiment-container">
+                    <div class="container-box">
+                        <svg id="molecule-container" viewBox="0 0 300 250">
+                            <!-- 용기 -->
+                            <rect x="25" y="25" width="250" height="200" rx="10" fill="none" stroke="#333" stroke-width="3"/>
+                            <!-- 분자들 -->
+                            <g id="molecules"></g>
+                        </svg>
+                        <div class="state-indicator" id="state-indicator">액체 상태</div>
+                    </div>
+                    
+                    <div class="controls">
+                        <div class="temperature-display">
+                            <span class="temp-label">온도</span>
+                            <span class="temp-value" id="temp-value">25°C</span>
+                        </div>
+                        <input type="range" id="temp-slider" min="-20" max="120" value="25" class="temp-slider">
+                        <div class="temp-markers">
+                            <span>-20°C</span>
+                            <span>0°C</span>
+                            <span>100°C</span>
+                            <span>120°C</span>
+                        </div>
+                    </div>
+                    
+                    <div class="observation-panel">
+                        <h3>관찰 기록</h3>
+                        <div class="observation-item">
+                            <span class="label">분자 속도:</span>
+                            <div class="speed-bar">
+                                <div class="speed-fill" id="speed-fill"></div>
+                            </div>
+                        </div>
+                        <div class="observation-item">
+                            <span class="label">분자 간격:</span>
+                            <span class="value" id="spacing-value">보통</span>
+                        </div>
+                        <div id="discovery-hint" class="hint hidden">
+                            <p>💡 힌트: 온도가 올라가면 분자가 어떻게 될까?</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="discovery-message hidden" id="discovery-message">
+                    <p>🎉 발견! 온도가 높아지면 분자가 더 빨리 움직여!</p>
+                </div>
+                
+                <button class="next-btn" onclick="ScienceApp.nextScene()">원리 정리하기</button>
+            </div>
+        </section>
+        
+        <!-- Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="scene-content">
+                <h2 class="section-title">발견한 원리</h2>
+                
+                <div class="principle-diagram">
+                    <div class="state-comparison">
+                        <div class="compare-item">
+                            <svg viewBox="0 0 100 100">
+                                <rect x="10" y="60" width="80" height="30" fill="#AED6F1" rx="5"/>
+                                <g class="frozen-molecules">
+                                    <circle cx="25" cy="75" r="6" fill="#2874A6"/>
+                                    <circle cx="45" cy="75" r="6" fill="#2874A6"/>
+                                    <circle cx="65" cy="75" r="6" fill="#2874A6"/>
+                                    <circle cx="35" cy="75" r="6" fill="#2874A6"/>
+                                    <circle cx="55" cy="75" r="6" fill="#2874A6"/>
+                                    <circle cx="75" cy="75" r="6" fill="#2874A6"/>
+                                </g>
+                                <text x="50" y="25" text-anchor="middle" font-size="14" fill="#333">고체</text>
+                                <text x="50" y="45" text-anchor="middle" font-size="10" fill="#666">분자가 제자리에서 진동</text>
+                            </svg>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="compare-item">
+                            <svg viewBox="0 0 100 100">
+                                <ellipse cx="50" cy="70" rx="40" ry="20" fill="#85C1E9"/>
+                                <g class="liquid-viz-molecules">
+                                    <circle cx="30" cy="65" r="6" fill="#2874A6"/>
+                                    <circle cx="50" cy="72" r="6" fill="#2874A6"/>
+                                    <circle cx="70" cy="68" r="6" fill="#2874A6"/>
+                                    <circle cx="40" cy="75" r="6" fill="#2874A6"/>
+                                    <circle cx="60" cy="70" r="6" fill="#2874A6"/>
+                                </g>
+                                <text x="50" y="25" text-anchor="middle" font-size="14" fill="#333">액체</text>
+                                <text x="50" y="45" text-anchor="middle" font-size="10" fill="#666">분자가 자유롭게 이동</text>
+                            </svg>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="compare-item">
+                            <svg viewBox="0 0 100 100">
+                                <g class="gas-viz-molecules">
+                                    <circle cx="20" cy="30" r="6" fill="#D5E8F7"/>
+                                    <circle cx="80" cy="40" r="6" fill="#D5E8F7"/>
+                                    <circle cx="50" cy="20" r="6" fill="#D5E8F7"/>
+                                    <circle cx="30" cy="70" r="6" fill="#D5E8F7"/>
+                                    <circle cx="70" cy="80" r="6" fill="#D5E8F7"/>
+                                </g>
+                                <text x="50" y="55" text-anchor="middle" font-size="14" fill="#333">기체</text>
+                                <text x="50" y="95" text-anchor="middle" font-size="10" fill="#666">분자가 빠르게 흩어짐</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="key-insight">
+                    <div class="formula-box">
+                        <p class="formula">열에너지 ↑ → 분자 운동 ↑ → 상태 변화</p>
+                    </div>
+                    <p class="insight-text">온도가 올라가면 분자들이 더 빨리 움직이고,<br>결국 서로 멀어져서 상태가 변해!</p>
+                </div>
+                
+                <button class="next-btn" onclick="ScienceApp.nextScene()">퀴즈 풀기</button>
+            </div>
+        </section>
+        
+        <!-- Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="scene-content">
+                <h2 class="section-title">실생활 퀴즈</h2>
+                
+                <div class="quiz-container" id="quiz-container">
+                    <div class="quiz-question">
+                        <p class="quiz-context">🍜 라면 끓이는 상황</p>
+                        <p class="quiz-text">뚜껑을 닫으면 물이 더 빨리 끓어요. 왜 그럴까요?</p>
+                    </div>
+                    
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-correct="false" onclick="ScienceApp.checkAnswer(this)">
+                            <span class="option-letter">A</span>
+                            <span>뚜껑이 물을 눌러서</span>
+                        </button>
+                        <button class="quiz-option" data-correct="true" onclick="ScienceApp.checkAnswer(this)">
+                            <span class="option-letter">B</span>
+                            <span>열이 빠져나가지 못해서 분자가 더 빨리 움직여서</span>
+                        </button>
+                        <button class="quiz-option" data-correct="false" onclick="ScienceApp.checkAnswer(this)">
+                            <span class="option-letter">C</span>
+                            <span>뚜껑 색깔이 어두워서</span>
+                        </button>
+                    </div>
+                    
+                    <div class="quiz-feedback hidden" id="quiz-feedback">
+                        <div class="feedback-content">
+                            <span class="feedback-icon"></span>
+                            <p class="feedback-text"></p>
+                        </div>
+                        <button class="retry-btn hidden" id="retry-btn" onclick="ScienceApp.retryQuiz()">다시 풀기</button>
+                    </div>
+                </div>
+                
+                <button class="next-btn hidden" id="quiz-next-btn" onclick="ScienceApp.nextScene()">다음으로</button>
+            </div>
+        </section>
+        
+        <!-- Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="scene-content">
+                <h2 class="section-title">오늘 발견한 것</h2>
+                
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <span class="summary-number">1</span>
+                        <p>물질은 <strong>고체, 액체, 기체</strong> 세 가지 상태가 있다</p>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-number">2</span>
+                        <p><strong>온도가 올라가면</strong> 분자가 더 빨리 움직인다</p>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-number">3</span>
+                        <p>분자 운동이 활발해지면 <strong>상태가 변한다</strong></p>
+                    </div>
+                </div>
+                
+                <div class="next-preview">
+                    <h3>다음에 배울 것</h3>
+                    <p>열에너지와 온도의 관계, 끓는점과 녹는점</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="ScienceApp.showScene(3)">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                        </svg>
+                        다시 실험하기
+                    </button>
+                    <button class="action-btn primary" onclick="ScienceApp.showScene(0)">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                        처음으로
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

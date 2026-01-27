@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지진과 판구조론 - 움직이는 대륙</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        
+        <!-- Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="scene-content">
+                <div class="phenomenon-container">
+                    <svg id="earthquake-animation" viewBox="0 0 300 200" class="main-visual">
+                        <!-- 땅 -->
+                        <rect x="0" y="120" width="300" height="80" fill="#8B4513"/>
+                        <!-- 갈라진 틈 -->
+                        <path d="M150 120 L145 140 L155 160 L148 180 L152 200" stroke="#333" stroke-width="3" fill="none" class="crack"/>
+                        <!-- 건물들 -->
+                        <g id="buildings" class="shake">
+                            <rect x="50" y="80" width="40" height="40" fill="#4A90D9"/>
+                            <rect x="55" y="85" width="10" height="10" fill="#87CEEB"/>
+                            <rect x="75" y="85" width="10" height="10" fill="#87CEEB"/>
+                            <rect x="55" y="100" width="10" height="10" fill="#87CEEB"/>
+                            <rect x="75" y="100" width="10" height="10" fill="#87CEEB"/>
+                        </g>
+                        <g id="buildings2" class="shake delay">
+                            <rect x="200" y="70" width="50" height="50" fill="#7ED321"/>
+                            <rect x="205" y="75" width="12" height="12" fill="#87CEEB"/>
+                            <rect x="225" y="75" width="12" height="12" fill="#87CEEB"/>
+                            <rect x="205" y="95" width="12" height="12" fill="#87CEEB"/>
+                            <rect x="225" y="95" width="12" height="12" fill="#87CEEB"/>
+                        </g>
+                        <!-- 지진파 표시 -->
+                        <g id="seismic-waves">
+                            <ellipse cx="150" cy="150" rx="30" ry="10" fill="none" stroke="#F5A623" stroke-width="2" opacity="0.8" class="wave"/>
+                            <ellipse cx="150" cy="150" rx="50" ry="15" fill="none" stroke="#F5A623" stroke-width="2" opacity="0.5" class="wave delay2"/>
+                            <ellipse cx="150" cy="150" rx="70" ry="20" fill="none" stroke="#F5A623" stroke-width="2" opacity="0.3" class="wave delay3"/>
+                        </g>
+                    </svg>
+                </div>
+                <h1 class="hook-question">땅이 왜 흔들릴까?</h1>
+                <p class="hook-subtext">단단해 보이는 땅이 갑자기 움직인다면...</p>
+                <button class="next-btn pulse" onclick="ScienceApp.nextScene()">알아보기</button>
+            </div>
+        </section>
+        
+        <!-- Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="scene-content">
+                <h2 class="section-title">잠깐! 이미 알고 있는 것부터</h2>
+                <div class="earth-layers">
+                    <svg viewBox="0 0 200 200" class="earth-diagram">
+                        <circle cx="100" cy="100" r="90" fill="#FF6B35"/>
+                        <circle cx="100" cy="100" r="70" fill="#FF9800"/>
+                        <circle cx="100" cy="100" r="50" fill="#FFC107"/>
+                        <circle cx="100" cy="100" r="25" fill="#FFEB3B"/>
+                        <!-- 레이블 -->
+                        <text x="100" y="25" text-anchor="middle" font-size="10" fill="white">지각</text>
+                        <text x="100" y="55" text-anchor="middle" font-size="10" fill="white">맨틀</text>
+                        <text x="100" y="85" text-anchor="middle" font-size="10" fill="#333">외핵</text>
+                        <text x="100" y="105" text-anchor="middle" font-size="8" fill="#333">내핵</text>
+                    </svg>
+                </div>
+                <div class="anchor-info">
+                    <p>지구는 여러 층으로 되어 있어!</p>
+                    <ul>
+                        <li><strong>지각</strong>: 우리가 사는 가장 바깥층</li>
+                        <li><strong>맨틀</strong>: 뜨거운 암석층</li>
+                        <li><strong>핵</strong>: 지구의 중심</li>
+                    </ul>
+                </div>
+                <div class="bridge-question">
+                    <p class="highlight-text">그런데 지각이 하나로 붙어있지 않고 조각나 있다면?</p>
+                </div>
+                <button class="next-btn" onclick="ScienceApp.nextScene()">조각난 지각을 보러 가자!</button>
+            </div>
+        </section>
+        
+        <!-- Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="scene-content">
+                <div class="character-container">
+                    <svg viewBox="0 0 150 200" class="character">
+                        <!-- 지질학자 -->
+                        <circle cx="75" cy="50" r="35" fill="#FFE4C4"/>
+                        <circle cx="60" cy="45" r="5" fill="#333"/>
+                        <circle cx="90" cy="45" r="5" fill="#333"/>
+                        <path d="M65 60 Q75 70 85 60" stroke="#333" stroke-width="2" fill="none"/>
+                        <!-- 안전모 -->
+                        <ellipse cx="75" cy="25" rx="40" ry="20" fill="#FFD700"/>
+                        <rect x="35" y="25" width="80" height="5" fill="#F5A623"/>
+                        <!-- 조끼 -->
+                        <rect x="40" y="85" width="70" height="80" rx="5" fill="#FF6B35"/>
+                        <rect x="50" y="95" width="50" height="60" fill="#FFF" opacity="0.3"/>
+                    </svg>
+                </div>
+                <div class="story-bubble">
+                    <h2>안녕! 나는 <span class="highlight">지질학자 민지</span>야!</h2>
+                    <p>최근 우리나라에서도 지진이 일어났어. 많은 사람들이 물어봐:</p>
+                    <div class="question-card">
+                        <p>"왜 갑자기 땅이 흔들린 거예요? 우리나라도 지진이 나나요?"</p>
+                    </div>
+                    <p>이걸 이해하려면 <strong>판구조론</strong>을 알아야 해!</p>
+                    <p>지구의 비밀을 같이 파헤쳐볼래?</p>
+                </div>
+                <button class="next-btn" onclick="ScienceApp.nextScene()">탐험 시작!</button>
+            </div>
+        </section>
+        
+        <!-- Core Scene -->
+        <section id="core-scene" class="scene">
+            <div class="scene-content wide">
+                <h2 class="section-title">판구조론 탐험</h2>
+                <p class="instruction">판들을 드래그해서 움직여보고, 어떤 일이 일어나는지 관찰해봐!</p>
+                
+                <div class="experiment-container">
+                    <div class="plate-simulation">
+                        <svg id="plate-sim" viewBox="0 0 500 300">
+                            <!-- 배경 - 맨틀 -->
+                            <rect x="0" y="0" width="500" height="300" fill="#FF9800"/>
+                            
+                            <!-- 맨틀 대류 화살표 -->
+                            <g class="convection-arrows">
+                                <path d="M100 280 Q100 150 200 150 Q300 150 300 280" fill="none" stroke="#FFE082" stroke-width="3" marker-end="url(#arrow)"/>
+                                <path d="M300 280 Q300 150 400 150 Q500 150 500 280" fill="none" stroke="#FFE082" stroke-width="3" marker-end="url(#arrow)"/>
+                            </g>
+                            
+                            <!-- 판 A -->
+                            <g id="plate-a" class="plate draggable" transform="translate(0, 0)">
+                                <rect x="20" y="30" width="180" height="50" rx="5" fill="#8B4513" stroke="#5D4037" stroke-width="2"/>
+                                <text x="110" y="60" text-anchor="middle" fill="white" font-size="14" font-weight="bold">유라시아판</text>
+                            </g>
+                            
+                            <!-- 판 B -->
+                            <g id="plate-b" class="plate draggable" transform="translate(0, 0)">
+                                <rect x="220" y="30" width="180" height="50" rx="5" fill="#A0522D" stroke="#5D4037" stroke-width="2"/>
+                                <text x="310" y="60" text-anchor="middle" fill="white" font-size="14" font-weight="bold">태평양판</text>
+                            </g>
+                            
+                            <!-- 경계 영역 -->
+                            <rect id="boundary-zone" x="190" y="25" width="40" height="60" fill="rgba(255,0,0,0.1)" rx="5"/>
+                            
+                            <!-- 화살표 마커 -->
+                            <defs>
+                                <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <path d="M0,0 L0,6 L9,3 z" fill="#FFE082"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                    
+                    <!-- 경계 유형 선택 -->
+                    <div class="boundary-types">
+                        <h3>판의 경계 유형</h3>
+                        <div class="type-buttons">
+                            <button class="type-btn active" data-type="convergent" onclick="ScienceApp.setBoundaryType('convergent')">
+                                <span class="type-icon">→←</span>
+                                <span>수렴형 (충돌)</span>
+                            </button>
+                            <button class="type-btn" data-type="divergent" onclick="ScienceApp.setBoundaryType('divergent')">
+                                <span class="type-icon">←→</span>
+                                <span>발산형 (분리)</span>
+                            </button>
+                            <button class="type-btn" data-type="transform" onclick="ScienceApp.setBoundaryType('transform')">
+                                <span class="type-icon">↑↓</span>
+                                <span>변환형 (스치기)</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 결과 표시 -->
+                    <div class="result-panel">
+                        <div class="result-icon" id="result-icon">🏔️</div>
+                        <h3 id="result-title">수렴형 경계</h3>
+                        <p id="result-description">두 판이 충돌하면 산맥이 형성되거나, 한 판이 다른 판 아래로 섭입해요.</p>
+                        <div class="examples">
+                            <span class="example-label">예시:</span>
+                            <span id="result-example">히말라야 산맥, 일본 해구</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="discovery-message hidden" id="discovery-message">
+                    <p>🌍 발견! 판들이 움직이면서 지진, 화산, 산맥이 만들어져!</p>
+                </div>
+                
+                <button class="next-btn" onclick="ScienceApp.nextScene()">원리 정리하기</button>
+            </div>
+        </section>
+        
+        <!-- Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="scene-content">
+                <h2 class="section-title">발견한 원리: 판구조론</h2>
+                
+                <div class="visualization-cards">
+                    <div class="viz-card">
+                        <div class="viz-icon">🧩</div>
+                        <h3>지구는 퍼즐 조각</h3>
+                        <p>지각은 여러 개의 <strong>판(plate)</strong>으로 나뉘어 있어</p>
+                    </div>
+                    <div class="viz-card">
+                        <div class="viz-icon">🔄</div>
+                        <h3>맨틀 대류</h3>
+                        <p>뜨거운 맨틀이 대류하면서 판을 <strong>움직이게</strong> 해</p>
+                    </div>
+                    <div class="viz-card">
+                        <div class="viz-icon">💥</div>
+                        <h3>경계에서 활동</h3>
+                        <p>판이 만나는 곳에서 <strong>지진, 화산, 산맥</strong>이 생겨</p>
+                    </div>
+                </div>
+                
+                <div class="key-insight">
+                    <div class="formula-box">
+                        <p class="formula">맨틀 대류 → 판 이동 → 지진/화산 발생</p>
+                    </div>
+                    <p class="insight-text">
+                        지진은 판들이 충돌하거나 스칠 때<br>쌓인 에너지가 갑자기 방출되는 현상이야!
+                    </p>
+                </div>
+                
+                <button class="next-btn" onclick="ScienceApp.nextScene()">퀴즈 풀기</button>
+            </div>
+        </section>
+        
+        <!-- Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="scene-content">
+                <h2 class="section-title">실생활 퀴즈</h2>
+                
+                <div class="quiz-container" id="quiz-container">
+                    <div class="quiz-question">
+                        <p class="quiz-context">🌋 불의 고리</p>
+                        <p class="quiz-text">태평양 주변에 화산과 지진이 많은 이유는?</p>
+                    </div>
+                    
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-correct="false" onclick="ScienceApp.checkAnswer(this)">
+                            <span class="option-letter">A</span>
+                            <span>바다가 있어서</span>
+                        </button>
+                        <button class="quiz-option" data-correct="true" onclick="ScienceApp.checkAnswer(this)">
+                            <span class="option-letter">B</span>
+                            <span>여러 판의 경계가 모여 있어서</span>
+                        </button>
+                        <button class="quiz-option" data-correct="false" onclick="ScienceApp.checkAnswer(this)">
+                            <span class="option-letter">C</span>
+                            <span>태평양이 가장 커서</span>
+                        </button>
+                    </div>
+                    
+                    <div class="quiz-feedback hidden" id="quiz-feedback">
+                        <div class="feedback-content">
+                            <span class="feedback-icon"></span>
+                            <p class="feedback-text"></p>
+                        </div>
+                        <button class="retry-btn hidden" id="retry-btn" onclick="ScienceApp.retryQuiz()">다시 풀기</button>
+                    </div>
+                </div>
+                
+                <button class="next-btn hidden" id="quiz-next-btn" onclick="ScienceApp.nextScene()">다음으로</button>
+            </div>
+        </section>
+        
+        <!-- Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="scene-content">
+                <h2 class="section-title">오늘 발견한 것</h2>
+                
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <span class="summary-number">1</span>
+                        <p>지각은 여러 개의 <strong>판</strong>으로 이루어져 있다</p>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-number">2</span>
+                        <p><strong>맨틀 대류</strong>가 판을 움직이게 한다</p>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-number">3</span>
+                        <p>판 경계에서 <strong>지진과 화산</strong>이 일어난다</p>
+                    </div>
+                </div>
+                
+                <div class="safety-box">
+                    <h3>🚨 지진 대비 안전 수칙</h3>
+                    <ul>
+                        <li>테이블 아래로 대피하기</li>
+                        <li>머리 보호하기</li>
+                        <li>흔들림 멈출 때까지 기다리기</li>
+                    </ul>
+                </div>
+                
+                <div class="next-preview">
+                    <h3>다음에 배울 것</h3>
+                    <p>화산의 종류, 지진파와 지진계</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="ScienceApp.showScene(3)">다시 탐험하기</button>
+                    <button class="action-btn primary" onclick="ScienceApp.showScene(0)">처음으로</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뉴턴의 운동 법칙 - 힘과 운동의 비밀</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        
+        <!-- Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="scene-content">
+                <div class="phenomenon-container">
+                    <svg id="bus-animation" viewBox="0 0 350 180" class="main-visual">
+                        <!-- 버스 -->
+                        <g id="bus">
+                            <rect x="50" y="80" width="200" height="70" rx="10" fill="#FF6B35"/>
+                            <rect x="70" y="90" width="40" height="30" rx="5" fill="#87CEEB"/>
+                            <rect x="120" y="90" width="40" height="30" rx="5" fill="#87CEEB"/>
+                            <rect x="170" y="90" width="40" height="30" rx="5" fill="#87CEEB"/>
+                            <circle cx="90" cy="155" r="15" fill="#333"/>
+                            <circle cx="210" cy="155" r="15" fill="#333"/>
+                            <rect x="240" y="100" width="20" height="40" rx="5" fill="#FF6B35"/>
+                        </g>
+                        <!-- 사람들 -->
+                        <g id="passengers">
+                            <g class="passenger" id="passenger1">
+                                <circle cx="95" cy="105" r="8" fill="#FFE4C4"/>
+                                <rect x="90" y="113" width="10" height="15" fill="#4A90D9"/>
+                            </g>
+                            <g class="passenger" id="passenger2">
+                                <circle cx="145" cy="105" r="8" fill="#FFE4C4"/>
+                                <rect x="140" y="113" width="10" height="15" fill="#7ED321"/>
+                            </g>
+                            <g class="passenger" id="passenger3">
+                                <circle cx="195" cy="105" r="8" fill="#FFE4C4"/>
+                                <rect x="190" y="113" width="10" height="15" fill="#F5A623"/>
+                            </g>
+                        </g>
+                        <!-- 화살표 (급정거 시 표시) -->
+                        <g id="motion-arrow" class="hidden">
+                            <path d="M280 110 L320 110 M310 100 L320 110 L310 120" stroke="#D0021B" stroke-width="4" fill="none"/>
+                            <text x="300" y="90" font-size="10" fill="#D0021B">관성</text>
+                        </g>
+                    </svg>
+                </div>
+                <h1 class="hook-question">버스가 급정거하면 왜 앞으로 쏠릴까?</h1>
+                <p class="hook-subtext">내가 움직이려고 한 게 아닌데... 왜 그럴까?</p>
+                <button class="next-btn pulse" onclick="ScienceApp.nextScene()">알아보기</button>
+            </div>
+        </section>
+        
+        <!-- Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="scene-content">
+                <h2 class="section-title">잠깐! 이미 알고 있는 것부터</h2>
+                <div class="anchor-diagram">
+                    <div class="anchor-item">
+                        <svg viewBox="0 0 80 80">
+                            <rect x="20" y="40" width="40" height="25" rx="5" fill="#4A90D9"/>
+                            <line x1="10" y1="65" x2="70" y2="65" stroke="#333" stroke-width="2"/>
+                            <path d="M60 52 L75 52 M70 47 L75 52 L70 57" stroke="#7ED321" stroke-width="2" fill="none"/>
+                        </svg>
+                        <span>힘</span>
+                        <p class="small">물체를 밀거나 당기는 것</p>
+                    </div>
+                    <div class="anchor-item">
+                        <svg viewBox="0 0 80 80">
+                            <circle cx="20" cy="50" r="10" fill="#F5A623"/>
+                            <circle cx="40" cy="50" r="10" fill="#F5A623" opacity="0.5"/>
+                            <circle cx="60" cy="50" r="10" fill="#F5A623" opacity="0.3"/>
+                            <path d="M15 35 L65 35 M60 30 L65 35 L60 40" stroke="#333" stroke-width="2" fill="none"/>
+                        </svg>
+                        <span>운동</span>
+                        <p class="small">위치가 변하는 것</p>
+                    </div>
+                </div>
+                <div class="bridge-question">
+                    <p>힘을 주면 물체가 움직인다는 건 알겠는데...</p>
+                    <p class="highlight-text">힘이 없으면 물체는 어떻게 될까?</p>
+                </div>
+                <button class="next-btn" onclick="ScienceApp.nextScene()">뉴턴에게 물어보자!</button>
+            </div>
+        </section>
+        
+        <!-- Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="scene-content">
+                <div class="character-container">
+                    <svg viewBox="0 0 150 200" class="character">
+                        <!-- 캐릭터: 발명가 준서 -->
+                        <circle cx="75" cy="50" r="35" fill="#FFE4C4"/>
+                        <circle cx="60" cy="45" r="5" fill="#333"/>
+                        <circle cx="90" cy="45" r="5" fill="#333"/>
+                        <path d="M65 60 Q75 70 85 60" stroke="#333" stroke-width="2" fill="none"/>
+                        <!-- 헬멧 -->
+                        <ellipse cx="75" cy="30" rx="38" ry="25" fill="#FFD700" opacity="0.3"/>
+                        <path d="M37 40 Q75 15 113 40" stroke="#FFD700" stroke-width="3" fill="none"/>
+                        <!-- 가운 -->
+                        <rect x="40" y="85" width="70" height="80" rx="10" fill="#34495E"/>
+                        <text x="75" y="130" text-anchor="middle" fill="white" font-size="10" font-weight="bold">발명가</text>
+                        <!-- 렌치 -->
+                        <rect x="110" y="100" width="8" height="40" fill="#95A5A6"/>
+                        <circle cx="114" cy="95" r="8" fill="none" stroke="#95A5A6" stroke-width="4"/>
+                    </svg>
+                </div>
+                <div class="story-bubble">
+                    <h2>안녕! 나는 <span class="highlight">발명가 준서</span>야!</h2>
+                    <p>요즘 자동 브레이크 시스템을 개발 중인데, 문제가 생겼어:</p>
+                    <div class="question-card">
+                        <p>"브레이크를 밟으면 차는 멈추는데, 왜 사람은 앞으로 쏠릴까?"</p>
+                    </div>
+                    <p>이걸 이해하려면 300년 전 <strong>뉴턴</strong>이 발견한 법칙을 알아야 해!</p>
+                    <p>나랑 같이 실험해볼래?</p>
+                </div>
+                <button class="next-btn" onclick="ScienceApp.nextScene()">실험 시작!</button>
+            </div>
+        </section>
+        
+        <!-- Core Scene -->
+        <section id="core-scene" class="scene">
+            <div class="scene-content wide">
+                <h2 class="section-title">뉴턴 운동 법칙 실험실</h2>
+                <p class="instruction">물체에 힘을 가해서 어떻게 움직이는지 관찰해봐!</p>
+                
+                <div class="experiment-container">
+                    <!-- 실험 캔버스 -->
+                    <div class="simulation-area">
+                        <svg id="physics-sim" viewBox="0 0 500 200">
+                            <!-- 바닥 -->
+                            <rect x="0" y="150" width="500" height="50" fill="#E0E0E0"/>
+                            <line x1="0" y1="150" x2="500" y2="150" stroke="#999" stroke-width="2"/>
+                            
+                            <!-- 마찰력 표시 -->
+                            <g id="friction-marks" class="hidden">
+                                <line x1="50" y1="148" x2="60" y2="142" stroke="#666" stroke-width="1"/>
+                                <line x1="100" y1="148" x2="110" y2="142" stroke="#666" stroke-width="1"/>
+                                <line x1="150" y1="148" x2="160" y2="142" stroke="#666" stroke-width="1"/>
+                            </g>
+                            
+                            <!-- 물체 -->
+                            <g id="box" transform="translate(50, 0)">
+                                <rect x="0" y="100" width="60" height="50" rx="5" fill="#4A90D9"/>
+                                <text x="30" y="130" text-anchor="middle" fill="white" font-size="12" font-weight="bold">1kg</text>
+                            </g>
+                            
+                            <!-- 힘 화살표 -->
+                            <g id="force-arrow" class="hidden">
+                                <line id="force-line" x1="110" y1="125" x2="150" y2="125" stroke="#D0021B" stroke-width="4"/>
+                                <polygon id="force-head" points="145,120 155,125 145,130" fill="#D0021B"/>
+                                <text id="force-label" x="130" y="115" text-anchor="middle" font-size="12" fill="#D0021B">힘</text>
+                            </g>
+                            
+                            <!-- 속도 표시 -->
+                            <g id="velocity-display">
+                                <text x="250" y="30" text-anchor="middle" font-size="14" fill="#333">속도: <tspan id="velocity-value">0</tspan> m/s</text>
+                            </g>
+                            
+                            <!-- 마커들 -->
+                            <g id="position-markers">
+                                <line x1="100" y1="145" x2="100" y2="155" stroke="#333" stroke-width="1"/>
+                                <line x1="200" y1="145" x2="200" y2="155" stroke="#333" stroke-width="1"/>
+                                <line x1="300" y1="145" x2="300" y2="155" stroke="#333" stroke-width="1"/>
+                                <line x1="400" y1="145" x2="400" y2="155" stroke="#333" stroke-width="1"/>
+                            </g>
+                        </svg>
+                    </div>
+                    
+                    <!-- 컨트롤 -->
+                    <div class="controls-panel">
+                        <div class="control-row">
+                            <div class="control-item">
+                                <label>가하는 힘 (N)</label>
+                                <input type="range" id="force-slider" min="0" max="20" value="0" class="slider">
+                                <span id="force-value" class="slider-value">0 N</span>
+                            </div>
+                            <div class="control-item">
+                                <label>마찰력</label>
+                                <div class="toggle-group">
+                                    <button id="friction-off" class="toggle-btn active" onclick="ScienceApp.setFriction(false)">없음</button>
+                                    <button id="friction-on" class="toggle-btn" onclick="ScienceApp.setFriction(true)">있음</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-buttons">
+                            <button class="action-btn" onclick="ScienceApp.applyForce()">
+                                힘 가하기
+                            </button>
+                            <button class="action-btn secondary" onclick="ScienceApp.resetSimulation()">
+                                초기화
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 관찰 패널 -->
+                    <div class="observation-panel">
+                        <h3>뉴턴의 운동 법칙</h3>
+                        <div class="laws-grid">
+                            <div class="law-card" id="law1-card">
+                                <span class="law-number">1</span>
+                                <div class="law-content">
+                                    <strong>관성의 법칙</strong>
+                                    <p>힘이 없으면 물체는 현재 상태를 유지하려 해</p>
+                                </div>
+                                <span class="check-mark hidden">✓</span>
+                            </div>
+                            <div class="law-card" id="law2-card">
+                                <span class="law-number">2</span>
+                                <div class="law-content">
+                                    <strong>가속도의 법칙</strong>
+                                    <p>힘 = 질량 × 가속도 (F = ma)</p>
+                                </div>
+                                <span class="check-mark hidden">✓</span>
+                            </div>
+                            <div class="law-card" id="law3-card">
+                                <span class="law-number">3</span>
+                                <div class="law-content">
+                                    <strong>작용-반작용 법칙</strong>
+                                    <p>모든 힘에는 반대 방향의 같은 크기 힘이 작용해</p>
+                                </div>
+                                <span class="check-mark hidden">✓</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="discovery-message hidden" id="discovery-message">
+                    <p>🎯 발견! 힘이 없으면 움직이던 물체는 계속 움직이려 해 (관성의 법칙)!</p>
+                </div>
+                
+                <button class="next-btn" onclick="ScienceApp.nextScene()">원리 정리하기</button>
+            </div>
+        </section>
+        
+        <!-- Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="scene-content">
+                <h2 class="section-title">발견한 원리: 뉴턴의 3가지 법칙</h2>
+                
+                <div class="laws-visualization">
+                    <div class="law-visual-card">
+                        <div class="law-header">
+                            <span class="law-num">1</span>
+                            <h3>관성의 법칙</h3>
+                        </div>
+                        <div class="law-illustration">
+                            <svg viewBox="0 0 150 80">
+                                <rect x="20" y="40" width="40" height="25" rx="5" fill="#4A90D9"/>
+                                <text x="40" y="56" text-anchor="middle" fill="white" font-size="8">정지</text>
+                                <path d="M70 52 L80 52" stroke="#999" stroke-width="2" stroke-dasharray="4"/>
+                                <rect x="90" y="40" width="40" height="25" rx="5" fill="#4A90D9"/>
+                                <text x="110" y="56" text-anchor="middle" fill="white" font-size="8">정지</text>
+                            </svg>
+                        </div>
+                        <p>힘이 없으면 멈춘 물체는 멈춰있고, 움직이는 물체는 계속 움직여</p>
+                    </div>
+                    
+                    <div class="law-visual-card">
+                        <div class="law-header">
+                            <span class="law-num">2</span>
+                            <h3>가속도의 법칙</h3>
+                        </div>
+                        <div class="law-illustration">
+                            <svg viewBox="0 0 150 80">
+                                <rect x="30" y="35" width="30" height="30" rx="5" fill="#7ED321"/>
+                                <text x="45" y="55" text-anchor="middle" fill="white" font-size="8">m</text>
+                                <path d="M65 50 L100 50 M95 45 L100 50 L95 55" stroke="#D0021B" stroke-width="3" fill="none"/>
+                                <text x="80" y="40" font-size="10" fill="#D0021B">F</text>
+                                <text x="115" y="55" font-size="12" fill="#333">a = F/m</text>
+                            </svg>
+                        </div>
+                        <p>같은 힘이면 가벼울수록 빨리 가속돼 (a = F/m)</p>
+                    </div>
+                    
+                    <div class="law-visual-card">
+                        <div class="law-header">
+                            <span class="law-num">3</span>
+                            <h3>작용-반작용 법칙</h3>
+                        </div>
+                        <div class="law-illustration">
+                            <svg viewBox="0 0 150 80">
+                                <circle cx="50" cy="45" r="20" fill="#F5A623"/>
+                                <circle cx="100" cy="45" r="20" fill="#9B59B6"/>
+                                <path d="M70 45 L80 45 M75 40 L80 45 L75 50" stroke="#D0021B" stroke-width="2" fill="none"/>
+                                <path d="M80 45 L70 45 M75 40 L70 45 L75 50" stroke="#3498DB" stroke-width="2" fill="none" transform="translate(0, 10)"/>
+                            </svg>
+                        </div>
+                        <p>밀면 반대로 밀리는 힘도 받아</p>
+                    </div>
+                </div>
+                
+                <div class="key-insight">
+                    <div class="formula-box">
+                        <p class="formula">F = m × a (힘 = 질량 × 가속도)</p>
+                    </div>
+                    <p class="insight-text">
+                        버스가 급정거해도 <strong>우리 몸은 관성 때문에</strong> 계속 앞으로 가려해서 쏠리는 거야!
+                    </p>
+                </div>
+                
+                <button class="next-btn" onclick="ScienceApp.nextScene()">퀴즈 풀기</button>
+            </div>
+        </section>
+        
+        <!-- Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="scene-content">
+                <h2 class="section-title">실생활 퀴즈</h2>
+                
+                <div class="quiz-container" id="quiz-container">
+                    <div class="quiz-question">
+                        <p class="quiz-context">🚗 자동차 안에서</p>
+                        <p class="quiz-text">안전벨트는 왜 착용해야 할까요?</p>
+                    </div>
+                    
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-correct="false" onclick="ScienceApp.checkAnswer(this)">
+                            <span class="option-letter">A</span>
+                            <span>법으로 정해져 있어서</span>
+                        </button>
+                        <button class="quiz-option" data-correct="true" onclick="ScienceApp.checkAnswer(this)">
+                            <span class="option-letter">B</span>
+                            <span>급정거 시 관성으로 앞으로 튕겨나가는 것을 막아줘서</span>
+                        </button>
+                        <button class="quiz-option" data-correct="false" onclick="ScienceApp.checkAnswer(this)">
+                            <span class="option-letter">C</span>
+                            <span>좌석을 더 편하게 만들어줘서</span>
+                        </button>
+                    </div>
+                    
+                    <div class="quiz-feedback hidden" id="quiz-feedback">
+                        <div class="feedback-content">
+                            <span class="feedback-icon"></span>
+                            <p class="feedback-text"></p>
+                        </div>
+                        <button class="retry-btn hidden" id="retry-btn" onclick="ScienceApp.retryQuiz()">다시 풀기</button>
+                    </div>
+                </div>
+                
+                <button class="next-btn hidden" id="quiz-next-btn" onclick="ScienceApp.nextScene()">다음으로</button>
+            </div>
+        </section>
+        
+        <!-- Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="scene-content">
+                <h2 class="section-title">오늘 발견한 것</h2>
+                
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <span class="summary-number">1</span>
+                        <p><strong>관성의 법칙</strong>: 물체는 현재 상태를 유지하려 한다</p>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-number">2</span>
+                        <p><strong>가속도의 법칙</strong>: F = ma</p>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-number">3</span>
+                        <p><strong>작용-반작용</strong>: 모든 힘에는 반대 힘이 있다</p>
+                    </div>
+                </div>
+                
+                <div class="impact-box">
+                    <h3>🚀 뉴턴 법칙이 쓰이는 곳</h3>
+                    <p>자동차 안전장치, 로켓 발사, 스포츠 역학 등 우리 생활 곳곳에!</p>
+                </div>
+                
+                <div class="next-preview">
+                    <h3>다음에 배울 것</h3>
+                    <p>중력과 만유인력, 마찰력의 종류</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="ScienceApp.showScene(3)">
+                        다시 실험하기
+                    </button>
+                    <button class="action-btn primary" onclick="ScienceApp.showScene(0)">
+                        처음으로
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
