@@ -17,7 +17,7 @@ const emit = defineEmits<{
   (e: 'node-click', node: KnowledgeNode): void
 }>()
 
-const isExpanded = ref(true)
+const isExpanded = ref(false)
 
 const subjectLabel = computed(() => SUBJECT_LABELS[props.subject])
 
