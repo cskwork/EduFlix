@@ -195,3 +195,88 @@ export function getArtAssetsRoot(): string {
   const path = require('path')
   return path.resolve(process.cwd(), '../art-assets')
 }
+
+// Review job request
+export interface ReviewJobRequest {
+  moduleId: string
+  modulePath: string
+}
+
+// Review job response
+export interface ReviewJobResponse {
+  success: true
+  jobId: string
+  message: string
+}
+
+// Review status response
+export interface ReviewStatusResponse {
+  jobId: string
+  status: 'pending' | 'processing' | 'completed' | 'failed'
+  progress: number
+  message: string
+  issues?: ArtAssetsReviewIssue[]
+  improvedFiles?: string[]
+  error?: string
+}
+
+// Create a review job via HTTP
+export async function createReviewJob(
+  request: ReviewJobRequest
+): Promise<ReviewJobResponse | ArtAssetsErrorResponse> {
+  try {
+    const response = await fetch(`${ART_ASSETS_URL}/api/review/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
+    })
+
+    const data = await response.json() as Record<string, unknown>
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: (data.error as string) || `HTTP ${response.status}`,
+        code: 'INTERNAL_ERROR',
+      }
+    }
+
+    return data as unknown as ReviewJobResponse
+  } catch (error) {
+    console.error('art-assets review API call failed:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'art-assets 리뷰 서버에 연결할 수 없습니다',
+      code: 'INTERNAL_ERROR',
+    }
+  }
+}
+
+// Get review job status via HTTP
+export async function getReviewStatus(
+  jobId: string
+): Promise<ReviewStatusResponse | ArtAssetsErrorResponse> {
+  try {
+    const response = await fetch(`${ART_ASSETS_URL}/api/review/status/${jobId}`)
+    const data = await response.json() as Record<string, unknown>
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: (data.error as string) || `HTTP ${response.status}`,
+        code: 'JOB_NOT_FOUND',
+      }
+    }
+
+    return data as unknown as ReviewStatusResponse
+  } catch (error) {
+    console.error('art-assets review status check failed:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'art-assets 서버에 연결할 수 없습니다',
+      code: 'INTERNAL_ERROR',
+    }
+  }
+}

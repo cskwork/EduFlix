@@ -3,6 +3,7 @@ import { serve } from 'bun'
 import { handleGenerateRoute } from './routes/generate'
 import { handleContentRoute } from './routes/content'
 import { handleRecommendationsRoute } from './routes/recommendations'
+import { handlePreviewRoute } from './routes/preview'
 import { getServerPort } from './config'
 import { checkArtAssetsHealth } from './services/health'
 
@@ -53,6 +54,10 @@ async function handleRequest(req: Request): Promise<Response> {
 
     if (pathname.startsWith('/api/recommendations')) {
       return await handleRecommendationsRoute(req, jsonResponse, errorResponse)
+    }
+
+    if (pathname.startsWith('/api/preview')) {
+      return await handlePreviewRoute(req, jsonResponse, errorResponse)
     }
 
     // 헬스 체크

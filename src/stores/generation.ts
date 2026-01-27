@@ -7,9 +7,10 @@ import type {
   GenerationProgress,
   GenerationStatus,
   GenerationHistoryItem,
+  ReviewProgress,
 } from '../types/generation'
 import type { Subject, Grade, Language, ContentManifest } from '../types/content'
-import { generateContent, type ProgressCallback } from '../services/api/claude'
+import { generateContent, reviewContent, type ProgressCallback, type ReviewProgressCallback } from '../services/api/claude'
 import { useContentStore } from './content'
 
 export const useGenerationStore = defineStore('generation', () => {
@@ -28,6 +29,16 @@ export const useGenerationStore = defineStore('generation', () => {
 
   // 생성 히스토리
   const history = ref<GenerationHistoryItem[]>([])
+
+  // 리뷰 진행 상태
+  const reviewProgress = ref<ReviewProgress>({
+    status: 'idle',
+    progress: 0,
+    message: '',
+  })
+
+  // 현재 작업 ID (실시간 프리뷰에 필요)
+  const currentJobId = ref<string | null>(null)
 
   // 생성 중인지 여부
   const isGenerating = computed(() => {
@@ -87,9 +98,10 @@ export const useGenerationStore = defineStore('generation', () => {
       message: '콘텐츠 준비 중...',
       startedAt: new Date().toISOString(),
     }
+    currentJobId.value = null
 
     try {
-      // API 호출
+      // API 호출 (jobId 추적 콜백 포함)
       const result = await generateContent(
         {
           interests: options.interests,
@@ -139,6 +151,11 @@ export const useGenerationStore = defineStore('generation', () => {
         }
       }
 
+      // jobId 저장 (실시간 프리뷰용)
+      if (result.jobId) {
+        currentJobId.value = result.jobId
+      }
+
       // lastResult와 history에 동일한 결과 저장 (warning 포함)
       lastResult.value = finalResult
 
@@ -181,6 +198,7 @@ export const useGenerationStore = defineStore('generation', () => {
       message: '',
     }
     currentRequest.value = null
+    currentJobId.value = null
   }
 
   // 상태 초기화
@@ -192,6 +210,7 @@ export const useGenerationStore = defineStore('generation', () => {
     }
     currentRequest.value = null
     lastResult.value = null
+    currentJobId.value = null
   }
 
   // 진행 상태 수동 업데이트
@@ -214,18 +233,82 @@ export const useGenerationStore = defineStore('generation', () => {
     history.value = []
   }
 
+  // 리뷰 상태 초기화
+  function resetReviewState() {
+    reviewProgress.value = {
+      status: 'idle',
+      progress: 0,
+      message: '',
+    }
+  }
+
+  // 리뷰 진행 상태 업데이트 콜백
+  const handleReviewProgress: ReviewProgressCallback = (progress: ReviewProgress) => {
+    reviewProgress.value = { ...progress }
+  }
+
+  // 리뷰 중인지 여부
+  const isReviewing = computed(() => reviewProgress.value.status === 'reviewing')
+
+  // 콘텐츠 리뷰/개선 시작
+  async function startReview(
+    moduleId: string,
+    modulePath: string
+  ): Promise<{ success: boolean; error?: string }> {
+    // 리뷰 상태 초기화
+    reviewProgress.value = {
+      status: 'reviewing',
+      progress: 0,
+      message: '리뷰 준비 중...',
+    }
+
+    try {
+      const result = await reviewContent(moduleId, modulePath, handleReviewProgress)
+
+      if (result.success) {
+        reviewProgress.value = {
+          status: 'completed',
+          progress: 100,
+          message: '리뷰가 완료되었습니다!',
+          issues: result.issues,
+        }
+      } else {
+        reviewProgress.value = {
+          status: 'error',
+          progress: 0,
+          message: result.error || '리뷰에 실패했습니다',
+          error: result.error,
+        }
+      }
+
+      return result
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류'
+      reviewProgress.value = {
+        status: 'error',
+        progress: 0,
+        message: errorMessage,
+        error: errorMessage,
+      }
+      return { success: false, error: errorMessage }
+    }
+  }
+
   return {
     // 상태
     currentProgress,
     currentRequest,
     lastResult,
     history,
+    reviewProgress,
+    currentJobId,
     // 계산된 속성
     isGenerating,
     isCompleted,
     hasError,
     progressPercent,
     statusMessage,
+    isReviewing,
     // 액션
     startGeneration,
     cancelGeneration,
@@ -233,5 +316,7 @@ export const useGenerationStore = defineStore('generation', () => {
     updateProgress,
     getHistoryItem,
     clearHistory,
+    startReview,
+    resetReviewState,
   }
 })

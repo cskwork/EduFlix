@@ -28,8 +28,14 @@ const grade = ref<Grade | null>(null)
 // 생성된 콘텐츠 ID
 const generatedContentId = ref<string | null>(null)
 
+// 생성된 콘텐츠 경로 (리뷰에 필요)
+const generatedModulePath = ref<string | null>(null)
+
 // 생성 진행 상태 (스토어에서 가져옴)
 const generationProgress = computed(() => generationStore.currentProgress)
+
+// 현재 작업 ID (실시간 프리뷰용)
+const currentJobId = computed(() => generationStore.currentJobId)
 
 // 단계 정보
 const steps: { key: WizardStep; label: string; number: number }[] = [
@@ -107,6 +113,13 @@ async function startGeneration() {
 
     if (result.success && result.contentId) {
       generatedContentId.value = result.contentId
+      // 모듈 경로 저장 (리뷰에 필요)
+      const gradeLevel = grade.value?.startsWith('elementary')
+        ? 'elementary'
+        : grade.value?.startsWith('middle')
+          ? 'middle'
+          : 'high'
+      generatedModulePath.value = `public/contents/${subject.value}/${gradeLevel}/${result.contentId}`
     }
   } catch (error) {
     console.error('콘텐츠 생성 실패:', error)
@@ -132,13 +145,29 @@ function viewContent(_contentId: string) {
   }
 }
 
+// 콘텐츠 개선
+async function improveContent(_contentId: string) {
+  if (!generatedContentId.value || !generatedModulePath.value) return
+
+  try {
+    await generationStore.startReview(
+      generatedContentId.value,
+      generatedModulePath.value
+    )
+  } catch (error) {
+    console.error('콘텐츠 개선 실패:', error)
+  }
+}
+
 // 처음부터 다시 시작
 function resetWizard() {
   interests.value = []
   subject.value = null
   grade.value = null
   generatedContentId.value = null
+  generatedModulePath.value = null
   generationStore.resetState()
+  generationStore.resetReviewState()
   currentStep.value = 'interests'
 }
 </script>
@@ -180,9 +209,11 @@ function resetWizard() {
           <GenerationProgressVue
             :progress="generationProgress"
             :content-id="generatedContentId"
+            :job-id="currentJobId"
             @cancel="cancelGeneration"
             @retry="retryGeneration"
             @view-content="viewContent"
+            @improve="improveContent"
           />
         </div>
       </transition>
@@ -225,6 +256,11 @@ function resetWizard() {
   max-width: 700px;
   margin: 0 auto;
   padding: var(--spacing-xl);
+}
+
+/* 생성 중일 때 더 넓은 레이아웃 (실시간 프리뷰 표시) */
+.creator-wizard:has(.generation-progress.with-preview) {
+  max-width: 1100px;
 }
 
 .wizard-header {

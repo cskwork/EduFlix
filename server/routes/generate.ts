@@ -7,6 +7,8 @@ import type {
 import {
   createJob,
   getJobStatus,
+  createReviewJob,
+  getReviewStatus,
   isErrorResponse,
   isSubjectSupported,
   type ArtAssetsStatusResponse,
@@ -242,6 +244,70 @@ export async function handleGenerateRoute(
 
     } catch (error) {
       console.error('상태 조회 오류:', error)
+      const message = error instanceof Error ? error.message : '상태 조회 실패'
+      return errorResponse(message, 500)
+    }
+  }
+
+  // POST /api/generate/review - 콘텐츠 리뷰/개선 작업 시작
+  if (req.method === 'POST' && pathname === '/api/generate/review') {
+    try {
+      const body = (await req.json()) as { moduleId?: string; modulePath?: string }
+
+      if (!body.moduleId || !body.modulePath) {
+        return errorResponse('moduleId와 modulePath가 필요합니다', 400)
+      }
+
+      // Art-assets 리뷰 작업 생성
+      const reviewResult = await createReviewJob({
+        moduleId: body.moduleId,
+        modulePath: body.modulePath,
+      })
+
+      if (isErrorResponse(reviewResult)) {
+        return errorResponse(reviewResult.error, 400)
+      }
+
+      return jsonResponse({
+        success: true,
+        jobId: reviewResult.jobId,
+        message: reviewResult.message,
+      }, 202)
+
+    } catch (error) {
+      console.error('리뷰 요청 오류:', error)
+      const message = error instanceof Error ? error.message : '리뷰 요청 실패'
+      return errorResponse(message, 500)
+    }
+  }
+
+  // GET /api/generate/review/status/:jobId - 리뷰 상태 조회
+  if (req.method === 'GET' && pathname.startsWith('/api/generate/review/status/')) {
+    const jobId = pathname.split('/').pop()
+
+    if (!jobId) {
+      return errorResponse('작업 ID가 필요합니다', 400)
+    }
+
+    try {
+      const statusResult = await getReviewStatus(jobId)
+
+      if (isErrorResponse(statusResult)) {
+        return errorResponse(statusResult.error, 404)
+      }
+
+      return jsonResponse({
+        jobId,
+        status: statusResult.status,
+        progress: statusResult.progress,
+        message: statusResult.message,
+        issues: statusResult.issues,
+        improvedFiles: statusResult.improvedFiles,
+        error: statusResult.error,
+      })
+
+    } catch (error) {
+      console.error('리뷰 상태 조회 오류:', error)
       const message = error instanceof Error ? error.message : '상태 조회 실패'
       return errorResponse(message, 500)
     }

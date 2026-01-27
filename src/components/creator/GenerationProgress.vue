@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { GenerationStatus, GenerationProgress as ProgressType } from '../../types/generation'
+import LivePreview from './LivePreview.vue'
 
 // Props
 const props = defineProps<{
   progress: ProgressType
   contentId?: string | null
+  jobId?: string | null
 }>()
 
 // Emits
@@ -13,6 +15,7 @@ const emit = defineEmits<{
   cancel: []
   retry: []
   viewContent: [contentId: string]
+  improve: [contentId: string]
 }>()
 
 // 상태별 메시지
@@ -61,10 +64,20 @@ function handleRetry() {
 function handleViewContent(contentId: string) {
   emit('viewContent', contentId)
 }
+
+// 개선 버튼 클릭
+function handleImprove(contentId: string) {
+  emit('improve', contentId)
+}
 </script>
 
 <template>
-  <div class="generation-progress" :class="{ completed: isCompleted, error: isError }">
+  <div class="generation-progress" :class="{ completed: isCompleted, error: isError, 'with-preview': isInProgress && props.jobId }">
+    <!-- 실시간 프리뷰 패널 (생성 중일 때만 표시) -->
+    <div v-if="isInProgress && props.jobId" class="preview-panel">
+      <LivePreview :job-id="props.jobId" :is-active="isInProgress" />
+    </div>
+
     <div class="progress-content">
       <div v-if="isInProgress" class="progress-animation">
         <div class="spinner"></div>
@@ -108,6 +121,15 @@ function handleViewContent(contentId: string) {
         >
           콘텐츠 보기
         </button>
+
+        <button
+          v-if="isCompleted && props.contentId"
+          type="button"
+          class="btn btn-secondary btn-improve"
+          @click="handleImprove(props.contentId)"
+        >
+          개선하기
+        </button>
       </div>
     </div>
 
@@ -127,6 +149,39 @@ function handleViewContent(contentId: string) {
   gap: var(--spacing-xl);
   padding: var(--spacing-2xl);
   min-height: 400px;
+}
+
+.generation-progress.with-preview {
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: var(--spacing-2xl);
+}
+
+.preview-panel {
+  flex: 1;
+  max-width: 50%;
+  min-width: 300px;
+}
+
+.generation-progress.with-preview .progress-content {
+  flex: 1;
+  max-width: 50%;
+}
+
+@media (max-width: 900px) {
+  .generation-progress.with-preview {
+    flex-direction: column;
+  }
+
+  .preview-panel {
+    max-width: 100%;
+    min-height: 250px;
+  }
+
+  .generation-progress.with-preview .progress-content {
+    max-width: 100%;
+  }
 }
 
 .progress-content {
@@ -283,6 +338,17 @@ function handleViewContent(contentId: string) {
 .btn-secondary:hover {
   background: var(--color-bg-card-hover);
   color: var(--color-text-primary);
+}
+
+.btn-improve {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+}
+
+.btn-improve:hover {
+  background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+  color: white;
 }
 
 .progress-tips {

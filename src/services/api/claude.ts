@@ -7,6 +7,8 @@ import type {
   GenerationProgress,
   GenerationStatus,
   JobStatusResponse,
+  ReviewProgress,
+  ReviewStatusResponse,
 } from '../../types/generation'
 import type { Subject, Grade, Language } from '../../types/content'
 import { buildApiUrl } from './url'
@@ -367,4 +369,128 @@ export async function generateContent(
 // 편의 함수: 건강 상태 확인
 export async function checkApiHealth(): Promise<boolean> {
   return claudeApi.healthCheck()
+}
+
+// 리뷰 상태 콜백 타입
+export type ReviewProgressCallback = (progress: ReviewProgress) => void
+
+// 콘텐츠 리뷰/개선 요청
+export async function reviewContent(
+  moduleId: string,
+  modulePath: string,
+  onProgress?: ReviewProgressCallback
+): Promise<{ success: boolean; issues?: ReviewStatusResponse['issues']; error?: string }> {
+  // 정적 배포 모드에서는 리뷰 기능 비활성화
+  if (isStaticMode) {
+    return {
+      success: false,
+      error: '정적 배포 모드에서는 리뷰 기능을 사용할 수 없습니다',
+    }
+  }
+
+  // 리뷰 시작 알림
+  if (onProgress) {
+    onProgress({
+      status: 'reviewing',
+      progress: 0,
+      message: '콘텐츠 품질 검토를 시작합니다...',
+    })
+  }
+
+  try {
+    // 리뷰 작업 생성
+    const createUrl = buildApiUrl('/api/generate/review', API_BASE_URL)
+    const createResponse = await fetch(createUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ moduleId, modulePath }),
+    })
+
+    if (!createResponse.ok) {
+      const errorMessage = await extractErrorMessage(createResponse, '/api/generate/review')
+      throw new Error(errorMessage)
+    }
+
+    const createResult = await parseJsonResponse<{ success?: boolean; jobId?: string; error?: string }>(
+      createResponse,
+      '/api/generate/review'
+    )
+
+    if (!createResult.success || !createResult.jobId) {
+      throw new Error(createResult.error || '리뷰 작업 생성에 실패했습니다')
+    }
+
+    const jobId = createResult.jobId
+
+    // 폴링으로 리뷰 완료 대기
+    const startTime = Date.now()
+    const maxDuration = 3 * 60 * 1000 // 3분
+
+    while (Date.now() - startTime < maxDuration) {
+      const statusUrl = buildApiUrl(`/api/generate/review/status/${jobId}`, API_BASE_URL)
+      const statusResponse = await fetch(statusUrl)
+
+      if (!statusResponse.ok) {
+        throw new Error('리뷰 상태 조회 실패')
+      }
+
+      const status = await parseJsonResponse<ReviewStatusResponse>(
+        statusResponse,
+        `/api/generate/review/status/${jobId}`
+      )
+
+      // 진행 상태 업데이트
+      if (onProgress) {
+        onProgress({
+          status: status.status === 'completed' ? 'completed' :
+                 status.status === 'failed' ? 'error' : 'reviewing',
+          progress: status.progress,
+          message: status.message,
+          issues: status.issues,
+          error: status.error,
+        })
+      }
+
+      // 완료 확인
+      if (status.status === 'completed') {
+        return {
+          success: true,
+          issues: status.issues,
+        }
+      }
+
+      // 실패 확인
+      if (status.status === 'failed') {
+        return {
+          success: false,
+          error: status.error || '리뷰에 실패했습니다',
+        }
+      }
+
+      // 대기 후 다시 폴링
+      await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS))
+    }
+
+    // 타임아웃
+    return {
+      success: false,
+      error: '리뷰 시간이 초과되었습니다',
+    }
+  } catch (error) {
+    if (onProgress) {
+      onProgress({
+        status: 'error',
+        progress: 0,
+        message: '리뷰 중 오류가 발생했습니다',
+        error: error instanceof Error ? error.message : '알 수 없는 오류',
+      })
+    }
+
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '리뷰 실패',
+    }
+  }
 }

@@ -150,3 +150,54 @@ export interface GenerationHistoryItem {
   createdAt: string
   duration: number // 생성 소요 시간 (ms)
 }
+
+// 리뷰 이슈 타입
+export interface ReviewIssue {
+  severity: 'high' | 'medium' | 'low'
+  location: string
+  message: string
+  fix?: string
+}
+
+// 리뷰 요청 타입
+export interface ReviewRequest {
+  contentId: string
+  modulePath: string
+}
+
+// 리뷰 응답 타입
+export interface ReviewResponse {
+  success: boolean
+  reviewJobId?: string
+  issues?: ReviewIssue[]
+  error?: string
+}
+
+// 리뷰 상태 응답 타입
+export interface ReviewStatusResponse {
+  jobId: string
+  status: 'pending' | 'processing' | 'completed' | 'failed'
+  progress: number
+  message: string
+  issues?: ReviewIssue[]
+  improvedFiles?: string[]
+  error?: string
+}
+
+// 리뷰 진행 상태
+export interface ReviewProgress {
+  status: 'idle' | 'reviewing' | 'completed' | 'error'
+  progress: number
+  message: string
+  issues?: ReviewIssue[]
+  error?: string
+}
+
+// 실시간 프리뷰 콘텐츠 타입
+export interface PreviewContent {
+  phase: 'html' | 'css' | 'js' | 'complete'
+  html?: string
+  css?: string
+  js?: string
+  timestamp?: string
+}
