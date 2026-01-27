@@ -467,9 +467,6 @@ onMounted(() => {
     overflow-y: auto;
   }
 
-  .viewer-container {
-    margin-right: 300px;
-  }
 }
 
 .sidebar-section {
