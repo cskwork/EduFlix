@@ -341,6 +341,66 @@
       "description": "서로 다른 분모를 가진 분수의 덧셈 방법을 시각적으로 이해하는 인터랙티브 학습",
       "thumbnail": "/contents/math/elementary/fraction-addition/assets/thumbnail.svg",
       "path": "/contents/math/elementary/fraction-addition/index.html"
+    },
+    {
+      "id": "moon-phases",
+      "title": "달의 위상 변화: 변하는 달의 비밀",
+      "subject": "science",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "type": "simulation",
+      "language": "ko",
+      "description": "달의 모양이 왜 변하는지 태양-지구-달의 위치 관계를 통해 알아보는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/science/elementary/moon-phases/index.html"
+    },
+    {
+      "id": "states-of-matter",
+      "title": "물질의 상태 변화: 분자의 비밀",
+      "subject": "science",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "type": "simulation",
+      "language": "ko",
+      "description": "고체, 액체, 기체 상태 변화와 분자 운동의 관계를 시각적으로 이해하는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/science/elementary/states-of-matter/index.html"
+    },
+    {
+      "id": "newtons-laws",
+      "title": "뉴턴의 운동 법칙: 힘과 운동의 비밀",
+      "subject": "science",
+      "gradeLevel": "middle",
+      "grade": "middle-2",
+      "type": "simulation",
+      "language": "ko",
+      "description": "뉴턴의 세 가지 운동 법칙을 실험과 시뮬레이션으로 이해하는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/science/middle/newtons-laws/index.html"
+    },
+    {
+      "id": "photosynthesis",
+      "title": "광합성: 식물의 비밀 공장",
+      "subject": "science",
+      "gradeLevel": "middle",
+      "grade": "middle-1",
+      "type": "simulation",
+      "language": "ko",
+      "description": "식물이 햇빛으로 양분을 만드는 광합성 과정을 시각적으로 탐구하는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/science/middle/photosynthesis/index.html"
+    },
+    {
+      "id": "plate-tectonics",
+      "title": "지진과 판구조론: 움직이는 대륙",
+      "subject": "science",
+      "gradeLevel": "middle",
+      "grade": "middle-2",
+      "type": "simulation",
+      "language": "ko",
+      "description": "지구의 판이 어떻게 움직이고 지진이 발생하는지 알아보는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/science/middle/plate-tectonics/index.html"
     }
   ]
 }
