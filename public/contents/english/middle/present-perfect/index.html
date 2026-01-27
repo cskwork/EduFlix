@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>현재완료시제 - Have You Ever...?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- 1. Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-wrapper">
+                <h1 class="hook-title english-text">"I went to Korea" vs "I have been to Korea"</h1>
+                <p class="hook-subtitle">둘 다 한국에 갔다는 뜻인데... 왜 다르게 말할까요?</p>
+                
+                <div class="comparison-bubbles">
+                    <div class="speech-bubble past">
+                        <span class="speaker-label">단순 과거</span>
+                        <p class="english-text">"I went to Korea last year."</p>
+                        <p>작년에 한국에 갔어요.</p>
+                    </div>
+                    <div class="speech-bubble present-perfect">
+                        <span class="speaker-label">현재완료</span>
+                        <p class="english-text">"I have been to Korea."</p>
+                        <p>한국에 가본 적 있어요.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-visual">
+                    <svg viewBox="0 0 600 120" class="timeline-svg">
+                        <!-- 타임라인 -->
+                        <defs>
+                            <linearGradient id="timeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#FFAB91"/>
+                                <stop offset="100%" style="stop-color:#81D4FA"/>
+                            </linearGradient>
+                        </defs>
+                        <rect x="50" y="50" width="500" height="10" rx="5" fill="url(#timeGradient)"/>
+                        
+                        <!-- 과거 포인트 -->
+                        <circle cx="150" cy="55" r="12" fill="#FF7043"/>
+                        <text x="150" y="90" text-anchor="middle" font-size="12" fill="#666">Past</text>
+                        <text x="150" y="30" text-anchor="middle" font-size="11" fill="#FF7043" class="english-text">went</text>
+                        
+                        <!-- 현재 포인트 -->
+                        <circle cx="500" cy="55" r="15" fill="#5C6BC0" stroke="#fff" stroke-width="3"/>
+                        <text x="500" y="90" text-anchor="middle" font-size="12" font-weight="bold" fill="#5C6BC0">Now</text>
+                        
+                        <!-- 연결 화살표 (현재완료) -->
+                        <path d="M160 40 Q330 10 490 40" fill="none" stroke="#5C6BC0" stroke-width="3" stroke-dasharray="8,4"/>
+                        <text x="330" y="20" text-anchor="middle" font-size="11" fill="#5C6BC0" class="english-text">have been (경험이 지금까지 연결!)</text>
+                    </svg>
+                </div>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">비밀 알아보기</button>
+            </div>
+        </section>
+
+        <!-- 2. Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="anchor-content">
+                    <h2>과거 시제, 알고 있죠?</h2>
+                    <p>과거에 일어난 일을 말할 때 사용했어요</p>
+                    
+                    <div class="tense-cards">
+                        <div class="tense-card">
+                            <h4>Simple Past</h4>
+                            <p class="example english-text">"I visited Seoul."</p>
+                            <p>서울을 방문했다</p>
+                        </div>
+                        <div class="tense-card">
+                            <h4>Simple Past</h4>
+                            <p class="example english-text">"She ate pizza."</p>
+                            <p>그녀는 피자를 먹었다</p>
+                        </div>
+                        <div class="tense-card">
+                            <h4>Simple Past</h4>
+                            <p class="example english-text">"They played games."</p>
+                            <p>그들은 게임을 했다</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bridge-question">
+                        <p>그런데... 그 <strong>경험</strong>이 지금까지 이어지거나,</p>
+                        <p><strong>언제인지 중요하지 않을 때</strong>는 어떻게 말할까요?</p>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="ContentApp.nextScene()">다음으로</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="story-card">
+                    <div class="character-area">
+                        <!-- 여행 유튜버 캐릭터 -->
+                        <svg viewBox="0 0 120 160" class="character-svg bounce">
+                            <!-- 머리 -->
+                            <circle cx="60" cy="45" r="30" fill="#FFE0B2"/>
+                            <!-- 머리카락 -->
+                            <path d="M30 40 Q30 15 60 15 Q90 15 90 40" fill="#5D4037"/>
+                            <ellipse cx="60" cy="20" rx="25" ry="12" fill="#5D4037"/>
+                            <!-- 선글라스 -->
+                            <rect x="38" y="38" width="18" height="12" rx="3" fill="#333"/>
+                            <rect x="64" y="38" width="18" height="12" rx="3" fill="#333"/>
+                            <line x1="56" y1="44" x2="64" y2="44" stroke="#333" stroke-width="2"/>
+                            <!-- 미소 -->
+                            <path d="M48 58 Q60 68 72 58" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+                            <!-- 몸 (티셔츠) -->
+                            <rect x="35" y="80" width="50" height="50" rx="8" fill="#26A69A"/>
+                            <!-- 카메라 -->
+                            <rect x="75" y="95" width="25" height="18" rx="3" fill="#37474F"/>
+                            <circle cx="87" cy="104" r="6" fill="#546E7A"/>
+                            <circle cx="87" cy="104" r="3" fill="#78909C"/>
+                            <!-- 팔 -->
+                            <rect x="85" y="85" width="12" height="30" rx="5" fill="#FFE0B2" transform="rotate(10 85 85)"/>
+                        </svg>
+                    </div>
+                    <div class="dialogue-box">
+                        <h3 class="english-text">Travel Vlogger "Alex"</h3>
+                        <p class="dialogue-text" id="story-text" data-text="안녕! 나는 세계 여행 유튜버 Alex야. 오늘 새로운 영상의 자기소개를 녹화하려고 해. 그런데... '한국에 가봤다', '일본 음식을 먹어봤다' 같은 경험을 영어로 어떻게 말하지? 단순히 'I went', 'I ate' 라고만 하면 뭔가 부족해 보여...">
+                            안녕! 나는 세계 여행 유튜버 Alex야. 오늘 새로운 영상의 자기소개를 녹화하려고 해...
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="problem-card">
+                    <h4>Alex의 YouTube 프로필 초안</h4>
+                    <div class="profile-preview">
+                        <div class="profile-item">
+                            <span>Countries visited:</span>
+                            <span class="english-text">"I _____ to 30 countries."</span>
+                        </div>
+                        <div class="profile-item">
+                            <span>Experience:</span>
+                            <span class="english-text">"I _____ Korean BBQ before."</span>
+                        </div>
+                        <div class="profile-item">
+                            <span>Living:</span>
+                            <span class="english-text">"I _____ in Tokyo for 2 years."</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">Alex 도와주기</button>
+            </div>
+        </section>
+
+        <!-- 4. Core Scene -->
+        <section id="core-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="core-header">
+                    <h2>현재완료 만들기</h2>
+                    <p class="instruction">단어들을 올바른 순서로 드래그해서 문장을 완성하세요!</p>
+                </div>
+                
+                <div class="formula-display">
+                    <div class="formula english-text">have/has + 과거분사 (p.p.)</div>
+                    <p class="formula-note">주어가 I/You/We/They면 have, He/She/It면 has</p>
+                </div>
+                
+                <div class="interaction-area">
+                    <!-- 문장 1 -->
+                    <div class="sentence-builder">
+                        <h4>문장 1: 한국에 가본 적 있어요</h4>
+                        <div class="sentence-template">
+                            <span class="drop-slot" data-expects="subject" id="slot1-1"></span>
+                            <span class="drop-slot" data-expects="have" id="slot1-2"></span>
+                            <span class="drop-slot" data-expects="pp" id="slot1-3"></span>
+                            <span class="english-text">to Korea.</span>
+                        </div>
+                        <div class="word-bank">
+                            <div class="word-block english-text" draggable="true" data-type="subject">I</div>
+                            <div class="word-block english-text" draggable="true" data-type="have">have</div>
+                            <div class="word-block english-text" draggable="true" data-type="pp">been</div>
+                            <div class="word-block english-text" draggable="true" data-type="wrong">went</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 문장 2 -->
+                    <div class="sentence-builder">
+                        <h4>문장 2: 그녀는 스시를 먹어본 적 있어요</h4>
+                        <div class="sentence-template">
+                            <span class="drop-slot" data-expects="subject2" id="slot2-1"></span>
+                            <span class="drop-slot" data-expects="has" id="slot2-2"></span>
+                            <span class="drop-slot" data-expects="pp2" id="slot2-3"></span>
+                            <span class="english-text">sushi.</span>
+                        </div>
+                        <div class="word-bank">
+                            <div class="word-block english-text" draggable="true" data-type="subject2">She</div>
+                            <div class="word-block english-text" draggable="true" data-type="has">has</div>
+                            <div class="word-block english-text" draggable="true" data-type="pp2">eaten</div>
+                            <div class="word-block english-text" draggable="true" data-type="wrong2">ate</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="discovery-box">
+                    <div class="discovery-icon">
+                        <svg viewBox="0 0 48 48" width="48" height="48">
+                            <circle cx="24" cy="24" r="20" fill="#FFD54F"/>
+                            <path d="M24 12 L24 28 M24 32 L24 36" stroke="#FF8F00" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <p><strong>발견!</strong> 현재완료는 <span class="english-text highlight">have/has + 과거분사</span>로 만들어요!</p>
+                    <p>과거의 경험이 <strong>지금까지 연결</strong>될 때 사용해요.</p>
+                </div>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">규칙 정리하기</button>
+            </div>
+        </section>
+
+        <!-- 5. Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="visualize-content">
+                    <h2>현재완료 사용법 정리</h2>
+                    
+                    <div class="timeline-diagram">
+                        <svg viewBox="0 0 600 180" class="timeline-svg">
+                            <!-- 배경 -->
+                            <rect x="10" y="10" width="580" height="160" rx="12" fill="#F5F5F5"/>
+                            
+                            <!-- 타임라인 -->
+                            <line x1="60" y1="100" x2="540" y2="100" stroke="#BDBDBD" stroke-width="4" stroke-linecap="round"/>
+                            
+                            <!-- 과거 영역 -->
+                            <rect x="60" y="85" width="200" height="30" rx="4" fill="#FFAB91" opacity="0.5"/>
+                            <text x="160" y="75" text-anchor="middle" font-size="13" fill="#E64A19">PAST</text>
+                            
+                            <!-- 현재 포인트 -->
+                            <circle cx="500" cy="100" r="18" fill="#5C6BC0"/>
+                            <text x="500" y="105" text-anchor="middle" font-size="11" fill="white" font-weight="bold">NOW</text>
+                            
+                            <!-- 연결 화살표 -->
+                            <path d="M160 80 C250 40 400 40 490 80" fill="none" stroke="#5C6BC0" stroke-width="3"/>
+                            <polygon points="485,75 495,80 485,85" fill="#5C6BC0"/>
+                            
+                            <!-- 레이블 -->
+                            <text x="300" y="35" text-anchor="middle" font-size="14" fill="#5C6BC0" font-weight="bold" class="english-text">Present Perfect = 과거 → 현재 연결!</text>
+                            
+                            <!-- 예시 -->
+                            <text x="300" y="145" text-anchor="middle" font-size="12" fill="#666" class="english-text">"I have lived here for 5 years." (5년 전부터 지금까지)</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="usage-cards">
+                        <div class="usage-card">
+                            <h4>1. 경험 (Experience)</h4>
+                            <p class="example english-text">"Have you ever been to Japan?"</p>
+                            <p class="korean">일본에 가본 적 있어요?</p>
+                        </div>
+                        <div class="usage-card">
+                            <h4>2. 계속 (Duration)</h4>
+                            <p class="example english-text">"I have studied English for 3 years."</p>
+                            <p class="korean">3년 동안 영어를 공부해왔어요.</p>
+                        </div>
+                        <div class="usage-card">
+                            <h4>3. 완료 (Completion)</h4>
+                            <p class="example english-text">"I have just finished my homework."</p>
+                            <p class="korean">방금 숙제를 끝냈어요.</p>
+                        </div>
+                        <div class="usage-card">
+                            <h4>4. 결과 (Result)</h4>
+                            <p class="example english-text">"She has lost her phone."</p>
+                            <p class="korean">그녀는 핸드폰을 잃어버렸어요. (지금도 없음)</p>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin-top: 24px; color: #666;">함께 자주 쓰이는 시간 표현</h4>
+                    <div class="time-words">
+                        <span class="time-word english-text">ever</span>
+                        <span class="time-word english-text">never</span>
+                        <span class="time-word english-text">already</span>
+                        <span class="time-word english-text">yet</span>
+                        <span class="time-word english-text">just</span>
+                        <span class="time-word english-text">for + 기간</span>
+                        <span class="time-word english-text">since + 시점</span>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="ContentApp.nextScene()">퀴즈 풀기</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="quiz-header">
+                    <span class="quiz-badge">Quiz Time!</span>
+                    <h3>올바른 표현을 선택하세요</h3>
+                </div>
+                
+                <div class="quiz-container">
+                    <!-- Quiz 1 -->
+                    <div class="quiz-item active" data-quiz="0">
+                        <div class="quiz-context">
+                            <svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align: middle; margin-right: 8px;">
+                                <circle cx="12" cy="12" r="10" fill="#E3F2FD"/>
+                                <path d="M12 8 L12 12 L16 14" stroke="#1976D2" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            친구에게 한국 여행 경험을 묻고 싶어요.
+                        </div>
+                        <p class="quiz-sentence english-text">
+                            <span class="quiz-blank">______</span> you ever <span class="quiz-blank">______</span> to Korea?
+                        </p>
+                        <div class="quiz-options">
+                            <button class="quiz-option english-text" onclick="ContentApp.checkQuizAnswer(0, 0)">Have ... been</button>
+                            <button class="quiz-option english-text" onclick="ContentApp.checkQuizAnswer(0, 1)">Did ... go</button>
+                            <button class="quiz-option english-text" onclick="ContentApp.checkQuizAnswer(0, 2)">Are ... going</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Quiz 2 -->
+                    <div class="quiz-item" data-quiz="1">
+                        <div class="quiz-context">
+                            <svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align: middle; margin-right: 8px;">
+                                <rect x="4" y="4" width="16" height="16" rx="2" fill="#E8F5E9"/>
+                                <path d="M8 12 L11 15 L16 9" stroke="#388E3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            5년 전부터 지금까지 서울에 살고 있어요.
+                        </div>
+                        <p class="quiz-sentence english-text">
+                            I <span class="quiz-blank">______</span> in Seoul for 5 years.
+                        </p>
+                        <div class="quiz-options">
+                            <button class="quiz-option english-text" onclick="ContentApp.checkQuizAnswer(1, 0)">have lived</button>
+                            <button class="quiz-option english-text" onclick="ContentApp.checkQuizAnswer(1, 1)">am living</button>
+                            <button class="quiz-option english-text" onclick="ContentApp.checkQuizAnswer(1, 2)">lived</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Quiz 3 -->
+                    <div class="quiz-item" data-quiz="2">
+                        <div class="quiz-context">
+                            <svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align: middle; margin-right: 8px;">
+                                <circle cx="12" cy="12" r="10" fill="#FFF3E0"/>
+                                <text x="12" y="16" text-anchor="middle" font-size="12" fill="#E65100">!</text>
+                            </svg>
+                            방금 숙제를 끝냈어요!
+                        </div>
+                        <p class="quiz-sentence english-text">
+                            I <span class="quiz-blank">______</span> just <span class="quiz-blank">______</span> my homework!
+                        </p>
+                        <div class="quiz-options">
+                            <button class="quiz-option english-text" onclick="ContentApp.checkQuizAnswer(2, 0)">have ... finished</button>
+                            <button class="quiz-option english-text" onclick="ContentApp.checkQuizAnswer(2, 1)">am ... finishing</button>
+                            <button class="quiz-option english-text" onclick="ContentApp.checkQuizAnswer(2, 2)">was ... finished</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="quiz-feedback" class="quiz-feedback"></div>
+                <div class="quiz-progress">
+                    <span id="quiz-progress-text">1 / 3</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="wrap-content">
+                    <!-- 축하 아이콘 -->
+                    <svg viewBox="0 0 120 120" class="celebration-svg">
+                        <defs>
+                            <linearGradient id="trophyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FFD54F"/>
+                                <stop offset="100%" style="stop-color:#FFA000"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- 트로피 -->
+                        <ellipse cx="60" cy="105" rx="25" ry="8" fill="#FFA000"/>
+                        <rect x="50" y="85" width="20" height="20" fill="url(#trophyGrad)"/>
+                        <path d="M30 35 Q30 70 60 80 Q90 70 90 35 L90 25 L30 25 Z" fill="url(#trophyGrad)"/>
+                        <ellipse cx="60" cy="25" rx="30" ry="10" fill="#FFE082"/>
+                        <!-- 손잡이 -->
+                        <path d="M25 35 Q10 40 15 55 Q20 65 30 55" fill="none" stroke="#FFA000" stroke-width="5"/>
+                        <path d="M95 35 Q110 40 105 55 Q100 65 90 55" fill="none" stroke="#FFA000" stroke-width="5"/>
+                        <!-- 별 -->
+                        <polygon points="60,40 63,50 73,50 65,56 68,66 60,60 52,66 55,56 47,50 57,50" fill="#FF6F00"/>
+                        <!-- 반짝이 -->
+                        <circle cx="25" cy="20" r="4" fill="#FFD54F"/>
+                        <circle cx="95" cy="15" r="3" fill="#FFD54F"/>
+                        <circle cx="15" cy="70" r="3" fill="#FFD54F"/>
+                        <circle cx="105" cy="75" r="4" fill="#FFD54F"/>
+                    </svg>
+                    
+                    <h2>Excellent Work!</h2>
+                    
+                    <div class="summary-box">
+                        <h3>오늘 배운 것</h3>
+                        <ul class="summary-list">
+                            <li><strong class="english-text">Present Perfect</strong> = <span class="english-text">have/has + 과거분사</span></li>
+                            <li><strong>경험</strong>을 말할 때: <span class="english-text">"Have you ever been to...?"</span></li>
+                            <li>과거부터 <strong>지금까지 계속</strong>될 때: <span class="english-text">"I have lived here for 5 years."</span></li>
+                            <li><strong>방금 완료</strong>된 일: <span class="english-text">"I have just finished."</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="real-examples">
+                        <h4>실생활에서 사용해보세요!</h4>
+                        <div class="example-grid">
+                            <div class="example-item">
+                                <p class="en english-text">"Have you ever tried Korean BBQ?"</p>
+                                <p class="ko">한국 BBQ 먹어본 적 있어?</p>
+                            </div>
+                            <div class="example-item">
+                                <p class="en english-text">"I have known him since 2020."</p>
+                                <p class="ko">2020년부터 그를 알아왔어.</p>
+                            </div>
+                            <div class="example-item">
+                                <p class="en english-text">"She has already left."</p>
+                                <p class="ko">그녀는 이미 떠났어.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn-secondary" onclick="location.reload()">다시 학습하기</button>
+                        <button class="btn-primary">다음 주제로</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

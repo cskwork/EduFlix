@@ -20,7 +20,10 @@
 
 body {
     font-family: 'Noto Sans KR', -apple-system, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-color);
+    background-image: url('/contents/backgrounds/bg-geometric-shapes-pastel-20260125.png');
+    background-size: cover;
+    background-attachment: fixed;
     color: var(--text-color);
     min-height: 100vh;
     overflow-x: hidden;

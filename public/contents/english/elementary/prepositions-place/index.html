@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>위치 전치사 - Where is it?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- 1. Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-wrapper">
+                <h1 class="hook-title english-text">Where is the cat?</h1>
+                <p class="hook-subtitle">고양이가 어디에 있는지 영어로 말해볼까요?</p>
+                
+                <div class="room-container">
+                    <svg viewBox="0 0 400 280" class="room-svg">
+                        <!-- 배경 -->
+                        <rect x="0" y="0" width="400" height="200" fill="#E3F2FD"/>
+                        <rect x="0" y="200" width="400" height="80" fill="#FFCCBC"/>
+                        
+                        <!-- 창문 -->
+                        <rect x="280" y="30" width="80" height="80" fill="#87CEEB" stroke="#8D6E63" stroke-width="4"/>
+                        <line x1="320" y1="30" x2="320" y2="110" stroke="#8D6E63" stroke-width="3"/>
+                        <line x1="280" y1="70" x2="360" y2="70" stroke="#8D6E63" stroke-width="3"/>
+                        
+                        <!-- 테이블 -->
+                        <rect x="100" y="140" width="150" height="15" fill="#8D6E63"/>
+                        <rect x="110" y="155" width="12" height="60" fill="#8D6E63"/>
+                        <rect x="228" y="155" width="12" height="60" fill="#8D6E63"/>
+                        
+                        <!-- 박스 (테이블 위) -->
+                        <rect x="150" y="100" width="60" height="40" fill="#FFAB91" stroke="#E64A19" stroke-width="2"/>
+                        
+                        <!-- 고양이 (박스 안) -->
+                        <ellipse cx="180" cy="115" rx="20" ry="15" fill="#FFA726"/>
+                        <polygon points="165,105 172,115 158,115" fill="#FFA726"/>
+                        <polygon points="195,105 188,115 202,115" fill="#FFA726"/>
+                        <circle cx="173" cy="112" r="3" fill="#333"/>
+                        <circle cx="187" cy="112" r="3" fill="#333"/>
+                        <path d="M176 118 Q180 122 184 118" fill="none" stroke="#333" stroke-width="1.5"/>
+                        
+                        <!-- 화살표와 레이블 -->
+                        <path d="M240 115 L270 115" stroke="#FF6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+                        <defs>
+                            <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#FF6B6B"/>
+                            </marker>
+                        </defs>
+                        <text x="290" y="120" font-size="18" font-weight="bold" fill="#FF6B6B" font-family="Nunito">in?</text>
+                        <text x="290" y="145" font-size="18" font-weight="bold" fill="#4ECDC4" font-family="Nunito">on?</text>
+                        <text x="290" y="170" font-size="18" font-weight="bold" fill="#A29BFE" font-family="Nunito">under?</text>
+                    </svg>
+                </div>
+                
+                <p style="text-align: center; font-size: 1.15rem; color: #666; margin-top: 24px;">
+                    <span class="english-text" style="color:#FF6B6B; font-weight:700;">in</span>, 
+                    <span class="english-text" style="color:#4ECDC4; font-weight:700;">on</span>, 
+                    <span class="english-text" style="color:#A29BFE; font-weight:700;">under</span>... 
+                    어떤 단어를 써야 할까요?
+                </p>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">위치 단어 배우기</button>
+            </div>
+        </section>
+
+        <!-- 2. Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 style="text-align: center; color: #FF6B6B; margin-bottom: 24px;">"어디에?"를 물을 때...</h2>
+                
+                <div style="background: #FFF5F5; padding: 24px; border-radius: 20px; text-align: center; margin-bottom: 32px;">
+                    <p class="english-text" style="font-size: 2rem; color: #FF6B6B; font-weight: 700;">Where is it?</p>
+                    <p style="font-size: 1.2rem; color: #666; margin-top: 8px;">그것은 어디에 있나요?</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+                    <div style="background: #E8F4FC; padding: 20px; border-radius: 16px; text-align: center;">
+                        <p style="font-size: 2rem;">📦</p>
+                        <p style="font-weight: 600;">박스</p>
+                        <p class="english-text" style="color: #666;">box</p>
+                    </div>
+                    <div style="background: #E8FFF8; padding: 20px; border-radius: 16px; text-align: center;">
+                        <p style="font-size: 2rem;">🪑</p>
+                        <p style="font-weight: 600;">의자</p>
+                        <p class="english-text" style="color: #666;">chair</p>
+                    </div>
+                    <div style="background: #FFF0F5; padding: 20px; border-radius: 16px; text-align: center;">
+                        <p style="font-size: 2rem;">🛏️</p>
+                        <p style="font-weight: 600;">침대</p>
+                        <p class="english-text" style="color: #666;">bed</p>
+                    </div>
+                    <div style="background: #FFFDE7; padding: 20px; border-radius: 16px; text-align: center;">
+                        <p style="font-size: 2rem;">🪟</p>
+                        <p style="font-weight: 600;">창문</p>
+                        <p class="english-text" style="color: #666;">window</p>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #FFE6CC, #FFDAB9); padding: 24px; border-radius: 20px; text-align: center; margin-top: 32px;">
+                    <p style="font-size: 1.2rem;">물건들의 <strong>위치</strong>를 말하려면?</p>
+                    <p style="font-size: 1.1rem; margin-top: 8px;">특별한 위치 단어 <strong>"전치사"</strong>가 필요해요!</p>
+                </div>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">다음으로</button>
+            </div>
+        </section>
+
+        <!-- 3. Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="character-container">
+                    <svg viewBox="0 0 120 160" class="character-svg">
+                        <!-- 강아지 캐릭터 -->
+                        <!-- 몸 -->
+                        <ellipse cx="60" cy="110" rx="35" ry="30" fill="#D2691E"/>
+                        <!-- 머리 -->
+                        <circle cx="60" cy="55" r="35" fill="#D2691E"/>
+                        <!-- 귀 -->
+                        <ellipse cx="30" cy="35" rx="12" ry="20" fill="#8B4513"/>
+                        <ellipse cx="90" cy="35" rx="12" ry="20" fill="#8B4513"/>
+                        <!-- 얼굴 -->
+                        <ellipse cx="60" cy="65" rx="18" ry="15" fill="#FFDAB9"/>
+                        <!-- 눈 -->
+                        <circle cx="48" cy="50" r="6" fill="#333"/>
+                        <circle cx="72" cy="50" r="6" fill="#333"/>
+                        <circle cx="50" cy="48" r="2" fill="white"/>
+                        <circle cx="74" cy="48" r="2" fill="white"/>
+                        <!-- 코 -->
+                        <ellipse cx="60" cy="62" rx="6" ry="4" fill="#333"/>
+                        <!-- 입 -->
+                        <path d="M50 70 Q60 80 70 70" fill="none" stroke="#333" stroke-width="2"/>
+                        <!-- 혀 -->
+                        <ellipse cx="60" cy="78" rx="6" ry="8" fill="#FF6B6B"/>
+                        <!-- 꼬리 -->
+                        <path d="M95 110 Q115 90 105 70" fill="none" stroke="#D2691E" stroke-width="10" stroke-linecap="round"/>
+                    </svg>
+                    
+                    <div class="speech-bubble">
+                        <h3 class="english-text" style="color: #FF6B6B; margin-bottom: 12px;">Puppy "Buddy"</h3>
+                        <p style="font-size: 1.05rem; line-height: 1.8;">
+                            안녕! 나는 강아지 <strong>버디(Buddy)</strong>야!<br><br>
+                            우리 집에 새 친구들이 왔는데, 자꾸 숨어버려!<br>
+                            고양이는 박스 <strong>안에</strong>, 햄스터는 테이블 <strong>아래에</strong>...<br><br>
+                            어디에 있는지 영어로 말하는 법을 알려줘!
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="background: #FFF9E6; border: 3px solid #FFE66D; border-radius: 20px; padding: 24px; margin-top: 24px;">
+                    <h4 style="color: #FF6F00; margin-bottom: 16px; text-align: center;">버디가 찾아야 할 친구들</h4>
+                    <div style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem;">🐱</div>
+                            <p class="english-text">Cat - 박스 <span style="color:#FF6B6B">안에</span></p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem;">🐹</div>
+                            <p class="english-text">Hamster - 테이블 <span style="color:#A29BFE">아래</span></p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem;">🐦</div>
+                            <p class="english-text">Bird - 창문 <span style="color:#FD79A8">옆에</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">위치 단어 배우기</button>
+            </div>
+        </section>
+
+        <!-- 4. Core Scene -->
+        <section id="core-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 style="text-align: center; color: #FF6B6B; margin-bottom: 8px;">Prepositions of Place</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 32px;">위치를 나타내는 단어들을 클릭해보세요!</p>
+                
+                <div class="prep-cards">
+                    <div class="prep-card in" onclick="ContentApp.selectPreposition(0)">
+                        <svg viewBox="0 0 60 60" class="prep-icon">
+                            <rect x="10" y="20" width="40" height="35" fill="none" stroke="#FF6B6B" stroke-width="4" rx="4"/>
+                            <circle cx="30" cy="35" r="10" fill="#FF6B6B"/>
+                        </svg>
+                        <div class="prep-word english-text" style="color:#FF6B6B;">in</div>
+                        <div class="prep-meaning">안에</div>
+                    </div>
+                    
+                    <div class="prep-card on" onclick="ContentApp.selectPreposition(1)">
+                        <svg viewBox="0 0 60 60" class="prep-icon">
+                            <rect x="10" y="40" width="40" height="10" fill="#4ECDC4" rx="2"/>
+                            <circle cx="30" cy="30" r="10" fill="#4ECDC4"/>
+                        </svg>
+                        <div class="prep-word english-text" style="color:#4ECDC4;">on</div>
+                        <div class="prep-meaning">위에</div>
+                    </div>
+                    
+                    <div class="prep-card under" onclick="ContentApp.selectPreposition(2)">
+                        <svg viewBox="0 0 60 60" class="prep-icon">
+                            <rect x="10" y="15" width="40" height="10" fill="#A29BFE" rx="2"/>
+                            <circle cx="30" cy="40" r="10" fill="#A29BFE"/>
+                        </svg>
+                        <div class="prep-word english-text" style="color:#A29BFE;">under</div>
+                        <div class="prep-meaning">아래에</div>
+                    </div>
+                    
+                    <div class="prep-card nextto" onclick="ContentApp.selectPreposition(3)">
+                        <svg viewBox="0 0 60 60" class="prep-icon">
+                            <rect x="10" y="20" width="15" height="30" fill="#FD79A8" rx="2"/>
+                            <circle cx="42" cy="35" r="10" fill="#FD79A8"/>
+                        </svg>
+                        <div class="prep-word english-text" style="color:#FD79A8;">next to</div>
+                        <div class="prep-meaning">옆에</div>
+                    </div>
+                    
+                    <div class="prep-card between" onclick="ContentApp.selectPreposition(4)">
+                        <svg viewBox="0 0 60 60" class="prep-icon">
+                            <rect x="5" y="20" width="12" height="30" fill="#74B9FF" rx="2"/>
+                            <rect x="43" y="20" width="12" height="30" fill="#74B9FF" rx="2"/>
+                            <circle cx="30" cy="35" r="8" fill="#74B9FF"/>
+                        </svg>
+                        <div class="prep-word english-text" style="color:#74B9FF;">between</div>
+                        <div class="prep-meaning">사이에</div>
+                    </div>
+                </div>
+                
+                <div id="prep-example" style="background: #F8F8F8; padding: 20px; border-radius: 16px; text-align: center; border-left: 5px solid #FF6B6B; transition: all 0.3s ease;">
+                    <p class="english-text" style="font-size: 1.2rem;">카드를 클릭하면 예문이 나타나요!</p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #FFF9E6, #FFECB3); border: 2px solid #FFB300; padding: 20px; border-radius: 16px; text-align: center; margin-top: 24px;">
+                    <p style="font-size: 1.1rem;"><strong>패턴:</strong> <span class="english-text" style="color:#FF6B6B;">The [물건] is [전치사] the [장소].</span></p>
+                </div>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">규칙 정리하기</button>
+            </div>
+        </section>
+
+        <!-- 5. Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 style="text-align: center; color: #FF6B6B; margin-bottom: 32px;">위치 전치사 정리</h2>
+                
+                <svg viewBox="0 0 600 300" style="width: 100%; max-width: 600px; display: block; margin: 0 auto;">
+                    <!-- 배경 방 -->
+                    <rect x="10" y="10" width="580" height="280" rx="20" fill="#FFF9E6"/>
+                    
+                    <!-- 박스 + in -->
+                    <rect x="40" y="120" width="80" height="60" fill="none" stroke="#8D6E63" stroke-width="4" rx="5"/>
+                    <circle cx="80" cy="140" r="15" fill="#FFA726"/>
+                    <text x="80" y="100" text-anchor="middle" font-size="14" font-weight="bold" fill="#FF6B6B" font-family="Nunito">in</text>
+                    <text x="80" y="200" text-anchor="middle" font-size="11" fill="#666">안에</text>
+                    
+                    <!-- 테이블 + on -->
+                    <rect x="160" y="150" width="80" height="10" fill="#8D6E63"/>
+                    <rect x="170" y="160" width="8" height="30" fill="#8D6E63"/>
+                    <rect x="222" y="160" width="8" height="30" fill="#8D6E63"/>
+                    <circle cx="200" cy="135" r="15" fill="#4ECDC4"/>
+                    <text x="200" y="100" text-anchor="middle" font-size="14" font-weight="bold" fill="#4ECDC4" font-family="Nunito">on</text>
+                    <text x="200" y="210" text-anchor="middle" font-size="11" fill="#666">위에</text>
+                    
+                    <!-- 테이블 + under -->
+                    <rect x="280" y="130" width="80" height="10" fill="#8D6E63"/>
+                    <rect x="290" y="140" width="8" height="50" fill="#8D6E63"/>
+                    <rect x="342" y="140" width="8" height="50" fill="#8D6E63"/>
+                    <circle cx="320" cy="165" r="15" fill="#A29BFE"/>
+                    <text x="320" y="100" text-anchor="middle" font-size="14" font-weight="bold" fill="#A29BFE" font-family="Nunito">under</text>
+                    <text x="320" y="210" text-anchor="middle" font-size="11" fill="#666">아래에</text>
+                    
+                    <!-- next to -->
+                    <rect x="400" y="140" width="30" height="50" fill="#8D6E63" rx="3"/>
+                    <circle cx="460" cy="165" r="15" fill="#FD79A8"/>
+                    <text x="430" y="100" text-anchor="middle" font-size="14" font-weight="bold" fill="#FD79A8" font-family="Nunito">next to</text>
+                    <text x="430" y="210" text-anchor="middle" font-size="11" fill="#666">옆에</text>
+                    
+                    <!-- between -->
+                    <rect x="500" y="140" width="20" height="50" fill="#8D6E63" rx="3"/>
+                    <rect x="560" y="140" width="20" height="50" fill="#8D6E63" rx="3"/>
+                    <circle cx="540" cy="165" r="12" fill="#74B9FF"/>
+                    <text x="540" y="100" text-anchor="middle" font-size="14" font-weight="bold" fill="#74B9FF" font-family="Nunito">between</text>
+                    <text x="540" y="210" text-anchor="middle" font-size="11" fill="#666">사이에</text>
+                </svg>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 32px;">
+                    <div style="background: #FFE8E8; padding: 16px; border-radius: 12px;">
+                        <p class="english-text" style="font-weight: 700; color: #FF6B6B;">in the box</p>
+                        <p style="font-size: 0.9rem; color: #666;">박스 안에</p>
+                    </div>
+                    <div style="background: #E8FFF8; padding: 16px; border-radius: 12px;">
+                        <p class="english-text" style="font-weight: 700; color: #4ECDC4;">on the table</p>
+                        <p style="font-size: 0.9rem; color: #666;">테이블 위에</p>
+                    </div>
+                    <div style="background: #F0EFFF; padding: 16px; border-radius: 12px;">
+                        <p class="english-text" style="font-weight: 700; color: #A29BFE;">under the bed</p>
+                        <p style="font-size: 0.9rem; color: #666;">침대 아래에</p>
+                    </div>
+                    <div style="background: #FFE8F0; padding: 16px; border-radius: 12px;">
+                        <p class="english-text" style="font-weight: 700; color: #FD79A8;">next to the door</p>
+                        <p style="font-size: 0.9rem; color: #666;">문 옆에</p>
+                    </div>
+                    <div style="background: #E8F4FF; padding: 16px; border-radius: 12px;">
+                        <p class="english-text" style="font-weight: 700; color: #74B9FF;">between the chairs</p>
+                        <p style="font-size: 0.9rem; color: #666;">의자들 사이에</p>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">퀴즈 풀기</button>
+            </div>
+        </section>
+
+        <!-- 6. Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 style="text-align: center; color: #FF6B6B; margin-bottom: 24px;">
+                    Quiz Time!
+                </h2>
+                <p style="text-align: center; color: #666; margin-bottom: 24px;">그림을 보고 올바른 위치 단어를 선택하세요!</p>
+                
+                <div id="quiz-container">
+                    <!-- 동적으로 생성 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-wrapper">
+                <div style="text-align: center;">
+                    <svg viewBox="0 0 120 120" width="140" height="140">
+                        <circle cx="60" cy="60" r="50" fill="#FFF9E6"/>
+                        <polygon points="60,15 68,40 95,40 73,55 82,80 60,65 40,80 47,55 25,40 52,40" fill="#FFE66D" stroke="#FF6B6B" stroke-width="2"/>
+                        <circle cx="30" cy="25" r="5" fill="#4ECDC4"/>
+                        <circle cx="90" cy="30" r="6" fill="#A29BFE"/>
+                        <circle cx="25" cy="85" r="5" fill="#FD79A8"/>
+                        <circle cx="95" cy="90" r="6" fill="#74B9FF"/>
+                    </svg>
+                    <h2 style="color: #FF6B6B; margin: 24px 0;">Great Job!</h2>
+                </div>
+                
+                <div style="background: #F8F8F8; padding: 24px; border-radius: 20px; margin: 24px 0;">
+                    <h3 style="color: #FF6B6B; margin-bottom: 16px;">오늘 배운 것</h3>
+                    <ul style="list-style: none; line-height: 2.2;">
+                        <li style="padding: 8px 0; border-bottom: 1px solid #E0E0E0;">
+                            <span class="english-text" style="color:#FF6B6B; font-weight:700;">in</span> = 안에 (3차원 공간 속)
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #E0E0E0;">
+                            <span class="english-text" style="color:#4ECDC4; font-weight:700;">on</span> = 위에 (표면에 닿아있음)
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #E0E0E0;">
+                            <span class="english-text" style="color:#A29BFE; font-weight:700;">under</span> = 아래에
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #E0E0E0;">
+                            <span class="english-text" style="color:#FD79A8; font-weight:700;">next to</span> = 옆에
+                        </li>
+                        <li style="padding: 8px 0;">
+                            <span class="english-text" style="color:#74B9FF; font-weight:700;">between</span> = 사이에
+                        </li>
+                    </ul>
+                </div>
+                
+                <div style="margin: 24px 0;">
+                    <h4 style="color: #666; margin-bottom: 16px; text-align: center;">실생활에서 사용해보세요!</h4>
+                    <div style="display: grid; gap: 12px;">
+                        <div style="background: white; padding: 16px; border-radius: 12px; border-left: 4px solid #FF6B6B;">
+                            <p class="english-text" style="font-weight: 600;">"My phone is in my bag."</p>
+                            <p style="font-size: 0.9rem; color: #888;">내 핸드폰은 가방 안에 있어.</p>
+                        </div>
+                        <div style="background: white; padding: 16px; border-radius: 12px; border-left: 4px solid #4ECDC4;">
+                            <p class="english-text" style="font-weight: 600;">"The book is on the desk."</p>
+                            <p style="font-size: 0.9rem; color: #888;">책은 책상 위에 있어.</p>
+                        </div>
+                        <div style="background: white; padding: 16px; border-radius: 12px; border-left: 4px solid #A29BFE;">
+                            <p class="english-text" style="font-weight: 600;">"The cat is under the sofa."</p>
+                            <p style="font-size: 0.9rem; color: #888;">고양이는 소파 아래에 있어.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn-secondary" onclick="location.reload()">다시 학습하기</button>
+                    <button class="btn-primary">다음 주제로</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -23,8 +23,10 @@
 
 body {
     font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: url('../../backgrounds/bg-edu-travel-gradient-20260126.png') no-repeat center center fixed;
+    background: var(--bg-color);
+    background-image: url('/contents/backgrounds/bg-geometric-shapes-pastel-20260125.png');
     background-size: cover;
+    background-attachment: fixed;
     color: var(--text-color);
     min-height: 100vh;
     overflow-x: hidden;

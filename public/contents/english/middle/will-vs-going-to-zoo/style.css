@@ -23,10 +23,10 @@
 
 body {
     font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
-    /* Fixed: Replaced external background with CSS gradient for portability */
-    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-    background-attachment: fixed;
+    background: var(--bg-color);
+    background-image: url('/contents/backgrounds/bg-geometric-shapes-pastel-20260125.png');
     background-size: cover;
+    background-attachment: fixed;
     color: var(--text-color);
     min-height: 100vh;
     overflow-x: hidden;

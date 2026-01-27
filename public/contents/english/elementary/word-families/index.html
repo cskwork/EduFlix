@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Families - 명사 만들기 마법</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- 1. Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-wrapper">
+                <h1 class="hook-title english-text">create → creation</h1>
+                <p class="hook-subtitle">동사가 어떻게 명사로 변신할까요? 비밀의 접미사!</p>
+                
+                <div class="transform-visual">
+                    <div class="word-card verb" onclick="ContentApp.playAudio('create')">
+                        <div class="label">Verb (동사)</div>
+                        <div class="word english-text">create</div>
+                        <div class="meaning">창조하다</div>
+                    </div>
+                    
+                    <div class="transform-arrow">
+                        <svg viewBox="0 0 80 40" width="80" height="40">
+                            <defs>
+                                <linearGradient id="arrowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#1565C0"/>
+                                    <stop offset="100%" style="stop-color:#7B1FA2"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M5 20 L55 20 M45 10 L55 20 L45 30" fill="none" stroke="url(#arrowGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <rect x="60" y="8" width="15" height="24" rx="4" fill="#FF6F00"/>
+                            <text x="67.5" y="24" text-anchor="middle" font-size="8" fill="white" font-weight="bold">tion</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="word-card noun" onclick="ContentApp.playAudio('creation')">
+                        <div class="label">Noun (명사)</div>
+                        <div class="word english-text">creation</div>
+                        <div class="meaning">창조, 창작물</div>
+                    </div>
+                </div>
+                
+                <p style="text-align: center; font-size: 1.15rem; color: #666;">
+                    <span class="english-text" style="color:#FF6F00; font-weight:700;">-tion</span>이 붙으면 동사가 명사로! 이 마법의 접미사를 알아볼까요?
+                </p>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">접미사 알아보기</button>
+            </div>
+        </section>
+
+        <!-- 2. Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 style="text-align: center; color: #00897B; margin-bottom: 24px;">동사와 명사, 기억하죠?</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin: 32px 0;">
+                    <div style="background: #E3F2FD; padding: 24px; border-radius: 16px; text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 12px;">
+                            <svg viewBox="0 0 60 60" width="60" height="60">
+                                <circle cx="30" cy="30" r="25" fill="#1565C0"/>
+                                <path d="M20 30 L25 35 L40 20" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h4 style="color: #1565C0; margin-bottom: 8px;">Verb (동사)</h4>
+                        <p style="color: #666;">행동, 동작을 나타내요</p>
+                        <p class="english-text" style="margin-top: 8px; font-weight: 600;">run, eat, create</p>
+                    </div>
+                    
+                    <div style="background: #F3E5F5; padding: 24px; border-radius: 16px; text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 12px;">
+                            <svg viewBox="0 0 60 60" width="60" height="60">
+                                <rect x="10" y="15" width="40" height="30" rx="5" fill="#7B1FA2"/>
+                                <circle cx="30" cy="30" r="8" fill="white"/>
+                            </svg>
+                        </div>
+                        <h4 style="color: #7B1FA2; margin-bottom: 8px;">Noun (명사)</h4>
+                        <p style="color: #666;">사물, 개념을 나타내요</p>
+                        <p class="english-text" style="margin-top: 8px; font-weight: 600;">book, idea, creation</p>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #B2DFDB, #80CBC4); padding: 24px; border-radius: 16px; text-align: center;">
+                    <p style="font-size: 1.2rem;">그런데... 행동 자체를 <strong>사물/개념</strong>처럼 표현하고 싶을 때는?</p>
+                    <p style="font-size: 1.1rem; margin-top: 8px;">"창조하다"가 아니라 "창조(물)" 자체를 말하고 싶다면?</p>
+                </div>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">다음으로</button>
+            </div>
+        </section>
+
+        <!-- 3. Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="content-wrapper">
+                <div style="display: flex; align-items: center; gap: 32px; flex-wrap: wrap; justify-content: center;">
+                    <svg viewBox="0 0 140 180" width="160" height="200">
+                        <!-- 캐릭터: 게임 개발자 -->
+                        <!-- 머리 -->
+                        <circle cx="70" cy="50" r="30" fill="#FFE0B2"/>
+                        <!-- 머리카락 -->
+                        <path d="M40 45 Q40 20 70 20 Q100 20 100 45" fill="#37474F"/>
+                        <!-- 안경 -->
+                        <rect x="50" y="42" width="16" height="12" rx="3" fill="none" stroke="#333" stroke-width="2"/>
+                        <rect x="74" y="42" width="16" height="12" rx="3" fill="none" stroke="#333" stroke-width="2"/>
+                        <line x1="66" y1="48" x2="74" y2="48" stroke="#333" stroke-width="2"/>
+                        <!-- 눈 -->
+                        <circle cx="58" cy="48" r="3" fill="#333"/>
+                        <circle cx="82" cy="48" r="3" fill="#333"/>
+                        <!-- 미소 -->
+                        <path d="M58 60 Q70 70 82 60" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+                        <!-- 몸 (후드티) -->
+                        <rect x="40" y="85" width="60" height="55" rx="10" fill="#00897B"/>
+                        <!-- 주머니 -->
+                        <rect x="55" y="110" width="30" height="20" rx="5" fill="#00695C"/>
+                        <!-- 노트북 -->
+                        <rect x="95" y="100" width="30" height="20" rx="3" fill="#37474F"/>
+                        <rect x="97" y="102" width="26" height="14" rx="2" fill="#4DD0E1"/>
+                        <!-- 손 -->
+                        <circle cx="105" cy="125" r="8" fill="#FFE0B2"/>
+                    </svg>
+                    
+                    <div style="flex: 1; min-width: 280px; background: #E0F2F1; padding: 24px; border-radius: 20px;">
+                        <h3 class="english-text" style="color: #00897B; margin-bottom: 12px;">Game Developer "Minjun"</h3>
+                        <p style="font-size: 1.05rem; line-height: 1.8;">
+                            안녕! 나는 모바일 게임을 만드는 <strong>민준</strong>이야.<br><br>
+                            새 게임의 앱스토어 설명을 쓰려고 하는데...<br>
+                            "이 게임은 create합니다"보다 "이 게임의 <strong class="english-text">creation</strong>은..." 이렇게 쓰면 더 전문적으로 보이잖아!<br><br>
+                            동사를 명사로 바꾸는 방법을 알려줘!
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="background: #FFF3E0; border: 2px solid #FF6F00; border-radius: 16px; padding: 24px; margin-top: 24px;">
+                    <h4 style="color: #FF6F00; margin-bottom: 12px;">민준이의 앱스토어 설명 초안</h4>
+                    <div style="background: white; padding: 16px; border-radius: 12px;">
+                        <p class="english-text" style="line-height: 2;">
+                            "This game's ______ (create) took 2 years."<br>
+                            "The ______ (educate) value is excellent."<br>
+                            "Every ______ (decide) affects the story."
+                        </p>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">민준이 도와주기</button>
+            </div>
+        </section>
+
+        <!-- 4. Core Scene -->
+        <section id="core-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 style="text-align: center; color: #00897B; margin-bottom: 8px;">Word Transformer</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 24px;">동사를 명사로 바꾸는 마법의 기계!</p>
+                
+                <div class="word-machine">
+                    <div class="machine-header">
+                        <h3 class="english-text">Verb → Noun Converter</h3>
+                        <p>동사에 접미사를 붙여 명사로 변환!</p>
+                    </div>
+                    <div class="conveyor-belt">
+                        <div class="input-slot">
+                            <div class="slot-label">Input (동사)</div>
+                            <div class="slot-word english-text" id="input-word">create</div>
+                        </div>
+                        
+                        <div class="suffix-box english-text" id="suffix-display">-tion</div>
+                        
+                        <div class="output-slot">
+                            <div class="slot-label">Output (명사)</div>
+                            <div class="slot-word english-text" id="output-word">creation</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px;">
+                        <button onclick="ContentApp.prevWord()" style="background: #455A64; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">
+                            <svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align: middle;"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                            이전
+                        </button>
+                        <button onclick="ContentApp.playAudio(ContentApp.wordData[ContentApp.currentWord].noun)" style="background: #FF6F00; color: white; border: none; padding: 12px 32px; border-radius: 8px; cursor: pointer; font-size: 1rem;">
+                            발음 듣기
+                        </button>
+                        <button onclick="ContentApp.nextWord()" style="background: #455A64; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">
+                            다음
+                            <svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align: middle;"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="rule-grid">
+                    <div class="rule-card">
+                        <h4>규칙 1: -te로 끝나는 동사</h4>
+                        <div class="pattern english-text">-te → -tion</div>
+                        <div class="examples">
+                            <p class="english-text">create → creation</p>
+                            <p class="english-text">educate → education</p>
+                            <p class="english-text">celebrate → celebration</p>
+                        </div>
+                    </div>
+                    <div class="rule-card">
+                        <h4>규칙 2: -de로 끝나는 동사</h4>
+                        <div class="pattern english-text">-de → -sion</div>
+                        <div class="examples">
+                            <p class="english-text">decide → decision</p>
+                            <p class="english-text">explode → explosion</p>
+                            <p class="english-text">include → inclusion</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #FFF8E1, #FFECB3); border: 2px solid #FFB300; padding: 20px; border-radius: 16px; text-align: center; margin-top: 20px;">
+                    <p style="font-size: 1.1rem;"><strong>발견!</strong> <span class="english-text" style="color:#FF6F00;">-tion</span>과 <span class="english-text" style="color:#FF6F00;">-sion</span>을 붙이면 동사가 명사로 변신해요!</p>
+                </div>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">규칙 정리하기</button>
+            </div>
+        </section>
+
+        <!-- 5. Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 style="text-align: center; color: #00897B; margin-bottom: 32px;">-tion/-sion 규칙 정리</h2>
+                
+                <svg viewBox="0 0 600 180" style="width: 100%; max-width: 600px; display: block; margin: 0 auto;">
+                    <rect x="10" y="10" width="280" height="160" rx="16" fill="#E3F2FD" stroke="#1565C0" stroke-width="3"/>
+                    <rect x="310" y="10" width="280" height="160" rx="16" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="3"/>
+                    
+                    <text x="150" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#1565C0">-tion (션)</text>
+                    <text x="450" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#7B1FA2">-sion (젼)</text>
+                    
+                    <text x="150" y="75" text-anchor="middle" font-size="12" fill="#666">-te로 끝나는 동사</text>
+                    <text x="450" y="75" text-anchor="middle" font-size="12" fill="#666">-de, -ss로 끝나는 동사</text>
+                    
+                    <text x="150" y="105" text-anchor="middle" font-size="13" fill="#333" font-family="Poppins">create → creation</text>
+                    <text x="150" y="125" text-anchor="middle" font-size="13" fill="#333" font-family="Poppins">operate → operation</text>
+                    <text x="150" y="145" text-anchor="middle" font-size="13" fill="#333" font-family="Poppins">educate → education</text>
+                    
+                    <text x="450" y="105" text-anchor="middle" font-size="13" fill="#333" font-family="Poppins">decide → decision</text>
+                    <text x="450" y="125" text-anchor="middle" font-size="13" fill="#333" font-family="Poppins">discuss → discussion</text>
+                    <text x="450" y="145" text-anchor="middle" font-size="13" fill="#333" font-family="Poppins">express → expression</text>
+                </svg>
+                
+                <div style="background: #F8F9FA; padding: 24px; border-radius: 16px; margin: 32px 0;">
+                    <h4 style="color: #00897B; margin-bottom: 16px; text-align: center;">언제 사용하면 좋을까요?</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <div style="background: white; padding: 16px; border-radius: 12px; text-align: center;">
+                            <p style="font-weight: 600; color: #00897B;">에세이/보고서</p>
+                            <p style="font-size: 0.9rem; color: #666; margin-top: 8px;">격식있는 글쓰기에서 자주 사용</p>
+                        </div>
+                        <div style="background: white; padding: 16px; border-radius: 12px; text-align: center;">
+                            <p style="font-weight: 600; color: #00897B;">발표</p>
+                            <p style="font-size: 0.9rem; color: #666; margin-top: 8px;">전문적인 느낌을 줄 때</p>
+                        </div>
+                        <div style="background: white; padding: 16px; border-radius: 12px; text-align: center;">
+                            <p style="font-weight: 600; color: #00897B;">학술 글</p>
+                            <p style="font-size: 0.9rem; color: #666; margin-top: 8px;">객관적인 표현이 필요할 때</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #E8F5E9; padding: 20px; border-radius: 16px; text-align: center;">
+                    <p style="font-size: 1.1rem;"><strong>Tip:</strong> <span class="english-text">-tion/-sion</span> 명사들은 대부분 <strong>라틴어</strong>에서 왔어요. 한자어처럼 격식있는 느낌!</p>
+                </div>
+                
+                <button class="btn-primary" onclick="ContentApp.nextScene()">퀴즈 풀기</button>
+            </div>
+        </section>
+
+        <!-- 6. Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 style="text-align: center; color: #00897B; margin-bottom: 24px;">
+                    <svg viewBox="0 0 24 24" width="28" height="28" style="vertical-align: middle;">
+                        <circle cx="12" cy="12" r="10" fill="#FF6F00"/>
+                        <text x="12" y="16" text-anchor="middle" font-size="12" fill="white" font-weight="bold">?</text>
+                    </svg>
+                    Quiz Time!
+                </h2>
+                <p style="text-align: center; color: #666; margin-bottom: 24px;">괄호 안의 동사를 명사로 바꿔 문장을 완성하세요!</p>
+                
+                <div id="quiz-container">
+                    <!-- 동적으로 생성 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-wrapper">
+                <div style="text-align: center;">
+                    <svg viewBox="0 0 120 120" width="140" height="140">
+                        <circle cx="60" cy="60" r="50" fill="#E0F2F1"/>
+                        <polygon points="60,20 68,45 95,45 73,60 80,85 60,70 40,85 47,60 25,45 52,45" fill="#00897B"/>
+                        <circle cx="30" cy="30" r="6" fill="#FF6F00"/>
+                        <circle cx="90" cy="25" r="5" fill="#7B1FA2"/>
+                        <circle cx="95" cy="85" r="6" fill="#FF6F00"/>
+                        <circle cx="25" cy="90" r="5" fill="#1565C0"/>
+                    </svg>
+                    <h2 style="color: #00897B; margin: 24px 0;">Excellent Work!</h2>
+                </div>
+                
+                <div style="background: #F8F9FA; padding: 24px; border-radius: 20px; margin: 24px 0;">
+                    <h3 style="color: #00897B; margin-bottom: 16px;">오늘 배운 것</h3>
+                    <ul style="list-style: none; line-height: 2.2;">
+                        <li style="padding: 8px 0; border-bottom: 1px solid #E0E0E0;">
+                            <strong class="english-text" style="color:#FF6F00;">-tion / -sion</strong>은 동사를 명사로 바꾸는 접미사
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #E0E0E0;">
+                            <span class="english-text">-te</span>로 끝나는 동사 → <span class="english-text" style="color:#1565C0;">-tion</span> (create → creation)
+                        </li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #E0E0E0;">
+                            <span class="english-text">-de/-ss</span>로 끝나는 동사 → <span class="english-text" style="color:#7B1FA2;">-sion</span> (decide → decision)
+                        </li>
+                        <li style="padding: 8px 0;">
+                            에세이, 발표 등 격식있는 글에서 많이 사용!
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="verb english-text">create</span>
+                        <span class="arrow">→</span>
+                        <span class="noun english-text">creation</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="verb english-text">educate</span>
+                        <span class="arrow">→</span>
+                        <span class="noun english-text">education</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="verb english-text">decide</span>
+                        <span class="arrow">→</span>
+                        <span class="noun english-text">decision</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="verb english-text">discuss</span>
+                        <span class="arrow">→</span>
+                        <span class="noun english-text">discussion</span>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn-secondary" onclick="location.reload()">다시 학습하기</button>
+                    <button class="btn-primary">다음 주제로</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

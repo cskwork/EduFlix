@@ -401,6 +401,66 @@
       "description": "지구의 판이 어떻게 움직이고 지진이 발생하는지 알아보는 인터랙티브 학습",
       "thumbnail": "",
       "path": "/contents/science/middle/plate-tectonics/index.html"
+    },
+    {
+      "id": "countable-uncountable",
+      "title": "셀 수 있을까? - Countable vs Uncountable",
+      "subject": "english",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "type": "quiz",
+      "language": "en",
+      "description": "셀 수 있는 명사와 셀 수 없는 명사의 차이를 배우는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/english/elementary/countable-uncountable/index.html"
+    },
+    {
+      "id": "magic-e",
+      "title": "Magic E - 마법의 E",
+      "subject": "english",
+      "gradeLevel": "elementary",
+      "grade": "elementary-2",
+      "type": "quiz",
+      "language": "en",
+      "description": "단어 끝 Silent E가 모음 발음을 바꾸는 규칙을 배우는 파닉스 학습",
+      "thumbnail": "",
+      "path": "/contents/english/elementary/magic-e/index.html"
+    },
+    {
+      "id": "prepositions-place",
+      "title": "위치 전치사 - Where is it?",
+      "subject": "english",
+      "gradeLevel": "elementary",
+      "grade": "elementary-3",
+      "type": "quiz",
+      "language": "en",
+      "description": "in, on, under, next to, between 등 위치 전치사를 배우는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/english/elementary/prepositions-place/index.html"
+    },
+    {
+      "id": "present-perfect",
+      "title": "현재완료시제 - Have You Ever...?",
+      "subject": "english",
+      "gradeLevel": "middle",
+      "grade": "middle-1",
+      "type": "quiz",
+      "language": "en",
+      "description": "have/has + 과거분사 구조의 현재완료시제를 배우는 인터랙티브 학습",
+      "thumbnail": "",
+      "path": "/contents/english/middle/present-perfect/index.html"
+    },
+    {
+      "id": "word-families",
+      "title": "Word Families - 명사 만들기 마법",
+      "subject": "english",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "type": "quiz",
+      "language": "en",
+      "description": "-tion/-sion 접미사로 동사를 명사로 바꾸는 단어 변환 학습",
+      "thumbnail": "",
+      "path": "/contents/english/elementary/word-families/index.html"
     }
   ]
 }

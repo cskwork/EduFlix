@@ -20,6 +20,10 @@ const isStaticMode = import.meta.env.VITE_STATIC_MODE === 'true'
 const POLL_INTERVAL_MS = 2000 // 2초마다 폴링
 const MAX_POLL_DURATION_MS = 5 * 60 * 1000 // 최대 5분
 
+// 공통 에러 메시지: 백엔드 연결/환경변수 안내
+const API_UNAVAILABLE_MESSAGE =
+  '백엔드 API(/api)가 연결되어 있는지 확인해주세요. 정적 배포라면 VITE_STATIC_MODE=true, 백엔드를 분리했다면 VITE_API_URL 설정이 필요합니다.'
+
 // 생성 요청 타입
 export interface ContentGenerationOptions {
   interests: string[]
@@ -31,6 +35,45 @@ export interface ContentGenerationOptions {
 
 // 생성 상태 콜백 타입
 export type ProgressCallback = (progress: GenerationProgress) => void
+
+// JSON 응답 여부 확인
+function isJsonResponse(response: Response): boolean {
+  const contentType = response.headers.get('content-type')?.toLowerCase() || ''
+  return contentType.includes('application/json')
+}
+
+// JSON 응답 파싱 (HTML 등 비정상 응답 방어)
+async function parseJsonResponse<T>(response: Response, context: string): Promise<T> {
+  if (!isJsonResponse(response)) {
+    // HTML 응답 등은 body를 살짝 읽어 디버깅 단서를 남긴다
+    const preview = (await response.text().catch(() => '')).slice(0, 80)
+    const hint = preview.toLowerCase().includes('<!doctype') ? ' HTML 응답이 감지되었습니다.' : ''
+    throw new Error(`API 응답이 JSON이 아닙니다 (${context}).${hint} ${API_UNAVAILABLE_MESSAGE}`)
+  }
+
+  try {
+    return (await response.json()) as T
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'JSON 파싱 실패'
+    throw new Error(`JSON 파싱에 실패했습니다 (${context}): ${message}`)
+  }
+}
+
+// 에러 응답 메시지 추출 (JSON이 아니어도 안전하게 처리)
+async function extractErrorMessage(response: Response, context: string): Promise<string> {
+  if (isJsonResponse(response)) {
+    const errorData = await response.json().catch(() => null as { error?: string } | null)
+    if (errorData?.error) {
+      return errorData.error
+    }
+    return `HTTP 오류: ${response.status}`
+  }
+
+  // JSON이 아닌 경우 (정적 index.html 등)에는 안내 메시지를 우선 제공
+  const preview = (await response.text().catch(() => '')).slice(0, 80)
+  const hint = preview.toLowerCase().includes('<!doctype') ? ' HTML 응답이 감지되었습니다.' : ''
+  return `API 오류 응답이 JSON이 아닙니다 (${context}).${hint} ${API_UNAVAILABLE_MESSAGE}`
+}
 
 // 상태 매핑: JobStatusResponse → GenerationProgress
 function mapJobStatusToProgress(jobStatus: JobStatusResponse): GenerationProgress {
@@ -57,6 +100,29 @@ export class ClaudeApiClient {
 
   constructor(baseUrl: string = API_BASE_URL) {
     this.baseUrl = baseUrl
+  }
+
+  // 백엔드 API 연결 상태 확인 (정적 index.html 응답 방어 포함)
+  private async ensureApiAvailable(): Promise<void> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/health`)
+
+      if (!response.ok) {
+        throw new Error(`헬스 체크 실패: ${response.status}`)
+      }
+
+      const data = await parseJsonResponse<{ status?: string }>(response, '/api/health')
+      if (data.status !== 'ok') {
+        throw new Error('헬스 체크 응답이 예상과 다릅니다')
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : API_UNAVAILABLE_MESSAGE
+      // 메시지에 이미 안내 문구가 포함되어 있지 않다면 붙여준다
+      if (message.includes('VITE_API_URL') || message.includes('백엔드')) {
+        throw new Error(message)
+      }
+      throw new Error(`${message}. ${API_UNAVAILABLE_MESSAGE}`)
+    }
   }
 
   // 콘텐츠 생성 요청 (비동기 작업 생성 + 폴링)
@@ -91,6 +157,9 @@ export class ClaudeApiClient {
     }
 
     try {
+      // 정적 배포/프록시 오동작 시 HTML 응답을 조기에 감지한다
+      await this.ensureApiAvailable()
+
       // API 요청 구성
       const request: GenerationRequest = {
         interests: options.interests,
@@ -118,11 +187,14 @@ export class ClaudeApiClient {
       })
 
       if (!createResponse.ok) {
-        const errorData = await createResponse.json().catch(() => ({ error: '서버 오류' }))
-        throw new Error(errorData.error || `HTTP 오류: ${createResponse.status}`)
+        const errorMessage = await extractErrorMessage(createResponse, '/api/generate')
+        throw new Error(errorMessage)
       }
 
-      const createResult = await createResponse.json()
+      const createResult = await parseJsonResponse<{ success?: boolean; jobId?: string; error?: string }>(
+        createResponse,
+        '/api/generate'
+      )
 
       if (!createResult.success || !createResult.jobId) {
         throw new Error(createResult.error || '작업 생성에 실패했습니다')
@@ -184,11 +256,17 @@ export class ClaudeApiClient {
       const statusResponse = await fetch(`${this.baseUrl}/api/generate/status/${jobId}`)
 
       if (!statusResponse.ok) {
-        const errorData = await statusResponse.json().catch(() => ({ error: '상태 조회 실패' }))
-        throw new Error(errorData.error || `상태 조회 HTTP 오류: ${statusResponse.status}`)
+        const errorMessage = await extractErrorMessage(
+          statusResponse,
+          `/api/generate/status/${jobId}`
+        )
+        throw new Error(errorMessage)
       }
 
-      const status = (await statusResponse.json()) as JobStatusResponse
+      const status = await parseJsonResponse<JobStatusResponse>(
+        statusResponse,
+        `/api/generate/status/${jobId}`
+      )
 
       // 진행 상태 업데이트
       if (onProgress) {
@@ -240,7 +318,10 @@ export class ClaudeApiClient {
         throw new Error('상태 조회 실패')
       }
 
-      const data = (await response.json()) as JobStatusResponse
+      const data = await parseJsonResponse<JobStatusResponse>(
+        response,
+        `/api/generate/status/${jobId}`
+      )
       return mapJobStatusToProgress(data)
     } catch {
       return {
@@ -255,7 +336,11 @@ export class ClaudeApiClient {
   async healthCheck(): Promise<boolean> {
     try {
       const response = await fetch(`${this.baseUrl}/api/health`)
-      return response.ok
+      if (!response.ok) {
+        return false
+      }
+      const data = await parseJsonResponse<{ status?: string }>(response, '/api/health')
+      return data.status === 'ok'
     } catch {
       return false
     }
