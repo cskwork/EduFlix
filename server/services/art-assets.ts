@@ -129,17 +129,17 @@ export async function createJob(
       body: JSON.stringify(artAssetsRequest),
     })
 
-    const data = await response.json()
+    const data = await response.json() as Record<string, unknown>
 
     if (!response.ok) {
       return {
         success: false,
-        error: data.error || `HTTP ${response.status}`,
+        error: (data.error as string) || `HTTP ${response.status}`,
         code: 'INTERNAL_ERROR',
       }
     }
 
-    return data as ArtAssetsJobResponse
+    return data as unknown as ArtAssetsJobResponse
   } catch (error) {
     console.error('art-assets API call failed:', error)
     return {
@@ -156,17 +156,17 @@ export async function getJobStatus(
 ): Promise<ArtAssetsStatusResponse | ArtAssetsErrorResponse> {
   try {
     const response = await fetch(`${ART_ASSETS_URL}/api/generate-content/status/${jobId}`)
-    const data = await response.json()
+    const data = await response.json() as Record<string, unknown>
 
     if (!response.ok) {
       return {
         success: false,
-        error: data.error || `HTTP ${response.status}`,
+        error: (data.error as string) || `HTTP ${response.status}`,
         code: 'JOB_NOT_FOUND',
       }
     }
 
-    return data as ArtAssetsStatusResponse
+    return data as unknown as ArtAssetsStatusResponse
   } catch (error) {
     console.error('art-assets status check failed:', error)
     return {
