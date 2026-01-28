@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터 시각화 허브 | 동아출판 중학 수학</title>
+    <meta name="description" content="인터랙티브 차트로 통계와 데이터 분석을 배워보세요!">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #06b6d4; --secondary: #8b5cf6; --accent: #fbbf24;
+            --success: #10b981; --danger: #ef4444; --dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #164e63 100%);
+            color: #fff; min-height: 100vh;
+        }
+        #game-container { width: 100vw; min-height: 100vh; position: relative; padding: 20px; }
+        
+        #top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 24px; margin-bottom: 24px;
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 20px; border: 1px solid rgba(255,255,255,0.2);
+        }
+        .stat-box { display: flex; align-items: center; gap: 10px; }
+        .stat-box .icon { font-size: 22px; }
+        .stat-box .value { font-size: 20px; font-weight: 700; color: var(--accent); }
+
+        #main-content {
+            display: grid; grid-template-columns: 280px 1fr 300px;
+            gap: 24px; max-width: 1400px; margin: 0 auto;
+        }
+
+        .panel {
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 20px; padding: 24px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .panel h3 { color: var(--accent); margin-bottom: 20px; font-size: 18px; text-align: center; }
+
+        .chart-btn {
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; padding: 14px; margin: 8px 0;
+            background: rgba(6,182,212,0.2); border: none; border-radius: 12px;
+            color: #fff; font-size: 14px; cursor: pointer; transition: all 0.3s;
+        }
+        .chart-btn:hover { background: rgba(6,182,212,0.4); transform: translateX(5px); }
+        .chart-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .chart-btn .chart-icon { font-size: 24px; }
+
+        #chart-area {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 500px;
+        }
+        #chart-container {
+            width: 100%; max-width: 600px; height: 400px;
+            background: rgba(0,0,0,0.3); border-radius: 20px;
+            padding: 20px; position: relative;
+        }
+        #chart-title { text-align: center; margin-bottom: 20px; font-size: 20px; font-weight: 700; }
+
+        .bar-chart { display: flex; align-items: flex-end; justify-content: space-around; height: 300px; padding: 20px; }
+        .bar {
+            width: 60px; background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 8px 8px 0 0; transition: height 0.5s ease; position: relative;
+            cursor: pointer;
+        }
+        .bar:hover { filter: brightness(1.2); transform: scaleX(1.1); }
+        .bar-label { position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); font-size: 12px; white-space: nowrap; }
+        .bar-value { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 14px; font-weight: 700; }
+
+        .pie-chart {
+            width: 250px; height: 250px; border-radius: 50%;
+            position: relative; margin: 0 auto;
+        }
+        .pie-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 20px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+        .legend-color { width: 16px; height: 16px; border-radius: 4px; }
+
+        .line-chart { position: relative; height: 300px; padding: 20px; }
+        .line-chart svg { width: 100%; height: 100%; }
+
+        #question-area {
+            background: rgba(0,0,0,0.3); border-radius: 16px; padding: 24px;
+            margin-top: 24px; text-align: center;
+        }
+        #question-text { font-size: 18px; margin-bottom: 20px; line-height: 1.6; }
+        #answer-options { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .option-btn {
+            padding: 14px 28px; background: rgba(6,182,212,0.3);
+            border: 2px solid rgba(6,182,212,0.5); border-radius: 12px;
+            color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s;
+        }
+        .option-btn:hover { background: rgba(6,182,212,0.5); transform: translateY(-2px); }
+        .option-btn.correct { background: var(--success); border-color: var(--success); }
+        .option-btn.wrong { background: var(--danger); border-color: var(--danger); }
+
+        #stats-panel .stat-item {
+            background: rgba(0,0,0,0.2); padding: 16px; border-radius: 12px; margin-bottom: 12px;
+        }
+        #stats-panel .stat-label { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+        #stats-panel .stat-value { font-size: 24px; font-weight: 700; color: var(--secondary); }
+
+        .data-table { width: 100%; margin-top: 16px; }
+        .data-table th, .data-table td {
+            padding: 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .data-table th { color: var(--accent); font-size: 12px; }
+
+        #feedback-message {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 64px; font-weight: 900; opacity: 0; pointer-events: none; z-index: 100;
+        }
+        #feedback-message.show { opacity: 1; animation: pop 0.5s ease; }
+        @keyframes pop { 50% { transform: translate(-50%,-50%) scale(1.2); } }
+
+        #start-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0f172a, #1e3a5f, #164e63);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100;
+        }
+        #start-screen h1 {
+            font-size: clamp(40px, 8vw, 72px); font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--accent), var(--primary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+        #start-screen .subtitle {
+            font-size: clamp(16px, 3vw, 22px); color: rgba(255,255,255,0.8);
+            margin-bottom: 48px; max-width: 600px; line-height: 1.6; text-align: center;
+        }
+        #start-btn {
+            background: linear-gradient(135deg, var(--accent), #f59e0b);
+            border: none; border-radius: 50px; padding: 22px 64px;
+            color: var(--dark); font-size: 24px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 10px 40px rgba(251,191,36,0.5); transition: all 0.3s;
+        }
+        #start-btn:hover { transform: scale(1.05) translateY(-3px); }
+
+        @media (max-width: 1024px) {
+            #main-content { grid-template-columns: 1fr; }
+            .panel:first-child, .panel:last-child { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="top-bar">
+            <div class="stat-box"><span class="icon">📊</span><span>레벨</span><span class="value" id="level">1</span></div>
+            <div class="stat-box"><span class="icon">⭐</span><span>점수</span><span class="value" id="score">0</span></div>
+            <div class="stat-box"><span class="icon">✅</span><span>정답</span><span class="value" id="correct">0</span></div>
+        </div>
+
+        <div id="main-content">
+            <div class="panel" id="chart-selector">
+                <h3>📈 차트 유형</h3>
+                <button class="chart-btn active" data-chart="bar"><span class="chart-icon">📊</span>막대 그래프</button>
+                <button class="chart-btn" data-chart="pie"><span class="chart-icon">🥧</span>원 그래프</button>
+                <button class="chart-btn" data-chart="line"><span class="chart-icon">📈</span>꺾은선 그래프</button>
+            </div>
+
+            <div class="panel" id="chart-area">
+                <div id="chart-container">
+                    <div id="chart-title">학생들의 좋아하는 과일</div>
+                    <div id="chart-display"></div>
+                </div>
+                <div id="question-area">
+                    <div id="question-text">이 그래프에서 가장 인기 있는 과일은 무엇일까요?</div>
+                    <div id="answer-options"></div>
+                </div>
+            </div>
+
+            <div class="panel" id="stats-panel">
+                <h3>📋 데이터 정보</h3>
+                <div class="stat-item"><div class="stat-label">총합</div><div class="stat-value" id="data-sum">0</div></div>
+                <div class="stat-item"><div class="stat-label">평균</div><div class="stat-value" id="data-avg">0</div></div>
+                <div class="stat-item"><div class="stat-label">최댓값</div><div class="stat-value" id="data-max">0</div></div>
+                <div class="stat-item"><div class="stat-label">최솟값</div><div class="stat-value" id="data-min">0</div></div>
+                <table class="data-table" id="data-table">
+                    <thead><tr><th>항목</th><th>값</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="feedback-message"></div>
+
+    <div id="start-screen">
+        <h1>📊 데이터 시각화 허브</h1>
+        <p class="subtitle">다양한 그래프로 데이터를 분석하고 통계를 배워보세요! 평균, 최댓값, 최솟값을 찾아보세요!</p>
+        <button id="start-btn">분석 시작! 🚀</button>
+    </div>
+
+    <script>
+        const datasets = [
+            { title: '학생들의 좋아하는 과일', labels: ['사과', '바나나', '딸기', '포도', '오렌지'], type: 'category' },
+            { title: '요일별 도서관 방문자 수', labels: ['월', '화', '수', '목', '금'], type: 'trend' },
+            { title: '과목별 평균 점수', labels: ['국어', '수학', '영어', '과학', '사회'], type: 'comparison' },
+            { title: '월별 기온 변화 (°C)', labels: ['1월', '3월', '5월', '7월', '9월', '11월'], type: 'trend' },
+            { title: '반별 운동회 점수', labels: ['1반', '2반', '3반', '4반'], type: 'comparison' }
+        ];
+
+        const questionTypes = [
+            { q: (d) => `이 그래프에서 가장 큰 값을 가진 항목은?`, a: (d) => d.labels[d.values.indexOf(Math.max(...d.values))], opts: (d) => d.labels },
+            { q: (d) => `이 그래프에서 가장 작은 값을 가진 항목은?`, a: (d) => d.labels[d.values.indexOf(Math.min(...d.values))], opts: (d) => d.labels },
+            { q: (d) => `모든 값의 합은 얼마일까요?`, a: (d) => d.values.reduce((a,b)=>a+b,0), opts: (d) => shuffleArray([d.values.reduce((a,b)=>a+b,0), d.values.reduce((a,b)=>a+b,0)+10, d.values.reduce((a,b)=>a+b,0)-5, Math.round(d.values.reduce((a,b)=>a+b,0)*1.2)]) },
+            { q: (d) => `평균값(소수점 첫째 자리)은 얼마일까요?`, a: (d) => (d.values.reduce((a,b)=>a+b,0)/d.values.length).toFixed(1), opts: (d) => { const avg = (d.values.reduce((a,b)=>a+b,0)/d.values.length); return shuffleArray([avg.toFixed(1), (avg+2).toFixed(1), (avg-1.5).toFixed(1), (avg*1.1).toFixed(1)]); } }
+        ];
+
+        let currentChartType = 'bar', currentData = null, currentQuestion = null;
+        let score = 0, level = 1, correct = 0, gameStarted = false;
+        const colors = ['#06b6d4', '#8b5cf6', '#f43f5e', '#fbbf24', '#10b981', '#ec4899'];
+
+        function shuffleArray(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+        function generateData() {
+            const dataset = datasets[Math.floor(Math.random() * datasets.length)];
+            const values = dataset.labels.map(() => 5 + Math.floor(Math.random() * 30 * (1 + level * 0.2)));
+            currentData = { ...dataset, values };
+            return currentData;
+        }
+
+        function drawBarChart(data) {
+            const container = document.getElementById('chart-display');
+            const maxVal = Math.max(...data.values);
+            container.innerHTML = '<div class="bar-chart">' + data.values.map((v, i) => 
+                `<div class="bar" style="height: ${(v/maxVal)*250}px; background: linear-gradient(180deg, ${colors[i%colors.length]}, ${colors[(i+1)%colors.length]})">
+                    <span class="bar-value">${v}</span>
+                    <span class="bar-label">${data.labels[i]}</span>
+                </div>`
+            ).join('') + '</div>';
+        }
+
+        function drawPieChart(data) {
+            const container = document.getElementById('chart-display');
+            const total = data.values.reduce((a, b) => a + b, 0);
+            let gradientParts = [], currentAngle = 0;
+            data.values.forEach((v, i) => {
+                const angle = (v / total) * 360;
+                gradientParts.push(`${colors[i%colors.length]} ${currentAngle}deg ${currentAngle + angle}deg`);
+                currentAngle += angle;
+            });
+            container.innerHTML = `
+                <div class="pie-chart" style="background: conic-gradient(${gradientParts.join(', ')})"></div>
+                <div class="pie-legend">${data.labels.map((l, i) => 
+                    `<div class="legend-item"><div class="legend-color" style="background: ${colors[i%colors.length]}"></div>${l} (${Math.round(data.values[i]/total*100)}%)</div>`
+                ).join('')}</div>`;
+        }
+
+        function drawLineChart(data) {
+            const container = document.getElementById('chart-display');
+            const maxVal = Math.max(...data.values);
+            const points = data.values.map((v, i) => {
+                const x = 50 + (i / (data.values.length - 1)) * 400;
+                const y = 250 - (v / maxVal) * 200;
+                return { x, y, v, label: data.labels[i] };
+            });
+            const pathD = points.map((p, i) => (i === 0 ? 'M' : 'L') + `${p.x},${p.y}`).join(' ');
+            container.innerHTML = `<div class="line-chart"><svg viewBox="0 0 500 300">
+                <path d="${pathD}" fill="none" stroke="${colors[0]}" stroke-width="3"/>
+                ${points.map((p, i) => `
+                    <circle cx="${p.x}" cy="${p.y}" r="8" fill="${colors[i%colors.length]}"/>
+                    <text x="${p.x}" y="${p.y - 15}" text-anchor="middle" fill="white" font-size="12">${p.v}</text>
+                    <text x="${p.x}" y="290" text-anchor="middle" fill="white" font-size="10">${p.label}</text>
+                `).join('')}
+            </svg></div>`;
+        }
+
+        function drawChart() {
+            document.getElementById('chart-title').textContent = currentData.title;
+            switch (currentChartType) {
+                case 'bar': drawBarChart(currentData); break;
+                case 'pie': drawPieChart(currentData); break;
+                case 'line': drawLineChart(currentData); break;
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const sum = currentData.values.reduce((a, b) => a + b, 0);
+            document.getElementById('data-sum').textContent = sum;
+            document.getElementById('data-avg').textContent = (sum / currentData.values.length).toFixed(1);
+            document.getElementById('data-max').textContent = Math.max(...currentData.values);
+            document.getElementById('data-min').textContent = Math.min(...currentData.values);
+            document.querySelector('#data-table tbody').innerHTML = currentData.labels.map((l, i) => 
+                `<tr><td>${l}</td><td>${currentData.values[i]}</td></tr>`).join('');
+        }
+
+        function generateQuestion() {
+            generateData();
+            drawChart();
+            currentQuestion = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+            document.getElementById('question-text').textContent = currentQuestion.q(currentData);
+            const opts = currentQuestion.opts(currentData);
+            document.getElementById('answer-options').innerHTML = opts.map(o => 
+                `<button class="option-btn" data-answer="${o}">${o}</button>`).join('');
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', () => checkAnswer(btn.dataset.answer, btn));
+            });
+        }
+
+        function checkAnswer(answer, btn) {
+            const correctAnswer = currentQuestion.a(currentData);
+            const isCorrect = answer.toString() === correctAnswer.toString();
+            document.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents = 'none');
+            if (isCorrect) {
+                btn.classList.add('correct');
+                correct++; score += 100 + level * 20;
+                if (correct % 5 === 0) level++;
+                showFeedback('🎉 정답!', '#10b981');
+            } else {
+                btn.classList.add('wrong');
+                document.querySelectorAll('.option-btn').forEach(b => {
+                    if (b.dataset.answer === correctAnswer.toString()) b.classList.add('correct');
+                });
+                score = Math.max(0, score - 20);
+                showFeedback(`❌ 정답: ${correctAnswer}`, '#ef4444');
+            }
+            document.getElementById('score').textContent = score;
+            document.getElementById('correct').textContent = correct;
+            document.getElementById('level').textContent = level;
+            setTimeout(generateQuestion, 1500);
+        }
+
+        function showFeedback(msg, color) {
+            const fb = document.getElementById('feedback-message');
+            fb.textContent = msg; fb.style.color = color; fb.style.textShadow = `0 0 40px ${color}`;
+            fb.classList.add('show');
+            setTimeout(() => fb.classList.remove('show'), 1200);
+        }
+
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('start-screen').style.display = 'none';
+                generateQuestion();
+            }, 500);
+        });
+
+        document.querySelectorAll('.chart-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentChartType = btn.dataset.chart;
+                document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                drawChart();
+            });
+        });
+    </script>
+</body>
+</html>

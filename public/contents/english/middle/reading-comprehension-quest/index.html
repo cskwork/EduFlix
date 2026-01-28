@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Comprehension Quest - Middle School English</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #2c1810 0%, #1a1a2e 100%);
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        .stat-box {
+            background: rgba(255, 215, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 12px 24px;
+            color: #ffd700;
+            font-size: 16px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            font-weight: bold;
+        }
+
+        #story-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 1000px;
+            height: 70%;
+            display: flex;
+            gap: 20px;
+            pointer-events: auto;
+        }
+
+        #story-content {
+            flex: 1.5;
+            background: rgba(255, 248, 220, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 3px solid #8B4513;
+            position: relative;
+        }
+
+        #story-content::before {
+            content: "📜";
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 30px;
+        }
+
+        #story-title {
+            font-size: 28px;
+            color: #8B4513;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #8B4513;
+            padding-bottom: 15px;
+        }
+
+        #story-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #2c1810;
+            text-align: justify;
+        }
+
+        #questions-panel {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #4a4a4a;
+        }
+
+        .question-block {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .question-block:last-child {
+            border-bottom: none;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1a1a2e;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            color: #8B4513;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        .option {
+            display: block;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .option:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .option.correct {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border-color: #11998e;
+        }
+
+        .option.wrong {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+            border-color: #eb3349;
+        }
+
+        #submit-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 40px;
+            color: #1a1a2e;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        #submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.6);
+        }
+
+        #submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2c1810 0%, #1a1a2e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        #start-screen h1 {
+            font-size: 56px;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #start-screen p {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        #start-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 20px 60px;
+            color: #1a1a2e;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        #start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.7);
+        }
+
+        #progress-bar-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffaa00);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        #result-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 248, 220, 0.98);
+            padding: 40px;
+            border-radius: 20px;
+            border: 3px solid #ffd700;
+            text-align: center;
+            z-index: 50;
+            display: none;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        #result-display h2 {
+            font-size: 36px;
+            color: #8B4513;
+            margin-bottom: 20px;
+        }
+
+        #result-score {
+            font-size: 48px;
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        #result-message {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        #next-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 40px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.5);
+        }
+
+        #celebration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            z-index: 60;
+        }
+
+        #celebration h2 {
+            font-size: 64px;
+            color: #ffd700;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+            animation: celebrate 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes celebrate {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="canvas-container"></div>
+
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box">📖 Story: <span id="story-number">1</span>/10</div>
+                <div class="stat-box">⭐ Score: <span id="score">0</span></div>
+                <div class="stat-box">🏆 Best: <span id="best-score">0</span></div>
+            </div>
+
+            <div id="story-area">
+                <div id="story-content">
+                    <h2 id="story-title">Loading...</h2>
+                    <div id="story-text"></div>
+                </div>
+
+                <div id="questions-panel"></div>
+            </div>
+
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div id="result-display">
+            <h2>📚 Story Complete!</h2>
+            <div id="result-score">0/3</div>
+            <div id="result-message"></div>
+            <button id="next-btn">Next Story →</button>
+        </div>
+
+        <div id="celebration"><h2>🎓 Reading Master! 🎓</h2></div>
+
+        <div id="start-screen">
+            <h1>📖 Reading Comprehension Quest</h1>
+            <p>Embark on an adventure through captivating stories! Read each passage carefully, analyze the content, and answer questions to test your comprehension. Each story is a new adventure waiting to be explored!</p>
+            <button id="start-btn">Begin Quest!</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        // Story data for middle school level
+        const storiesData = [
+            {
+                title: "The Secret Garden Discovery",
+                text: "Lily had always been fascinated by the old mansion at the end of Maple Street. The ivy-covered walls and crumbling towers held secrets from a bygone era. One afternoon, while exploring the overgrown garden, she discovered something remarkable. Hidden behind a wall of wild roses was an ancient wooden door, its surface etched with intricate carvings of mythical creatures. With trembling hands, she pushed the heavy door, and it creaked open to reveal a forgotten world inside. The garden beyond was a magical paradise, filled with flowers that glowed with an ethereal light. In the center stood a magnificent tree, its branches stretching toward the sky like ancient arms reaching for the stars. Lily realized she had found something truly special, a place where imagination and reality intertwined in the most beautiful way.",
+                questions: [
+                    {
+                        text: "What did Lily discover hidden behind the wall of wild roses?",
+                        options: ["An old treasure chest", "An ancient wooden door", "A mysterious book", "A hidden pathway"],
+                        correct: 1
+                    },
+                    {
+                        text: "What did the garden look like behind the door?",
+                        options: ["A dark and gloomy forest", "A desert with cacti", "A magical paradise with glowing flowers", "A simple vegetable garden"],
+                        correct: 2
+                    },
+                    {
+                        text: "What does the word 'ethereal' suggest about the light from the flowers?",
+                        options: ["It was bright and harsh", "It was delicate and heavenly", "It was flickering and weak", "It was ordinary and plain"],
+                        correct: 1
+                    }
+                ]
+            },
+            {
+                title: "The Young Inventor's Dream",
+                text: "Ten-year-old Alex had a workspace in the corner of his bedroom that looked like a miniature laboratory. Tools were scattered across his desk, and sketches of inventions covered the walls. His latest project was a device that could help people with disabilities walk again. For months, Alex had been studying human anatomy, watching videos of physical therapy, and learning about robotics. His parents worried he was spending too much time alone, but Alex knew this was his calling. One evening, after countless failed attempts, his prototype finally worked. It wasn't perfect – it wobbled and made strange noises – but it moved on its own. Alex called his parents into the room, tears of joy streaming down his face. They watched in amazement as the mechanical legs took their first steps across the floor. That night, Alex fell asleep with a smile, knowing that with dedication and perseverance, even the most impossible dreams could come true.",
+                questions: [
+                    {
+                        text: "What was Alex working on creating?",
+                        options: ["A robot that could speak", "A device to help people walk again", "A flying machine", "A computer program"],
+                        correct: 1
+                    },
+                    {
+                        text: "How did Alex's parents feel about his project?",
+                        options: ["They were angry about the mess", "They were worried about his time alone at first", "They never showed interest", "They helped him from the beginning"],
+                        correct: 1
+                    },
+                    {
+                        text: "What lesson did Alex learn from his experience?",
+                        options: ["Inventions are impossible", "Working alone is always best", "Dedication and perseverance can make dreams come true", "Parents should do everything for children"],
+                        correct: 2
+                    }
+                ]
+            },
+            {
+                title: "The Storm's Lesson",
+                text: "The coastal village of Port Haven had never experienced a storm like the one approaching that evening. Hurricane warnings blared from every radio, but old Captain Miller refused to leave his lighthouse. 'This lighthouse has stood for a hundred years,' he grumbled, 'and it will stand tonight.' His daughter, a meteorologist named Emma, had pleaded with him to evacuate, but he was stubborn. As the storm's fury unleashed, Emma watched from the safety of her weather station, her heart pounding. She saw the waves crashing against the lighthouse, but the beam of light kept sweeping across the dark sea, guiding ships to safety. In the morning, Emma rushed to the lighthouse, fearing the worst. She found her father exhausted but alive, still keeping the light burning. 'Someone had to be here for the sailors,' he said with a tired smile. Emma hugged him tightly, understanding that sometimes duty calls louder than fear, and that true heroes are those who stay when others would run away.",
+                questions: [
+                    {
+                        text: "Why did Captain Miller refuse to leave the lighthouse?",
+                        options: ["He didn't believe the storm warnings", "He felt it was his duty to keep the light burning for sailors", "He wanted to prove his bravery", "He couldn't find transportation"],
+                        correct: 1
+                    },
+                    {
+                        text: "What was Emma's profession?",
+                        options: ["A lighthouse keeper", "A sailor", "A meteorologist", "A coast guard officer"],
+                        correct: 2
+                    },
+                    {
+                        text: "What does the story suggest about true heroes?",
+                        options: ["They are never afraid", "They stay when others would run away because of duty", "They always receive medals", "They are young and strong"],
+                        correct: 1
+                    }
+                ]
+            },
+            {
+                title: "The Lost City Discovery",
+                text: "Archaeologist Dr. Elena Rodriguez had spent her entire career searching for the legendary City of Gold. Ancient texts described a magnificent civilization that had vanished without a trace, leaving behind only rumors and myths. After years of studying maps, translating forgotten languages, and enduring countless failed expeditions, Elena finally found a promising lead deep in the Amazon rainforest. With her team, she trekked through dense vegetation, facing swarms of insects and unpredictable weather. On the twelfth day, they discovered it – a temple entrance covered in vines, hidden for centuries. Inside, they found golden artifacts, ancient manuscripts, and proof of a sophisticated society that had mastered agriculture, astronomy, and medicine. Elena held up a golden pendant, tears filling her eyes. History was not just about kings and battles, she realized, but about the everyday lives of people who had dreams, families, and stories waiting to be told. As the sun set over the jungle, Elena made a silent promise to share this civilization's legacy with the world.",
+                questions: [
+                    {
+                        text: "What had Dr. Elena Rodriguez been searching for?",
+                        options: ["Ancient dinosaur fossils", "The legendary City of Gold", "A lost treasure map", "A new species of plant"],
+                        correct: 1
+                    },
+                    {
+                        text: "Where did Elena finally find the city?",
+                        options: ["In the desert", "In the mountains", "Deep in the Amazon rainforest", "Near the ocean"],
+                        correct: 2
+                    },
+                    {
+                        text: "What realization did Elena have about history?",
+                        options: ["Only famous people matter", "History is about gold and treasure", "History is about the everyday lives and stories of people", "Ancient civilizations were not advanced"],
+                        correct: 2
+                    }
+                ]
+            },
+            {
+                title: "The Musician's Journey",
+                text: "Marcus had always dreamed of becoming a professional musician, but growing up in a small town with limited resources made that dream seem impossible. His family couldn't afford music lessons or instruments, so Marcus taught himself using old library books and a borrowed guitar. Every day after school, he practiced until his fingers bled, pouring his heart into every chord and melody. The townspeople would gather outside his window to listen, marveling at the raw emotion in his music. One day, a famous music producer passed through town and heard Marcus playing. The producer was so moved that he offered Marcus a record deal on the spot. Marcus couldn't believe it – years of hard work and sacrifice had finally paid off. His first album went platinum, and he performed in sold-out concerts around the world. But Marcus never forgot where he came from. He returned to his hometown, built a community music center, and started a scholarship program for other young musicians with big dreams but small wallets. 'Music belongs to everyone,' Marcus told the gathered crowd, 'and anyone with passion and dedication deserves a chance to share their song with the world.'",
+                questions: [
+                    {
+                        text: "How did Marcus learn to play music?",
+                        options: ["He had private lessons", "He taught himself using library books and a borrowed guitar", "His parents taught him", "He attended a music school"],
+                        correct: 1
+                    },
+                    {
+                        text: "What happened after a famous music producer heard Marcus play?",
+                        options: ["The producer ignored him", "The producer offered him a record deal", "The producer told him to give up", "The producer asked him to become a roadie"],
+                        correct: 1
+                    },
+                    {
+                        text: "What did Marcus do after becoming successful?",
+                        options: ["He forgot his hometown", "He built a community music center and scholarship program", "He moved to a different country", "He stopped playing music"],
+                        correct: 1
+                    }
+                ]
+            },
+            {
+                title: "The Space Colony Challenge",
+                text: "In the year 2150, humanity had established its first permanent colony on Mars, named New Horizon. The colony of 500 residents lived in biodomes that provided oxygen, water, and food grown in hydroponic gardens. Among them was young engineer Zara, whose job was to maintain the colony's life support systems. When a massive dust storm damaged one of the main oxygen generators, panic spread through the colony. The backup system could only last 48 hours, and rescue from Earth would take at least a week. Zara refused to give up. She worked around the clock, modifying other systems to compensate, and discovered an innovative way to reroute power from the solar arrays. Her solution was unconventional and risky, but it worked. The colony survived, and Zara became a hero. 'This experience taught us something important,' Zara told the colony council. 'We can't always wait for Earth to save us. We need to be self-reliant and innovative.' Inspired by her words, the colonists began developing new technologies and training everyone in emergency procedures. New Horizon became not just a colony, but a symbol of human resilience and ingenuity in the face of adversity.",
+                questions: [
+                    {
+                        text: "What was Zara's role in the Mars colony?",
+                        options: ["Commander of the colony", "Life support systems engineer", "Hydroponic garden manager", "Solar array technician"],
+                        correct: 1
+                    },
+                    {
+                        text: "How long would it take for rescue to arrive from Earth?",
+                        options: ["A few hours", "A day", "At least a week", "A month"],
+                        correct: 2
+                    },
+                    {
+                        text: "What important lesson did Zara teach the colony?",
+                        options: ["They should always wait for help from Earth", "They needed to be self-reliant and innovative", "Dust storms weren't dangerous", "Life support systems don't matter"],
+                        correct: 1
+                    }
+                ]
+            },
+            {
+                title: "The Ancient Tree's Secret",
+                text: "In the center of Oakwood Forest stood the Elder Tree, a magnificent oak that had witnessed five centuries of history. Local legend said the tree possessed wisdom, and villagers would bring their problems to it, hoping for guidance. Young Sarah was skeptical of these stories until her grandmother took her to visit. 'Listen closely,' her grandmother whispered, 'and the tree will teach you.' Sarah closed her eyes and heard not just rustling leaves and singing birds, but something deeper – the murmuring of wind through ancient branches, the gentle creaking of wood, and the faintest whispers of countless conversations from generations past. She felt a profound connection to all who had stood beneath these branches over the centuries. When she opened her eyes, Sarah understood that wisdom wasn't magic – it was the accumulation of experiences, the lessons learned by those who came before us. The Elder Tree wasn't supernatural; it was a living library of human history, its rings storing memories of joy, sorrow, triumph, and resilience. Sarah returned often, not to ask for answers, but to learn from the quiet strength of a tree that had weathered every storm and still reached for the sun.",
+                questions: [
+                    {
+                        text: "What did Sarah hear when she closed her eyes at the Elder Tree?",
+                        options: ["Only birds singing", "Wind, wood creaking, and whispers of past conversations", "Nothing at all", "A magical voice speaking to her"],
+                        correct: 1
+                    },
+                    {
+                        text: "What did Sarah realize about wisdom?",
+                        options: ["It was magical power", "It was the accumulation of experiences from those who came before", "Only old trees had wisdom", "It came from asking questions"],
+                        correct: 1
+                    },
+                    {
+                        text: "How did Sarah's visits to the tree change?",
+                        options: ["She stopped visiting", "She came to learn from the tree's quiet strength rather than ask for answers", "She brought more people to ask questions", "She tried to cut it down"],
+                        correct: 1
+                    }
+                ]
+            },
+            {
+                title: "The Athlete's Comeback",
+                text: "Olympic swimmer Jordan Chen had been training for the world championship for four years, but a devastating car accident two weeks before the competition left him with a broken leg. Doctors said he might never walk properly again, let alone compete. Jordan spent months in rehabilitation, fighting through pain and despair. 'This isn't the end of your story,' his coach told him, 'just a different chapter.' Inspired, Jordan began training again, even before his leg had fully healed. The world championship passed without him, but Jordan had a new goal: the Paralympics. His modified prosthetic leg was different from his natural one, requiring him to relearn swimming techniques. Jordan faced skepticism from some who thought he was aiming too high, but he ignored them. Two years later, Jordan stood on the Paralympic podium, a gold medal around his neck. His story inspired millions – not because he had won, but because he had refused to let his accident define him. 'Champions aren't made by what they achieve when everything goes right,' Jordan told reporters, 'but by how they respond when everything goes wrong.'",
+                questions: [
+                    {
+                        text: "What happened to Jordan before the world championship?",
+                        options: ["He got sick", "He was injured in a car accident", "He decided to retire", "He lost his motivation"],
+                        correct: 1
+                    },
+                    {
+                        text: "What new goal did Jordan set after his accident?",
+                        options: ["To become a coach", "To compete in the Paralympics", "To write a book about his experience", "To start a swimming school"],
+                        correct: 1
+                    },
+                    {
+                        text: "What does Jordan believe defines true champions?",
+                        options: ["Winning every competition", "How they respond when things go wrong", "Having natural talent", "Getting the best equipment"],
+                        correct: 1
+                    }
+                ]
+            },
+            {
+                title: "The Library of Dreams",
+                text: "Hidden in the narrow streets of an old European city was a bookstore called The Library of Dreams. Its owner, Mr. Abernathy, was a gentle old man with sparkling eyes who claimed every book held a piece of someone's dream. Young Mia, an aspiring writer who struggled with self-doubt, stumbled upon the shop one rainy afternoon. As she browsed the dusty shelves, Mr. Abernathy appeared beside her. 'You're looking for something to inspire you,' he observed. He led her to a special section containing manuscripts that had never been published – ordinary people's stories, poems, and memoirs. 'These are dreams that never came true,' he explained softly, 'but they deserve to be read just as much as any famous book.' Mia spent the afternoon reading these hidden treasures – stories of love, loss, hope, and everyday heroism written by people whose names history would never remember. She realized that everyone has a story worth telling, and that being published wasn't what made writing meaningful. The act of expressing oneself, of giving voice to thoughts and feelings, was valuable in itself. That night, Mia went home and started writing again, not for publication, but for the joy of creating. Years later, when her first novel was published, Mia returned to The Library of Dreams to thank Mr. Abernathy. The shop was empty, with only a note on the door: 'Every dream that inspires another dream becomes eternal.'",
+                questions: [
+                    {
+                        text: "What was special about the manuscripts in Mr. Abernathy's special section?",
+                        options: ["They were written by famous authors", "They were unpublished stories by ordinary people", "They were about magical creatures", "They were ancient texts"],
+                        correct: 1
+                    },
+                    {
+                        text: "What did Mia realize about writing?",
+                        options: ["Only published writing matters", "Everyone has a story worth telling", "Writing is only about making money", "You should only write about famous people"],
+                        correct: 1
+                    },
+                    {
+                        text: "What did Mia find when she returned to the shop years later?",
+                        options: ["Mr. Abernathy was waiting", "The shop was closed forever", "The shop was empty with a note about inspiring dreams", "The shop had changed completely"],
+                        correct: 2
+                    }
+                ]
+            },
+            {
+                title: "The Time Capsule",
+                text: "As part of their school's centennial celebration, Mrs. Anderson's class was assigned to create a time capsule to be opened 100 years in the future. The students debated what to include – should they put in technology, popular items, or something more personal? One student, quiet Luis, suggested something different. 'Let's put in letters about our hopes and fears,' he said. 'So people in the future will know what it felt like to be us.' The class agreed, and each student wrote a heartfelt letter about their dreams, worries about the future, and what mattered most to them. They added photos, drawings, and small personal items that told their individual stories. When it came time to bury the capsule, the students realized they weren't just preserving objects – they were creating a bridge across time. A hundred years from now, someone would read these letters and understand that, despite all the changes in technology and society, some things remain constant: the desire to be understood, the hope for a better future, and the importance of connection between human beings. As they lowered the capsule into the ground, Luis smiled. 'One day,' he said, 'someone will know that we were real, that we felt deeply, and that we believed in tomorrow.'",
+                questions: [
+                    {
+                        text: "What did Luis suggest the class include in the time capsule?",
+                        options: ["The latest technology", "Letters about their hopes and fears", "Valuable jewelry", "Awards and certificates"],
+                        correct: 1
+                    },
+                    {
+                        text: "What did the students realize as they buried the capsule?",
+                        options: ["They were wasting time", "They were creating a bridge across time to future generations", "They should have put in more valuable items", "The project wasn't important"],
+                        correct: 1
+                    },
+                    {
+                        text: "What does Luis believe people in the future will understand?",
+                        options: ["That they had advanced technology", "That they were real people who felt deeply and believed in tomorrow", "That they were perfect and had no problems", "That they never made mistakes"],
+                        correct: 1
+                    }
+                ]
+            }
+        ];
+
+        // Game state
+        let currentStoryIndex = 0;
+        let score = 0;
+        let bestScore = 0;
+        let answers = {};
+        let gameStarted = false;
+
+        // Three.js setup
+        let scene, camera, renderer;
+        let books = [];
+        let floatingPapers = [];
+        let magicalLights = [];
+
+        function initThreeJS() {
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 40;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Create mystical library environment
+            createBooks();
+            createFloatingPapers();
+            createMagicalLights();
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+
+            const pointLight1 = new THREE.PointLight(0xffd700, 1, 100);
+            pointLight1.position.set(30, 20, 30);
+            scene.add(pointLight1);
+
+            const pointLight2 = new THREE.PointLight(0x8B4513, 0.8, 100);
+            pointLight2.position.set(-30, -10, 20);
+            scene.add(pointLight2);
+
+            // Handle resize
+            window.addEventListener('resize', onWindowResize);
+
+            // Start animation
+            animate();
+        }
+
+        function createBooks() {
+            const bookColors = [0x8B4513, 0x2c1810, 0xffd700, 0xd4af37];
+
+            for (let i = 0; i < 25; i++) {
+                const width = 2 + Math.random() * 2;
+                const height = 2.5 + Math.random() * 1.5;
+                const depth = 0.5 + Math.random() * 0.5;
+
+                const geometry = new THREE.BoxGeometry(width, height, depth);
+                const material = new THREE.MeshPhongMaterial({
+                    color: bookColors[Math.floor(Math.random() * bookColors.length)],
+                    shininess: 60
+                });
+                const book = new THREE.Mesh(geometry, material);
+
+                book.position.x = (Math.random() - 0.5) * 60;
+                book.position.y = (Math.random() - 0.5) * 40;
+                book.position.z = (Math.random() - 0.5) * 30 - 10;
+
+                book.rotation.y = (Math.random() - 0.5) * 0.5;
+                book.rotation.z = (Math.random() - 0.5) * 0.3;
+
+                book.userData = {
+                    rotationSpeed: (Math.random() - 0.5) * 0.003,
+                    floatSpeed: Math.random() * 0.005,
+                    floatOffset: Math.random() * Math.PI * 2
+                };
+
+                scene.add(book);
+                books.push(book);
+            }
+        }
+
+        function createFloatingPapers() {
+            const paperGeometry = new THREE.PlaneGeometry(2, 3, 4, 4);
+            const paperMaterial = new THREE.MeshPhongMaterial({
+                color: 0xfffaf0,
+                transparent: true,
+                opacity: 0.7,
+                side: THREE.DoubleSide
+            });
+
+            for (let i = 0; i < 15; i++) {
+                const paper = new THREE.Mesh(paperGeometry, paperMaterial);
+                paper.position.x = (Math.random() - 0.5) * 50;
+                paper.position.y = (Math.random() - 0.5) * 35;
+                paper.position.z = (Math.random() - 0.5) * 25 - 15;
+
+                paper.userData = {
+                    rotationSpeed: (Math.random() - 0.5) * 0.01,
+                    floatSpeed: Math.random() * 0.008,
+                    floatOffset: Math.random() * Math.PI * 2
+                };
+
+                scene.add(paper);
+                floatingPapers.push(paper);
+            }
+        }
+
+        function createMagicalLights() {
+            const lightGeometry = new THREE.SphereGeometry(0.3, 8, 8);
+            const lightMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700 });
+
+            for (let i = 0; i < 30; i++) {
+                const light = new THREE.Mesh(lightGeometry, lightMaterial);
+                light.position.x = (Math.random() - 0.5) * 60;
+                light.position.y = (Math.random() - 0.5) * 40;
+                light.position.z = (Math.random() - 0.5) * 30;
+
+                light.userData = {
+                    floatSpeed: 0.01 + Math.random() * 0.02,
+                    floatOffset: Math.random() * Math.PI * 2
+                };
+
+                scene.add(light);
+                magicalLights.push(light);
+            }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.001;
+
+            // Animate books
+            books.forEach(book => {
+                book.rotation.y += book.userData.rotationSpeed;
+                book.position.y += Math.sin(time + book.userData.floatOffset) * book.userData.floatSpeed;
+            });
+
+            // Animate papers
+            floatingPapers.forEach(paper => {
+                paper.rotation.x += paper.userData.rotationSpeed;
+                paper.rotation.y += paper.userData.rotationSpeed;
+                paper.position.y += Math.sin(time + paper.userData.floatOffset) * paper.userData.floatSpeed;
+            });
+
+            // Animate magical lights
+            magicalLights.forEach(light => {
+                light.position.y += Math.sin(time + light.userData.floatOffset) * light.userData.floatSpeed;
+                light.position.x += Math.cos(time + light.userData.floatOffset) * 0.02;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        function showStory() {
+            if (currentStoryIndex >= storiesData.length) {
+                showCelebration();
+                return;
+            }
+
+            const story = storiesData[currentStoryIndex];
+            answers = {};
+
+            document.getElementById('story-number').textContent = currentStoryIndex + 1;
+            document.getElementById('story-title').textContent = story.title;
+            document.getElementById('story-text').textContent = story.text;
+
+            // Create questions
+            const questionsPanel = document.getElementById('questions-panel');
+            questionsPanel.innerHTML = '';
+
+            story.questions.forEach((question, qIndex) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'question-block';
+
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.innerHTML = `<span class="question-number">Q${qIndex + 1}</span>${question.text}`;
+                questionBlock.appendChild(questionText);
+
+                question.options.forEach((option, oIndex) => {
+                    const optionEl = document.createElement('div');
+                    optionEl.className = 'option';
+                    optionEl.textContent = option;
+                    optionEl.addEventListener('click', () => selectOption(qIndex, oIndex, optionEl));
+                    questionBlock.appendChild(optionEl);
+                });
+
+                questionsPanel.appendChild(questionBlock);
+            });
+
+            // Add submit button
+            const submitBtn = document.createElement('button');
+            submitBtn.id = 'submit-btn';
+            submitBtn.textContent = 'Submit Answers';
+            submitBtn.addEventListener('click', submitAnswers);
+            questionsPanel.appendChild(submitBtn);
+
+            // Update progress bar
+            const progress = (currentStoryIndex / storiesData.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+
+            // Hide result display
+            document.getElementById('result-display').style.display = 'none';
+        }
+
+        function selectOption(questionIndex, optionIndex, optionEl) {
+            answers[questionIndex] = optionIndex;
+
+            // Update visual selection
+            const parent = optionEl.parentElement;
+            const options = parent.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            optionEl.classList.add('selected');
+        }
+
+        function submitAnswers() {
+            const story = storiesData[currentStoryIndex];
+            let correctCount = 0;
+            const totalQuestions = story.questions.length;
+
+            // Check answers
+            story.questions.forEach((question, qIndex) => {
+                if (answers[qIndex] === question.correct) {
+                    correctCount++;
+                }
+            });
+
+            // Calculate score
+            const storyScore = (correctCount / totalQuestions) * 100;
+            score += storyScore;
+
+            // Update UI
+            document.getElementById('score').textContent = Math.round(score);
+
+            if (score > bestScore) {
+                bestScore = score;
+                document.getElementById('best-score').textContent = Math.round(bestScore);
+            }
+
+            // Show result display
+            const resultDisplay = document.getElementById('result-display');
+            document.getElementById('result-score').textContent = `${correctCount}/${totalQuestions}`;
+            document.getElementById('result-message').textContent = correctCount === totalQuestions ?
+                'Perfect! You understood everything! 🌟' :
+                correctCount >= 2 ? 'Great job! Keep practicing! 👍' :
+                'Keep reading and try again! 📚';
+            resultDisplay.style.display = 'block';
+        }
+
+        function nextStory() {
+            currentStoryIndex++;
+            showStory();
+        }
+
+        function showCelebration() {
+            document.getElementById('celebration').style.display = 'flex';
+            document.getElementById('progress-bar').style.width = '100%';
+
+            setTimeout(() => {
+                alert(`🎓 Congratulations! You completed all stories! Final Score: ${Math.round(score)} 🎓`);
+                location.reload();
+            }, 2000);
+        }
+
+        // Event listeners
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            gameStarted = true;
+            initThreeJS();
+            showStory();
+        });
+
+        document.getElementById('next-btn').addEventListener('click', nextStory);
+    </script>
+</body>
+</html>

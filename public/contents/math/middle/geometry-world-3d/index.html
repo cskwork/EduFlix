@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기하 월드 3D | 동아출판 중학 수학</title>
+    <meta name="description" content="3D 공간에서 기하학의 세계를 탐험하세요! 넓이, 둘레, 부피를 배워요.">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --secondary: #06b6d4;
+            --accent: #fbbf24;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+            color: #fff;
+        }
+        #game-container { width: 100vw; height: 100vh; position: relative; }
+        #canvas-container { width: 100%; height: 100%; position: absolute; }
+        #ui-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+        
+        #top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 30px; pointer-events: auto;
+            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+        }
+        .stat-box {
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 16px; padding: 14px 24px;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .stat-box .icon { font-size: 22px; }
+        .stat-box .value { font-size: 20px; font-weight: 700; color: var(--accent); }
+
+        #shape-selector {
+            position: absolute; top: 100px; left: 20px;
+            background: var(--glass); backdrop-filter: blur(20px);
+            padding: 24px; border-radius: 20px; pointer-events: auto;
+            border: 1px solid rgba(255,255,255,0.2); width: 240px;
+        }
+        #shape-selector h3 { color: #fff; margin-bottom: 16px; text-align: center; }
+        .shape-btn {
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; padding: 14px; margin: 8px 0;
+            background: rgba(139,92,246,0.2); border: none; border-radius: 12px;
+            color: #fff; font-size: 14px; cursor: pointer; transition: all 0.3s;
+        }
+        .shape-btn:hover { background: rgba(139,92,246,0.4); transform: translateX(5px); }
+        .shape-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .shape-btn .shape-icon { font-size: 24px; }
+
+        #game-area {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 700px; text-align: center; pointer-events: auto;
+        }
+        #problem-display {
+            background: var(--glass); backdrop-filter: blur(20px);
+            padding: 40px; border-radius: 24px; margin-bottom: 24px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        #problem-title { font-size: 18px; color: rgba(255,255,255,0.7); margin-bottom: 16px; }
+        #problem-text { font-size: 24px; font-weight: 700; margin-bottom: 24px; line-height: 1.6; }
+        .formula-display {
+            background: rgba(0,0,0,0.3); padding: 16px; border-radius: 12px;
+            font-family: 'Courier New', monospace; font-size: 20px;
+            color: var(--accent); margin-bottom: 24px;
+        }
+        #answer-area { display: flex; justify-content: center; align-items: center; gap: 12px; }
+        #answer-input {
+            width: 150px; height: 60px; font-size: 28px; text-align: center;
+            border: 3px solid rgba(255,255,255,0.3); border-radius: 16px;
+            background: rgba(255,255,255,0.95); color: var(--dark);
+        }
+        #answer-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 30px rgba(251,191,36,0.5); }
+        .unit-label { font-size: 20px; font-weight: 600; }
+
+        #action-buttons { display: flex; gap: 16px; justify-content: center; }
+        .action-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none; border-radius: 16px; padding: 18px 36px;
+            color: #fff; font-size: 18px; font-weight: 700; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .action-btn:hover { transform: translateY(-3px); }
+        .action-btn.submit { background: linear-gradient(135deg, var(--success), #059669); }
+        .action-btn.hint { background: linear-gradient(135deg, var(--accent), #f59e0b); color: var(--dark); }
+
+        #hint-display {
+            position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%);
+            background: rgba(251,191,36,0.2); border: 2px solid var(--accent);
+            padding: 20px 30px; border-radius: 16px; color: var(--accent);
+            max-width: 500px; display: none;
+        }
+        #hint-display.show { display: block; }
+
+        #shape-info {
+            position: absolute; top: 100px; right: 20px;
+            background: var(--glass); backdrop-filter: blur(20px);
+            padding: 24px; border-radius: 20px; pointer-events: auto;
+            border: 1px solid rgba(255,255,255,0.2); width: 280px; text-align: center;
+        }
+        #shape-info .shape-preview { font-size: 80px; margin-bottom: 16px; }
+        #shape-info h3 { color: var(--accent); font-size: 22px; margin-bottom: 8px; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+        .info-item { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; }
+        .info-item .label { font-size: 12px; color: rgba(255,255,255,0.6); }
+        .info-item .value { font-size: 18px; font-weight: 700; color: var(--secondary); }
+
+        #feedback-message {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 64px; font-weight: 900; opacity: 0; pointer-events: none; z-index: 100;
+        }
+        #feedback-message.show { opacity: 1; animation: pop 0.5s ease; }
+        @keyframes pop { 0%,100% { transform: translate(-50%,-50%) scale(1); } 50% { transform: translate(-50%,-50%) scale(1.2); } }
+
+        #start-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100;
+        }
+        #start-screen h1 {
+            font-size: clamp(40px, 8vw, 72px); font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--accent), var(--primary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+        #start-screen .subtitle {
+            font-size: clamp(16px, 3vw, 22px); color: rgba(255,255,255,0.8);
+            margin-bottom: 48px; max-width: 600px; line-height: 1.6; text-align: center; padding: 0 20px;
+        }
+        #start-btn {
+            background: linear-gradient(135deg, var(--accent), #f59e0b);
+            border: none; border-radius: 50px; padding: 22px 64px;
+            color: var(--dark); font-size: 24px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 10px 40px rgba(251,191,36,0.5); transition: all 0.3s;
+        }
+        #start-btn:hover { transform: scale(1.05) translateY(-3px); }
+        .features { display: flex; gap: 40px; margin-top: 60px; flex-wrap: wrap; justify-content: center; }
+        .feature { text-align: center; max-width: 180px; }
+        .feature-icon { font-size: 48px; margin-bottom: 12px; }
+        .feature-title { font-weight: 700; margin-bottom: 8px; }
+        .feature-desc { font-size: 14px; color: rgba(255,255,255,0.6); }
+
+        @media (max-width: 768px) {
+            #shape-selector, #shape-info { display: none; }
+            #problem-text { font-size: 18px; }
+            .formula-display { font-size: 16px; }
+            #answer-input { width: 120px; height: 50px; font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="canvas-container"></div>
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box"><span class="icon">📐</span><span>레벨</span><span class="value" id="level">1</span></div>
+                <div class="stat-box"><span class="icon">⭐</span><span>점수</span><span class="value" id="score">0</span></div>
+                <div class="stat-box"><span class="icon">✅</span><span>정답</span><span class="value" id="correct">0</span></div>
+            </div>
+            <div id="shape-selector">
+                <h3>📐 도형 선택</h3>
+                <button class="shape-btn active" data-shape="rectangle"><span class="shape-icon">▭</span>직사각형</button>
+                <button class="shape-btn" data-shape="triangle"><span class="shape-icon">△</span>삼각형</button>
+                <button class="shape-btn" data-shape="circle"><span class="shape-icon">○</span>원</button>
+                <button class="shape-btn" data-shape="trapezoid"><span class="shape-icon">⏢</span>사다리꼴</button>
+                <button class="shape-btn" data-shape="cube"><span class="shape-icon">◻️</span>정육면체</button>
+            </div>
+            <div id="shape-info">
+                <div class="shape-preview" id="shape-preview">▭</div>
+                <h3 id="shape-name">직사각형</h3>
+                <div class="info-grid">
+                    <div class="info-item"><div class="label">공식</div><div class="value" id="formula-display">가로×세로</div></div>
+                    <div class="info-item"><div class="label">유형</div><div class="value" id="type-display">넓이</div></div>
+                </div>
+            </div>
+            <div id="game-area">
+                <div id="problem-display">
+                    <div id="problem-title">넓이를 구하세요</div>
+                    <div id="problem-text">가로 8cm, 세로 5cm인 직사각형의 넓이는?</div>
+                    <div class="formula-display" id="formula-hint">넓이 = 가로 × 세로</div>
+                    <div id="answer-area">
+                        <input type="number" id="answer-input" placeholder="?" autocomplete="off">
+                        <span class="unit-label" id="unit-label">cm²</span>
+                    </div>
+                </div>
+                <div id="action-buttons">
+                    <button class="action-btn hint" id="hint-btn">💡 힌트</button>
+                    <button class="action-btn submit" id="submit-btn">✓ 제출</button>
+                </div>
+            </div>
+            <div id="hint-display"></div>
+        </div>
+        <div id="feedback-message"></div>
+        <div id="start-screen">
+            <h1>📐 기하 월드 3D</h1>
+            <p class="subtitle">3D 공간에서 도형의 넓이, 둘레, 부피를 계산하세요! 다양한 도형을 마스터해요!</p>
+            <button id="start-btn">탐험 시작! 🚀</button>
+            <div class="features">
+                <div class="feature"><div class="feature-icon">▭</div><div class="feature-title">평면도형</div><div class="feature-desc">넓이와 둘레 계산</div></div>
+                <div class="feature"><div class="feature-icon">◻️</div><div class="feature-title">입체도형</div><div class="feature-desc">부피와 겉넓이 계산</div></div>
+                <div class="feature"><div class="feature-icon">🎯</div><div class="feature-title">단계별 학습</div><div class="feature-desc">쉬운 것부터 어려운 것까지</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        const shapes = {
+            rectangle: {
+                name: '직사각형', icon: '▭',
+                formulas: { area: '가로 × 세로', perimeter: '2 × (가로 + 세로)' },
+                generate: (level) => {
+                    const w = 3 + Math.floor(Math.random() * (level + 3));
+                    const h = 2 + Math.floor(Math.random() * (level + 2));
+                    const type = Math.random() > 0.5 ? 'area' : 'perimeter';
+                    return {
+                        text: `가로 ${w}cm, 세로 ${h}cm인 직사각형의 ${type === 'area' ? '넓이' : '둘레'}는?`,
+                        answer: type === 'area' ? w * h : 2 * (w + h),
+                        unit: type === 'area' ? 'cm²' : 'cm',
+                        type, formula: shapes.rectangle.formulas[type],
+                        hint: type === 'area' ? `${w} × ${h} = ?` : `2 × (${w} + ${h}) = ?`
+                    };
+                }
+            },
+            triangle: {
+                name: '삼각형', icon: '△',
+                formulas: { area: '(밑변 × 높이) ÷ 2' },
+                generate: (level) => {
+                    const base = 4 + Math.floor(Math.random() * (level + 4));
+                    const height = 3 + Math.floor(Math.random() * (level + 3));
+                    return {
+                        text: `밑변 ${base}cm, 높이 ${height}cm인 삼각형의 넓이는?`,
+                        answer: (base * height) / 2, unit: 'cm²', type: 'area',
+                        formula: shapes.triangle.formulas.area,
+                        hint: `(${base} × ${height}) ÷ 2 = ?`
+                    };
+                }
+            },
+            circle: {
+                name: '원', icon: '○',
+                formulas: { area: 'π × 반지름²', circumference: '2 × π × 반지름' },
+                generate: (level) => {
+                    const r = 2 + Math.floor(Math.random() * (level + 2));
+                    const type = Math.random() > 0.5 ? 'area' : 'circumference';
+                    return {
+                        text: `반지름 ${r}cm인 원의 ${type === 'area' ? '넓이' : '둘레'}는? (π=3.14)`,
+                        answer: type === 'area' ? Math.round(3.14 * r * r * 100) / 100 : Math.round(2 * 3.14 * r * 100) / 100,
+                        unit: type === 'area' ? 'cm²' : 'cm', type,
+                        formula: shapes.circle.formulas[type],
+                        hint: type === 'area' ? `3.14 × ${r} × ${r} = ?` : `2 × 3.14 × ${r} = ?`
+                    };
+                }
+            },
+            trapezoid: {
+                name: '사다리꼴', icon: '⏢',
+                formulas: { area: '(윗변 + 아랫변) × 높이 ÷ 2' },
+                generate: (level) => {
+                    const top = 3 + Math.floor(Math.random() * level);
+                    const bottom = top + 2 + Math.floor(Math.random() * 4);
+                    const h = 3 + Math.floor(Math.random() * level);
+                    return {
+                        text: `윗변 ${top}cm, 아랫변 ${bottom}cm, 높이 ${h}cm인 사다리꼴의 넓이는?`,
+                        answer: ((top + bottom) * h) / 2, unit: 'cm²', type: 'area',
+                        formula: shapes.trapezoid.formulas.area,
+                        hint: `(${top} + ${bottom}) × ${h} ÷ 2 = ?`
+                    };
+                }
+            },
+            cube: {
+                name: '정육면체', icon: '◻️',
+                formulas: { volume: '한 변³', surface: '6 × 한 변²' },
+                generate: (level) => {
+                    const s = 2 + Math.floor(Math.random() * (level + 2));
+                    const type = Math.random() > 0.5 ? 'volume' : 'surface';
+                    return {
+                        text: `한 변이 ${s}cm인 정육면체의 ${type === 'volume' ? '부피' : '겉넓이'}는?`,
+                        answer: type === 'volume' ? s * s * s : 6 * s * s,
+                        unit: type === 'volume' ? 'cm³' : 'cm²', type,
+                        formula: shapes.cube.formulas[type],
+                        hint: type === 'volume' ? `${s} × ${s} × ${s} = ?` : `6 × ${s} × ${s} = ?`
+                    };
+                }
+            }
+        };
+
+        let currentShape = 'rectangle', currentProblem = null;
+        let score = 0, level = 1, correct = 0, gameStarted = false;
+        let scene, camera, renderer, shapeMesh;
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x1e1b4b, 0.02);
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 5, 15);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            const ambient = new THREE.AmbientLight(0x404080, 0.5);
+            scene.add(ambient);
+            const light = new THREE.DirectionalLight(0xffffff, 0.8);
+            light.position.set(10, 20, 10);
+            light.castShadow = true;
+            scene.add(light);
+            const purple = new THREE.PointLight(0x8b5cf6, 0.6, 40);
+            purple.position.set(-10, 10, 10);
+            scene.add(purple);
+
+            createShape();
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            animate();
+        }
+
+        function createShape() {
+            if (shapeMesh) scene.remove(shapeMesh);
+            let geometry;
+            switch (currentShape) {
+                case 'rectangle': geometry = new THREE.BoxGeometry(5, 0.5, 3); break;
+                case 'triangle': geometry = new THREE.ConeGeometry(2, 3, 3); break;
+                case 'circle': geometry = new THREE.CylinderGeometry(2, 2, 0.3, 32); break;
+                case 'trapezoid': geometry = new THREE.CylinderGeometry(1.5, 2.5, 0.5, 4); break;
+                case 'cube': geometry = new THREE.BoxGeometry(3, 3, 3); break;
+            }
+            const material = new THREE.MeshPhongMaterial({ color: 0x8b5cf6, shininess: 60, emissive: 0x4c1d95, emissiveIntensity: 0.2 });
+            shapeMesh = new THREE.Mesh(geometry, material);
+            shapeMesh.castShadow = true;
+            scene.add(shapeMesh);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (shapeMesh) {
+                shapeMesh.rotation.y += 0.005;
+                shapeMesh.rotation.x += 0.002;
+            }
+            renderer.render(scene, camera);
+        }
+
+        function generateProblem() {
+            currentProblem = shapes[currentShape].generate(level);
+            document.getElementById('problem-text').textContent = currentProblem.text;
+            document.getElementById('formula-hint').textContent = currentProblem.formula;
+            document.getElementById('unit-label').textContent = currentProblem.unit;
+            document.getElementById('answer-input').value = '';
+            document.getElementById('answer-input').focus();
+            document.getElementById('hint-display').classList.remove('show');
+            updateShapeInfo();
+        }
+
+        function updateShapeInfo() {
+            const shape = shapes[currentShape];
+            document.getElementById('shape-preview').textContent = shape.icon;
+            document.getElementById('shape-name').textContent = shape.name;
+            document.getElementById('formula-display').textContent = currentProblem.formula;
+            document.getElementById('type-display').textContent = currentProblem.type === 'area' ? '넓이' : (currentProblem.type === 'volume' ? '부피' : '둘레');
+        }
+
+        function submitAnswer() {
+            const userAnswer = parseFloat(document.getElementById('answer-input').value);
+            if (isNaN(userAnswer)) { showFeedback('❓', '#fbbf24'); return; }
+            if (Math.abs(userAnswer - currentProblem.answer) < 0.1) {
+                correct++; score += 100 + level * 20;
+                if (correct % 5 === 0) level++;
+                showFeedback('🎉 정답!', '#10b981');
+                document.getElementById('score').textContent = score;
+                document.getElementById('correct').textContent = correct;
+                document.getElementById('level').textContent = level;
+                setTimeout(generateProblem, 1200);
+            } else {
+                score = Math.max(0, score - 20);
+                showFeedback(`❌ ${currentProblem.answer}`, '#ef4444');
+                document.getElementById('score').textContent = score;
+            }
+        }
+
+        function showHint() {
+            document.getElementById('hint-display').textContent = '💡 ' + currentProblem.hint;
+            document.getElementById('hint-display').classList.add('show');
+            score = Math.max(0, score - 10);
+            document.getElementById('score').textContent = score;
+        }
+
+        function showFeedback(msg, color) {
+            const fb = document.getElementById('feedback-message');
+            fb.textContent = msg; fb.style.color = color; fb.style.textShadow = `0 0 40px ${color}`;
+            fb.classList.add('show');
+            setTimeout(() => fb.classList.remove('show'), 1200);
+        }
+
+        function selectShape(shape) {
+            currentShape = shape;
+            document.querySelectorAll('.shape-btn').forEach(b => b.classList.toggle('active', b.dataset.shape === shape));
+            createShape();
+            generateProblem();
+        }
+
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('start-screen').style.display = 'none';
+                initThreeJS();
+                generateProblem();
+            }, 500);
+        });
+        document.getElementById('submit-btn').addEventListener('click', submitAnswer);
+        document.getElementById('hint-btn').addEventListener('click', showHint);
+        document.getElementById('answer-input').addEventListener('keypress', e => { if (e.key === 'Enter') submitAnswer(); });
+        document.querySelectorAll('.shape-btn').forEach(b => b.addEventListener('click', () => selectShape(b.dataset.shape)));
+    </script>
+</body>
+</html>

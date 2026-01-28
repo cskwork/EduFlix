@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Galaxy - Dong-A Elementary English</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            overflow: hidden;
+            background: #000022;
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Power-up animations */
+        .power-up {
+            position: fixed;
+            pointer-events: none;
+            z-index: 200;
+            font-size: 40px;
+            animation: powerUpFloat 1s ease-out forwards;
+        }
+
+        @keyframes powerUpFloat {
+            0% { transform: scale(0) translateY(0); opacity: 1; }
+            50% { transform: scale(1.5) translateY(-30px); opacity: 1; }
+            100% { transform: scale(1) translateY(-60px); opacity: 0; }
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+        }
+
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 12px 20px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+
+        .stat-value {
+            color: #00ffff;
+            font-weight: 800;
+        }
+
+        /* XP Bar */
+        #xp-container {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(80%, 400px);
+            pointer-events: none;
+        }
+
+        #xp-label {
+            color: #ffd700;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        #xp-bar-bg {
+            height: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(255,215,0,0.3);
+        }
+
+        #xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ff8c00);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        #xp-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+            border-radius: 10px 10px 0 0;
+        }
+
+        #question-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: auto;
+            width: 90%;
+            max-width: 850px;
+        }
+
+        #grammar-topic {
+            font-size: 14px;
+            color: #ffd700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        #question-text {
+            font-size: clamp(20px, 4vw, 32px);
+            font-weight: 700;
+            color: #00ffff;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            margin-bottom: 25px;
+            animation: questionPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes questionPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        #sentence-display {
+            font-size: clamp(18px, 3vw, 26px);
+            color: #fff;
+            background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20,20,60,0.9) 100%);
+            padding: 30px 35px;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            border: 3px solid rgba(0, 255, 255, 0.4);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0,255,255,0.1);
+            line-height: 1.8;
+        }
+
+        .blank-word {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 4px dashed #ff00ff;
+            color: #ff00ff;
+            text-align: center;
+            margin: 0 8px;
+            font-weight: 800;
+            padding: 5px 15px;
+            background: rgba(255, 0, 255, 0.15);
+            border-radius: 8px;
+            animation: blankPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blankPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 255, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(255, 0, 255, 0.6); }
+        }
+
+        #options-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 18px;
+            padding: 16px 32px;
+            color: white;
+            font-size: clamp(14px, 2.5vw, 18px);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+            min-width: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 0.5s;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+        }
+
+        .option-btn:hover::before {
+            left: 100%;
+        }
+
+        .option-btn.correct {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            animation: correctBurst 0.6s ease-out;
+        }
+
+        .option-btn.wrong {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            animation: wrongShake 0.5s ease-out;
+        }
+
+        @keyframes correctBurst {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0f2027 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .galaxy-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: galaxySpin 4s linear infinite;
+        }
+
+        @keyframes galaxySpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        #start-screen h1 {
+            font-size: clamp(40px, 12vw, 72px);
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow: 0 0 50px rgba(0, 255, 255, 0.7);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        #start-screen p {
+            font-size: clamp(16px, 3vw, 22px);
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 650px;
+            line-height: 1.7;
+        }
+
+        /* Difficulty selection */
+        #difficulty-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            max-width: 500px;
+            margin-bottom: 30px;
+        }
+
+        .difficulty-card {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .difficulty-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ffff;
+        }
+
+        .difficulty-card.active {
+            background: linear-gradient(135deg, rgba(0,255,255,0.2) 0%, rgba(102,126,234,0.2) 100%);
+            border-color: #00ffff;
+        }
+
+        .difficulty-card .icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .difficulty-card .label {
+            color: white;
+            font-weight: 700;
+        }
+
+        #start-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 20px 55px;
+            color: white;
+            font-size: clamp(20px, 4vw, 28px);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        #start-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 18px 50px rgba(102, 126, 234, 0.7);
+        }
+
+        #start-btn::after {
+            content: ' 🚀';
+        }
+
+        #feedback-message {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(28px, 8vw, 48px);
+            font-weight: 900;
+            opacity: 0;
+            transition: opacity 0.3s;
+            text-shadow: 0 0 40px currentColor, 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 60;
+        }
+
+        #feedback-message.show {
+            opacity: 1;
+            animation: feedbackBounce 0.5s ease-out;
+        }
+
+        @keyframes feedbackBounce {
+            0% { transform: translateX(-50%) scale(0.5); }
+            50% { transform: translateX(-50%) scale(1.2); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        #explanation {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            color: #fff;
+            background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(20,20,60,0.95) 100%);
+            padding: 20px 30px;
+            border-radius: 20px;
+            max-width: 650px;
+            width: 90%;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.4s, transform 0.4s;
+            pointer-events: auto;
+            border: 2px solid rgba(255,215,0,0.4);
+            line-height: 1.6;
+        }
+
+        #explanation.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+        }
+
+        #explanation::before {
+            content: '💡 ';
+        }
+
+        #progress-bar-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(70%, 450px);
+            height: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #ffd700);
+            background-size: 200% 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            animation: progressShine 2s linear infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes progressShine {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        #celebration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            z-index: 50;
+            background: rgba(0,0,0,0.8);
+        }
+
+        #celebration h2 {
+            font-size: clamp(45px, 15vw, 85px);
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 0 0 60px rgba(255, 215, 0, 0.8);
+            animation: celebrateSpin 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes celebrateSpin {
+            from { transform: scale(1) rotate(-3deg); }
+            to { transform: scale(1.1) rotate(3deg); }
+        }
+
+        #celebration p {
+            font-size: 24px;
+            color: white;
+            margin-top: 20px;
+        }
+
+        #level-display {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(18px, 4vw, 26px);
+            font-weight: 800;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            pointer-events: none;
+            padding: 10px 30px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 215, 0, 0.4);
+        }
+
+        /* Streak display */
+        #streak-display {
+            position: absolute;
+            top: 150px;
+            right: 20px;
+            font-size: 20px;
+            color: #ff6b6b;
+            font-weight: 800;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.3s;
+        }
+
+        #streak-display.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #top-bar {
+                justify-content: center;
+            }
+
+            .stat-box {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            #sentence-display {
+                padding: 20px 25px;
+            }
+
+            .option-btn {
+                padding: 14px 24px;
+                min-width: 120px;
+            }
+
+            #explanation {
+                bottom: 80px;
+                padding: 15px 20px;
+                font-size: 14px;
+            }
+        }
+
+        /* Loading */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .planet-loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(0,255,255,0.2);
+            border-top-color: #00ffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: relative;
+        }
+
+        .planet-loader::after {
+            content: '🌍';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #loading-screen p {
+            color: #00ffff;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="planet-loader"></div>
+        <p>Launching Grammar Galaxy...</p>
+    </div>
+
+    <div id="game-container">
+        <div id="canvas-container"></div>
+
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box">
+                    <span>⭐</span> Score: <span class="stat-value" id="score">0</span>
+                </div>
+                <div class="stat-box">
+                    <span>❤️</span> Lives: <span class="stat-value" id="lives">3</span>
+                </div>
+                <div class="stat-box">
+                    <span>🎯</span> Level: <span class="stat-value" id="level">1</span>
+                </div>
+                <div class="stat-box">
+                    <span>📝</span> Question: <span class="stat-value" id="question-num">1</span>/<span id="total-questions">20</span>
+                </div>
+            </div>
+
+            <div id="xp-container">
+                <div id="xp-label">XP: <span id="xp-current">0</span> / <span id="xp-needed">100</span></div>
+                <div id="xp-bar-bg">
+                    <div id="xp-bar-fill"></div>
+                </div>
+            </div>
+
+            <div id="level-display">🌟 Nouns & Verbs 🌟</div>
+
+            <div id="streak-display">🔥 Streak: <span id="streak-count">0</span></div>
+
+            <div id="question-panel">
+                <div id="grammar-topic">Grammar Topic</div>
+                <div id="question-text"></div>
+                <div id="sentence-display"></div>
+                <div id="options-container"></div>
+            </div>
+
+            <div id="feedback-message"></div>
+            <div id="explanation"></div>
+
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div id="celebration">
+            <h2>🌌 Grammar Master! 🌌</h2>
+            <p>You conquered the Grammar Galaxy!</p>
+        </div>
+
+        <div id="start-screen">
+            <div class="galaxy-icon">🌌</div>
+            <h1>Grammar Galaxy</h1>
+            <p>Travel through space and master grammar! Learn about nouns, verbs, adjectives, pronouns, and more as you explore different planets!</p>
+            
+            <div id="difficulty-grid">
+                <div class="difficulty-card active" data-difficulty="easy">
+                    <div class="icon">🌟</div>
+                    <div class="label">Explorer</div>
+                </div>
+                <div class="difficulty-card" data-difficulty="medium">
+                    <div class="icon">⭐</div>
+                    <div class="label">Voyager</div>
+                </div>
+                <div class="difficulty-card" data-difficulty="hard">
+                    <div class="icon">💫</div>
+                    <div class="label">Commander</div>
+                </div>
+            </div>
+            
+            <button id="start-btn">Start Adventure</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        // Extended grammar questions by level
+        const grammarLevels = {
+            easy: [
+                {
+                    name: "Nouns",
+                    questions: [
+                        { question: "Which word is a NOUN?", sentence: "The _____ jumped over the fence.", options: ["quickly", "dog", "run", "green"], correct: 1, explanation: "A noun is a person, place, thing, or animal. 'Dog' is an animal!" },
+                        { question: "Choose the correct NOUN:", sentence: "My _____ is very tall.", options: ["slowly", "teacher", "teaches", "tall"], correct: 1, explanation: "'Teacher' is a person - a noun!" },
+                        { question: "Which word is a NOUN?", sentence: "The _____ shines bright.", options: ["sun", "sunny", "shine", "brightly"], correct: 0, explanation: "'Sun' is a thing - a noun!" },
+                        { question: "Find the NOUN:", sentence: "We visited the _____.", options: ["visited", "museum", "happily", "big"], correct: 1, explanation: "'Museum' is a place - a noun!" },
+                        { question: "Which is a NOUN?", sentence: "My _____ loves to cook.", options: ["grandmother", "cooking", "delicious", "often"], correct: 0, explanation: "'Grandmother' is a person - a noun!" }
+                    ]
+                },
+                {
+                    name: "Verbs",
+                    questions: [
+                        { question: "Which word is a VERB?", sentence: "The cat _____ on the bed.", options: ["soft", "sleeps", "fluffy", "bed"], correct: 1, explanation: "A verb shows action or state. 'Sleeps' is what the cat does!" },
+                        { question: "Choose the VERB:", sentence: "Birds _____ in the sky.", options: ["blue", "fly", "high", "beautiful"], correct: 1, explanation: "'Fly' shows what the birds do - it's a verb!" },
+                        { question: "Find the VERB:", sentence: "She _____ a new book.", options: ["reads", "interesting", "new", "quickly"], correct: 0, explanation: "'Reads' is the action - a verb!" },
+                        { question: "Which is a VERB?", sentence: "We _____ to the park.", options: ["walked", "sunny", "fun", "green"], correct: 0, explanation: "'Walked' shows action - it's a verb!" },
+                        { question: "Choose the VERB:", sentence: "The baby _____ loudly.", options: ["cries", "loud", "small", "cute"], correct: 0, explanation: "'Cries' is what the baby does - a verb!" }
+                    ]
+                }
+            ],
+            medium: [
+                {
+                    name: "Adjectives",
+                    questions: [
+                        { question: "Which word is an ADJECTIVE?", sentence: "The _____ cat slept quietly.", options: ["sleep", "orange", "quietly", "the"], correct: 1, explanation: "Adjectives describe nouns. 'Orange' describes the cat!" },
+                        { question: "Choose the ADJECTIVE:", sentence: "She wore a _____ dress.", options: ["beautiful", "wore", "she", "dress"], correct: 0, explanation: "'Beautiful' describes the dress - it's an adjective!" },
+                        { question: "Find the ADJECTIVE:", sentence: "The _____ mountain is covered in snow.", options: ["tall", "covered", "snow", "the"], correct: 0, explanation: "'Tall' describes the mountain - an adjective!" },
+                        { question: "Which is an ADJECTIVE?", sentence: "He has a _____ smile.", options: ["smile", "bright", "has", "he"], correct: 1, explanation: "'Bright' describes the smile - an adjective!" },
+                        { question: "Choose the ADJECTIVE:", sentence: "The _____ puppy played all day.", options: ["played", "puppy", "playful", "day"], correct: 2, explanation: "'Playful' describes the puppy - an adjective!" }
+                    ]
+                },
+                {
+                    name: "Pronouns",
+                    questions: [
+                        { question: "Choose the correct PRONOUN:", sentence: "_____ likes to play soccer.", options: ["She", "Her", "Hers", "Herself"], correct: 0, explanation: "'She' is a subject pronoun that replaces a name!" },
+                        { question: "Which PRONOUN fits?", sentence: "Please give _____ the pencil.", options: ["I", "me", "my", "mine"], correct: 1, explanation: "After 'give', we use 'me' as the object pronoun!" },
+                        { question: "Choose the PRONOUN:", sentence: "_____ went to the store together.", options: ["They", "Them", "Their", "Theirs"], correct: 0, explanation: "'They' is the subject pronoun for a group!" },
+                        { question: "Which PRONOUN is correct?", sentence: "The cat licked _____ paw.", options: ["it", "its", "it's", "itself"], correct: 1, explanation: "'Its' shows possession - no apostrophe needed!" },
+                        { question: "Find the correct PRONOUN:", sentence: "This book belongs to _____.", options: ["I", "me", "my", "mine"], correct: 1, explanation: "After 'to', we use the object pronoun 'me'!" }
+                    ]
+                }
+            ],
+            hard: [
+                {
+                    name: "Prepositions",
+                    questions: [
+                        { question: "Choose the PREPOSITION:", sentence: "The book is _____ the table.", options: ["on", "reading", "table", "the"], correct: 0, explanation: "'On' shows where the book is - a preposition!" },
+                        { question: "Which is a PREPOSITION?", sentence: "The cat jumped _____ the wall.", options: ["cat", "jumped", "over", "wall"], correct: 2, explanation: "'Over' shows position - a preposition!" },
+                        { question: "Find the PREPOSITION:", sentence: "We walked _____ the forest.", options: ["through", "walked", "forest", "beautiful"], correct: 0, explanation: "'Through' shows movement - a preposition!" },
+                        { question: "Choose the PREPOSITION:", sentence: "The party starts _____ 7 o'clock.", options: ["on", "in", "at", "by"], correct: 2, explanation: "For exact times, we use 'at'!" },
+                        { question: "Which PREPOSITION fits?", sentence: "The bird flew _____ the clouds.", options: ["above", "bird", "flew", "clouds"], correct: 0, explanation: "'Above' shows position - a preposition!" }
+                    ]
+                },
+                {
+                    name: "Conjunctions",
+                    questions: [
+                        { question: "Choose the CONJUNCTION:", sentence: "I like apples _____ oranges.", options: ["apples", "and", "like", "oranges"], correct: 1, explanation: "'And' connects two things - a conjunction!" },
+                        { question: "Which is a CONJUNCTION?", sentence: "She wanted to go _____ it was raining.", options: ["wanted", "go", "but", "raining"], correct: 2, explanation: "'But' shows contrast - a conjunction!" },
+                        { question: "Find the CONJUNCTION:", sentence: "Study hard _____ you will pass.", options: ["study", "and", "hard", "pass"], correct: 1, explanation: "'And' connects cause and result!" },
+                        { question: "Choose the CONJUNCTION:", sentence: "You can have cake _____ ice cream.", options: ["can", "have", "or", "cream"], correct: 2, explanation: "'Or' shows a choice - a conjunction!" },
+                        { question: "Which CONJUNCTION fits?", sentence: "I was tired _____ I went to bed early.", options: ["so", "tired", "went", "early"], correct: 0, explanation: "'So' shows result - a conjunction!" }
+                    ]
+                }
+            ]
+        };
+
+        // Game state
+        let currentDifficulty = 'easy';
+        let allQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let lives = 3;
+        let streak = 0;
+        let maxStreak = 0;
+        let xp = 0;
+        let level = 1;
+        let xpNeeded = 100;
+        let gameStarted = false;
+
+        // Three.js variables
+        let scene, camera, renderer;
+        let planets = [];
+        let stars = [];
+        let asteroids = [];
+        let nebulae = [];
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+            camera.position.z = 60;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setClearColor(0x000022);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            createStarfield();
+            createNebulae();
+            createPlanets();
+            createAsteroids();
+            createLights();
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function createStarfield() {
+            const starGeometry = new THREE.BufferGeometry();
+            const starCount = 3000;
+            const positions = new Float32Array(starCount * 3);
+            const colors = new Float32Array(starCount * 3);
+            const sizes = new Float32Array(starCount);
+
+            for (let i = 0; i < starCount; i++) {
+                const i3 = i * 3;
+                positions[i3] = (Math.random() - 0.5) * 500;
+                positions[i3 + 1] = (Math.random() - 0.5) * 500;
+                positions[i3 + 2] = (Math.random() - 0.5) * 500;
+
+                const colorChoice = Math.random();
+                if (colorChoice < 0.6) {
+                    colors[i3] = 1; colors[i3 + 1] = 1; colors[i3 + 2] = 1;
+                } else if (colorChoice < 0.8) {
+                    colors[i3] = 0.7; colors[i3 + 1] = 0.8; colors[i3 + 2] = 1;
+                } else {
+                    colors[i3] = 1; colors[i3 + 1] = 0.9; colors[i3 + 2] = 0.6;
+                }
+
+                sizes[i] = Math.random() * 2;
+            }
+
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            starGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const starMaterial = new THREE.PointsMaterial({
+                size: 0.5,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.9
+            });
+
+            const starField = new THREE.Points(starGeometry, starMaterial);
+            scene.add(starField);
+            stars.push(starField);
+        }
+
+        function createNebulae() {
+            const nebulaColors = [0x6600ff, 0xff0066, 0x00ffff];
+            
+            nebulaColors.forEach((color, index) => {
+                const nebulaGeometry = new THREE.BufferGeometry();
+                const count = 200;
+                const positions = new Float32Array(count * 3);
+
+                for (let i = 0; i < count; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const radius = 30 + Math.random() * 50;
+                    positions[i * 3] = Math.cos(angle) * radius + (index - 1) * 60;
+                    positions[i * 3 + 1] = (Math.random() - 0.5) * 40;
+                    positions[i * 3 + 2] = Math.sin(angle) * radius - 80;
+                }
+
+                nebulaGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+                const nebulaMaterial = new THREE.PointsMaterial({
+                    color: color,
+                    size: 4,
+                    transparent: true,
+                    opacity: 0.3,
+                    blending: THREE.AdditiveBlending
+                });
+
+                const nebula = new THREE.Points(nebulaGeometry, nebulaMaterial);
+                scene.add(nebula);
+                nebulae.push(nebula);
+            });
+        }
+
+        function createPlanets() {
+            const planetConfigs = [
+                { color: 0xff6b6b, emissive: 0xff3333, size: 6, x: -40, y: 20, z: -50, hasRing: false },
+                { color: 0x4ecdc4, emissive: 0x2fa8a0, size: 8, x: 45, y: -15, z: -60, hasRing: true },
+                { color: 0xffd93d, emissive: 0xcc9900, size: 5, x: 25, y: 30, z: -70, hasRing: false },
+                { color: 0x9b59b6, emissive: 0x7d3c98, size: 7, x: -50, y: -25, z: -80, hasRing: true }
+            ];
+
+            planetConfigs.forEach(config => {
+                const geometry = new THREE.SphereGeometry(config.size, 64, 64);
+                const material = new THREE.MeshPhongMaterial({
+                    color: config.color,
+                    emissive: config.emissive,
+                    emissiveIntensity: 0.2,
+                    shininess: 100
+                });
+                const planet = new THREE.Mesh(geometry, material);
+                planet.position.set(config.x, config.y, config.z);
+
+                // Atmosphere
+                const atmosphereGeometry = new THREE.SphereGeometry(config.size * 1.15, 32, 32);
+                const atmosphereMaterial = new THREE.MeshPhongMaterial({
+                    color: config.color,
+                    transparent: true,
+                    opacity: 0.15,
+                    side: THREE.BackSide
+                });
+                const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+                planet.add(atmosphere);
+
+                if (config.hasRing) {
+                    const ringGeometry = new THREE.TorusGeometry(config.size * 1.8, config.size * 0.25, 2, 64);
+                    const ringMaterial = new THREE.MeshPhongMaterial({
+                        color: config.color,
+                        transparent: true,
+                        opacity: 0.6,
+                        side: THREE.DoubleSide
+                    });
+                    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+                    ring.rotation.x = Math.PI / 2.5;
+                    planet.add(ring);
+                }
+
+                planet.userData = {
+                    rotationSpeed: 0.005 + Math.random() * 0.01,
+                    orbitSpeed: 0.002 + Math.random() * 0.003,
+                    orbitAngle: Math.random() * Math.PI * 2,
+                    orbitRadius: 10,
+                    centerX: config.x,
+                    centerY: config.y
+                };
+
+                scene.add(planet);
+                planets.push(planet);
+            });
+        }
+
+        function createAsteroids() {
+            for (let i = 0; i < 40; i++) {
+                const asteroidGeometry = new THREE.DodecahedronGeometry(0.5 + Math.random() * 1, 0);
+                const asteroidMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0x888888,
+                    flatShading: true
+                });
+                const asteroid = new THREE.Mesh(asteroidGeometry, asteroidMaterial);
+
+                asteroid.position.set(
+                    (Math.random() - 0.5) * 120,
+                    (Math.random() - 0.5) * 80,
+                    (Math.random() - 0.5) * 60 - 30
+                );
+
+                asteroid.rotation.set(
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI,
+                    Math.random() * Math.PI
+                );
+
+                asteroid.userData = {
+                    rotationSpeed: (Math.random() - 0.5) * 0.05,
+                    moveSpeed: 0.01 + Math.random() * 0.02
+                };
+
+                scene.add(asteroid);
+                asteroids.push(asteroid);
+            }
+        }
+
+        function createLights() {
+            const ambientLight = new THREE.AmbientLight(0x404080, 0.4);
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 1);
+            sunLight.position.set(50, 50, 50);
+            scene.add(sunLight);
+
+            const pointLight1 = new THREE.PointLight(0x00ffff, 0.6, 150);
+            pointLight1.position.set(-50, 30, 30);
+            scene.add(pointLight1);
+
+            const pointLight2 = new THREE.PointLight(0xff00ff, 0.4, 150);
+            pointLight2.position.set(50, -30, 30);
+            scene.add(pointLight2);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.001;
+
+            // Rotate planets
+            planets.forEach(planet => {
+                planet.rotation.y += planet.userData.rotationSpeed;
+                planet.userData.orbitAngle += planet.userData.orbitSpeed;
+                planet.position.x = planet.userData.centerX + Math.cos(planet.userData.orbitAngle) * planet.userData.orbitRadius;
+                planet.position.y = planet.userData.centerY + Math.sin(planet.userData.orbitAngle) * planet.userData.orbitRadius * 0.3;
+            });
+
+            // Rotate starfield
+            stars.forEach(star => {
+                star.rotation.y += 0.0001;
+            });
+
+            // Rotate nebulae
+            nebulae.forEach((nebula, index) => {
+                nebula.rotation.y += 0.0002 * (index + 1);
+            });
+
+            // Animate asteroids
+            asteroids.forEach(asteroid => {
+                asteroid.rotation.x += asteroid.userData.rotationSpeed;
+                asteroid.rotation.y += asteroid.userData.rotationSpeed;
+                asteroid.position.z += asteroid.userData.moveSpeed;
+                if (asteroid.position.z > 30) asteroid.position.z = -60;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        function showPowerUp(type, x, y) {
+            const powerUp = document.createElement('div');
+            powerUp.className = 'power-up';
+            powerUp.textContent = type === 'correct' ? '⭐' : type === 'streak' ? '🔥' : '💫';
+            powerUp.style.left = x + 'px';
+            powerUp.style.top = y + 'px';
+            document.body.appendChild(powerUp);
+            setTimeout(() => powerUp.remove(), 1000);
+        }
+
+        function prepareQuestions() {
+            const levels = grammarLevels[currentDifficulty];
+            allQuestions = [];
+            levels.forEach(level => {
+                level.questions.forEach(q => {
+                    allQuestions.push({ ...q, levelName: level.name });
+                });
+            });
+            // Shuffle
+            allQuestions.sort(() => Math.random() - 0.5);
+            document.getElementById('total-questions').textContent = allQuestions.length;
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= allQuestions.length) {
+                showCelebration();
+                return;
+            }
+
+            const questionData = allQuestions[currentQuestionIndex];
+            
+            document.getElementById('grammar-topic').textContent = questionData.levelName;
+            document.getElementById('level-display').textContent = `🌟 ${questionData.levelName} 🌟`;
+            document.getElementById('question-text').textContent = questionData.question;
+            document.getElementById('sentence-display').innerHTML = 
+                questionData.sentence.replace('_____', '<span class="blank-word">?</span>');
+            document.getElementById('question-num').textContent = currentQuestionIndex + 1;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            questionData.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.addEventListener('click', (e) => checkAnswer(index, questionData, e));
+                optionsContainer.appendChild(btn);
+            });
+
+            const progress = (currentQuestionIndex / allQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+
+            // Hide explanation
+            document.getElementById('explanation').classList.remove('show');
+        }
+
+        function checkAnswer(selectedIndex, questionData, event) {
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback-message');
+            const explanation = document.getElementById('explanation');
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === questionData.correct) {
+                buttons[selectedIndex].classList.add('correct');
+                feedback.textContent = getPositiveFeedback();
+                feedback.style.color = '#38ef7d';
+                
+                streak++;
+                if (streak > maxStreak) maxStreak = streak;
+                
+                const basePoints = 50;
+                const streakBonus = streak * 10;
+                const totalPoints = basePoints + streakBonus;
+                score += totalPoints;
+                xp += 20 + streak * 5;
+
+                document.getElementById('score').textContent = score;
+                showPowerUp('correct', event.clientX, event.clientY);
+
+                if (streak >= 3) {
+                    document.getElementById('streak-display').classList.add('show');
+                    document.getElementById('streak-count').textContent = streak;
+                    showPowerUp('streak', event.clientX + 30, event.clientY);
+                }
+
+                // Level up check
+                if (xp >= xpNeeded) {
+                    xp -= xpNeeded;
+                    level++;
+                    xpNeeded = Math.floor(xpNeeded * 1.5);
+                    document.getElementById('level').textContent = level;
+                    showPowerUp('levelup', window.innerWidth / 2, window.innerHeight / 2);
+                }
+
+                updateXPBar();
+
+            } else {
+                buttons[selectedIndex].classList.add('wrong');
+                buttons[questionData.correct].classList.add('correct');
+                feedback.textContent = getEncouragingFeedback();
+                feedback.style.color = '#f45c43';
+                
+                streak = 0;
+                lives--;
+                
+                document.getElementById('lives').textContent = lives;
+                document.getElementById('streak-display').classList.remove('show');
+
+                if (lives <= 0) {
+                    setTimeout(() => {
+                        alert(`Game Over! 🎮\n\nFinal Score: ${score}\nLevel: ${level}\nMax Streak: ${maxStreak}`);
+                        location.reload();
+                    }, 1500);
+                    return;
+                }
+            }
+
+            feedback.classList.add('show');
+            explanation.textContent = questionData.explanation;
+            explanation.classList.add('show');
+
+            setTimeout(() => {
+                feedback.classList.remove('show');
+                explanation.classList.remove('show');
+                currentQuestionIndex++;
+                showQuestion();
+            }, 2500);
+        }
+
+        function updateXPBar() {
+            document.getElementById('xp-current').textContent = xp;
+            document.getElementById('xp-needed').textContent = xpNeeded;
+            const xpPercent = (xp / xpNeeded) * 100;
+            document.getElementById('xp-bar-fill').style.width = xpPercent + '%';
+        }
+
+        function getPositiveFeedback() {
+            const messages = ['🎉 Correct!', '⭐ Excellent!', '🌟 Perfect!', '💫 Amazing!', '🚀 Brilliant!', '✨ Superb!', '🎯 Spot on!'];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        function getEncouragingFeedback() {
+            const messages = ['😊 Keep trying!', '💪 You got this!', '🌈 Almost there!', '📚 Keep learning!'];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        function showCelebration() {
+            document.getElementById('celebration').style.display = 'flex';
+            document.getElementById('progress-bar').style.width = '100%';
+
+            setTimeout(() => {
+                alert(`🌌 Congratulations! 🌌\n\nYou conquered the Grammar Galaxy!\n\nFinal Score: ${score}\nLevel: ${level}\nMax Streak: ${maxStreak}`);
+                location.reload();
+            }, 2500);
+        }
+
+        // Difficulty selection
+        document.querySelectorAll('.difficulty-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.difficulty-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                currentDifficulty = card.dataset.difficulty;
+            });
+        });
+
+        // Start game
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            prepareQuestions();
+            initThreeJS();
+            showQuestion();
+            gameStarted = true;
+        });
+
+        // Hide loading screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+            }, 1000);
+        });
+
+        // Keyboard navigation for accessibility
+        document.addEventListener('keydown', (e) => {
+            if (!gameStarted) return;
+            
+            const buttons = document.querySelectorAll('.option-btn:not(:disabled)');
+            if (buttons.length === 0) return;
+            
+            // Number keys 1-4 to select options
+            if (e.key >= '1' && e.key <= '4') {
+                const index = parseInt(e.key) - 1;
+                if (index < buttons.length) {
+                    // Create a fake event for the power-up animation
+                    const fakeEvent = { clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 };
+                    const questionData = allQuestions[currentQuestionIndex];
+                    checkAnswer(index, questionData, fakeEvent);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

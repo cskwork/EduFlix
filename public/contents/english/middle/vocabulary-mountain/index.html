@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Mountain - Middle School English</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 12px 24px;
+            color: #fff;
+            font-size: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #altitude-display {
+            font-size: 20px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        #game-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+            pointer-events: auto;
+        }
+
+        #level-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .level-node {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        .level-node.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            border-color: #ffd700;
+            color: #1a1a2e;
+            font-weight: bold;
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .level-node.completed {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border-color: #38ef7d;
+        }
+
+        #vocabulary-challenge {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        #challenge-word {
+            font-size: 48px;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        #word-definition {
+            font-size: 20px;
+            color: #fff;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        #difficulty-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .difficulty-easy {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .difficulty-medium {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            color: #1a1a2e;
+        }
+
+        .difficulty-hard {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        #options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            font-size: 18px;
+            font-family: 'Segoe UI', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .option-btn.correct {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .option-btn.wrong {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        }
+
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        #start-screen h1 {
+            font-size: 64px;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #start-screen p {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        #start-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 20px 60px;
+            color: #1a1a2e;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        #start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.7);
+        }
+
+        #feedback-message {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            text-shadow: 0 0 20px currentColor;
+            z-index: 10;
+        }
+
+        #feedback-message.show {
+            opacity: 1;
+        }
+
+        #altitude-progress {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 300px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            overflow: hidden;
+        }
+
+        #altitude-fill {
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(to top, #11998e, #38ef7d, #ffd700);
+            transition: height 0.5s;
+            position: absolute;
+            bottom: 0;
+            border-radius: 0 0 8px 8px;
+        }
+
+        #climber-icon {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            transition: bottom 0.5s;
+        }
+
+        #celebration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        #celebration h2 {
+            font-size: 64px;
+            color: #ffd700;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+            animation: celebrate 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes celebrate {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        #hint-btn {
+            position: absolute;
+            bottom: 35px;
+            right: 20px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid #ffd700;
+            border-radius: 50px;
+            padding: 10px 25px;
+            color: #ffd700;
+            font-size: 16px;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.3s;
+        }
+
+        #hint-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        #hint-display {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: #ffd700;
+            font-size: 14px;
+            max-width: 250px;
+            display: none;
+        }
+
+        #example-sentence {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #aaa;
+            font-style: italic;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="canvas-container"></div>
+
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box">⛰️ Altitude: <span id="altitude-display">0m</span></div>
+                <div class="stat-box">⭐ Score: <span id="score">0</span></div>
+                <div class="stat-box">💡 Hints: <span id="hints">3</span></div>
+            </div>
+
+            <div id="game-area">
+                <div id="level-indicator"></div>
+
+                <div id="vocabulary-challenge">
+                    <div id="difficulty-badge" class="difficulty-medium">MEDIUM</div>
+                    <div id="challenge-word">Summit</div>
+                    <div id="word-definition">The highest point of a mountain or hill</div>
+                    <div id="example-sentence"></div>
+                </div>
+
+                <div id="options-container"></div>
+            </div>
+
+            <button id="hint-btn">💡 Get Hint</button>
+            <div id="hint-display"></div>
+
+            <div id="altitude-progress">
+                <div id="altitude-fill"></div>
+                <div id="climber-icon">🧗</div>
+            </div>
+        </div>
+
+        <div id="feedback-message"></div>
+        <div id="celebration"><h2>🏔️ Summit Reached! 🏔️</h2></div>
+
+        <div id="start-screen">
+            <h1>🏔️ Vocabulary Mountain</h1>
+            <p>Climb the Vocabulary Mountain by mastering advanced words! Each level brings you higher up the mountain with increasingly challenging vocabulary. Use context clues, word parts, and your knowledge to reach the summit!</p>
+            <button id="start-btn">Start Climbing!</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        // Vocabulary data organized by difficulty levels
+        const vocabularyLevels = [
+            // Level 1-3: Easy (Base camp to foothills)
+            {
+                words: [
+                    {
+                        word: "benevolent",
+                        definition: "Characterized by expressing goodwill; kind and charitable",
+                        example: "The benevolent teacher always stayed after class to help struggling students.",
+                        options: ["cruel", "generous", "angry", "selfish"],
+                        correct: 1,
+                        difficulty: "easy",
+                        hint: "Think about someone who does good deeds for others"
+                    },
+                    {
+                        word: "diligent",
+                        definition: "Having or showing care and conscientiousness in one's work or duties",
+                        example: "Her diligent studying paid off when she earned the highest grade in the class.",
+                        options: ["lazy", "careful", "careless", "quick"],
+                        correct: 1,
+                        difficulty: "easy",
+                        hint: "Opposite of lazy"
+                    },
+                    {
+                        word: "eloquent",
+                        definition: "Fluent or persuasive in speaking or writing",
+                        example: "The eloquent speaker captivated the audience with his powerful words.",
+                        options: ["quiet", "persuasive", "boring", "confused"],
+                        correct: 1,
+                        difficulty: "easy",
+                        hint: "Someone who speaks very well and convincingly"
+                    }
+                ]
+            },
+            // Level 4-6: Medium (Foothills to mid-mountain)
+            {
+                words: [
+                    {
+                        word: "meticulous",
+                        definition: "Showing great attention to detail; very careful and precise",
+                        example: "The meticulous artist spent days painting each tiny detail of the portrait.",
+                        options: ["careless", "careful", "messy", "quick"],
+                        correct: 1,
+                        difficulty: "medium",
+                        hint: "Paying attention to every little detail"
+                    },
+                    {
+                        word: "profound",
+                        definition: "Very great or intense; having deep meaning",
+                        example: "Her speech had a profound impact on everyone who heard it.",
+                        options: ["shallow", "deep", "simple", "weak"],
+                        correct: 1,
+                        difficulty: "medium",
+                        hint: "Something that has great depth or importance"
+                    },
+                    {
+                        word: "resilient",
+                        definition: "Able to recover quickly from difficulties; tough",
+                        example: "The resilient athlete overcame his injury to win the championship.",
+                        options: ["weak", "tough", "fragile", "scared"],
+                        correct: 1,
+                        difficulty: "medium",
+                        hint: "Someone who bounces back from challenges"
+                    }
+                ]
+            },
+            // Level 7-9: Hard (Mid-mountain to high altitude)
+            {
+                words: [
+                    {
+                        word: "ambiguous",
+                        definition: "Open to more than one interpretation; having a double meaning",
+                        example: "The ambiguous ending of the movie left viewers debating what really happened.",
+                        options: ["clear", "unclear", "simple", "obvious"],
+                        correct: 1,
+                        difficulty: "hard",
+                        hint: "Something that can be understood in more than one way"
+                    },
+                    {
+                        word: "inadvertently",
+                        definition: "Without intention; accidentally",
+                        example: "She inadvertently deleted the file while trying to organize her documents.",
+                        options: ["purposefully", "accidentally", "carefully", "quickly"],
+                        correct: 1,
+                        difficulty: "hard",
+                        hint: "When you do something without meaning to"
+                    },
+                    {
+                        word: "pragmatic",
+                        definition: "Dealing with things sensibly and realistically; practical",
+                        example: "His pragmatic approach to the problem focused on finding a workable solution.",
+                        options: ["impractical", "practical", "dreamy", "unrealistic"],
+                        correct: 1,
+                        difficulty: "hard",
+                        hint: "Focusing on what actually works rather than theories"
+                    }
+                ]
+            },
+            // Level 10-12: Expert (High altitude to near summit)
+            {
+                words: [
+                    {
+                        word: "ephemeral",
+                        definition: "Lasting for a very short time; fleeting",
+                        example: "The ephemeral beauty of cherry blossoms makes them even more precious.",
+                        options: ["permanent", "short-lived", "lasting", "enduring"],
+                        correct: 1,
+                        difficulty: "hard",
+                        hint: "Something that doesn't last very long"
+                    },
+                    {
+                        word: "ubiquitous",
+                        definition: "Present, appearing, or found everywhere",
+                        example: "Smartphones have become ubiquitous in modern society.",
+                        options: ["rare", "everywhere", "hidden", "uncommon"],
+                        correct: 1,
+                        difficulty: "hard",
+                        hint: "Found all around you, wherever you look"
+                    },
+                    {
+                        word: "paradox",
+                        definition: "A seemingly absurd or contradictory statement that may be true",
+                        example: "The paradox of being happy and sad at the same time is common in complex emotions.",
+                        options: ["clear fact", "contradiction", "simple truth", "obvious statement"],
+                        correct: 1,
+                        difficulty: "hard",
+                        hint: "A statement that seems contradictory but might be true"
+                    }
+                ]
+            },
+            // Level 13-15: Master (Summit approach)
+            {
+                words: [
+                    {
+                        word: "cacophony",
+                        definition: "A harsh, discordant mixture of sounds",
+                        example: "The cacophony of car horns and construction made it impossible to concentrate.",
+                        options: ["melody", "harmony", "noise", "silence"],
+                        correct: 2,
+                        difficulty: "hard",
+                        hint: "Unpleasant mix of loud, different sounds"
+                    },
+                    {
+                        word: "quintessential",
+                        definition: "Representing the most perfect example of a quality or class",
+                        example: "The elegant restaurant was the quintessential fine dining experience.",
+                        options: ["imperfect", "worst", "perfect example", "average"],
+                        correct: 2,
+                        difficulty: "hard",
+                        hint: "The absolute best or most typical example of something"
+                    },
+                    {
+                        word: "vicarious",
+                        definition: "Experienced in the imagination through the feelings or actions of another person",
+                        example: "She lived vicariously through her daughter's adventures by reading her travel blog.",
+                        options: ["direct experience", "through others", "alone", "fake"],
+                        correct: 1,
+                        difficulty: "hard",
+                        hint: "Experiencing something through someone else's experiences"
+                    }
+                ]
+            }
+        ];
+
+        // Flatten all words into a single array
+        const allWords = vocabularyLevels.reduce((acc, level) => acc.concat(level.words), []);
+
+        // Game state
+        let currentWordIndex = 0;
+        let score = 0;
+        let hintsRemaining = 3;
+        let gameStarted = false;
+        let altitude = 0;
+
+        // Three.js setup
+        let scene, camera, renderer;
+        let mountain = [];
+        let clouds = [];
+        let snowflakes = [];
+        let climbers = [];
+
+        function initThreeJS() {
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 50;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Create mountain environment
+            createMountain();
+            createClouds();
+            createSnowflakes();
+            createClimber();
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xffd700, 1);
+            sunLight.position.set(50, 50, 50);
+            scene.add(sunLight);
+
+            const moonLight = new THREE.PointLight(0xaaddff, 0.5, 100);
+            moonLight.position.set(-30, 30, 30);
+            scene.add(moonLight);
+
+            // Handle resize
+            window.addEventListener('resize', onWindowResize);
+
+            // Start animation
+            animate();
+        }
+
+        function createMountain() {
+            // Main mountain peak
+            const peakGeometry = new THREE.ConeGeometry(15, 40, 4);
+            const peakMaterial = new THREE.MeshPhongMaterial({
+                color: 0x4a4a4a,
+                shininess: 30
+            });
+            const peak = new THREE.Mesh(peakGeometry, peakMaterial);
+            peak.position.set(0, 15, -20);
+            peak.rotation.y = Math.PI / 4;
+            scene.add(peak);
+            mountain.push(peak);
+
+            // Snow cap
+            const snowCapGeometry = new THREE.ConeGeometry(6, 10, 4);
+            const snowCapMaterial = new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                shininess: 80
+            });
+            const snowCap = new THREE.Mesh(snowCapGeometry, snowCapMaterial);
+            snowCap.position.set(0, 32, -20);
+            snowCap.rotation.y = Math.PI / 4;
+            scene.add(snowCap);
+            mountain.push(snowCap);
+
+            // Lower ridges
+            for (let i = 0; i < 3; i++) {
+                const ridgeGeometry = new THREE.ConeGeometry(10 + i * 3, 25 - i * 5, 4);
+                const ridgeMaterial = new THREE.MeshPhongMaterial({
+                    color: 0x5a5a5a,
+                    shininess: 30
+                });
+                const ridge = new THREE.Mesh(ridgeGeometry, ridgeMaterial);
+
+                const angle = (i / 3) * Math.PI * 2;
+                ridge.position.set(
+                    Math.cos(angle) * 20,
+                    -5 - i * 3,
+                    Math.sin(angle) * 20 - 10
+                );
+                ridge.rotation.y = angle + Math.PI / 4;
+
+                scene.add(ridge);
+                mountain.push(ridge);
+            }
+        }
+
+        function createClouds() {
+            const cloudGeometry = new THREE.SphereGeometry(5, 16, 16);
+            const cloudMaterial = new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.8
+            });
+
+            for (let i = 0; i < 8; i++) {
+                const cloud = new THREE.Mesh(cloudGeometry, cloudMaterial);
+                cloud.position.set(
+                    (Math.random() - 0.5) * 80,
+                    10 + Math.random() * 30,
+                    (Math.random() - 0.5) * 40 - 20
+                );
+                cloud.scale.set(
+                    1 + Math.random(),
+                    0.6 + Math.random() * 0.4,
+                    0.8 + Math.random() * 0.5
+                );
+
+                cloud.userData = {
+                    speed: 0.01 + Math.random() * 0.02,
+                    startY: cloud.position.y
+                };
+
+                scene.add(cloud);
+                clouds.push(cloud);
+            }
+        }
+
+        function createSnowflakes() {
+            const snowGeometry = new THREE.SphereGeometry(0.15, 8, 8);
+            const snowMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+            for (let i = 0; i < 200; i++) {
+                const snowflake = new THREE.Mesh(snowGeometry, snowMaterial);
+                snowflake.position.set(
+                    (Math.random() - 0.5) * 100,
+                    (Math.random() - 0.5) * 80,
+                    (Math.random() - 0.5) * 50 - 20
+                );
+
+                snowflake.userData = {
+                    fallSpeed: 0.02 + Math.random() * 0.05,
+                    driftSpeed: (Math.random() - 0.5) * 0.02
+                };
+
+                scene.add(snowflake);
+                snowflakes.push(snowflake);
+            }
+        }
+
+        function createClimber() {
+            // Simple climber figure
+            const climberGroup = new THREE.Group();
+
+            // Body
+            const bodyGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 8);
+            const bodyMaterial = new THREE.MeshPhongMaterial({ color: 0xff6b6b });
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.position.y = 0.75;
+            climberGroup.add(body);
+
+            // Head
+            const headGeometry = new THREE.SphereGeometry(0.4, 16, 16);
+            const headMaterial = new THREE.MeshPhongMaterial({ color: 0xffdbac });
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.y = 1.9;
+            climberGroup.add(head);
+
+            // Hat
+            const hatGeometry = new THREE.ConeGeometry(0.6, 0.8, 8);
+            const hatMaterial = new THREE.MeshPhongMaterial({ color: 0x4ecdc4 });
+            const hat = new THREE.Mesh(hatGeometry, hatMaterial);
+            hat.position.y = 2.5;
+            climberGroup.add(hat);
+
+            climberGroup.position.set(5, -20, 10);
+            scene.add(climberGroup);
+            climbers.push(climberGroup);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate clouds
+            clouds.forEach(cloud => {
+                cloud.position.x += cloud.userData.speed;
+                if (cloud.position.x > 50) {
+                    cloud.position.x = -50;
+                }
+            });
+
+            // Animate snowflakes
+            snowflakes.forEach(snowflake => {
+                snowflake.position.y -= snowflake.userData.fallSpeed;
+                snowflake.position.x += snowflake.userData.driftSpeed;
+
+                if (snowflake.position.y < -40) {
+                    snowflake.position.y = 40;
+                    snowflake.position.x = (Math.random() - 0.5) * 100;
+                }
+            });
+
+            // Move climber based on altitude
+            if (climbers.length > 0) {
+                const climber = climbers[0];
+                climber.position.y = -20 + (altitude / 100) * 40;
+                climber.rotation.y += 0.01;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function showWord() {
+            if (currentWordIndex >= allWords.length) {
+                showCelebration();
+                return;
+            }
+
+            const wordData = allWords[currentWordIndex];
+            const altitudeGained = (currentWordIndex / allWords.length) * 8848; // Height of Everest
+            altitude = Math.round(altitudeGained);
+
+            document.getElementById('altitude-display').textContent = altitude + 'm';
+            document.getElementById('challenge-word').textContent = wordData.word;
+            document.getElementById('word-definition').textContent = wordData.definition;
+            document.getElementById('example-sentence').textContent = '"' + wordData.example + '"';
+
+            // Set difficulty badge
+            const badge = document.getElementById('difficulty-badge');
+            badge.textContent = wordData.difficulty.toUpperCase();
+            badge.className = 'difficulty-' + wordData.difficulty;
+
+            // Update level indicator
+            updateLevelIndicator();
+
+            // Create option buttons
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            wordData.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.addEventListener('click', () => checkAnswer(index));
+                optionsContainer.appendChild(btn);
+            });
+
+            // Update altitude progress
+            const progress = (currentWordIndex / allWords.length) * 100;
+            document.getElementById('altitude-fill').style.height = progress + '%';
+            document.getElementById('climber-icon').style.bottom = progress + '%';
+
+            // Hide hint display
+            document.getElementById('hint-display').style.display = 'none';
+        }
+
+        function updateLevelIndicator() {
+            const indicator = document.getElementById('level-indicator');
+            indicator.innerHTML = '';
+
+            const totalLevels = 15;
+            const currentLevel = Math.min(currentWordIndex + 1, totalLevels);
+
+            for (let i = 1; i <= totalLevels; i++) {
+                const node = document.createElement('div');
+                node.className = 'level-node';
+                node.textContent = i;
+
+                if (i < currentWordIndex + 1) {
+                    node.classList.add('completed');
+                } else if (i === currentWordIndex + 1) {
+                    node.classList.add('active');
+                }
+
+                indicator.appendChild(node);
+            }
+        }
+
+        function checkAnswer(selectedIndex) {
+            const wordData = allWords[currentWordIndex];
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback-message');
+
+            // Disable all buttons
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === wordData.correct) {
+                // Correct answer
+                buttons[selectedIndex].classList.add('correct');
+                feedback.textContent = '🎉 Correct! Moving up!';
+                feedback.style.color = '#38ef7d';
+                score += 100 + (altitude / 100); // Bonus for higher altitude
+                document.getElementById('score').textContent = Math.round(score);
+            } else {
+                // Wrong answer
+                buttons[selectedIndex].classList.add('wrong');
+                buttons[wordData.correct].classList.add('correct');
+                feedback.textContent = '❌ Keep trying!';
+                feedback.style.color = '#f45c43';
+            }
+
+            feedback.classList.add('show');
+
+            setTimeout(() => {
+                feedback.classList.remove('show');
+                currentWordIndex++;
+                showWord();
+            }, 1500);
+        }
+
+        function showHint() {
+            if (hintsRemaining <= 0) {
+                alert('No hints remaining!');
+                return;
+            }
+
+            const wordData = allWords[currentWordIndex];
+            document.getElementById('hint-display').textContent = '💡 ' + wordData.hint;
+            document.getElementById('hint-display').style.display = 'block';
+            hintsRemaining--;
+            document.getElementById('hints').textContent = hintsRemaining;
+            score -= 25; // Penalty for using hint
+            document.getElementById('score').textContent = Math.round(score);
+        }
+
+        function showCelebration() {
+            document.getElementById('celebration').style.display = 'flex';
+            document.getElementById('altitude-fill').style.height = '100%';
+            document.getElementById('climber-icon').style.bottom = '100%';
+            document.getElementById('altitude-display').textContent = '8848m';
+
+            setTimeout(() => {
+                alert(`🏔️ Congratulations! You reached the summit! Final Score: ${Math.round(score)} 🏔️`);
+                location.reload();
+            }, 2000);
+        }
+
+        // Event listeners
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            gameStarted = true;
+            initThreeJS();
+            showWord();
+        });
+
+        document.getElementById('hint-btn').addEventListener('click', showHint);
+    </script>
+</body>
+</html>

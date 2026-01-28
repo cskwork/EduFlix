@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>패턴 행성 3D | 동아출판 수학</title>
+    <meta name="description" content="우주를 여행하며 숫자와 도형 패턴을 발견하세요!">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ec4899;
+            --primary-dark: #db2777;
+            --secondary: #8b5cf6;
+            --accent: #fbbf24;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #fff;
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Top bar */
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            pointer-events: auto;
+            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+        }
+
+        .stat-box {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 14px 24px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-box .icon { font-size: 22px; }
+        .stat-box .value { font-size: 20px; font-weight: 700; color: var(--accent); }
+
+        /* Pattern type selector */
+        #pattern-selector {
+            position: absolute;
+            top: 100px;
+            left: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 24px;
+            border-radius: 20px;
+            pointer-events: auto;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            width: 240px;
+        }
+
+        #pattern-selector h3 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .pattern-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 16px;
+            margin: 8px 0;
+            background: rgba(236, 72, 153, 0.2);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pattern-btn:hover {
+            background: rgba(236, 72, 153, 0.4);
+            transform: translateX(5px);
+        }
+
+        .pattern-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-color: var(--primary);
+        }
+
+        .pattern-btn .pattern-icon { font-size: 24px; }
+
+        /* Main game area */
+        #game-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 700px;
+            text-align: center;
+            pointer-events: auto;
+        }
+
+        #pattern-display {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 24px;
+            margin-bottom: 24px;
+            border: 2px solid var(--glass-border);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+        }
+
+        #pattern-title {
+            font-size: 20px;
+            color: var(--accent);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        #pattern-sequence {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .pattern-item {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 900;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(236, 72, 153, 0.3) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .pattern-item.shape {
+            font-size: 40px;
+        }
+
+        .pattern-item.mystery {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.3) 0%, rgba(245, 158, 11, 0.3) 100%);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        #answer-options {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .answer-option {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 900;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .answer-option:hover {
+            transform: scale(1.1);
+            border-color: var(--primary);
+            box-shadow: 0 8px 30px rgba(236, 72, 153, 0.4);
+        }
+
+        .answer-option.correct {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            border-color: var(--success);
+            animation: pulse 0.5s;
+        }
+
+        .answer-option.wrong {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            border-color: var(--danger);
+            animation: shake 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Planet info */
+        #planet-info {
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 24px;
+            border-radius: 20px;
+            pointer-events: auto;
+            border: 1px solid var(--glass-border);
+            width: 280px;
+            text-align: center;
+        }
+
+        #planet-info .planet-icon { font-size: 64px; margin-bottom: 16px; }
+        #planet-info h3 { color: var(--accent); font-size: 22px; margin-bottom: 8px; }
+        #planet-info p { color: rgba(255, 255, 255, 0.7); font-size: 14px; line-height: 1.6; }
+
+        .planet-progress {
+            margin-top: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        .planet-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.5s;
+        }
+
+        /* Feedback */
+        #feedback-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 72px;
+            font-weight: 900;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        #feedback-message.show {
+            opacity: 1;
+            animation: feedbackPop 0.5s ease;
+        }
+
+        @keyframes feedbackPop {
+            0% { transform: translate(-50%, -50%) scale(0.5); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Start screen */
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        #start-screen h1 {
+            font-size: clamp(40px, 8vw, 72px);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        #start-screen .subtitle {
+            font-size: clamp(16px, 3vw, 22px);
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 48px;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.6;
+            padding: 0 20px;
+        }
+
+        #start-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, #f59e0b 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 22px 64px;
+            color: var(--dark);
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 40px rgba(251, 191, 36, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #start-btn:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.7);
+        }
+
+        .features {
+            display: flex;
+            gap: 40px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .feature {
+            text-align: center;
+            max-width: 180px;
+        }
+
+        .feature-icon { font-size: 48px; margin-bottom: 12px; }
+        .feature-title { font-weight: 700; margin-bottom: 8px; color: #fff; }
+        .feature-desc { font-size: 14px; color: rgba(255, 255, 255, 0.6); }
+
+        /* Streak display */
+        #streak-display {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 16px 40px;
+            border-radius: 50px;
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            pointer-events: auto;
+        }
+
+        .streak-item { text-align: center; }
+        .streak-item .label { font-size: 12px; color: rgba(255, 255, 255, 0.7); }
+        .streak-item .value { font-size: 24px; font-weight: 900; color: var(--accent); }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            #pattern-selector, #planet-info { display: none; }
+            .pattern-item { width: 55px; height: 55px; font-size: 24px; }
+            .answer-option { width: 60px; height: 60px; font-size: 24px; }
+            #pattern-display { padding: 24px; }
+            .stat-box { padding: 10px 14px; font-size: 13px; }
+            #top-bar { flex-wrap: wrap; gap: 8px; justify-content: center; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="canvas-container"></div>
+
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box">
+                    <span class="icon">🪐</span>
+                    <span>행성</span>
+                    <span class="value" id="planet-num">1</span>
+                </div>
+                <div class="stat-box">
+                    <span class="icon">⭐</span>
+                    <span>점수</span>
+                    <span class="value" id="score">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="icon">✅</span>
+                    <span>정답</span>
+                    <span class="value" id="correct-count">0</span>
+                </div>
+            </div>
+
+            <div id="pattern-selector">
+                <h3>🌟 패턴 유형</h3>
+                <button class="pattern-btn active" data-type="number">
+                    <span class="pattern-icon">🔢</span>
+                    <span>숫자 패턴</span>
+                </button>
+                <button class="pattern-btn" data-type="shape">
+                    <span class="pattern-icon">🔷</span>
+                    <span>도형 패턴</span>
+                </button>
+                <button class="pattern-btn" data-type="color">
+                    <span class="pattern-icon">🎨</span>
+                    <span>색상 패턴</span>
+                </button>
+                <button class="pattern-btn" data-type="mixed">
+                    <span class="pattern-icon">🌈</span>
+                    <span>혼합 패턴</span>
+                </button>
+            </div>
+
+            <div id="planet-info">
+                <div class="planet-icon" id="current-planet">🪐</div>
+                <h3 id="planet-name">패턴 행성</h3>
+                <p id="planet-desc">패턴을 찾아 빈칸을 채우세요!</p>
+                <div class="planet-progress">
+                    <div class="planet-progress-fill" id="planet-progress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div id="game-area">
+                <div id="pattern-display">
+                    <div id="pattern-title">다음에 올 것은 무엇일까요?</div>
+                    <div id="pattern-sequence"></div>
+                    <div id="answer-options"></div>
+                </div>
+            </div>
+
+            <div id="streak-display">
+                <div class="streak-item">
+                    <div class="label">연속 정답</div>
+                    <div class="value">🔥 <span id="streak">0</span></div>
+                </div>
+                <div class="streak-item">
+                    <div class="label">레벨</div>
+                    <div class="value">🚀 <span id="level">1</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="feedback-message"></div>
+
+        <div id="start-screen">
+            <div class="stars" id="stars"></div>
+            <h1>🪐 패턴 행성 3D</h1>
+            <p class="subtitle">우주를 여행하며 신비로운 패턴을 발견하세요! 숫자, 도형, 색상 패턴을 찾아 우주 탐험가가 되어보세요!</p>
+            <button id="start-btn">
+                <span>탐험 시작!</span>
+                <span>🚀</span>
+            </button>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🔢</div>
+                    <div class="feature-title">숫자 패턴</div>
+                    <div class="feature-desc">덧셈, 뺄셈, 곱셈 규칙</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔷</div>
+                    <div class="feature-title">도형 패턴</div>
+                    <div class="feature-desc">반복되는 도형 찾기</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌈</div>
+                    <div class="feature-title">혼합 패턴</div>
+                    <div class="feature-desc">복합 규칙 발견하기</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        // Pattern generators
+        const patternGenerators = {
+            number: {
+                easy: [
+                    { rule: 'add2', generate: (i) => 2 + i * 2, name: '+2 규칙' },
+                    { rule: 'add3', generate: (i) => 3 + i * 3, name: '+3 규칙' },
+                    { rule: 'add5', generate: (i) => 5 + i * 5, name: '+5 규칙' }
+                ],
+                medium: [
+                    { rule: 'double', generate: (i) => Math.pow(2, i + 1), name: '×2 규칙' },
+                    { rule: 'square', generate: (i) => (i + 1) * (i + 1), name: '제곱수' },
+                    { rule: 'fib', generate: (i, seq) => i < 2 ? i + 1 : seq[i-1] + seq[i-2], name: '피보나치' }
+                ],
+                hard: [
+                    { rule: 'triple', generate: (i) => Math.pow(3, i), name: '×3 규칙' },
+                    { rule: 'cube', generate: (i) => Math.pow(i + 1, 3), name: '세제곱수' }
+                ]
+            },
+            shape: {
+                easy: [
+                    { rule: 'repeat2', sequence: ['🔵', '🔴'], name: '2개 반복' },
+                    { rule: 'repeat3', sequence: ['🟡', '🟢', '🔵'], name: '3개 반복' },
+                    { rule: 'shapes2', sequence: ['⭐', '⬡'], name: '별과 육각형' }
+                ],
+                medium: [
+                    { rule: 'repeat4', sequence: ['🔷', '🔶', '⬛', '⬜'], name: '4개 반복' },
+                    { rule: 'grow', sequence: ['▪️', '◾', '◼️', '⬛'], name: '성장 패턴' }
+                ],
+                hard: [
+                    { rule: 'complex', sequence: ['🔵', '🔵', '🔴', '🔵', '🔵', '🔴'], name: '복합 반복' }
+                ]
+            },
+            color: {
+                easy: [
+                    { rule: 'rgb', sequence: ['🔴', '🟢', '🔵'], name: 'RGB 순서' },
+                    { rule: 'warm', sequence: ['🔴', '🟠', '🟡'], name: '따뜻한 색' }
+                ],
+                medium: [
+                    { rule: 'rainbow', sequence: ['🔴', '🟠', '🟡', '🟢', '🔵', '🟣'], name: '무지개' },
+                    { rule: 'pastel', sequence: ['🩷', '🩵', '💛', '💚'], name: '파스텔' }
+                ],
+                hard: [
+                    { rule: 'complex', sequence: ['🔴', '🔴', '🟢', '🟢', '🟢', '🔵'], name: '복합 색상' }
+                ]
+            },
+            mixed: {
+                easy: [
+                    { rule: 'numShape', generate: (i) => i % 2 === 0 ? (i/2 + 1).toString() : '⭐', name: '숫자와 별' }
+                ],
+                medium: [
+                    { rule: 'alternate', generate: (i) => i % 3 === 0 ? '🔵' : (i % 3 === 1 ? (i+1).toString() : '🔴'), name: '혼합 패턴' }
+                ],
+                hard: [
+                    { rule: 'formula', generate: (i) => ['🌟', (i+1)*2, '🌙'][i % 3], name: '공식 패턴' }
+                ]
+            }
+        };
+
+        const planets = [
+            { icon: '🌍', name: '지구', desc: '기초 패턴을 배워요!' },
+            { icon: '🌙', name: '달', desc: '조금 더 어려운 패턴!' },
+            { icon: '🔴', name: '화성', desc: '도전적인 패턴!' },
+            { icon: '🪐', name: '토성', desc: '복잡한 패턴 마스터!' },
+            { icon: '⭐', name: '북극성', desc: '최고 난이도!' }
+        ];
+
+        // Game state
+        let currentPatternType = 'number';
+        let currentDifficulty = 'easy';
+        let currentPattern = null;
+        let correctAnswer = null;
+        let score = 0;
+        let streak = 0;
+        let level = 1;
+        let correctCount = 0;
+        let planetIndex = 0;
+        let gameStarted = false;
+
+        // Three.js
+        let scene, camera, renderer;
+        let planet, stars = [], asteroids = [];
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 30);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            setupLighting();
+            createSpace();
+            createPlanet();
+            createAsteroids();
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function setupLighting() {
+            const ambient = new THREE.AmbientLight(0x404080, 0.3);
+            scene.add(ambient);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 1);
+            sunLight.position.set(50, 30, 50);
+            scene.add(sunLight);
+
+            const pinkLight = new THREE.PointLight(0xec4899, 0.5, 50);
+            pinkLight.position.set(-20, 10, 20);
+            scene.add(pinkLight);
+
+            const purpleLight = new THREE.PointLight(0x8b5cf6, 0.5, 50);
+            purpleLight.position.set(20, -10, 20);
+            scene.add(purpleLight);
+        }
+
+        function createSpace() {
+            // Create stars
+            const starGeometry = new THREE.BufferGeometry();
+            const starCount = 1000;
+            const positions = new Float32Array(starCount * 3);
+
+            for (let i = 0; i < starCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 200;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 200;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 200 - 50;
+            }
+
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const starMaterial = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 0.3,
+                transparent: true,
+                opacity: 0.8
+            });
+
+            const starField = new THREE.Points(starGeometry, starMaterial);
+            scene.add(starField);
+            stars.push(starField);
+        }
+
+        function createPlanet() {
+            const planetGeometry = new THREE.SphereGeometry(8, 64, 64);
+            const planetMaterial = new THREE.MeshPhongMaterial({
+                color: 0x8b5cf6,
+                shininess: 30,
+                emissive: 0x4c1d95,
+                emissiveIntensity: 0.2
+            });
+
+            planet = new THREE.Mesh(planetGeometry, planetMaterial);
+            planet.position.z = -20;
+            scene.add(planet);
+
+            // Add rings
+            const ringGeometry = new THREE.RingGeometry(10, 14, 64);
+            const ringMaterial = new THREE.MeshBasicMaterial({
+                color: 0xfbbf24,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.5
+            });
+
+            const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+            ring.rotation.x = Math.PI / 2.5;
+            planet.add(ring);
+        }
+
+        function createAsteroids() {
+            for (let i = 0; i < 20; i++) {
+                const geometry = new THREE.DodecahedronGeometry(0.5 + Math.random() * 0.5, 0);
+                const material = new THREE.MeshPhongMaterial({
+                    color: [0xec4899, 0x8b5cf6, 0xfbbf24][Math.floor(Math.random() * 3)],
+                    flatShading: true
+                });
+
+                const asteroid = new THREE.Mesh(geometry, material);
+                asteroid.position.set(
+                    (Math.random() - 0.5) * 60,
+                    (Math.random() - 0.5) * 40,
+                    (Math.random() - 0.5) * 40 - 30
+                );
+
+                asteroid.userData = {
+                    rotationSpeed: (Math.random() - 0.5) * 0.02,
+                    orbitSpeed: 0.001 + Math.random() * 0.002,
+                    orbitRadius: asteroid.position.length(),
+                    orbitAngle: Math.random() * Math.PI * 2
+                };
+
+                scene.add(asteroid);
+                asteroids.push(asteroid);
+            }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.001;
+
+            // Rotate planet
+            if (planet) {
+                planet.rotation.y += 0.002;
+            }
+
+            // Animate asteroids
+            asteroids.forEach(asteroid => {
+                asteroid.rotation.x += asteroid.userData.rotationSpeed;
+                asteroid.rotation.y += asteroid.userData.rotationSpeed;
+                
+                asteroid.userData.orbitAngle += asteroid.userData.orbitSpeed;
+                asteroid.position.x = Math.cos(asteroid.userData.orbitAngle) * asteroid.userData.orbitRadius * 0.3;
+            });
+
+            // Animate stars
+            stars.forEach(starField => {
+                starField.rotation.y += 0.0001;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        function generatePattern() {
+            const patterns = patternGenerators[currentPatternType];
+            const difficulty = level <= 3 ? 'easy' : (level <= 6 ? 'medium' : 'hard');
+            const availablePatterns = patterns[difficulty] || patterns.easy;
+            const pattern = availablePatterns[Math.floor(Math.random() * availablePatterns.length)];
+
+            let sequence = [];
+            let answerIndex = 4 + Math.floor(Math.random() * 2); // Position 5 or 6
+
+            if (pattern.sequence) {
+                // Repeating pattern
+                for (let i = 0; i <= answerIndex; i++) {
+                    sequence.push(pattern.sequence[i % pattern.sequence.length]);
+                }
+            } else {
+                // Generated pattern
+                for (let i = 0; i <= answerIndex; i++) {
+                    sequence.push(pattern.generate(i, sequence));
+                }
+            }
+
+            correctAnswer = sequence[answerIndex];
+            sequence[answerIndex] = '?';
+            currentPattern = { sequence, answerIndex, name: pattern.name };
+
+            displayPattern();
+        }
+
+        function displayPattern() {
+            const sequenceContainer = document.getElementById('pattern-sequence');
+            sequenceContainer.innerHTML = '';
+
+            currentPattern.sequence.forEach((item, index) => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'pattern-item' + (item === '?' ? ' mystery' : '');
+                
+                if (typeof item === 'string' && item.length === 1 && !isNaN(item)) {
+                    itemEl.textContent = item;
+                } else if (typeof item === 'number') {
+                    itemEl.textContent = item;
+                } else {
+                    itemEl.textContent = item;
+                    itemEl.classList.add('shape');
+                }
+                
+                itemEl.style.animationDelay = (index * 0.1) + 's';
+                sequenceContainer.appendChild(itemEl);
+            });
+
+            generateOptions();
+            document.getElementById('pattern-title').textContent = 
+                `패턴: ${currentPattern.name} - 빈칸에 들어갈 것은?`;
+        }
+
+        function generateOptions() {
+            const optionsContainer = document.getElementById('answer-options');
+            optionsContainer.innerHTML = '';
+
+            let options = [correctAnswer];
+
+            // Generate wrong answers
+            if (typeof correctAnswer === 'number') {
+                while (options.length < 4) {
+                    const wrong = correctAnswer + Math.floor(Math.random() * 10) - 5;
+                    if (wrong > 0 && !options.includes(wrong)) {
+                        options.push(wrong);
+                    }
+                }
+            } else {
+                const shapes = ['🔵', '🔴', '🟡', '🟢', '🟣', '⭐', '⬡', '🔷', '🔶', '⬛'];
+                while (options.length < 4) {
+                    const wrong = shapes[Math.floor(Math.random() * shapes.length)];
+                    if (!options.includes(wrong)) {
+                        options.push(wrong);
+                    }
+                }
+            }
+
+            // Shuffle options
+            options.sort(() => Math.random() - 0.5);
+
+            options.forEach(option => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'answer-option';
+                optionEl.textContent = option;
+                optionEl.addEventListener('click', () => checkAnswer(option, optionEl));
+                optionsContainer.appendChild(optionEl);
+            });
+        }
+
+        function checkAnswer(selected, element) {
+            const options = document.querySelectorAll('.answer-option');
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+
+            if (selected === correctAnswer || selected.toString() === correctAnswer.toString()) {
+                element.classList.add('correct');
+                streak++;
+                correctCount++;
+                
+                const points = 100 + streak * 20;
+                score += points;
+
+                showFeedback('🎉 정답!', '#10b981');
+                createCelebration();
+
+                document.getElementById('score').textContent = score;
+                document.getElementById('correct-count').textContent = correctCount;
+                document.getElementById('streak').textContent = streak;
+
+                // Level up
+                if (correctCount % 5 === 0) {
+                    level++;
+                    document.getElementById('level').textContent = level;
+                    
+                    if (level % 3 === 0 && planetIndex < planets.length - 1) {
+                        planetIndex++;
+                        updatePlanet();
+                    }
+                }
+
+                updateProgress();
+
+                setTimeout(generatePattern, 1200);
+            } else {
+                element.classList.add('wrong');
+                
+                // Highlight correct answer
+                options.forEach(opt => {
+                    if (opt.textContent === correctAnswer.toString()) {
+                        opt.classList.add('correct');
+                    }
+                });
+
+                streak = 0;
+                score = Math.max(0, score - 20);
+
+                showFeedback('❌ 다시 해봐요!', '#ef4444');
+
+                document.getElementById('score').textContent = score;
+                document.getElementById('streak').textContent = streak;
+
+                setTimeout(() => {
+                    options.forEach(opt => {
+                        opt.style.pointerEvents = 'auto';
+                        opt.classList.remove('wrong', 'correct');
+                    });
+                }, 1500);
+            }
+        }
+
+        function updatePlanet() {
+            const p = planets[planetIndex];
+            document.getElementById('current-planet').textContent = p.icon;
+            document.getElementById('planet-name').textContent = p.name;
+            document.getElementById('planet-desc').textContent = p.desc;
+            document.getElementById('planet-num').textContent = planetIndex + 1;
+
+            // Change planet color
+            if (planet) {
+                const colors = [0x8b5cf6, 0xfbbf24, 0xef4444, 0x10b981, 0x06b6d4];
+                planet.material.color.setHex(colors[planetIndex % colors.length]);
+            }
+        }
+
+        function updateProgress() {
+            const progress = Math.min(100, (correctCount % 5) * 20);
+            document.getElementById('planet-progress').style.width = progress + '%';
+        }
+
+        function showFeedback(message, color) {
+            const feedback = document.getElementById('feedback-message');
+            feedback.textContent = message;
+            feedback.style.color = color;
+            feedback.style.textShadow = `0 0 40px ${color}`;
+            feedback.classList.add('show');
+
+            setTimeout(() => {
+                feedback.classList.remove('show');
+            }, 1200);
+        }
+
+        function createCelebration() {
+            const colors = ['#ec4899', '#8b5cf6', '#fbbf24', '#10b981'];
+            
+            for (let i = 0; i < 15; i++) {
+                const star = document.createElement('div');
+                star.textContent = '⭐';
+                star.style.position = 'fixed';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = '-50px';
+                star.style.fontSize = (20 + Math.random() * 20) + 'px';
+                star.style.pointerEvents = 'none';
+                star.style.zIndex = '1000';
+                star.style.animation = `fall ${2 + Math.random()}s ease-out forwards`;
+                document.body.appendChild(star);
+
+                setTimeout(() => star.remove(), 3000);
+            }
+        }
+
+        function selectPatternType(type) {
+            currentPatternType = type;
+            
+            document.querySelectorAll('.pattern-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.type === type);
+            });
+            
+            generatePattern();
+        }
+
+        // Create stars on start screen
+        function createStarsOnScreen() {
+            const container = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(star);
+            }
+        }
+
+        createStarsOnScreen();
+
+        // Add falling animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Event listeners
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.opacity = '0';
+            document.getElementById('start-screen').style.transition = 'opacity 0.5s';
+            
+            setTimeout(() => {
+                document.getElementById('start-screen').style.display = 'none';
+                gameStarted = true;
+                initThreeJS();
+                updatePlanet();
+                generatePattern();
+            }, 500);
+        });
+
+        document.querySelectorAll('.pattern-btn').forEach(btn => {
+            btn.addEventListener('click', () => selectPatternType(btn.dataset.type));
+        });
+    </script>
+</body>
+</html>

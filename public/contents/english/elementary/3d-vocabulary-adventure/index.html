@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Vocabulary Adventure - Dong-A Elementary English</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            overflow: hidden;
+            background: #000011;
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Sound Feedback Indicator */
+        .sound-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .sound-indicator.active {
+            opacity: 1;
+        }
+
+        .sound-wave {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,255,255,0.8) 0%, rgba(0,255,255,0) 70%);
+            animation: soundPulse 0.5s ease-out;
+        }
+
+        @keyframes soundPulse {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+        }
+
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 12px 20px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .stat-box .icon {
+            font-size: 20px;
+        }
+
+        .stat-value {
+            color: #00ffff;
+            font-weight: 800;
+        }
+
+        /* Streak indicator */
+        #streak-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .streak-flame {
+            font-size: 18px;
+            animation: flameWiggle 0.5s ease-in-out infinite;
+        }
+
+        @keyframes flameWiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        #word-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: auto;
+            max-width: 90%;
+        }
+
+        #current-word {
+            font-size: clamp(32px, 8vw, 56px);
+            font-weight: 800;
+            color: #00ffff;
+            text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 4px 8px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+            animation: wordGlow 2s ease-in-out infinite alternate;
+            letter-spacing: 2px;
+        }
+
+        @keyframes wordGlow {
+            from { 
+                text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 4px 8px rgba(0,0,0,0.5);
+                filter: brightness(1);
+            }
+            to { 
+                text-shadow: 0 0 30px #ff00ff, 0 0 60px #ff00ff, 0 4px 8px rgba(0,0,0,0.5);
+                filter: brightness(1.1);
+            }
+        }
+
+        #word-type {
+            font-size: 14px;
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #definition {
+            font-size: clamp(16px, 3vw, 22px);
+            color: #fff;
+            background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20,20,40,0.9) 100%);
+            padding: 25px 30px;
+            border-radius: 20px;
+            max-width: 550px;
+            margin: 0 auto 15px;
+            line-height: 1.6;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        #example-sentence {
+            font-size: 14px;
+            color: #aaa;
+            font-style: italic;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+
+        #options-container {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            pointer-events: auto;
+            max-width: 90%;
+        }
+
+        .option-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 16px;
+            padding: 16px 28px;
+            color: white;
+            font-size: clamp(14px, 2.5vw, 18px);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4), 0 3px 6px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            min-width: 140px;
+        }
+
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6), 0 5px 10px rgba(0,0,0,0.3);
+        }
+
+        .option-btn:hover::before {
+            left: 100%;
+        }
+
+        .option-btn:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        .option-btn.correct {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            animation: correctPulse 0.5s ease-out;
+        }
+
+        .option-btn.wrong {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            animation: wrongShake 0.5s ease-out;
+        }
+
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+        }
+
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0f2027 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        #start-screen h1 {
+            font-size: clamp(36px, 10vw, 64px);
+            font-weight: 800;
+            color: #00ffff;
+            text-shadow: 0 0 40px #00ffff, 0 0 80px #00ffff;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: titleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        #start-screen .subtitle {
+            font-size: clamp(18px, 4vw, 28px);
+            color: #ffd700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        #start-screen p {
+            font-size: clamp(14px, 3vw, 20px);
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        #start-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 20px 50px;
+            color: white;
+            font-size: clamp(18px, 4vw, 26px);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.7);
+        }
+
+        #start-btn::after {
+            content: '🚀';
+            margin-left: 10px;
+        }
+
+        /* Difficulty selector */
+        #difficulty-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .difficulty-btn {
+            padding: 12px 24px;
+            border-radius: 25px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+        }
+
+        .difficulty-btn:hover {
+            transform: scale(1.05);
+        }
+
+        #feedback-message {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(24px, 6vw, 40px);
+            font-weight: 800;
+            opacity: 0;
+            transition: opacity 0.3s;
+            text-shadow: 0 0 30px currentColor, 0 4px 8px rgba(0,0,0,0.5);
+            z-index: 60;
+        }
+
+        #feedback-message.show {
+            opacity: 1;
+            animation: feedbackPop 0.5s ease-out;
+        }
+
+        @keyframes feedbackPop {
+            0% { transform: translateX(-50%) scale(0.5); }
+            50% { transform: translateX(-50%) scale(1.2); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        #progress-bar-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(80%, 500px);
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #ffd700);
+            background-size: 200% 100%;
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: progressShimmer 2s linear infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes progressShimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        #celebration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            z-index: 50;
+            background: rgba(0,0,0,0.7);
+        }
+
+        #celebration h2 {
+            font-size: clamp(40px, 12vw, 80px);
+            font-weight: 800;
+            color: #ffd700;
+            text-shadow: 0 0 50px #ffd700;
+            animation: celebrateText 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes celebrateText {
+            from { transform: scale(1) rotate(-2deg); }
+            to { transform: scale(1.1) rotate(2deg); }
+        }
+
+        #celebration p {
+            font-size: 24px;
+            color: white;
+            margin-top: 20px;
+        }
+
+        /* Achievement popup */
+        #achievement-popup {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            padding: 20px 30px;
+            border-radius: 15px;
+            color: #1a1a2e;
+            font-weight: 700;
+            transform: translateX(400px);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 200;
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.5);
+        }
+
+        #achievement-popup.show {
+            transform: translateX(0);
+        }
+
+        #achievement-popup .achievement-icon {
+            font-size: 30px;
+            margin-right: 10px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #top-bar {
+                justify-content: center;
+            }
+            
+            .stat-box {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            #options-container {
+                bottom: 80px;
+            }
+
+            .option-btn {
+                padding: 14px 20px;
+                min-width: 120px;
+            }
+
+            #progress-bar-container {
+                bottom: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #ui-overlay {
+                padding: 10px;
+            }
+
+            .stat-box {
+                padding: 8px 12px;
+                font-size: 12px;
+                border-radius: 15px;
+            }
+
+            #definition {
+                padding: 15px 20px;
+            }
+
+            .option-btn {
+                padding: 12px 16px;
+                font-size: 14px;
+                min-width: 100px;
+            }
+        }
+
+        /* Loading screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(0,255,255,0.2);
+            border-top-color: #00ffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #loading-screen p {
+            color: #00ffff;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="loader"></div>
+        <p>Loading Adventure...</p>
+    </div>
+
+    <div id="game-container">
+        <div id="canvas-container"></div>
+
+        <div class="sound-indicator" id="sound-indicator">
+            <div class="sound-wave"></div>
+        </div>
+
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box">
+                    <span class="icon">⭐</span>
+                    Score: <span class="stat-value" id="score">0</span>
+                </div>
+                <div class="stat-box" id="streak-container">
+                    <span class="streak-flame">🔥</span>
+                    Streak: <span class="stat-value" id="streak">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="icon">❤️</span>
+                    Lives: <span class="stat-value" id="lives">3</span>
+                </div>
+                <div class="stat-box">
+                    <span class="icon">📚</span>
+                    Word: <span class="stat-value" id="word-number">1</span>/<span id="total-words">20</span>
+                </div>
+            </div>
+
+            <div id="word-display">
+                <div id="word-type">Adjective</div>
+                <div id="current-word">Loading...</div>
+                <div id="definition"></div>
+                <div id="example-sentence"></div>
+            </div>
+
+            <div id="options-container"></div>
+
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div id="feedback-message"></div>
+        
+        <div id="celebration">
+            <h2>🎉 Amazing! 🎉</h2>
+            <p>You completed the vocabulary adventure!</p>
+        </div>
+
+        <div id="achievement-popup">
+            <span class="achievement-icon">🏆</span>
+            <span id="achievement-text">First Word!</span>
+        </div>
+
+        <div id="start-screen">
+            <h1>🚀 3D Vocabulary Adventure</h1>
+            <p class="subtitle">Explore Space & Learn Words!</p>
+            <p>Journey through the cosmos while mastering new vocabulary! Read the definition and select the word that matches. Collect stars, build streaks, and unlock achievements!</p>
+            <p style="font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 10px;">⌨️ Keyboard: Press 1-4 to select answers, Space to hear pronunciation</p>
+            
+            <div id="difficulty-selector">
+                <button class="difficulty-btn active" data-level="easy">🌟 Easy</button>
+                <button class="difficulty-btn" data-level="medium">⭐ Medium</button>
+                <button class="difficulty-btn" data-level="hard">💫 Hard</button>
+            </div>
+            
+            <button id="start-btn">Start Adventure</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        // Extended vocabulary data with difficulty levels
+        const vocabularyData = {
+            easy: [
+                { word: "enormous", type: "Adjective", options: ["huge", "tiny", "fast", "slow"], correct: 0, definition: "Very large in size; much bigger than usual", example: "The enormous elephant was the biggest animal at the zoo." },
+                { word: "curious", type: "Adjective", options: ["scared", "eager to learn", "angry", "tired"], correct: 1, definition: "Wanting to learn or know more about something", example: "The curious kitten explored every corner of the room." },
+                { word: "ancient", type: "Adjective", options: ["new", "bright", "very old", "broken"], correct: 2, definition: "Very old; from a long time ago", example: "The ancient castle had stood for a thousand years." },
+                { word: "delicious", type: "Adjective", options: ["tasty", "bad", "ugly", "noisy"], correct: 0, definition: "Having a very pleasant taste", example: "Mom made the most delicious chocolate cake for my birthday." },
+                { word: "brave", type: "Adjective", options: ["scared", "worried", "courageous", "sad"], correct: 2, definition: "Showing courage; not afraid of danger", example: "The brave firefighter saved everyone from the burning building." },
+                { word: "discover", type: "Verb", options: ["lose", "hide", "find", "break"], correct: 2, definition: "To find something for the first time", example: "Scientists discover new species in the rainforest every year." },
+                { word: "adventure", type: "Noun", options: ["boring time", "exciting journey", "quiet day", "sleep"], correct: 1, definition: "An exciting and unusual experience", example: "Our camping trip turned into a real adventure!" },
+                { word: "brilliant", type: "Adjective", options: ["dull", "very bright", "quiet", "slow"], correct: 1, definition: "Very bright, impressive, or intelligent", example: "The brilliant stars lit up the night sky." },
+                { word: "gentle", type: "Adjective", options: ["rough", "soft and kind", "loud", "fast"], correct: 1, definition: "Mild, kind, or careful in manner", example: "The gentle breeze felt refreshing on a hot day." },
+                { word: "treasure", type: "Noun", options: ["trash", "valuable things", "food", "water"], correct: 1, definition: "Valuable things like gold, jewels, or money", example: "The pirates searched for buried treasure on the island." }
+            ],
+            medium: [
+                { word: "mysterious", type: "Adjective", options: ["clear", "strange and unknown", "bright", "loud"], correct: 1, definition: "Hard to explain or understand; full of secrets", example: "The mysterious sound came from deep within the cave." },
+                { word: "graceful", type: "Adjective", options: ["clumsy", "quick", "elegant", "heavy"], correct: 2, definition: "Moving in a smooth, beautiful way", example: "The graceful dancer floated across the stage." },
+                { word: "create", type: "Verb", options: ["destroy", "ignore", "make new", "lose"], correct: 2, definition: "To make something new; to bring into existence", example: "Artists create beautiful paintings from their imagination." },
+                { word: "magnificent", type: "Adjective", options: ["ugly", "plain", "extremely beautiful", "small"], correct: 2, definition: "Extremely beautiful, impressive, or extraordinary", example: "The magnificent palace took our breath away." },
+                { word: "swift", type: "Adjective", options: ["slow", "very fast", "gentle", "loud"], correct: 1, definition: "Moving or capable of moving with great speed", example: "The swift falcon is one of the fastest birds." },
+                { word: "transform", type: "Verb", options: ["keep same", "completely change", "lose", "break"], correct: 1, definition: "To change completely in form or character", example: "The caterpillar will transform into a butterfly." },
+                { word: "precious", type: "Adjective", options: ["worthless", "very valuable", "ugly", "common"], correct: 1, definition: "Of great value; not to be wasted", example: "Time with family is precious and should be cherished." },
+                { word: "courageous", type: "Adjective", options: ["afraid", "nervous", "brave", "weak"], correct: 2, definition: "Having or showing courage; brave", example: "The courageous hero faced the dragon without fear." },
+                { word: "extraordinary", type: "Adjective", options: ["normal", "boring", "remarkable", "common"], correct: 2, definition: "Very unusual, remarkable, or impressive", example: "Her extraordinary talent amazed everyone." },
+                { word: "flourish", type: "Verb", options: ["die", "grow well", "hide", "stop"], correct: 1, definition: "To grow or develop in a healthy way", example: "Plants flourish when they get enough sunlight and water." }
+            ],
+            hard: [
+                { word: "perseverance", type: "Noun", options: ["laziness", "giving up", "continuing effort", "rest"], correct: 2, definition: "Continued effort despite difficulties", example: "Her perseverance helped her win the marathon after years of training." },
+                { word: "benevolent", type: "Adjective", options: ["cruel", "kind and generous", "selfish", "mean"], correct: 1, definition: "Showing kindness and a desire to help others", example: "The benevolent king shared his wealth with the poor." },
+                { word: "illuminate", type: "Verb", options: ["darken", "confuse", "light up", "hide"], correct: 2, definition: "To supply with light; to make clear", example: "The full moon will illuminate the path through the forest." },
+                { word: "meticulous", type: "Adjective", options: ["careless", "sloppy", "very careful", "messy"], correct: 2, definition: "Showing great attention to detail", example: "The meticulous artist spent hours on every tiny detail." },
+                { word: "resilient", type: "Adjective", options: ["weak", "fragile", "able to recover", "delicate"], correct: 2, definition: "Able to recover quickly from difficulties", example: "Resilient plants can survive even the harshest winters." },
+                { word: "endeavor", type: "Noun/Verb", options: ["laziness", "serious attempt", "failure", "rest"], correct: 1, definition: "A serious effort or attempt to achieve something", example: "Learning a new language is a worthwhile endeavor." },
+                { word: "harmonious", type: "Adjective", options: ["chaotic", "fighting", "peaceful together", "noisy"], correct: 2, definition: "Working or living together in peace", example: "The harmonious choir sounded like angels singing." },
+                { word: "spectacular", type: "Adjective", options: ["boring", "ordinary", "amazing to see", "plain"], correct: 2, definition: "Beautiful or impressive in a dramatic way", example: "The spectacular fireworks display lit up the entire sky." },
+                { word: "tenacious", type: "Adjective", options: ["lazy", "giving up easily", "determined", "weak"], correct: 2, definition: "Holding firmly to something; persistent", example: "The tenacious climber never gave up despite the storm." },
+                { word: "eloquent", type: "Adjective", options: ["silent", "confused", "expressing clearly", "mumbling"], correct: 2, definition: "Fluent and persuasive in speaking or writing", example: "Her eloquent speech moved the audience to tears." }
+            ]
+        };
+
+        // Achievements system
+        const achievements = {
+            firstWord: { name: "First Step!", icon: "🎯", unlocked: false },
+            streak5: { name: "On Fire! 5 Streak", icon: "🔥", unlocked: false },
+            streak10: { name: "Unstoppable! 10 Streak", icon: "💥", unlocked: false },
+            perfectRound: { name: "Perfect Score!", icon: "⭐", unlocked: false },
+            halfwayThere: { name: "Halfway There!", icon: "🌟", unlocked: false },
+            vocabularyMaster: { name: "Vocabulary Master!", icon: "👑", unlocked: false }
+        };
+
+        // Game state
+        let currentWords = [];
+        let currentWordIndex = 0;
+        let score = 0;
+        let lives = 3;
+        let streak = 0;
+        let maxStreak = 0;
+        let gameStarted = false;
+        let selectedDifficulty = 'easy';
+        let correctAnswersInRound = 0;
+
+        // Three.js variables
+        let scene, camera, renderer;
+        let stars = [];
+        let planets = [];
+        let nebula;
+        let particles;
+        let shootingStars = [];
+
+        // Load saved progress
+        function loadProgress() {
+            const saved = localStorage.getItem('vocabAdventureProgress');
+            if (saved) {
+                const data = JSON.parse(saved);
+                maxStreak = data.maxStreak || 0;
+                Object.keys(data.achievements || {}).forEach(key => {
+                    if (achievements[key]) {
+                        achievements[key].unlocked = data.achievements[key];
+                    }
+                });
+            }
+        }
+
+        // Save progress
+        function saveProgress() {
+            const data = {
+                maxStreak,
+                achievements: Object.fromEntries(
+                    Object.entries(achievements).map(([key, val]) => [key, val.unlocked])
+                )
+            };
+            localStorage.setItem('vocabAdventureProgress', JSON.stringify(data));
+        }
+
+        // Show achievement popup
+        function showAchievement(achievementKey) {
+            if (achievements[achievementKey] && !achievements[achievementKey].unlocked) {
+                achievements[achievementKey].unlocked = true;
+                const popup = document.getElementById('achievement-popup');
+                document.getElementById('achievement-text').textContent = 
+                    achievements[achievementKey].icon + ' ' + achievements[achievementKey].name;
+                popup.classList.add('show');
+                playSoundEffect('achievement');
+                setTimeout(() => popup.classList.remove('show'), 3000);
+                saveProgress();
+            }
+        }
+
+        // Sound effect visual indicator
+        function playSoundEffect(type) {
+            const indicator = document.getElementById('sound-indicator');
+            const wave = indicator.querySelector('.sound-wave');
+            
+            // Reset animation
+            wave.style.animation = 'none';
+            wave.offsetHeight; // Trigger reflow
+            
+            // Set color based on type
+            switch(type) {
+                case 'correct':
+                    wave.style.background = 'radial-gradient(circle, rgba(56,239,125,0.8) 0%, rgba(56,239,125,0) 70%)';
+                    break;
+                case 'wrong':
+                    wave.style.background = 'radial-gradient(circle, rgba(235,51,73,0.8) 0%, rgba(235,51,73,0) 70%)';
+                    break;
+                case 'achievement':
+                    wave.style.background = 'radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(255,215,0,0) 70%)';
+                    break;
+                default:
+                    wave.style.background = 'radial-gradient(circle, rgba(0,255,255,0.8) 0%, rgba(0,255,255,0) 70%)';
+            }
+            
+            wave.style.animation = 'soundPulse 0.5s ease-out';
+            indicator.classList.add('active');
+            setTimeout(() => indicator.classList.remove('active'), 500);
+        }
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+            camera.position.z = 50;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setClearColor(0x000011);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            createStars();
+            createNebula();
+            createPlanets();
+            createParticleSystem();
+            createLights();
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function createStars() {
+            const starGeometry = new THREE.BufferGeometry();
+            const starCount = 2000;
+            const positions = new Float32Array(starCount * 3);
+            const colors = new Float32Array(starCount * 3);
+            const sizes = new Float32Array(starCount);
+
+            for (let i = 0; i < starCount; i++) {
+                const i3 = i * 3;
+                positions[i3] = (Math.random() - 0.5) * 400;
+                positions[i3 + 1] = (Math.random() - 0.5) * 400;
+                positions[i3 + 2] = (Math.random() - 0.5) * 400;
+
+                // Color variation
+                const colorChoice = Math.random();
+                if (colorChoice < 0.7) {
+                    colors[i3] = 1; colors[i3 + 1] = 1; colors[i3 + 2] = 1;
+                } else if (colorChoice < 0.85) {
+                    colors[i3] = 0.8; colors[i3 + 1] = 0.9; colors[i3 + 2] = 1;
+                } else {
+                    colors[i3] = 1; colors[i3 + 1] = 0.9; colors[i3 + 2] = 0.7;
+                }
+
+                sizes[i] = Math.random() * 2 + 0.5;
+            }
+
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            starGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            starGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+            const starMaterial = new THREE.PointsMaterial({
+                size: 0.5,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.9,
+                sizeAttenuation: true
+            });
+
+            const starField = new THREE.Points(starGeometry, starMaterial);
+            scene.add(starField);
+            stars.push(starField);
+        }
+
+        function createNebula() {
+            const nebulaGeometry = new THREE.BufferGeometry();
+            const nebulaCount = 500;
+            const positions = new Float32Array(nebulaCount * 3);
+            const colors = new Float32Array(nebulaCount * 3);
+
+            for (let i = 0; i < nebulaCount; i++) {
+                const i3 = i * 3;
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * 80 + 20;
+                
+                positions[i3] = Math.cos(angle) * radius;
+                positions[i3 + 1] = (Math.random() - 0.5) * 30;
+                positions[i3 + 2] = Math.sin(angle) * radius - 50;
+
+                // Purple/blue nebula colors
+                colors[i3] = 0.4 + Math.random() * 0.3;
+                colors[i3 + 1] = 0.2 + Math.random() * 0.2;
+                colors[i3 + 2] = 0.6 + Math.random() * 0.4;
+            }
+
+            nebulaGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            nebulaGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const nebulaMaterial = new THREE.PointsMaterial({
+                size: 3,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.4,
+                blending: THREE.AdditiveBlending
+            });
+
+            nebula = new THREE.Points(nebulaGeometry, nebulaMaterial);
+            scene.add(nebula);
+        }
+
+        function createPlanets() {
+            const planetConfigs = [
+                { color: 0xff6b6b, size: 4, position: { x: -30, y: 15, z: -30 }, hasRing: false, emissive: 0xff3333 },
+                { color: 0x4ecdc4, size: 5, position: { x: 35, y: -10, z: -40 }, hasRing: true, emissive: 0x2fa8a0 },
+                { color: 0xffd93d, size: 3, position: { x: 20, y: 25, z: -50 }, hasRing: false, emissive: 0xcc9900 },
+                { color: 0x6bcb77, size: 6, position: { x: -40, y: -20, z: -60 }, hasRing: true, emissive: 0x3d8c43 }
+            ];
+
+            planetConfigs.forEach((config, index) => {
+                // Main planet
+                const geometry = new THREE.SphereGeometry(config.size, 64, 64);
+                const material = new THREE.MeshPhongMaterial({
+                    color: config.color,
+                    emissive: config.emissive,
+                    emissiveIntensity: 0.2,
+                    shininess: 100,
+                    specular: 0x555555
+                });
+                const planet = new THREE.Mesh(geometry, material);
+                planet.position.set(config.position.x, config.position.y, config.position.z);
+                planet.castShadow = true;
+                planet.receiveShadow = true;
+
+                // Atmosphere glow
+                const atmosphereGeometry = new THREE.SphereGeometry(config.size * 1.15, 32, 32);
+                const atmosphereMaterial = new THREE.MeshPhongMaterial({
+                    color: config.color,
+                    transparent: true,
+                    opacity: 0.15,
+                    side: THREE.BackSide
+                });
+                const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+                planet.add(atmosphere);
+
+                // Ring for some planets
+                if (config.hasRing) {
+                    const ringGeometry = new THREE.TorusGeometry(config.size * 1.8, config.size * 0.3, 2, 64);
+                    const ringMaterial = new THREE.MeshPhongMaterial({
+                        color: config.color,
+                        transparent: true,
+                        opacity: 0.5,
+                        side: THREE.DoubleSide
+                    });
+                    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+                    ring.rotation.x = Math.PI / 2.5;
+                    planet.add(ring);
+                }
+
+                planet.userData = {
+                    rotationSpeed: (Math.random() - 0.5) * 0.02,
+                    orbitSpeed: (Math.random() - 0.5) * 0.005,
+                    orbitRadius: 8 + Math.random() * 10,
+                    orbitAngle: Math.random() * Math.PI * 2,
+                    centerX: config.position.x,
+                    centerY: config.position.y
+                };
+
+                scene.add(planet);
+                planets.push(planet);
+            });
+        }
+
+        function createParticleSystem() {
+            const particleGeometry = new THREE.BufferGeometry();
+            const particleCount = 100;
+            const positions = new Float32Array(particleCount * 3);
+            const velocities = [];
+
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3] = (Math.random() - 0.5) * 100;
+                positions[i3 + 1] = (Math.random() - 0.5) * 100;
+                positions[i3 + 2] = (Math.random() - 0.5) * 50;
+                velocities.push({
+                    x: (Math.random() - 0.5) * 0.1,
+                    y: (Math.random() - 0.5) * 0.1,
+                    z: (Math.random() - 0.5) * 0.1
+                });
+            }
+
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.userData = { velocities };
+
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 0.5,
+                color: 0x00ffff,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particles);
+        }
+
+        function createLights() {
+            const ambientLight = new THREE.AmbientLight(0x404080, 0.5);
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 1);
+            sunLight.position.set(50, 50, 50);
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 2048;
+            sunLight.shadow.mapSize.height = 2048;
+            scene.add(sunLight);
+
+            const pointLight1 = new THREE.PointLight(0x00ffff, 0.5, 100);
+            pointLight1.position.set(-30, 30, 30);
+            scene.add(pointLight1);
+
+            const pointLight2 = new THREE.PointLight(0xff00ff, 0.3, 100);
+            pointLight2.position.set(30, -30, 30);
+            scene.add(pointLight2);
+        }
+
+        function createShootingStar() {
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array([
+                0, 0, 0,
+                -3, -0.5, 0
+            ]);
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const material = new THREE.LineBasicMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 1
+            });
+
+            const shootingStar = new THREE.Line(geometry, material);
+            shootingStar.position.set(
+                (Math.random() - 0.5) * 100,
+                50 + Math.random() * 30,
+                (Math.random() - 0.5) * 50 - 20
+            );
+
+            shootingStar.userData = {
+                velocity: { x: 2, y: -1.5, z: 0 },
+                life: 0
+            };
+
+            scene.add(shootingStar);
+            shootingStars.push(shootingStar);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.001;
+
+            // Rotate planets and orbital motion
+            planets.forEach(planet => {
+                planet.rotation.y += planet.userData.rotationSpeed;
+                planet.userData.orbitAngle += planet.userData.orbitSpeed;
+                planet.position.x = planet.userData.centerX + Math.cos(planet.userData.orbitAngle) * planet.userData.orbitRadius;
+                planet.position.y = planet.userData.centerY + Math.sin(planet.userData.orbitAngle) * planet.userData.orbitRadius * 0.3;
+            });
+
+            // Rotate star field slowly
+            if (stars[0]) {
+                stars[0].rotation.y += 0.0001;
+                stars[0].rotation.x += 0.00005;
+            }
+
+            // Rotate nebula
+            if (nebula) {
+                nebula.rotation.y += 0.0002;
+            }
+
+            // Animate particles
+            if (particles) {
+                const positions = particles.geometry.attributes.position.array;
+                const velocities = particles.geometry.userData.velocities;
+                
+                for (let i = 0; i < positions.length / 3; i++) {
+                    const i3 = i * 3;
+                    positions[i3] += velocities[i].x;
+                    positions[i3 + 1] += velocities[i].y;
+                    positions[i3 + 2] += velocities[i].z;
+
+                    // Wrap around
+                    if (Math.abs(positions[i3]) > 50) positions[i3] *= -0.9;
+                    if (Math.abs(positions[i3 + 1]) > 50) positions[i3 + 1] *= -0.9;
+                    if (Math.abs(positions[i3 + 2]) > 25) positions[i3 + 2] *= -0.9;
+                }
+                particles.geometry.attributes.position.needsUpdate = true;
+            }
+
+            // Shooting stars
+            if (Math.random() < 0.01 && shootingStars.length < 3) {
+                createShootingStar();
+            }
+
+            shootingStars.forEach((star, index) => {
+                star.position.x += star.userData.velocity.x;
+                star.position.y += star.userData.velocity.y;
+                star.userData.life++;
+
+                star.material.opacity = Math.max(0, 1 - star.userData.life / 60);
+
+                if (star.userData.life > 60) {
+                    scene.remove(star);
+                    shootingStars.splice(index, 1);
+                }
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        function showWord() {
+            if (currentWordIndex >= currentWords.length) {
+                if (correctAnswersInRound === currentWords.length) {
+                    showAchievement('perfectRound');
+                }
+                showCelebration();
+                return;
+            }
+
+            const wordData = currentWords[currentWordIndex];
+            document.getElementById('current-word').textContent = wordData.word;
+            document.getElementById('word-type').textContent = wordData.type;
+            document.getElementById('definition').textContent = wordData.definition;
+            document.getElementById('example-sentence').textContent = `"${wordData.example}"`;
+            document.getElementById('word-number').textContent = currentWordIndex + 1;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            // Shuffle options for display
+            const shuffledIndices = wordData.options.map((_, i) => i).sort(() => Math.random() - 0.5);
+            const newCorrectIndex = shuffledIndices.indexOf(wordData.correct);
+
+            shuffledIndices.forEach((originalIndex, displayIndex) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = wordData.options[originalIndex];
+                btn.addEventListener('click', () => checkAnswer(displayIndex === newCorrectIndex, displayIndex, newCorrectIndex));
+                optionsContainer.appendChild(btn);
+            });
+
+            const progress = (currentWordIndex / currentWords.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+
+            // Check for halfway achievement
+            if (currentWordIndex === Math.floor(currentWords.length / 2)) {
+                showAchievement('halfwayThere');
+            }
+        }
+
+        function checkAnswer(isCorrect, selectedIndex, correctIndex) {
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback-message');
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (isCorrect) {
+                buttons[selectedIndex].classList.add('correct');
+                feedback.textContent = getPositiveFeedback();
+                feedback.style.color = '#38ef7d';
+                
+                streak++;
+                if (streak > maxStreak) maxStreak = streak;
+                score += 100 + (streak * 10);
+                correctAnswersInRound++;
+                
+                document.getElementById('score').textContent = score;
+                document.getElementById('streak').textContent = streak;
+                
+                playSoundEffect('correct');
+
+                // Streak achievements
+                if (streak === 5) showAchievement('streak5');
+                if (streak === 10) showAchievement('streak10');
+                if (currentWordIndex === 0) showAchievement('firstWord');
+
+            } else {
+                buttons[selectedIndex].classList.add('wrong');
+                buttons[correctIndex].classList.add('correct');
+                feedback.textContent = getEncouragingFeedback();
+                feedback.style.color = '#f45c43';
+                
+                streak = 0;
+                lives--;
+                
+                document.getElementById('streak').textContent = streak;
+                document.getElementById('lives').textContent = lives;
+                
+                playSoundEffect('wrong');
+
+                if (lives <= 0) {
+                    setTimeout(() => {
+                        saveProgress();
+                        alert(`Game Over! 🎮\nFinal Score: ${score}\nMax Streak: ${maxStreak}`);
+                        location.reload();
+                    }, 1500);
+                    return;
+                }
+            }
+
+            feedback.classList.add('show');
+
+            setTimeout(() => {
+                feedback.classList.remove('show');
+                currentWordIndex++;
+                showWord();
+            }, 1500);
+        }
+
+        function getPositiveFeedback() {
+            const messages = ['🎉 Correct!', '⭐ Excellent!', '🌟 Perfect!', '💫 Amazing!', '🚀 Brilliant!', '✨ Superb!'];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        function getEncouragingFeedback() {
+            const messages = ['😊 Keep trying!', '💪 You got this!', '🌈 Almost there!', '📚 Learning!'];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        function showCelebration() {
+            showAchievement('vocabularyMaster');
+            document.getElementById('celebration').style.display = 'flex';
+            document.getElementById('progress-bar').style.width = '100%';
+            saveProgress();
+
+            setTimeout(() => {
+                alert(`🎉 Congratulations! 🎉\nFinal Score: ${score}\nMax Streak: ${maxStreak}\n\nYou're a vocabulary champion!`);
+                location.reload();
+            }, 2500);
+        }
+
+        // Difficulty selection
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedDifficulty = btn.dataset.level;
+            });
+        });
+
+        // Start game
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            
+            // Select words based on difficulty
+            currentWords = [...vocabularyData[selectedDifficulty]].sort(() => Math.random() - 0.5);
+            document.getElementById('total-words').textContent = currentWords.length;
+            
+            loadProgress();
+            initThreeJS();
+            showWord();
+            gameStarted = true;
+        });
+
+        // Keyboard navigation for accessibility
+        document.addEventListener('keydown', (e) => {
+            if (!gameStarted) return;
+            
+            const buttons = document.querySelectorAll('.option-btn:not(:disabled)');
+            if (buttons.length === 0) return;
+            
+            // Number keys 1-4 to select options
+            if (e.key >= '1' && e.key <= '4') {
+                const index = parseInt(e.key) - 1;
+                if (index < buttons.length) {
+                    buttons[index].click();
+                }
+            }
+            
+            // Space to replay current word pronunciation
+            if (e.key === ' ') {
+                e.preventDefault();
+                if ('speechSynthesis' in window) {
+                    const word = document.getElementById('current-word').textContent;
+                    const utterance = new SpeechSynthesisUtterance(word);
+                    utterance.rate = 0.8;
+                    speechSynthesis.speak(utterance);
+                    playSoundEffect('default');
+                }
+            }
+        });
+
+        // Hide loading screen when ready
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

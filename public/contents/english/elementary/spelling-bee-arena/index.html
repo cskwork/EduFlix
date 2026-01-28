@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spelling Bee Arena - Dong-A Elementary English</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF6B6B 100%);
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Bee animation */
+        .flying-bee {
+            position: fixed;
+            font-size: 40px;
+            pointer-events: none;
+            z-index: 100;
+            animation: flyAround 8s ease-in-out infinite;
+        }
+
+        @keyframes flyAround {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -30px) rotate(15deg); }
+            50% { transform: translate(100px, 10px) rotate(-10deg); }
+            75% { transform: translate(50px, 40px) rotate(5deg); }
+        }
+
+        /* Sound wave animation */
+        .sound-wave-container {
+            position: fixed;
+            bottom: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .sound-wave-container.active {
+            opacity: 1;
+        }
+
+        .sound-wave-bar {
+            width: 6px;
+            height: 30px;
+            background: linear-gradient(to top, #FFD700, #FF6B6B);
+            border-radius: 3px;
+            animation: soundWave 0.6s ease-in-out infinite alternate;
+        }
+
+        @keyframes soundWave {
+            0% { height: 10px; }
+            100% { height: 40px; }
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+        }
+
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 12px 22px;
+            color: #333;
+            font-size: 16px;
+            font-weight: 700;
+            border: 4px solid #FFD700;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-value {
+            color: #FF6B6B;
+            font-weight: 800;
+        }
+
+        /* Timer */
+        #timer-container {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background: white;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 5px solid #FF6B6B;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            pointer-events: none;
+        }
+
+        #timer {
+            font-size: 28px;
+            font-weight: 900;
+            color: #FF6B6B;
+        }
+
+        #timer.warning {
+            color: #eb3349;
+            animation: timerPulse 0.5s ease-in-out infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        #main-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: auto;
+            width: 95%;
+            max-width: 700px;
+        }
+
+        #word-card {
+            background: white;
+            border-radius: 30px;
+            padding: 35px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            border: 5px solid #FFD700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #word-card::before {
+            content: '🐝';
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 35px;
+            animation: beeBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes beeBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        #word-type {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        #word-to-spell {
+            font-size: clamp(36px, 10vw, 64px);
+            font-weight: 900;
+            color: #FFD700;
+            text-shadow: 4px 4px 0 #FF6B6B, 6px 6px 15px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            animation: wordBounce 0.8s ease-out;
+            display: none;
+        }
+
+        @keyframes wordBounce {
+            0% { transform: scale(0.5) translateY(-50px); opacity: 0; }
+            50% { transform: scale(1.1) translateY(0); }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        #word-definition {
+            font-size: clamp(16px, 3vw, 22px);
+            color: #333;
+            background: linear-gradient(135deg, #fff8dc 0%, #ffefd5 100%);
+            padding: 20px 25px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            border: 3px solid #FFD700;
+        }
+
+        #word-hint {
+            font-size: 16px;
+            color: #FF6B6B;
+            font-style: italic;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        #letter-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .letter-box {
+            width: 45px;
+            height: 55px;
+            background: white;
+            border: 3px solid #FFD700;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            color: #333;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .letter-box.filled {
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            color: white;
+            border-color: #44A08D;
+            animation: letterPop 0.3s ease-out;
+        }
+
+        .letter-box.correct {
+            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+            border-color: #11998e;
+        }
+
+        .letter-box.wrong {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            border-color: #eb3349;
+            animation: letterShake 0.4s ease-out;
+        }
+
+        @keyframes letterPop {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes letterShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        #spelling-input-container {
+            display: none;
+        }
+
+        #spelling-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 18px 25px;
+            font-size: 28px;
+            text-align: center;
+            border: 4px solid #FFD700;
+            border-radius: 20px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        #spelling-input:focus {
+            border-color: #FF6B6B;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        #play-sound-btn {
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 16px 35px;
+            color: white;
+            font-size: 18px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 25px rgba(78, 205, 196, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #play-sound-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 35px rgba(78, 205, 196, 0.6);
+        }
+
+        #check-btn {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 16px 45px;
+            color: #333;
+            font-size: 20px;
+            font-weight: 800;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 25px rgba(255, 215, 0, 0.5);
+            display: none;
+        }
+
+        #check-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 35px rgba(255, 215, 0, 0.7);
+        }
+
+        #hint-btn {
+            background: linear-gradient(135deg, #FFA500 0%, #FF6B6B 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 14px 28px;
+            color: white;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+            display: none;
+        }
+
+        #hint-btn:hover {
+            transform: scale(1.05);
+        }
+
+        #hint-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #next-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 16px 45px;
+            color: white;
+            font-size: 20px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+            display: none;
+        }
+
+        #next-btn:hover {
+            transform: scale(1.05);
+        }
+
+        #feedback-message {
+            font-size: clamp(28px, 8vw, 48px);
+            font-weight: 900;
+            margin-top: 20px;
+            opacity: 0;
+            transition: all 0.3s;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+        }
+
+        #feedback-message.show {
+            opacity: 1;
+            animation: feedbackBounce 0.5s ease-out;
+        }
+
+        @keyframes feedbackBounce {
+            0% { transform: scale(0.5); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FFD700 0%, #FF6B6B 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .bee-mascot {
+            font-size: 100px;
+            margin-bottom: 20px;
+            animation: mascotFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes mascotFloat {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        #start-screen h1 {
+            font-size: clamp(40px, 12vw, 80px);
+            font-weight: 900;
+            color: white;
+            text-shadow: 5px 5px 0 rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+            animation: titleWobble 2s ease-in-out infinite;
+            text-align: center;
+        }
+
+        @keyframes titleWobble {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+
+        #start-screen p {
+            font-size: clamp(16px, 4vw, 24px);
+            color: white;
+            margin-bottom: 35px;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.6;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Mode selection */
+        #mode-selection {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mode-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            border: 4px solid transparent;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .mode-card.active {
+            border-color: #FF6B6B;
+            box-shadow: 0 10px 30px rgba(255,107,107,0.4);
+        }
+
+        .mode-card .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .mode-card .label {
+            font-weight: 800;
+            color: #333;
+        }
+
+        #start-btn {
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 22px 60px;
+            color: #FF6B6B;
+            font-size: clamp(22px, 5vw, 32px);
+            font-weight: 900;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        #start-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        #start-btn::after {
+            content: ' 🐝';
+        }
+
+        #progress-bar-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(80%, 500px);
+            height: 16px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 3px solid white;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700, #FF6B6B);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 8px;
+        }
+
+        #celebration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        #celebration h2 {
+            font-size: clamp(50px, 15vw, 90px);
+            font-weight: 900;
+            color: #FFD700;
+            text-shadow: 5px 5px 0 #FF6B6B;
+            animation: celebrateDance 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes celebrateDance {
+            from { transform: scale(1) rotate(-5deg); }
+            to { transform: scale(1.1) rotate(5deg); }
+        }
+
+        #celebration p {
+            font-size: 28px;
+            color: #333;
+            margin-top: 20px;
+            font-weight: 700;
+        }
+
+        /* Virtual keyboard */
+        #virtual-keyboard {
+            display: none;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-width: 500px;
+            margin: 20px auto 0;
+        }
+
+        .key-btn {
+            width: 40px;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .key-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.5);
+        }
+
+        .key-btn:active {
+            transform: translateY(1px);
+        }
+
+        .key-btn.backspace {
+            width: 80px;
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #top-bar {
+                justify-content: center;
+            }
+
+            .stat-box {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+
+            #word-card {
+                padding: 25px 20px;
+            }
+
+            .letter-box {
+                width: 35px;
+                height: 45px;
+                font-size: 22px;
+            }
+
+            #timer-container {
+                width: 60px;
+                height: 60px;
+                top: 65px;
+            }
+
+            #timer {
+                font-size: 22px;
+            }
+        }
+
+        /* Loading */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FFD700 0%, #FF6B6B 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .bee-loader {
+            font-size: 70px;
+            animation: beeWiggle 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes beeWiggle {
+            from { transform: translateX(-10px) rotate(-10deg); }
+            to { transform: translateX(10px) rotate(10deg); }
+        }
+
+        #loading-screen p {
+            color: white;
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="bee-loader">🐝</div>
+        <p>Preparing the Arena...</p>
+    </div>
+
+    <div id="game-container">
+        <div id="canvas-container"></div>
+
+        <div class="flying-bee" style="top: 20%; left: 10%;">🐝</div>
+        <div class="flying-bee" style="top: 60%; right: 15%; animation-delay: 2s;">🐝</div>
+
+        <div class="sound-wave-container" id="sound-wave">
+            <div class="sound-wave-bar" style="animation-delay: 0s;"></div>
+            <div class="sound-wave-bar" style="animation-delay: 0.1s;"></div>
+            <div class="sound-wave-bar" style="animation-delay: 0.2s;"></div>
+            <div class="sound-wave-bar" style="animation-delay: 0.3s;"></div>
+            <div class="sound-wave-bar" style="animation-delay: 0.4s;"></div>
+        </div>
+
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box">
+                    <span>🏆</span> Score: <span class="stat-value" id="score">0</span>
+                </div>
+                <div class="stat-box">
+                    <span>❤️</span> Lives: <span class="stat-value" id="lives">3</span>
+                </div>
+                <div class="stat-box">
+                    <span>🔥</span> Streak: <span class="stat-value" id="streak">0</span>
+                </div>
+                <div class="stat-box">
+                    <span>📝</span> Word: <span class="stat-value" id="word-number">1</span>/<span id="total-words">15</span>
+                </div>
+            </div>
+
+            <div id="timer-container">
+                <div id="timer">30</div>
+            </div>
+
+            <div id="main-panel">
+                <div id="word-card">
+                    <div id="word-type">Noun</div>
+                    <div id="word-to-spell">adventure</div>
+                    <div id="word-definition">Loading definition...</div>
+                    <div id="word-hint">💡 Hint: It starts with 'A'</div>
+                    
+                    <div id="letter-boxes"></div>
+
+                    <div id="spelling-input-container">
+                        <input type="text" id="spelling-input" placeholder="Type here..." autocomplete="off" autocapitalize="off">
+                    </div>
+
+                    <div id="virtual-keyboard"></div>
+
+                    <div class="btn-row">
+                        <button id="play-sound-btn">🔊 Play Sound</button>
+                        <button id="hint-btn">💡 Hint (<span id="hints-left">3</span>)</button>
+                    </div>
+
+                    <div class="btn-row">
+                        <button id="check-btn">Check Spelling ✓</button>
+                        <button id="next-btn">Next Word →</button>
+                    </div>
+
+                    <div id="feedback-message"></div>
+                </div>
+            </div>
+
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div id="celebration">
+            <h2>🎉 Champion Speller! 🎉</h2>
+            <p>You're a spelling superstar!</p>
+        </div>
+
+        <div id="start-screen">
+            <div class="bee-mascot">🐝</div>
+            <h1>Spelling Bee Arena</h1>
+            <p>Welcome to the ultimate spelling competition! Listen to the word, read the definition, and spell it correctly. Can you become the spelling champion?</p>
+            
+            <div id="mode-selection">
+                <div class="mode-card active" data-mode="classic">
+                    <div class="icon">📝</div>
+                    <div class="label">Classic</div>
+                </div>
+                <div class="mode-card" data-mode="timed">
+                    <div class="icon">⏱️</div>
+                    <div class="label">Timed</div>
+                </div>
+                <div class="mode-card" data-mode="challenge">
+                    <div class="icon">🏆</div>
+                    <div class="label">Challenge</div>
+                </div>
+            </div>
+            
+            <button id="start-btn">Start Competition</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        // Extended spelling words with categories
+        const spellingWords = {
+            classic: [
+                { word: "adventure", type: "Noun", definition: "An exciting and unusual experience", hint: "It starts with 'A' and has 9 letters" },
+                { word: "beautiful", type: "Adjective", definition: "Having qualities that delight the senses", hint: "Describes something pretty, ends with '-ful'" },
+                { word: "chocolate", type: "Noun", definition: "A sweet brown food made from cocoa beans", hint: "A yummy treat that's brown" },
+                { word: "dinosaur", type: "Noun", definition: "A large reptile that lived millions of years ago", hint: "T-Rex was one of these!" },
+                { word: "elephant", type: "Noun", definition: "A very large mammal with a trunk", hint: "Biggest land animal, starts with 'E'" },
+                { word: "fantastic", type: "Adjective", definition: "Extraordinarily good or attractive", hint: "Another word for amazing" },
+                { word: "giraffe", type: "Noun", definition: "A tall African animal with a very long neck", hint: "Tallest animal, has two 'f's" },
+                { word: "happiness", type: "Noun", definition: "The state of being happy", hint: "How you feel when smiling, ends with '-ness'" },
+                { word: "imagine", type: "Verb", definition: "To form a mental picture of something", hint: "To dream or picture something" },
+                { word: "jungle", type: "Noun", definition: "A forest in a tropical area with lots of trees", hint: "Where Tarzan lives" },
+                { word: "knowledge", type: "Noun", definition: "Facts and information learned through experience", hint: "Silent 'k' at the start" },
+                { word: "library", type: "Noun", definition: "A place where books are kept for reading", hint: "Where you borrow books" },
+                { word: "mountain", type: "Noun", definition: "A large natural elevation of the earth", hint: "Tall landform you can climb" },
+                { word: "neighbor", type: "Noun", definition: "A person who lives near you", hint: "Person next door, 'ei' not 'ie'" },
+                { word: "oxygen", type: "Noun", definition: "A gas we need to breathe", hint: "What we breathe in the air" }
+            ],
+            timed: [
+                { word: "accomplish", type: "Verb", definition: "To succeed in doing something", hint: "To achieve or complete" },
+                { word: "brilliant", type: "Adjective", definition: "Extremely clever or talented", hint: "Very smart or bright" },
+                { word: "celebrate", type: "Verb", definition: "To show happiness about something special", hint: "What you do at parties" },
+                { word: "different", type: "Adjective", definition: "Not the same as another", hint: "Opposite of same" },
+                { word: "excellent", type: "Adjective", definition: "Extremely good", hint: "Better than great" },
+                { word: "favorite", type: "Adjective", definition: "Liked more than others", hint: "The one you like best" },
+                { word: "generous", type: "Adjective", definition: "Willing to give and share", hint: "Someone who gives a lot" },
+                { word: "however", type: "Adverb", definition: "In spite of that; nevertheless", hint: "But, on the other hand" },
+                { word: "important", type: "Adjective", definition: "Of great significance or value", hint: "Really matters a lot" },
+                { word: "jewelry", type: "Noun", definition: "Decorative items worn on the body", hint: "Necklaces, rings, earrings" }
+            ],
+            challenge: [
+                { word: "achievement", type: "Noun", definition: "Something accomplished through effort", hint: "A goal you reached" },
+                { word: "courageous", type: "Adjective", definition: "Not deterred by danger; brave", hint: "Very brave person" },
+                { word: "determined", type: "Adjective", definition: "Having made a firm decision", hint: "Won't give up" },
+                { word: "environment", type: "Noun", definition: "The surroundings or conditions", hint: "Nature around us" },
+                { word: "extraordinary", type: "Adjective", definition: "Very unusual or remarkable", hint: "Extra + ordinary" },
+                { word: "fascinating", type: "Adjective", definition: "Extremely interesting", hint: "Super interesting" },
+                { word: "government", type: "Noun", definition: "The group that rules a country", hint: "Who makes the laws" },
+                { word: "independent", type: "Adjective", definition: "Not depending on others", hint: "Does things alone" },
+                { word: "mysterious", type: "Adjective", definition: "Difficult to understand or explain", hint: "Full of mystery" },
+                { word: "responsible", type: "Adjective", definition: "Having a duty to do something", hint: "You can be counted on" }
+            ]
+        };
+
+        // Game state
+        let currentMode = 'classic';
+        let currentWords = [];
+        let currentWordIndex = 0;
+        let score = 0;
+        let lives = 3;
+        let streak = 0;
+        let maxStreak = 0;
+        let hintsRemaining = 3;
+        let currentInput = '';
+        let timerInterval = null;
+        let timeLeft = 30;
+        let gameStarted = false;
+
+        // Three.js variables
+        let scene, camera, renderer;
+        let bees = [];
+        let flowers = [];
+        let honeycombs = [];
+        let particles = [];
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 45;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setClearColor(0xFFD700, 1);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            createArena();
+            createBees();
+            createFlowers();
+            createHoneycombs();
+            createParticles();
+            createLights();
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function createArena() {
+            // Stage
+            const stageGeometry = new THREE.CylinderGeometry(35, 35, 3, 32);
+            const stageMaterial = new THREE.MeshPhongMaterial({
+                color: 0xFFD700,
+                shininess: 100
+            });
+            const stage = new THREE.Mesh(stageGeometry, stageMaterial);
+            stage.position.y = -18;
+            scene.add(stage);
+
+            // Podium
+            const podiumGeometry = new THREE.CylinderGeometry(6, 7, 10, 32);
+            const podiumMaterial = new THREE.MeshPhongMaterial({
+                color: 0xFF6B6B,
+                shininess: 80
+            });
+            const podium = new THREE.Mesh(podiumGeometry, podiumMaterial);
+            podium.position.y = -14;
+            scene.add(podium);
+        }
+
+        function createBees() {
+            for (let i = 0; i < 8; i++) {
+                const bee = createBee();
+                const angle = (i / 8) * Math.PI * 2;
+                const radius = 20 + Math.random() * 10;
+                
+                bee.position.x = Math.cos(angle) * radius;
+                bee.position.y = Math.random() * 15 - 5;
+                bee.position.z = Math.sin(angle) * radius;
+
+                bee.userData = {
+                    angle: angle,
+                    radius: radius,
+                    speed: 0.01 + Math.random() * 0.01,
+                    baseY: bee.position.y,
+                    wingPhase: Math.random() * Math.PI * 2
+                };
+
+                scene.add(bee);
+                bees.push(bee);
+            }
+        }
+
+        function createBee() {
+            const group = new THREE.Group();
+
+            // Body
+            const bodyGeometry = new THREE.CapsuleGeometry(1.5, 3, 8, 16);
+            const bodyMaterial = new THREE.MeshPhongMaterial({ color: 0xFFD700 });
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.rotation.z = Math.PI / 2;
+            group.add(body);
+
+            // Stripes
+            for (let i = -1; i <= 1; i++) {
+                const stripeGeometry = new THREE.TorusGeometry(1.5, 0.25, 8, 16);
+                const stripeMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
+                const stripe = new THREE.Mesh(stripeGeometry, stripeMaterial);
+                stripe.position.x = i * 0.9;
+                stripe.rotation.y = Math.PI / 2;
+                group.add(stripe);
+            }
+
+            // Head
+            const headGeometry = new THREE.SphereGeometry(0.9, 16, 16);
+            const headMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.x = 2.5;
+            group.add(head);
+
+            // Eyes
+            const eyeGeometry = new THREE.SphereGeometry(0.25, 8, 8);
+            const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            [-0.4, 0.4].forEach(z => {
+                const eye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+                eye.position.set(3, 0.2, z);
+                group.add(eye);
+            });
+
+            // Wings
+            const wingGeometry = new THREE.PlaneGeometry(2, 1);
+            const wingMaterial = new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.6,
+                side: THREE.DoubleSide
+            });
+
+            const topWing = new THREE.Mesh(wingGeometry, wingMaterial);
+            topWing.position.set(0, 1.5, 0);
+            topWing.rotation.x = Math.PI / 4;
+            topWing.name = 'wing';
+            group.add(topWing);
+
+            const bottomWing = new THREE.Mesh(wingGeometry, wingMaterial);
+            bottomWing.position.set(0, -1.5, 0);
+            bottomWing.rotation.x = -Math.PI / 4;
+            bottomWing.name = 'wing';
+            group.add(bottomWing);
+
+            return group;
+        }
+
+        function createFlowers() {
+            const flowerColors = [0xFF69B4, 0xFFB6C1, 0xFFFF00, 0xFF6347, 0x9370DB, 0x87CEEB];
+
+            for (let i = 0; i < 12; i++) {
+                const flower = createFlower(flowerColors[i % flowerColors.length]);
+                const angle = (i / 12) * Math.PI * 2;
+                const radius = 28 + Math.random() * 8;
+                
+                flower.position.x = Math.cos(angle) * radius;
+                flower.position.y = -15 + Math.random() * 2;
+                flower.position.z = Math.sin(angle) * radius;
+                flower.scale.setScalar(0.6 + Math.random() * 0.4);
+
+                scene.add(flower);
+                flowers.push(flower);
+            }
+        }
+
+        function createFlower(color) {
+            const group = new THREE.Group();
+
+            // Center
+            const centerGeometry = new THREE.SphereGeometry(0.8, 16, 16);
+            const centerMaterial = new THREE.MeshPhongMaterial({ color: 0xFFD700 });
+            const center = new THREE.Mesh(centerGeometry, centerMaterial);
+            group.add(center);
+
+            // Petals
+            const petalGeometry = new THREE.SphereGeometry(0.6, 16, 16);
+            const petalMaterial = new THREE.MeshPhongMaterial({ color: color });
+
+            for (let i = 0; i < 6; i++) {
+                const petal = new THREE.Mesh(petalGeometry, petalMaterial);
+                const angle = (i / 6) * Math.PI * 2;
+                petal.position.x = Math.cos(angle) * 1.2;
+                petal.position.y = Math.sin(angle) * 1.2;
+                petal.scale.set(1, 0.6, 0.3);
+                group.add(petal);
+            }
+
+            // Stem
+            const stemGeometry = new THREE.CylinderGeometry(0.1, 0.1, 4, 8);
+            const stemMaterial = new THREE.MeshPhongMaterial({ color: 0x228B22 });
+            const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+            stem.position.y = -2.5;
+            group.add(stem);
+
+            return group;
+        }
+
+        function createHoneycombs() {
+            const honeycombGeometry = new THREE.CylinderGeometry(2.5, 2.5, 0.6, 6);
+            const honeycombMaterial = new THREE.MeshPhongMaterial({
+                color: 0xFFD700,
+                shininess: 100
+            });
+
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < 4; col++) {
+                    const honeycomb = new THREE.Mesh(honeycombGeometry, honeycombMaterial.clone());
+                    honeycomb.position.x = (col - 1.5) * 6 + (row % 2) * 3;
+                    honeycomb.position.y = (row - 1) * 5;
+                    honeycomb.position.z = -25;
+                    honeycomb.rotation.x = Math.PI / 2;
+
+                    honeycomb.userData = {
+                        pulsePhase: Math.random() * Math.PI * 2
+                    };
+
+                    scene.add(honeycomb);
+                    honeycombs.push(honeycomb);
+                }
+            }
+        }
+
+        function createParticles() {
+            const particleGeometry = new THREE.BufferGeometry();
+            const count = 150;
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+
+            for (let i = 0; i < count; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 80;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
+
+                const color = new THREE.Color(Math.random() > 0.5 ? 0xFFD700 : 0xFF6B6B);
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 0.5,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.7
+            });
+
+            const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+            particleSystem.userData = { positions };
+            scene.add(particleSystem);
+            particles.push(particleSystem);
+        }
+
+        function createLights() {
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            sunLight.position.set(20, 30, 20);
+            scene.add(sunLight);
+
+            const warmLight = new THREE.PointLight(0xFFD700, 0.5, 100);
+            warmLight.position.set(-20, 10, 20);
+            scene.add(warmLight);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.001;
+
+            // Animate bees
+            bees.forEach(bee => {
+                bee.userData.angle += bee.userData.speed;
+                bee.position.x = Math.cos(bee.userData.angle) * bee.userData.radius;
+                bee.position.z = Math.sin(bee.userData.angle) * bee.userData.radius;
+                bee.position.y = bee.userData.baseY + Math.sin(time * 2 + bee.userData.wingPhase) * 2;
+                bee.rotation.y = -bee.userData.angle + Math.PI / 2;
+
+                // Wing flapping
+                bee.userData.wingPhase += 0.3;
+                bee.children.forEach(child => {
+                    if (child.name === 'wing') {
+                        child.rotation.z = Math.sin(bee.userData.wingPhase) * 0.5;
+                    }
+                });
+            });
+
+            // Pulse honeycombs
+            honeycombs.forEach(honeycomb => {
+                const scale = 1 + Math.sin(time * 2 + honeycomb.userData.pulsePhase) * 0.1;
+                honeycomb.scale.setScalar(scale);
+            });
+
+            // Animate particles
+            particles.forEach(system => {
+                const positions = system.geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                    positions[i + 1] += 0.02;
+                    if (positions[i + 1] > 25) positions[i + 1] = -25;
+                }
+                system.geometry.attributes.position.needsUpdate = true;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        function showSoundWave() {
+            const soundWave = document.getElementById('sound-wave');
+            soundWave.classList.add('active');
+            setTimeout(() => soundWave.classList.remove('active'), 1500);
+        }
+
+        function createLetterBoxes(word) {
+            const container = document.getElementById('letter-boxes');
+            container.innerHTML = '';
+
+            for (let i = 0; i < word.length; i++) {
+                const box = document.createElement('div');
+                box.className = 'letter-box';
+                box.dataset.index = i;
+                container.appendChild(box);
+            }
+        }
+
+        function createVirtualKeyboard() {
+            const keyboard = document.getElementById('virtual-keyboard');
+            keyboard.innerHTML = '';
+            keyboard.style.display = 'flex';
+
+            const rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+            
+            rows.forEach(row => {
+                row.split('').forEach(letter => {
+                    const btn = document.createElement('button');
+                    btn.className = 'key-btn';
+                    btn.textContent = letter;
+                    btn.addEventListener('click', () => handleKeyInput(letter.toLowerCase()));
+                    keyboard.appendChild(btn);
+                });
+            });
+
+            // Backspace
+            const backspace = document.createElement('button');
+            backspace.className = 'key-btn backspace';
+            backspace.textContent = '⌫';
+            backspace.addEventListener('click', handleBackspace);
+            keyboard.appendChild(backspace);
+        }
+
+        function handleKeyInput(letter) {
+            const wordData = currentWords[currentWordIndex];
+            if (currentInput.length < wordData.word.length) {
+                currentInput += letter;
+                updateLetterBoxes();
+            }
+        }
+
+        function handleBackspace() {
+            if (currentInput.length > 0) {
+                currentInput = currentInput.slice(0, -1);
+                updateLetterBoxes();
+            }
+        }
+
+        function updateLetterBoxes() {
+            const boxes = document.querySelectorAll('.letter-box');
+            boxes.forEach((box, index) => {
+                if (index < currentInput.length) {
+                    box.textContent = currentInput[index].toUpperCase();
+                    box.classList.add('filled');
+                } else {
+                    box.textContent = '';
+                    box.classList.remove('filled');
+                }
+            });
+
+            // Show check button when complete
+            const wordData = currentWords[currentWordIndex];
+            document.getElementById('check-btn').style.display = 
+                currentInput.length === wordData.word.length ? 'block' : 'none';
+        }
+
+        function showWord() {
+            if (currentWordIndex >= currentWords.length) {
+                showCelebration();
+                return;
+            }
+
+            const wordData = currentWords[currentWordIndex];
+            currentInput = '';
+
+            document.getElementById('word-type').textContent = wordData.type;
+            document.getElementById('word-to-spell').style.display = 'none';
+            document.getElementById('word-definition').textContent = wordData.definition;
+            document.getElementById('word-hint').textContent = '💡 ' + wordData.hint;
+            document.getElementById('word-hint').style.display = 'none';
+            document.getElementById('word-number').textContent = currentWordIndex + 1;
+
+            createLetterBoxes(wordData.word);
+            createVirtualKeyboard();
+
+            document.getElementById('play-sound-btn').style.display = 'flex';
+            document.getElementById('hint-btn').style.display = 'block';
+            document.getElementById('check-btn').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('feedback-message').classList.remove('show');
+
+            const progress = (currentWordIndex / currentWords.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+
+            // Start timer for timed mode
+            if (currentMode === 'timed' || currentMode === 'challenge') {
+                startTimer();
+            }
+
+            playWordSound();
+        }
+
+        function startTimer() {
+            timeLeft = currentMode === 'challenge' ? 20 : 30;
+            document.getElementById('timer').textContent = timeLeft;
+            document.getElementById('timer').classList.remove('warning');
+            document.getElementById('timer-container').style.display = 'flex';
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+
+                if (timeLeft <= 10) {
+                    document.getElementById('timer').classList.add('warning');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    checkSpelling(true);
+                }
+            }, 1000);
+        }
+
+        function playWordSound() {
+            const wordData = currentWords[currentWordIndex];
+            showSoundWave();
+
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(wordData.word);
+                utterance.rate = 0.7;
+                utterance.pitch = 1.1;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function checkSpelling(timeout = false) {
+            clearInterval(timerInterval);
+
+            const wordData = currentWords[currentWordIndex];
+            const correct = currentInput.toLowerCase() === wordData.word.toLowerCase();
+            const feedback = document.getElementById('feedback-message');
+            const boxes = document.querySelectorAll('.letter-box');
+
+            if (correct) {
+                feedback.textContent = '🎉 Correct!';
+                feedback.style.color = '#38ef7d';
+                
+                streak++;
+                if (streak > maxStreak) maxStreak = streak;
+                
+                const timeBonus = (currentMode === 'timed' || currentMode === 'challenge') ? timeLeft * 2 : 0;
+                const streakBonus = streak * 15;
+                score += 100 + timeBonus + streakBonus;
+
+                boxes.forEach(box => box.classList.add('correct'));
+
+            } else {
+                feedback.textContent = timeout ? '⏰ Time\'s up!' : '😅 Not quite!';
+                feedback.style.color = '#f45c43';
+                
+                streak = 0;
+                lives--;
+
+                // Show correct letters
+                boxes.forEach((box, index) => {
+                    if (currentInput[index]?.toLowerCase() === wordData.word[index]) {
+                        box.classList.add('correct');
+                    } else {
+                        box.classList.add('wrong');
+                    }
+                });
+
+                if (lives <= 0) {
+                    setTimeout(() => {
+                        alert(`Game Over! 🎮\n\nFinal Score: ${score}\nMax Streak: ${maxStreak}`);
+                        location.reload();
+                    }, 1500);
+                    return;
+                }
+            }
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
+            document.getElementById('streak').textContent = streak;
+
+            // Show correct word
+            document.getElementById('word-to-spell').textContent = wordData.word;
+            document.getElementById('word-to-spell').style.display = 'block';
+
+            feedback.classList.add('show');
+
+            document.getElementById('play-sound-btn').style.display = 'none';
+            document.getElementById('hint-btn').style.display = 'none';
+            document.getElementById('check-btn').style.display = 'none';
+            document.getElementById('virtual-keyboard').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function useHint() {
+            if (hintsRemaining <= 0) return;
+
+            const wordData = currentWords[currentWordIndex];
+            document.getElementById('word-hint').style.display = 'block';
+            
+            // Also fill in next correct letter
+            if (currentInput.length < wordData.word.length) {
+                currentInput += wordData.word[currentInput.length];
+                updateLetterBoxes();
+            }
+
+            hintsRemaining--;
+            document.getElementById('hints-left').textContent = hintsRemaining;
+
+            if (hintsRemaining <= 0) {
+                document.getElementById('hint-btn').disabled = true;
+            }
+        }
+
+        function showCelebration() {
+            clearInterval(timerInterval);
+            document.getElementById('celebration').style.display = 'flex';
+            document.getElementById('progress-bar').style.width = '100%';
+
+            setTimeout(() => {
+                alert(`🎉 Congratulations! 🎉\n\nYou're a spelling champion!\n\nFinal Score: ${score}\nMax Streak: ${maxStreak}`);
+                location.reload();
+            }, 2500);
+        }
+
+        // Mode selection
+        document.querySelectorAll('.mode-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                currentMode = card.dataset.mode;
+            });
+        });
+
+        // Physical keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (!gameStarted) return;
+            
+            if (e.key.match(/^[a-zA-Z]$/)) {
+                handleKeyInput(e.key.toLowerCase());
+            } else if (e.key === 'Backspace') {
+                e.preventDefault();
+                handleBackspace();
+            } else if (e.key === 'Enter') {
+                const wordData = currentWords[currentWordIndex];
+                if (currentInput.length === wordData.word.length) {
+                    checkSpelling();
+                }
+            }
+        });
+
+        // Event listeners
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            currentWords = [...spellingWords[currentMode]].sort(() => Math.random() - 0.5);
+            document.getElementById('total-words').textContent = currentWords.length;
+            
+            document.getElementById('timer-container').style.display = 
+                (currentMode === 'timed' || currentMode === 'challenge') ? 'flex' : 'none';
+            
+            initThreeJS();
+            showWord();
+            gameStarted = true;
+        });
+
+        document.getElementById('play-sound-btn').addEventListener('click', playWordSound);
+        document.getElementById('hint-btn').addEventListener('click', useHint);
+        document.getElementById('check-btn').addEventListener('click', () => checkSpelling());
+        document.getElementById('next-btn').addEventListener('click', () => {
+            currentWordIndex++;
+            showWord();
+        });
+
+        // Hide loading screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

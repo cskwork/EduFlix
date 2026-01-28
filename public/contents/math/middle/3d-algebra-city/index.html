@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 대수 도시 | 동아출판 중학 수학</title>
+    <meta name="description" content="3D 도시에서 방정식과 대수를 배워보세요!">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --secondary: #f43f5e;
+            --accent: #fbbf24;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+            color: #fff;
+        }
+
+        #game-container { width: 100vw; height: 100vh; position: relative; }
+        #canvas-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            pointer-events: auto;
+            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+        }
+
+        .stat-box {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 14px 24px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-box .icon { font-size: 22px; }
+        .stat-box .value { font-size: 20px; font-weight: 700; color: var(--accent); }
+
+        #topic-selector {
+            position: absolute;
+            top: 100px;
+            left: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 24px;
+            border-radius: 20px;
+            pointer-events: auto;
+            border: 1px solid var(--glass-border);
+            width: 260px;
+        }
+
+        #topic-selector h3 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .topic-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 16px;
+            margin: 8px 0;
+            background: rgba(14, 165, 233, 0.2);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .topic-btn:hover {
+            background: rgba(14, 165, 233, 0.4);
+            transform: translateX(5px);
+        }
+
+        .topic-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-color: var(--primary);
+        }
+
+        .topic-btn .topic-icon { font-size: 24px; }
+
+        #game-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 700px;
+            text-align: center;
+            pointer-events: auto;
+        }
+
+        #equation-display {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 24px;
+            margin-bottom: 24px;
+            border: 2px solid var(--glass-border);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+        }
+
+        #equation-title {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        #equation-text {
+            font-size: 48px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 3px;
+        }
+
+        .variable { color: var(--accent); }
+        .operator { color: var(--primary); }
+        .equals { color: var(--success); }
+
+        #answer-input-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .variable-label {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--accent);
+        }
+
+        #answer-input {
+            width: 120px;
+            height: 70px;
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            border: 3px solid var(--glass-border);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--dark);
+        }
+
+        #answer-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
+        }
+
+        #action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            border-radius: 16px;
+            padding: 18px 36px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.6);
+        }
+
+        .action-btn.submit {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        }
+
+        .action-btn.hint {
+            background: linear-gradient(135deg, var(--accent) 0%, #f59e0b 100%);
+            color: var(--dark);
+        }
+
+        #hint-display {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(251, 191, 36, 0.2);
+            border: 2px solid var(--accent);
+            padding: 20px 30px;
+            border-radius: 16px;
+            color: var(--accent);
+            font-size: 16px;
+            max-width: 500px;
+            display: none;
+        }
+
+        #hint-display.show { display: block; }
+
+        #feedback-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 64px;
+            font-weight: 900;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        #feedback-message.show {
+            opacity: 1;
+            animation: feedbackPop 0.5s ease;
+        }
+
+        @keyframes feedbackPop {
+            0% { transform: translate(-50%, -50%) scale(0.5); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        #building-info {
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 24px;
+            border-radius: 20px;
+            pointer-events: auto;
+            border: 1px solid var(--glass-border);
+            width: 280px;
+            text-align: center;
+        }
+
+        #building-info .building-icon { font-size: 64px; margin-bottom: 16px; }
+        #building-info h3 { color: var(--accent); font-size: 22px; margin-bottom: 8px; }
+        #building-info p { color: rgba(255, 255, 255, 0.7); font-size: 14px; line-height: 1.6; }
+
+        #progress-container {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            max-width: 500px;
+        }
+
+        #progress-bar {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.5s;
+        }
+
+        #progress-text {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        #start-screen {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        #start-screen h1 {
+            font-size: clamp(40px, 8vw, 72px);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        #start-screen .subtitle {
+            font-size: clamp(16px, 3vw, 22px);
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 48px;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.6;
+            padding: 0 20px;
+        }
+
+        #start-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, #f59e0b 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 22px 64px;
+            color: var(--dark);
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 40px rgba(251, 191, 36, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #start-btn:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.7);
+        }
+
+        .features {
+            display: flex;
+            gap: 40px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .feature { text-align: center; max-width: 180px; }
+        .feature-icon { font-size: 48px; margin-bottom: 12px; }
+        .feature-title { font-weight: 700; margin-bottom: 8px; color: #fff; }
+        .feature-desc { font-size: 14px; color: rgba(255, 255, 255, 0.6); }
+
+        @media (max-width: 768px) {
+            #topic-selector, #building-info { display: none; }
+            #equation-text { font-size: 32px; }
+            #answer-input { width: 100px; height: 60px; font-size: 28px; }
+            .variable-label { font-size: 28px; }
+            .action-btn { padding: 14px 24px; font-size: 16px; }
+            .stat-box { padding: 10px 14px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="canvas-container"></div>
+
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box">
+                    <span class="icon">🏙️</span>
+                    <span>빌딩</span>
+                    <span class="value" id="building-num">1</span>
+                </div>
+                <div class="stat-box">
+                    <span class="icon">⭐</span>
+                    <span>점수</span>
+                    <span class="value" id="score">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="icon">✅</span>
+                    <span>정답</span>
+                    <span class="value" id="correct-count">0</span>
+                </div>
+            </div>
+
+            <div id="topic-selector">
+                <h3>🏗️ 대수 주제</h3>
+                <button class="topic-btn active" data-topic="linear">
+                    <span class="topic-icon">📐</span>
+                    <span>일차방정식</span>
+                </button>
+                <button class="topic-btn" data-topic="substitution">
+                    <span class="topic-icon">🔄</span>
+                    <span>대입</span>
+                </button>
+                <button class="topic-btn" data-topic="simplify">
+                    <span class="topic-icon">✂️</span>
+                    <span>식의 간단화</span>
+                </button>
+                <button class="topic-btn" data-topic="inequality">
+                    <span class="topic-icon">⚖️</span>
+                    <span>부등식</span>
+                </button>
+            </div>
+
+            <div id="building-info">
+                <div class="building-icon">🏢</div>
+                <h3 id="building-name">방정식 빌딩</h3>
+                <p id="building-desc">x의 값을 찾아 빌딩을 완성하세요!</p>
+            </div>
+
+            <div id="game-area">
+                <div id="equation-display">
+                    <div id="equation-title">x의 값을 구하세요</div>
+                    <div id="equation-text">2x + 3 = 11</div>
+                    <div id="answer-input-area">
+                        <span class="variable-label">x =</span>
+                        <input type="number" id="answer-input" placeholder="?" autocomplete="off">
+                    </div>
+                </div>
+                <div id="action-buttons">
+                    <button class="action-btn hint" id="hint-btn">💡 힌트</button>
+                    <button class="action-btn submit" id="submit-btn">✓ 제출</button>
+                </div>
+            </div>
+
+            <div id="hint-display"></div>
+
+            <div id="progress-container">
+                <div id="progress-bar">
+                    <div id="progress-fill" style="width: 0%"></div>
+                </div>
+                <div id="progress-text">도시 건설 진행률: 0%</div>
+            </div>
+        </div>
+
+        <div id="feedback-message"></div>
+
+        <div id="start-screen">
+            <h1>🏙️ 3D 대수 도시</h1>
+            <p class="subtitle">방정식을 풀어 도시를 건설하세요! 일차방정식, 대입, 식의 간단화를 마스터하면 멋진 도시가 완성됩니다!</p>
+            <button id="start-btn">
+                <span>도시 건설 시작!</span>
+                <span>🚀</span>
+            </button>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📐</div>
+                    <div class="feature-title">일차방정식</div>
+                    <div class="feature-desc">미지수 x 값 구하기</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">대입</div>
+                    <div class="feature-desc">값을 대입해서 계산</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🏗️</div>
+                    <div class="feature-title">도시 건설</div>
+                    <div class="feature-desc">문제를 풀며 빌딩 건설</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        // Problem generators
+        const problemGenerators = {
+            linear: {
+                easy: () => {
+                    const x = Math.floor(Math.random() * 10) + 1;
+                    const a = Math.floor(Math.random() * 5) + 1;
+                    const b = Math.floor(Math.random() * 10);
+                    const result = a * x + b;
+                    return {
+                        equation: `${a}x + ${b} = ${result}`,
+                        answer: x,
+                        hint: `양변에서 ${b}를 빼고, ${a}로 나누세요`
+                    };
+                },
+                medium: () => {
+                    const x = Math.floor(Math.random() * 10) + 1;
+                    const a = Math.floor(Math.random() * 5) + 2;
+                    const b = Math.floor(Math.random() * 10) + 1;
+                    const c = Math.floor(Math.random() * 5) + 1;
+                    const result = a * x + b - c;
+                    return {
+                        equation: `${a}x + ${b} - ${c} = ${result}`,
+                        answer: x,
+                        hint: `먼저 상수를 정리하고 x를 구하세요`
+                    };
+                },
+                hard: () => {
+                    const x = Math.floor(Math.random() * 8) + 2;
+                    const a = Math.floor(Math.random() * 4) + 2;
+                    const b = Math.floor(Math.random() * 3) + 1;
+                    const left = a * x + 5;
+                    const right = b * x + (a - b) * x + 5;
+                    return {
+                        equation: `${a}x + 5 = ${b}x + ${(a-b)*x + 5}`,
+                        answer: x,
+                        hint: `x항을 한쪽으로 모으세요`
+                    };
+                }
+            },
+            substitution: {
+                easy: () => {
+                    const x = Math.floor(Math.random() * 5) + 1;
+                    const a = Math.floor(Math.random() * 4) + 1;
+                    const b = Math.floor(Math.random() * 5);
+                    return {
+                        equation: `x = ${x}일 때, ${a}x + ${b} = ?`,
+                        answer: a * x + b,
+                        hint: `x에 ${x}를 대입하세요`
+                    };
+                },
+                medium: () => {
+                    const x = Math.floor(Math.random() * 4) + 2;
+                    const a = Math.floor(Math.random() * 3) + 1;
+                    const b = Math.floor(Math.random() * 3) + 1;
+                    return {
+                        equation: `x = ${x}일 때, ${a}x² + ${b} = ?`,
+                        answer: a * x * x + b,
+                        hint: `x²은 x × x입니다`
+                    };
+                }
+            },
+            simplify: {
+                easy: () => {
+                    const a = Math.floor(Math.random() * 5) + 1;
+                    const b = Math.floor(Math.random() * 5) + 1;
+                    return {
+                        equation: `${a}x + ${b}x = ?x`,
+                        answer: a + b,
+                        hint: `같은 문자끼리 더하세요`
+                    };
+                },
+                medium: () => {
+                    const a = Math.floor(Math.random() * 5) + 2;
+                    const b = Math.floor(Math.random() * 4) + 1;
+                    const c = Math.floor(Math.random() * 3) + 1;
+                    return {
+                        equation: `${a}x + ${b}x - ${c}x = ?x`,
+                        answer: a + b - c,
+                        hint: `차례대로 계산하세요`
+                    };
+                }
+            },
+            inequality: {
+                easy: () => {
+                    const answer = Math.floor(Math.random() * 8) + 2;
+                    const a = Math.floor(Math.random() * 3) + 1;
+                    const right = a * answer;
+                    return {
+                        equation: `${a}x < ${right + a}의 가장 큰 정수 x = ?`,
+                        answer: answer,
+                        hint: `양변을 ${a}로 나누세요`
+                    };
+                }
+            }
+        };
+
+        const buildings = [
+            { icon: '🏢', name: '오피스 빌딩', desc: '일차방정식으로 건설!' },
+            { icon: '🏬', name: '쇼핑몰', desc: '대입으로 건설!' },
+            { icon: '🏨', name: '호텔', desc: '식의 간단화로 건설!' },
+            { icon: '🏛️', name: '박물관', desc: '부등식으로 건설!' },
+            { icon: '🏗️', name: '공사중', desc: '다음 레벨을 향해!' }
+        ];
+
+        // Game state
+        let currentTopic = 'linear';
+        let currentDifficulty = 'easy';
+        let currentProblem = null;
+        let score = 0;
+        let correctCount = 0;
+        let buildingIndex = 0;
+        let gameStarted = false;
+
+        // Three.js
+        let scene, camera, renderer;
+        let cityBuildings = [];
+        let ground, skybox;
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x0f172a, 0.02);
+
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(15, 15, 25);
+            camera.lookAt(0, 0, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            setupLighting();
+            createGround();
+            createInitialBuildings();
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function setupLighting() {
+            const ambient = new THREE.AmbientLight(0x404080, 0.4);
+            scene.add(ambient);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            sunLight.position.set(30, 50, 30);
+            sunLight.castShadow = true;
+            scene.add(sunLight);
+
+            const blueLight = new THREE.PointLight(0x0ea5e9, 0.5, 50);
+            blueLight.position.set(-20, 15, 20);
+            scene.add(blueLight);
+
+            const pinkLight = new THREE.PointLight(0xf43f5e, 0.5, 50);
+            pinkLight.position.set(20, 10, -20);
+            scene.add(pinkLight);
+        }
+
+        function createGround() {
+            const groundGeometry = new THREE.PlaneGeometry(100, 100);
+            const groundMaterial = new THREE.MeshPhongMaterial({
+                color: 0x1e3a5f,
+                shininess: 20
+            });
+            ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -0.1;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // Grid
+            const gridHelper = new THREE.GridHelper(50, 50, 0x0ea5e9, 0x1e3a5f);
+            gridHelper.position.y = 0;
+            scene.add(gridHelper);
+        }
+
+        function createInitialBuildings() {
+            // Create some placeholder buildings
+            for (let i = 0; i < 10; i++) {
+                const height = 2 + Math.random() * 6;
+                const geometry = new THREE.BoxGeometry(3, height, 3);
+                const material = new THREE.MeshPhongMaterial({
+                    color: [0x0ea5e9, 0xf43f5e, 0xfbbf24, 0x10b981][Math.floor(Math.random() * 4)],
+                    transparent: true,
+                    opacity: 0.3
+                });
+                const building = new THREE.Mesh(geometry, material);
+                
+                const angle = (i / 10) * Math.PI * 2;
+                building.position.set(
+                    Math.cos(angle) * 15,
+                    height / 2,
+                    Math.sin(angle) * 15
+                );
+                building.castShadow = true;
+                
+                scene.add(building);
+                cityBuildings.push(building);
+            }
+        }
+
+        function addBuilding() {
+            const height = 5 + Math.random() * 10;
+            const geometry = new THREE.BoxGeometry(4, height, 4);
+            const material = new THREE.MeshPhongMaterial({
+                color: [0x0ea5e9, 0xf43f5e, 0xfbbf24, 0x10b981][buildingIndex % 4],
+                shininess: 60
+            });
+            const building = new THREE.Mesh(geometry, material);
+            
+            const angle = (buildingIndex / 8) * Math.PI * 2 + Math.random() * 0.5;
+            const radius = 8 + buildingIndex * 0.5;
+            building.position.set(
+                Math.cos(angle) * radius,
+                0,
+                Math.sin(angle) * radius
+            );
+            building.castShadow = true;
+            
+            // Animate building rising
+            building.scale.y = 0.01;
+            const targetY = height / 2;
+            
+            const animateBuilding = () => {
+                if (building.scale.y < 1) {
+                    building.scale.y += 0.05;
+                    building.position.y = (building.scale.y * height) / 2;
+                    requestAnimationFrame(animateBuilding);
+                }
+            };
+            animateBuilding();
+            
+            scene.add(building);
+            cityBuildings.push(building);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.001;
+
+            // Rotate camera around city
+            camera.position.x = 25 * Math.cos(time * 0.1);
+            camera.position.z = 25 * Math.sin(time * 0.1);
+            camera.lookAt(0, 5, 0);
+
+            renderer.render(scene, camera);
+        }
+
+        function generateProblem() {
+            const difficulty = correctCount < 5 ? 'easy' : (correctCount < 10 ? 'medium' : 'hard');
+            const generator = problemGenerators[currentTopic];
+            const diffGenerator = generator[difficulty] || generator.easy;
+            
+            currentProblem = diffGenerator();
+            displayProblem();
+        }
+
+        function displayProblem() {
+            document.getElementById('equation-text').textContent = currentProblem.equation;
+            document.getElementById('answer-input').value = '';
+            document.getElementById('answer-input').focus();
+            document.getElementById('hint-display').classList.remove('show');
+
+            // Update building info
+            const building = buildings[buildingIndex % buildings.length];
+            document.getElementById('building-icon')?.remove;
+            document.querySelector('#building-info .building-icon').textContent = building.icon;
+            document.getElementById('building-name').textContent = building.name;
+            document.getElementById('building-desc').textContent = building.desc;
+        }
+
+        function submitAnswer() {
+            const userAnswer = parseFloat(document.getElementById('answer-input').value);
+
+            if (isNaN(userAnswer)) {
+                showFeedback('❓ 숫자를 입력하세요', '#fbbf24');
+                return;
+            }
+
+            if (Math.abs(userAnswer - currentProblem.answer) < 0.01) {
+                handleCorrect();
+            } else {
+                handleWrong();
+            }
+        }
+
+        function handleCorrect() {
+            correctCount++;
+            score += 100 + correctCount * 10;
+            buildingIndex++;
+
+            showFeedback('🎉 정답!', '#10b981');
+            addBuilding();
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('correct-count').textContent = correctCount;
+            document.getElementById('building-num').textContent = buildingIndex;
+
+            updateProgress();
+
+            setTimeout(generateProblem, 1200);
+        }
+
+        function handleWrong() {
+            score = Math.max(0, score - 20);
+            showFeedback(`❌ 정답: ${currentProblem.answer}`, '#ef4444');
+            document.getElementById('score').textContent = score;
+        }
+
+        function showHint() {
+            document.getElementById('hint-display').textContent = '💡 ' + currentProblem.hint;
+            document.getElementById('hint-display').classList.add('show');
+            score = Math.max(0, score - 10);
+            document.getElementById('score').textContent = score;
+        }
+
+        function selectTopic(topic) {
+            currentTopic = topic;
+            
+            document.querySelectorAll('.topic-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.topic === topic);
+            });
+            
+            generateProblem();
+        }
+
+        function updateProgress() {
+            const progress = Math.min(100, correctCount * 5);
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = `도시 건설 진행률: ${progress}%`;
+        }
+
+        function showFeedback(message, color) {
+            const feedback = document.getElementById('feedback-message');
+            feedback.textContent = message;
+            feedback.style.color = color;
+            feedback.style.textShadow = `0 0 40px ${color}`;
+            feedback.classList.add('show');
+
+            setTimeout(() => {
+                feedback.classList.remove('show');
+            }, 1200);
+        }
+
+        // Event listeners
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.opacity = '0';
+            document.getElementById('start-screen').style.transition = 'opacity 0.5s';
+            
+            setTimeout(() => {
+                document.getElementById('start-screen').style.display = 'none';
+                gameStarted = true;
+                initThreeJS();
+                generateProblem();
+            }, 500);
+        });
+
+        document.getElementById('submit-btn').addEventListener('click', submitAnswer);
+        document.getElementById('hint-btn').addEventListener('click', showHint);
+        document.getElementById('answer-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') submitAnswer();
+        });
+
+        document.querySelectorAll('.topic-btn').forEach(btn => {
+            btn.addEventListener('click', () => selectTopic(btn.dataset.topic));
+        });
+    </script>
+</body>
+</html>

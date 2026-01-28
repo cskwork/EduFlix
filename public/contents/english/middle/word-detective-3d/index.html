@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Detective 3D - Middle School English</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: #1a1a2e;
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 12px 24px;
+            color: #fff;
+            font-size: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #case-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: auto;
+            max-width: 800px;
+            width: 90%;
+        }
+
+        #case-title {
+            font-size: 36px;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        #sentence-context {
+            font-size: 22px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            border-left: 5px solid #ffd700;
+        }
+
+        #mystery-word {
+            color: #ff6b6b;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        #clues-container {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        #clues-title {
+            font-size: 18px;
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .clue-item {
+            color: #fff;
+            font-size: 16px;
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .clue-item:before {
+            content: "🔍";
+            position: absolute;
+            left: 0;
+        }
+
+        #options-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 16px;
+            font-family: 'Segoe UI', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            min-width: 150px;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .option-btn.correct {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .option-btn.wrong {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        }
+
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        #start-screen h1 {
+            font-size: 56px;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #start-screen p {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        #start-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 20px 60px;
+            color: #1a1a2e;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        #start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.7);
+        }
+
+        #feedback-message {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            text-shadow: 0 0 20px currentColor;
+            z-index: 10;
+        }
+
+        #feedback-message.show {
+            opacity: 1;
+        }
+
+        #progress-bar-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffaa00);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        #explanation {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            max-width: 600px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #explanation.show {
+            opacity: 1;
+        }
+
+        #celebration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        #celebration h2 {
+            font-size: 64px;
+            color: #ffd700;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+            animation: celebrate 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes celebrate {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        #hint-btn {
+            position: absolute;
+            bottom: 35px;
+            right: 20px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid #ffd700;
+            border-radius: 50px;
+            padding: 10px 25px;
+            color: #ffd700;
+            font-size: 16px;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.3s;
+        }
+
+        #hint-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        #hint-display {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: #ffd700;
+            font-size: 14px;
+            max-width: 250px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="canvas-container"></div>
+
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box">🔎 Case: <span id="case-number">1</span>/10</div>
+                <div class="stat-box">⭐ Score: <span id="score">0</span></div>
+                <div class="stat-box">💡 Hints: <span id="hints">3</span></div>
+            </div>
+
+            <div id="case-display">
+                <div id="case-title">📋 Detective Case #1</div>
+                <div id="sentence-context"></div>
+                <div id="clues-container">
+                    <div id="clues-title">🔍 Context Clues:</div>
+                    <div id="clues-list"></div>
+                </div>
+                <div id="options-container"></div>
+            </div>
+
+            <button id="hint-btn">💡 Get Hint</button>
+            <div id="hint-display"></div>
+
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div id="explanation"></div>
+        <div id="feedback-message"></div>
+        <div id="celebration"><h2>🏆 Case Solved! 🏆</h2></div>
+
+        <div id="start-screen">
+            <h1>🕵️ Word Detective 3D</h1>
+            <p>Welcome, Detective! Your mission is to solve vocabulary mysteries using context clues. Read each sentence carefully, examine the clues, and determine the meaning of the mystery word. Good luck!</p>
+            <button id="start-btn">Start Investigation!</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        // Case data for middle school level
+        const casesData = [
+            {
+                title: "The Mysterious Journey",
+                sentence: "The <span id='mystery-word'>arduous</span> journey through the mountains took three days, requiring hikers to climb steep cliffs and cross dangerous rivers.",
+                mysteryWord: "arduous",
+                options: ["enjoyable", "difficult", "short", "beautiful"],
+                correct: 1,
+                clues: [
+                    "The journey 'took three days' - suggesting it wasn't quick or easy",
+                    "Hikers had to 'climb steep cliffs' and 'cross dangerous rivers' - challenging activities",
+                    "The physical demands imply difficulty and hardship"
+                ],
+                hint: "Look for descriptions of physical challenges",
+                explanation: "Arduous means involving or requiring strenuous effort; difficult and tiring. The context clues about steep cliffs, dangerous rivers, and a three-day duration all point to something difficult."
+            },
+            {
+                title: "The Ancient City",
+                sentence: "The archaeologists were amazed by the <span id='mystery-word'>pristine</span> condition of the artifacts they found in the buried temple.",
+                mysteryWord: "pristine",
+                options: ["damaged", "ancient", "perfect", "hidden"],
+                correct: 2,
+                clues: [
+                    "Archaeologists were 'amazed' - suggesting something unusual or impressive",
+                    "The artifacts were 'found' - not made recently",
+                    "Being amazed suggests the condition was unexpectedly good"
+                ],
+                hint: "Think about how archaeologists would feel about finding something in perfect condition",
+                explanation: "Pristine means in its original condition; unspoiled or untouched. The archaeologists' amazement at the condition indicates the artifacts were remarkably well-preserved."
+            },
+            {
+                title: "The Debate",
+                sentence: "Her <span id='mystery-word'>eloquent</span> speech convinced everyone in the audience to support the new environmental proposal.",
+                mysteryWord: "eloquent",
+                options: ["quiet", "persuasive", "short", "boring"],
+                correct: 1,
+                clues: [
+                    "The speech 'convinced everyone' - it was effective",
+                    "It caused people to 'support' the proposal - showing persuasive power",
+                    "The result was complete audience agreement"
+                ],
+                hint: "Consider what kind of speech convinces everyone",
+                explanation: "Eloquent means fluent or persuasive in speaking or writing. The context shows her speech was powerful enough to convince the entire audience."
+            },
+            {
+                title: "The Artist",
+                sentence: "The artist's <span id='mystery-word'>meticulous</span> attention to detail was evident in every brushstroke of the portrait.",
+                mysteryWord: "meticulous",
+                options: ["careless", "careful", "quick", "creative"],
+                correct: 1,
+                clues: [
+                    "'Attention to detail' is explicitly mentioned",
+                    "The care was 'evident in every brushstroke' - thoroughness",
+                    "Artists who pay attention to detail work with great care"
+                ],
+                hint: "Pay attention to the phrase 'attention to detail'",
+                explanation: "Meticulous means showing great attention to detail; very careful and precise. The reference to detail in every brushstroke clearly indicates careful, precise work."
+            },
+            {
+                title: "The Negotiation",
+                sentence: "After hours of <span id='mystery-word'>heated</span> discussion, the two companies finally reached an agreement.",
+                mysteryWord: "heated",
+                options: ["warm", "intense", "boring", "short"],
+                correct: 1,
+                clues: [
+                    "The discussion lasted 'hours' - suggesting it wasn't brief",
+                    "They 'finally' reached agreement - implying it was difficult",
+                    "The context suggests strong emotions or opinions"
+                ],
+                hint: "Think about what kind of discussion goes on for hours before agreement",
+                explanation: "Heated in this context means full of anger, passion, or strong emotion. The long duration and difficulty reaching agreement point to an intense discussion."
+            },
+            {
+                title: "The Discovery",
+                sentence: "The <span id='mystery-word'>novel</span> approach to solving the problem impressed all the scientists at the conference.",
+                mysteryWord: "novel",
+                options: ["old", "new", "fiction", "boring"],
+                correct: 1,
+                clues: [
+                    "The approach 'impressed' scientists - suggesting it was notable",
+                    "Scientists typically appreciate innovative thinking",
+                    "Being impressive at a conference suggests something fresh"
+                ],
+                hint: "Consider what kind of approach would impress scientists",
+                explanation: "Novel means new or unusual in an interesting way. The fact that it impressed scientists suggests it was innovative and fresh."
+            },
+            {
+                title: "The Storm",
+                sentence: "The <span id='mystery-word'>furious</span> winds knocked down trees and damaged several houses in the neighborhood.",
+                mysteryWord: "furious",
+                options: ["gentle", "angry", "warm", "light"],
+                correct: 1,
+                clues: [
+                    "Winds 'knocked down trees' - showing great force",
+                    "They 'damaged houses' - indicating destructive power",
+                    "The destruction suggests violent, intense action"
+                ],
+                hint: "Think about winds that can knock down trees and damage houses",
+                explanation: "Furious means extremely violent or intense. The destructive power shown by knocking down trees and damaging houses indicates violent winds."
+            },
+            {
+                title: "The Meeting",
+                sentence: "The manager's <span id='mystery-word'>concise</span> report covered all the important points in just ten minutes.",
+                mysteryWord: "concise",
+                options: ["long", "brief", "detailed", "confusing"],
+                correct: 1,
+                clues: [
+                    "The report covered everything 'in just ten minutes' - very short time",
+                    "It covered 'all the important points' - despite being short",
+                    "Efficiency is clearly demonstrated"
+                ],
+                hint: "Notice how quickly everything was covered",
+                explanation: "Concise means giving a lot of information clearly and in a few words. The ten-minute timeframe while covering all points shows efficiency and brevity."
+            },
+            {
+                title: "The Leader",
+                sentence: "The team leader's <span id='mystery-word'>compassionate</span> response to the employee's personal crisis earned everyone's respect.",
+                mysteryWord: "compassionate",
+                options: ["cold", "caring", "strict", "angry"],
+                correct: 1,
+                clues: [
+                    "The response was to a 'personal crisis' - requiring sensitivity",
+                    "It 'earned everyone's respect' - positive outcome",
+                    "Respect often follows kind, understanding behavior"
+                ],
+                hint: "Consider what kind of response to a crisis earns respect",
+                explanation: "Compassionate means feeling or showing sympathy and concern for others. The positive reaction and respect earned indicate a caring, understanding response."
+            },
+            {
+                title: "The Decision",
+                sentence: "After careful consideration, she made a <span id='mystery-word'>prudent</span> decision that saved the company a lot of money.",
+                mysteryWord: "prudent",
+                options: ["rash", "wise", "quick", "lazy"],
+                correct: 1,
+                clues: [
+                    "Decision came after 'careful consideration' - not impulsive",
+                    "It 'saved the company money' - positive result",
+                    "The combination of thought and success suggests wisdom"
+                ],
+                hint: "Think about a decision that comes after careful thought and has good results",
+                explanation: "Prudent means acting with or showing care and thought for the future. The careful consideration and positive outcome demonstrate wise, sensible decision-making."
+            }
+        ];
+
+        // Game state
+        let currentCaseIndex = 0;
+        let score = 0;
+        let hintsRemaining = 3;
+        let gameStarted = false;
+
+        // Three.js setup
+        let scene, camera, renderer;
+        let magnifyingGlass;
+        let evidenceItems = [];
+        let particles = [];
+
+        function initThreeJS() {
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x1a1a2e);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Create detective environment
+            createMagnifyingGlass();
+            createEvidenceItems();
+            createParticles();
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0xffd700, 1, 100);
+            pointLight.position.set(0, 20, 20);
+            scene.add(pointLight);
+
+            // Handle resize
+            window.addEventListener('resize', onWindowResize);
+
+            // Mouse movement for magnifying glass
+            document.addEventListener('mousemove', onMouseMove);
+
+            // Start animation
+            animate();
+        }
+
+        function createMagnifyingGlass() {
+            // Handle
+            const handleGeometry = new THREE.CylinderGeometry(0.3, 0.3, 4, 16);
+            const handleMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
+            const handle = new THREE.Mesh(handleGeometry, handleMaterial);
+            handle.position.y = -2;
+
+            // Ring
+            const ringGeometry = new THREE.TorusGeometry(2, 0.3, 16, 32);
+            const ringMaterial = new THREE.MeshPhongMaterial({ color: 0xffd700, metalness: 0.8 });
+            const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+
+            // Glass (lens)
+            const glassGeometry = new THREE.CircleGeometry(1.8, 32);
+            const glassMaterial = new THREE.MeshPhongMaterial({
+                color: 0xadd8e6,
+                transparent: true,
+                opacity: 0.3,
+                shininess: 100
+            });
+            const glass = new THREE.Mesh(glassGeometry, glassMaterial);
+            glass.position.z = 0.1;
+
+            magnifyingGlass = new THREE.Group();
+            magnifyingGlass.add(handle);
+            magnifyingGlass.add(ring);
+            magnifyingGlass.add(glass);
+            magnifyingGlass.position.set(15, 5, 5);
+
+            scene.add(magnifyingGlass);
+        }
+
+        function createEvidenceItems() {
+            const colors = [0xff6b6b, 0x4ecdc4, 0xffd93d, 0x6bcb77, 0xff9ff3];
+
+            for (let i = 0; i < 15; i++) {
+                const geometry = new THREE.BoxGeometry(
+                    0.5 + Math.random() * 1.5,
+                    0.5 + Math.random() * 1.5,
+                    0.5 + Math.random() * 1.5
+                );
+                const material = new THREE.MeshPhongMaterial({
+                    color: colors[i % colors.length],
+                    shininess: 80
+                });
+                const item = new THREE.Mesh(geometry, material);
+
+                item.position.x = (Math.random() - 0.5) * 50;
+                item.position.y = (Math.random() - 0.5) * 30;
+                item.position.z = (Math.random() - 0.5) * 20 - 10;
+
+                item.userData = {
+                    rotationSpeed: (Math.random() - 0.5) * 0.02,
+                    floatSpeed: Math.random() * 0.01,
+                    floatOffset: Math.random() * Math.PI * 2
+                };
+
+                scene.add(item);
+                evidenceItems.push(item);
+            }
+        }
+
+        function createParticles() {
+            const particleGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+            const particleMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700 });
+
+            for (let i = 0; i < 100; i++) {
+                const particle = new THREE.Mesh(particleGeometry, particleMaterial);
+                particle.position.x = (Math.random() - 0.5) * 60;
+                particle.position.y = (Math.random() - 0.5) * 40;
+                particle.position.z = (Math.random() - 0.5) * 30;
+                scene.add(particle);
+                particles.push(particle);
+            }
+        }
+
+        function onMouseMove(event) {
+            const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            if (magnifyingGlass) {
+                magnifyingGlass.position.x = mouseX * 15 + 5;
+                magnifyingGlass.position.y = mouseY * 8;
+                magnifyingGlass.rotation.z = -mouseX * 0.2;
+            }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.001;
+
+            // Animate evidence items
+            evidenceItems.forEach(item => {
+                item.rotation.x += item.userData.rotationSpeed;
+                item.rotation.y += item.userData.rotationSpeed;
+                item.position.y += Math.sin(time + item.userData.floatOffset) * item.userData.floatSpeed;
+            });
+
+            // Animate particles
+            particles.forEach(particle => {
+                particle.position.y += 0.02;
+                if (particle.position.y > 20) {
+                    particle.position.y = -20;
+                }
+            });
+
+            // Rotate magnifying glass slightly
+            if (magnifyingGlass) {
+                magnifyingGlass.rotation.z += 0.005;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function showCase() {
+            if (currentCaseIndex >= casesData.length) {
+                showCelebration();
+                return;
+            }
+
+            const caseData = casesData[currentCaseIndex];
+            document.getElementById('case-number').textContent = currentCaseIndex + 1;
+            document.getElementById('case-title').textContent = `📋 Detective Case #${currentCaseIndex + 1}: ${caseData.title}`;
+            document.getElementById('sentence-context').innerHTML = caseData.sentence;
+
+            // Show clues
+            const cluesList = document.getElementById('clues-list');
+            cluesList.innerHTML = '';
+            caseData.clues.forEach(clue => {
+                const clueItem = document.createElement('div');
+                clueItem.className = 'clue-item';
+                clueItem.textContent = clue;
+                cluesList.appendChild(clueItem);
+            });
+
+            // Create option buttons
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            caseData.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.addEventListener('click', () => checkAnswer(index));
+                optionsContainer.appendChild(btn);
+            });
+
+            // Update progress bar
+            const progress = (currentCaseIndex / casesData.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+
+            // Hide hint display
+            document.getElementById('hint-display').style.display = 'none';
+        }
+
+        function checkAnswer(selectedIndex) {
+            const caseData = casesData[currentCaseIndex];
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback-message');
+            const explanation = document.getElementById('explanation');
+
+            // Disable all buttons
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === caseData.correct) {
+                // Correct answer
+                buttons[selectedIndex].classList.add('correct');
+                feedback.textContent = '🎉 Case Solved!';
+                feedback.style.color = '#38ef7d';
+                score += 150;
+                document.getElementById('score').textContent = score;
+            } else {
+                // Wrong answer
+                buttons[selectedIndex].classList.add('wrong');
+                buttons[caseData.correct].classList.add('correct');
+                feedback.textContent = '❌ Not quite!';
+                feedback.style.color = '#f45c43';
+            }
+
+            // Show explanation
+            explanation.textContent = caseData.explanation;
+            explanation.classList.add('show');
+
+            feedback.classList.add('show');
+
+            setTimeout(() => {
+                feedback.classList.remove('show');
+                explanation.classList.remove('show');
+                currentCaseIndex++;
+                showCase();
+            }, 3000);
+        }
+
+        function showHint() {
+            if (hintsRemaining <= 0) {
+                alert('No hints remaining!');
+                return;
+            }
+
+            const caseData = casesData[currentCaseIndex];
+            document.getElementById('hint-display').textContent = caseData.hint;
+            document.getElementById('hint-display').style.display = 'block';
+            hintsRemaining--;
+            document.getElementById('hints').textContent = hintsRemaining;
+        }
+
+        function showCelebration() {
+            document.getElementById('celebration').style.display = 'flex';
+            document.getElementById('progress-bar').style.width = '100%';
+
+            setTimeout(() => {
+                alert(`🏆 Congratulations! You solved all cases! Score: ${score} 🏆`);
+                location.reload();
+            }, 2000);
+        }
+
+        // Event listeners
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            gameStarted = true;
+            initThreeJS();
+            showCase();
+        });
+
+        document.getElementById('hint-btn').addEventListener('click', showHint);
+
+        // Keyboard navigation for accessibility
+        document.addEventListener('keydown', (e) => {
+            if (!gameStarted) return;
+            
+            const buttons = document.querySelectorAll('.option-btn:not(:disabled)');
+            
+            // Number keys 1-4 to select options
+            if (e.key >= '1' && e.key <= '4' && buttons.length > 0) {
+                const index = parseInt(e.key) - 1;
+                if (index < buttons.length) {
+                    checkAnswer(index);
+                }
+            }
+            
+            // H for hint
+            if (e.key === 'h' || e.key === 'H') {
+                showHint();
+            }
+        });
+    </script>
+</body>
+</html>

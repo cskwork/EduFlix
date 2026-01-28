@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Word Builder - Dong-A Elementary English</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Sound Feedback System */
+        .sound-feedback {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .sound-ripple {
+            position: absolute;
+            border-radius: 50%;
+            animation: rippleEffect 0.6s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            0% { transform: scale(0); opacity: 0.8; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            z-index: 10;
+        }
+
+        #top-bar {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            pointer-events: auto;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 12px 20px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-value {
+            color: #ffd700;
+            font-weight: 800;
+        }
+
+        /* Combo indicator */
+        #combo-display {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: 800;
+            color: #ff6b6b;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+        }
+
+        #combo-display.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #story-panel {
+            background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 35px 40px;
+            max-width: 750px;
+            width: 95%;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            pointer-events: auto;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        #story-title {
+            font-size: clamp(24px, 5vw, 36px);
+            font-weight: 800;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        #story-theme {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #story-text {
+            font-size: clamp(16px, 3vw, 22px);
+            color: #fff;
+            line-height: 2;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        .blank {
+            display: inline-block;
+            min-width: 100px;
+            height: 40px;
+            border-bottom: 3px dashed #00ffff;
+            color: #00ffff;
+            font-weight: 700;
+            text-align: center;
+            vertical-align: middle;
+            margin: 0 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 8px;
+            line-height: 35px;
+            padding: 0 10px;
+        }
+
+        .blank:hover {
+            background: rgba(0, 255, 255, 0.25);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        }
+
+        .blank.filled {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.3) 0%, rgba(56, 239, 125, 0.3) 100%);
+            border-color: #4CAF50;
+            color: #4CAF50;
+            animation: fillPop 0.3s ease-out;
+        }
+
+        @keyframes fillPop {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .blank.incorrect {
+            background: rgba(255, 82, 82, 0.3);
+            border-color: #ff5252;
+            color: #ff5252;
+            animation: shakeBlank 0.5s ease-out;
+        }
+
+        @keyframes shakeBlank {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        #word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .word-bank-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 24px;
+            color: white;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .word-bank-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .word-bank-item:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .word-bank-item:hover::before {
+            left: 100%;
+        }
+
+        .word-bank-item.selected {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+        }
+
+        .word-bank-item.used {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: scale(0.95);
+            box-shadow: none;
+        }
+
+        .word-bank-item.correct-used {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            opacity: 0.6;
+        }
+
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        #start-screen h1 {
+            font-size: clamp(36px, 10vw, 64px);
+            font-weight: 800;
+            color: #ffd700;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+            margin-bottom: 15px;
+            text-align: center;
+            animation: floatTitle 3s ease-in-out infinite;
+        }
+
+        @keyframes floatTitle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .book-icons {
+            font-size: 50px;
+            margin-bottom: 20px;
+            animation: bookBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bookBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        #start-screen p {
+            font-size: clamp(16px, 3vw, 22px);
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 35px;
+            text-align: center;
+            max-width: 650px;
+            line-height: 1.7;
+        }
+
+        #start-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 18px 50px;
+            color: #1a1a2e;
+            font-size: clamp(18px, 4vw, 26px);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.5);
+        }
+
+        #start-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 15px 50px rgba(255, 215, 0, 0.7);
+        }
+
+        #start-btn::after {
+            content: ' 📖';
+        }
+
+        /* Story selector */
+        #story-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .story-option {
+            padding: 15px 25px;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .story-option .story-icon {
+            font-size: 30px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .story-option.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            border-color: #ffd700;
+            color: #1a1a2e;
+        }
+
+        .story-option:hover {
+            transform: scale(1.05);
+        }
+
+        #feedback {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(76, 175, 80, 0.95);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: 700;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 200;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        #feedback.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        #next-btn {
+            display: none;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border: none;
+            border-radius: 30px;
+            padding: 16px 40px;
+            color: white;
+            font-size: 18px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.5);
+        }
+
+        #next-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(17, 153, 142, 0.7);
+        }
+
+        #celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 300;
+        }
+
+        #celebration h2 {
+            font-size: clamp(40px, 12vw, 72px);
+            font-weight: 800;
+            color: #ffd700;
+            text-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+            animation: celebratePulse 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes celebratePulse {
+            0% { transform: scale(1) rotate(-2deg); }
+            100% { transform: scale(1.1) rotate(2deg); }
+        }
+
+        #celebration p {
+            font-size: 24px;
+            color: white;
+            margin-top: 20px;
+        }
+
+        #hint-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 25px;
+            color: white;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(240, 147, 251, 0.4);
+            z-index: 20;
+        }
+
+        #hint-btn:hover {
+            transform: scale(1.05);
+        }
+
+        #hint-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Progress bar */
+        #progress-container {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(70%, 400px);
+            pointer-events: none;
+        }
+
+        #progress-bar-bg {
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ff8c00, #f5576c);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        #progress-text {
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* Confetti effect */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            z-index: 400;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #story-panel {
+                padding: 25px;
+                max-height: 75vh;
+            }
+
+            .blank {
+                min-width: 80px;
+                height: 35px;
+                font-size: 14px;
+                line-height: 30px;
+            }
+
+            .word-bank-item {
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+
+            #top-bar {
+                justify-content: center;
+            }
+
+            .stat-box {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #story-panel {
+                padding: 20px;
+            }
+
+            #story-text {
+                line-height: 1.8;
+            }
+
+            .word-bank-item {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+        }
+
+        /* Loading */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .book-loader {
+            font-size: 60px;
+            animation: bookFlip 1s ease-in-out infinite;
+        }
+
+        @keyframes bookFlip {
+            0%, 100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(180deg); }
+        }
+
+        #loading-screen p {
+            color: #ffd700;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="book-loader">📚</div>
+        <p>Opening Storybook...</p>
+    </div>
+
+    <div id="game-container">
+        <div id="canvas-container"></div>
+
+        <div class="sound-feedback" id="sound-feedback"></div>
+
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box">
+                    <span>⭐</span> Score: <span class="stat-value" id="score">0</span>
+                </div>
+                <div class="stat-box">
+                    <span>📖</span> Story: <span class="stat-value" id="story-number">1</span>/<span id="total-stories">5</span>
+                </div>
+                <div class="stat-box">
+                    <span>💡</span> Hints: <span class="stat-value" id="hint-count">3</span>
+                </div>
+            </div>
+
+            <div id="combo-display">🔥 Combo x3!</div>
+
+            <div id="story-panel">
+                <h2 id="story-title">Story Title</h2>
+                <div id="story-theme">Theme: Adventure</div>
+                <p id="story-text"></p>
+                <div id="word-bank"></div>
+                <button id="next-btn">Next Story ➡️</button>
+            </div>
+        </div>
+
+        <button id="hint-btn">💡 Hint (<span id="hints-remaining">3</span>)</button>
+
+        <div id="progress-container">
+            <div id="progress-bar-bg">
+                <div id="progress-bar-fill"></div>
+            </div>
+            <div id="progress-text">0 / 5 blanks filled</div>
+        </div>
+
+        <div id="feedback"></div>
+        <div id="celebration">
+            <h2>🎉 Excellent Storyteller! 🎉</h2>
+            <p>You completed all the stories!</p>
+        </div>
+
+        <div id="start-screen">
+            <div class="book-icons">📚✨📖</div>
+            <h1>Story Word Builder</h1>
+            <p>Become a master storyteller! Complete magical stories by filling in the missing words. Click a word from the bank, then click the blank space where it belongs!</p>
+            
+            <div id="story-selector">
+                <div class="story-option active" data-category="fantasy">
+                    <span class="story-icon">🏰</span>
+                    Fantasy
+                </div>
+                <div class="story-option" data-category="adventure">
+                    <span class="story-icon">🗺️</span>
+                    Adventure
+                </div>
+                <div class="story-option" data-category="nature">
+                    <span class="story-icon">🌿</span>
+                    Nature
+                </div>
+            </div>
+            
+            <button id="start-btn">Start Building</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        // Extended story data by category
+        const storiesData = {
+            fantasy: [
+                {
+                    title: "The Magical Forest",
+                    theme: "Fantasy & Magic",
+                    text: "One sunny morning, little Emma walked into the _____ forest. The trees were tall and the leaves were _____ colors. Suddenly, she saw a _____ rabbit hopping by. Emma followed it deeper into the forest where she found a _____ cave. Inside, there was a _____ treasure chest filled with sparkling jewels!",
+                    blanks: ["magical", "bright", "white", "hidden", "golden"],
+                    words: ["magical", "bright", "white", "hidden", "golden", "scary", "dark", "black", "tiny", "broken"]
+                },
+                {
+                    title: "The Dragon's Friend",
+                    theme: "Fantasy & Friendship",
+                    text: "In a _____ kingdom far away, lived a _____ dragon named Spark. Unlike other dragons, Spark was very _____. One day, a _____ princess came to visit. She wasn't afraid at all! Together, they became _____ friends and had many adventures.",
+                    blanks: ["peaceful", "young", "friendly", "brave", "best"],
+                    words: ["peaceful", "young", "friendly", "brave", "best", "dark", "old", "mean", "scared", "worst"]
+                },
+                {
+                    title: "The Wizard's Garden",
+                    theme: "Fantasy & Nature",
+                    text: "Old wizard Merlo had a very _____ garden. The flowers could _____ beautiful songs. The trees grew _____ fruits that tasted like candy. A _____ fountain stood in the center, spraying _____ water that sparkled like diamonds.",
+                    blanks: ["special", "sing", "magical", "crystal", "rainbow"],
+                    words: ["special", "sing", "magical", "crystal", "rainbow", "boring", "cry", "normal", "stone", "dirty"]
+                }
+            ],
+            adventure: [
+                {
+                    title: "Space Adventure",
+                    theme: "Science Fiction",
+                    text: "Astronaut Tom climbed into his _____ spaceship. He launched into _____ space where he could see _____ stars. A _____ planet appeared on his radar. Tom landed and discovered _____ aliens who were very friendly!",
+                    blanks: ["shiny", "deep", "twinkling", "mysterious", "green"],
+                    words: ["shiny", "deep", "twinkling", "mysterious", "green", "old", "shallow", "dim", "boring", "angry"]
+                },
+                {
+                    title: "Ocean Discovery",
+                    theme: "Underwater Adventure",
+                    text: "Dive into the _____ ocean and explore the _____ coral reefs. Watch _____ fish swim around you. You might see a _____ turtle or a friendly _____! The underwater world is full of _____ surprises!",
+                    blanks: ["blue", "colorful", "tropical", "giant", "dolphin", "wonderful"],
+                    words: ["blue", "colorful", "tropical", "giant", "dolphin", "wonderful", "red", "grey", "tiny", "shark"]
+                },
+                {
+                    title: "Mountain Expedition",
+                    theme: "Outdoor Adventure",
+                    text: "The _____ hikers started their journey up the _____ mountain. The path was _____ but exciting. At the top, they saw a _____ view of the valley below. An _____ flew overhead as they celebrated reaching the summit!",
+                    blanks: ["brave", "tall", "challenging", "beautiful", "eagle"],
+                    words: ["brave", "tall", "challenging", "beautiful", "eagle", "scared", "small", "easy", "ugly", "ant"]
+                }
+            ],
+            nature: [
+                {
+                    title: "The Butterfly Garden",
+                    theme: "Nature & Growth",
+                    text: "In the _____ garden, _____ butterflies danced in the air. They landed on _____ flowers and drank sweet nectar. A _____ caterpillar watched them, dreaming of the day it would become just as _____.",
+                    blanks: ["sunny", "beautiful", "colorful", "small", "graceful"],
+                    words: ["sunny", "beautiful", "colorful", "small", "graceful", "dark", "ugly", "dead", "huge", "clumsy"]
+                },
+                {
+                    title: "Seasons Change",
+                    theme: "Weather & Seasons",
+                    text: "In spring, _____ flowers bloom everywhere. Summer brings _____ days perfect for swimming. _____ leaves fall during autumn. Winter covers everything in _____ snow. Each season is _____ in its own way!",
+                    blanks: ["fresh", "warm", "golden", "white", "special"],
+                    words: ["fresh", "warm", "golden", "white", "special", "old", "cold", "green", "black", "boring"]
+                },
+                {
+                    title: "Forest Friends",
+                    theme: "Wildlife",
+                    text: "The _____ forest is home to many animals. A _____ deer drinks from the stream. _____ squirrels gather nuts for winter. An _____ owl watches from a branch. All the animals live together in _____ harmony.",
+                    blanks: ["ancient", "gentle", "busy", "wise", "peaceful"],
+                    words: ["ancient", "gentle", "busy", "wise", "peaceful", "new", "wild", "lazy", "foolish", "chaotic"]
+                }
+            ]
+        };
+
+        // Game state
+        let currentCategory = 'fantasy';
+        let currentStories = [];
+        let currentStoryIndex = 0;
+        let score = 0;
+        let selectedWord = null;
+        let filledBlanks = 0;
+        let totalBlanks = 0;
+        let hintsRemaining = 3;
+        let combo = 0;
+        let maxCombo = 0;
+
+        // Three.js setup
+        let scene, camera, renderer;
+        let particles = [];
+        let books = [];
+        let floatingStars = [];
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 50;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setClearColor(0x1a1a2e);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            createParticles();
+            createFloatingBooks();
+            createFloatingStars();
+            createLights();
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function createParticles() {
+            const colors = [0xffd700, 0x667eea, 0x764ba2, 0x00ffff, 0xff6b6b, 0x38ef7d];
+            const particleGeometry = new THREE.BufferGeometry();
+            const particleCount = 300;
+            const positions = new Float32Array(particleCount * 3);
+            const particleColors = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3] = (Math.random() - 0.5) * 150;
+                positions[i3 + 1] = (Math.random() - 0.5) * 100;
+                positions[i3 + 2] = (Math.random() - 0.5) * 80;
+
+                const color = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+                particleColors[i3] = color.r;
+                particleColors[i3 + 1] = color.g;
+                particleColors[i3 + 2] = color.b;
+            }
+
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 0.8,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending
+            });
+
+            const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+            particleSystem.userData = { positions, velocities: [] };
+
+            for (let i = 0; i < particleCount; i++) {
+                particleSystem.userData.velocities.push({
+                    x: (Math.random() - 0.5) * 0.05,
+                    y: (Math.random() - 0.5) * 0.05,
+                    z: (Math.random() - 0.5) * 0.03
+                });
+            }
+
+            scene.add(particleSystem);
+            particles.push(particleSystem);
+        }
+
+        function createFloatingBooks() {
+            const bookColors = [0xff6b6b, 0x4ecdc4, 0xffd93d, 0x9b59b6, 0x3498db];
+
+            for (let i = 0; i < 8; i++) {
+                const bookGroup = new THREE.Group();
+
+                // Book cover
+                const coverGeometry = new THREE.BoxGeometry(3, 4, 0.5);
+                const coverMaterial = new THREE.MeshPhongMaterial({
+                    color: bookColors[i % bookColors.length],
+                    shininess: 80
+                });
+                const cover = new THREE.Mesh(coverGeometry, coverMaterial);
+                bookGroup.add(cover);
+
+                // Pages
+                const pagesGeometry = new THREE.BoxGeometry(2.8, 3.8, 0.4);
+                const pagesMaterial = new THREE.MeshPhongMaterial({ color: 0xfffef0 });
+                const pages = new THREE.Mesh(pagesGeometry, pagesMaterial);
+                pages.position.z = 0.05;
+                bookGroup.add(pages);
+
+                // Spine
+                const spineGeometry = new THREE.BoxGeometry(0.3, 4, 0.5);
+                const spine = new THREE.Mesh(spineGeometry, coverMaterial);
+                spine.position.x = -1.65;
+                bookGroup.add(spine);
+
+                bookGroup.position.set(
+                    (Math.random() - 0.5) * 80,
+                    (Math.random() - 0.5) * 50,
+                    (Math.random() - 0.5) * 40 - 20
+                );
+
+                bookGroup.userData = {
+                    rotationSpeed: (Math.random() - 0.5) * 0.01,
+                    floatSpeed: Math.random() * 0.02,
+                    floatOffset: Math.random() * Math.PI * 2,
+                    baseY: bookGroup.position.y
+                };
+
+                scene.add(bookGroup);
+                books.push(bookGroup);
+            }
+        }
+
+        function createFloatingStars() {
+            const starGeometry = new THREE.OctahedronGeometry(0.5, 0);
+            const starMaterial = new THREE.MeshPhongMaterial({
+                color: 0xffd700,
+                emissive: 0xffd700,
+                emissiveIntensity: 0.3,
+                shininess: 100
+            });
+
+            for (let i = 0; i < 20; i++) {
+                const star = new THREE.Mesh(starGeometry, starMaterial);
+                star.position.set(
+                    (Math.random() - 0.5) * 100,
+                    (Math.random() - 0.5) * 60,
+                    (Math.random() - 0.5) * 50
+                );
+
+                star.userData = {
+                    rotationSpeed: Math.random() * 0.05,
+                    floatSpeed: Math.random() * 0.02,
+                    floatOffset: Math.random() * Math.PI * 2
+                };
+
+                scene.add(star);
+                floatingStars.push(star);
+            }
+        }
+
+        function createLights() {
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const pointLight1 = new THREE.PointLight(0xffd700, 1, 100);
+            pointLight1.position.set(30, 30, 30);
+            scene.add(pointLight1);
+
+            const pointLight2 = new THREE.PointLight(0x667eea, 0.8, 100);
+            pointLight2.position.set(-30, -20, 20);
+            scene.add(pointLight2);
+
+            const pointLight3 = new THREE.PointLight(0xff6b6b, 0.5, 100);
+            pointLight3.position.set(0, -30, 30);
+            scene.add(pointLight3);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.001;
+
+            // Animate particles
+            particles.forEach(system => {
+                const positions = system.geometry.attributes.position.array;
+                const velocities = system.userData.velocities;
+
+                for (let i = 0; i < positions.length / 3; i++) {
+                    const i3 = i * 3;
+                    positions[i3] += velocities[i].x;
+                    positions[i3 + 1] += Math.sin(time + i * 0.1) * 0.02;
+                    positions[i3 + 2] += velocities[i].z;
+
+                    // Wrap around
+                    if (positions[i3] > 75) positions[i3] = -75;
+                    if (positions[i3] < -75) positions[i3] = 75;
+                    if (positions[i3 + 2] > 40) positions[i3 + 2] = -40;
+                    if (positions[i3 + 2] < -40) positions[i3 + 2] = 40;
+                }
+                system.geometry.attributes.position.needsUpdate = true;
+            });
+
+            // Animate books
+            books.forEach(book => {
+                book.rotation.y += book.userData.rotationSpeed;
+                book.rotation.x = Math.sin(time + book.userData.floatOffset) * 0.1;
+                book.position.y = book.userData.baseY + Math.sin(time * book.userData.floatSpeed * 50 + book.userData.floatOffset) * 2;
+            });
+
+            // Animate stars
+            floatingStars.forEach(star => {
+                star.rotation.x += star.userData.rotationSpeed;
+                star.rotation.y += star.userData.rotationSpeed;
+                star.position.y += Math.sin(time + star.userData.floatOffset) * 0.02;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        // Sound feedback visual
+        function playSoundFeedback(type, x, y) {
+            const feedback = document.getElementById('sound-feedback');
+            const ripple = document.createElement('div');
+            ripple.className = 'sound-ripple';
+            
+            const colors = {
+                correct: 'rgba(56, 239, 125, 0.6)',
+                wrong: 'rgba(255, 82, 82, 0.6)',
+                select: 'rgba(102, 126, 234, 0.6)',
+                complete: 'rgba(255, 215, 0, 0.8)'
+            };
+
+            ripple.style.cssText = `
+                left: ${x}px;
+                top: ${y}px;
+                width: 40px;
+                height: 40px;
+                background: ${colors[type] || colors.select};
+            `;
+
+            feedback.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        }
+
+        function showCombo() {
+            if (combo >= 2) {
+                const comboDisplay = document.getElementById('combo-display');
+                comboDisplay.textContent = `🔥 Combo x${combo}!`;
+                comboDisplay.classList.add('show');
+                setTimeout(() => comboDisplay.classList.remove('show'), 1500);
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#9b59b6', '#38ef7d'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.cssText = `
+                    left: ${Math.random() * 100}vw;
+                    top: -20px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    transform: rotate(${Math.random() * 360}deg);
+                    animation: confettiFall ${2 + Math.random() * 2}s linear forwards;
+                `;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        }
+
+        // Add confetti animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes confettiFall {
+                to {
+                    transform: translateY(100vh) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        function loadStory() {
+            const story = currentStories[currentStoryIndex];
+            document.getElementById('story-title').textContent = story.title;
+            document.getElementById('story-theme').textContent = `Theme: ${story.theme}`;
+            document.getElementById('story-number').textContent = currentStoryIndex + 1;
+
+            // Create text with blanks
+            let blankIndex = 0;
+            const html = story.text.replace(/_____/g, () => {
+                const index = blankIndex++;
+                return `<span class="blank" data-index="${index}" data-correct="${story.blanks[index]}"></span>`;
+            });
+
+            document.getElementById('story-text').innerHTML = html;
+            totalBlanks = story.blanks.length;
+            filledBlanks = 0;
+            combo = 0;
+
+            // Update progress
+            updateProgress();
+
+            // Create word bank (shuffled)
+            const wordBank = document.getElementById('word-bank');
+            wordBank.innerHTML = '';
+
+            const shuffledWords = [...story.words].sort(() => Math.random() - 0.5);
+
+            shuffledWords.forEach(word => {
+                const btn = document.createElement('button');
+                btn.className = 'word-bank-item';
+                btn.textContent = word;
+                btn.addEventListener('click', (e) => selectWord(btn, word, e));
+                wordBank.appendChild(btn);
+            });
+
+            // Add click handlers to blanks
+            document.querySelectorAll('.blank').forEach(blank => {
+                blank.addEventListener('click', (e) => fillBlank(blank, e));
+            });
+
+            document.getElementById('next-btn').style.display = 'none';
+        }
+
+        function updateProgress() {
+            const fill = (filledBlanks / totalBlanks) * 100;
+            document.getElementById('progress-bar-fill').style.width = `${fill}%`;
+            document.getElementById('progress-text').textContent = `${filledBlanks} / ${totalBlanks} blanks filled`;
+        }
+
+        function selectWord(btn, word, event) {
+            if (btn.classList.contains('used')) return;
+
+            // Clear previous selection
+            document.querySelectorAll('.word-bank-item').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedWord = { btn, word };
+
+            playSoundFeedback('select', event.clientX, event.clientY);
+        }
+
+        function fillBlank(blank, event) {
+            if (!selectedWord || blank.classList.contains('filled')) return;
+
+            const correctAnswer = blank.dataset.correct;
+            const userAnswer = selectedWord.word;
+
+            blank.textContent = userAnswer;
+            selectedWord.btn.classList.add('used');
+
+            if (userAnswer === correctAnswer) {
+                blank.classList.add('filled');
+                selectedWord.btn.classList.add('correct-used');
+                
+                combo++;
+                if (combo > maxCombo) maxCombo = combo;
+                showCombo();
+
+                const points = 50 + (combo * 10);
+                score += points;
+                document.getElementById('score').textContent = score;
+
+                showFeedback(`✅ Correct! +${points}`, '#4CAF50');
+                playSoundFeedback('correct', event.clientX, event.clientY);
+
+                filledBlanks++;
+                updateProgress();
+
+                if (filledBlanks === totalBlanks) {
+                    document.getElementById('next-btn').style.display = 'block';
+                    createConfetti();
+                    playSoundFeedback('complete', window.innerWidth / 2, window.innerHeight / 2);
+                }
+            } else {
+                blank.classList.add('incorrect');
+                showFeedback('❌ Try again!', '#f44336');
+                playSoundFeedback('wrong', event.clientX, event.clientY);
+                combo = 0;
+
+                setTimeout(() => {
+                    blank.textContent = '';
+                    blank.classList.remove('incorrect');
+                    selectedWord.btn.classList.remove('used', 'correct-used');
+                }, 1000);
+            }
+
+            selectedWord = null;
+            document.querySelectorAll('.word-bank-item').forEach(b => b.classList.remove('selected'));
+        }
+
+        function showFeedback(message, color) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.style.background = color;
+            feedback.classList.add('show');
+            setTimeout(() => feedback.classList.remove('show'), 1500);
+        }
+
+        function nextStory() {
+            currentStoryIndex++;
+
+            if (currentStoryIndex >= currentStories.length) {
+                showCelebration();
+            } else {
+                loadStory();
+            }
+        }
+
+        function showCelebration() {
+            document.getElementById('celebration').style.display = 'flex';
+            createConfetti();
+
+            setTimeout(() => {
+                const message = `🎉 Congratulations! 🎉\n\nFinal Score: ${score}\nMax Combo: ${maxCombo}\n\nYou're an amazing storyteller!`;
+                alert(message);
+                location.reload();
+            }, 2500);
+        }
+
+        function useHint() {
+            if (hintsRemaining <= 0) return;
+
+            const story = currentStories[currentStoryIndex];
+            const blanks = document.querySelectorAll('.blank');
+
+            // Find first empty blank
+            for (let i = 0; i < blanks.length; i++) {
+                if (!blanks[i].classList.contains('filled')) {
+                    const correctWord = story.blanks[i];
+                    const wordButtons = document.querySelectorAll('.word-bank-item');
+
+                    wordButtons.forEach(btn => {
+                        if (btn.textContent === correctWord && !btn.classList.contains('used')) {
+                            btn.style.boxShadow = '0 0 30px #ffd700, 0 0 60px #ffd700';
+                            btn.style.transform = 'scale(1.15)';
+                            setTimeout(() => {
+                                btn.style.boxShadow = '';
+                                btn.style.transform = '';
+                            }, 2500);
+                        }
+                    });
+
+                    hintsRemaining--;
+                    document.getElementById('hint-count').textContent = hintsRemaining;
+                    document.getElementById('hints-remaining').textContent = hintsRemaining;
+
+                    if (hintsRemaining <= 0) {
+                        document.getElementById('hint-btn').disabled = true;
+                    }
+                    break;
+                }
+            }
+        }
+
+        // Story category selection
+        document.querySelectorAll('.story-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.story-option').forEach(o => o.classList.remove('active'));
+                option.classList.add('active');
+                currentCategory = option.dataset.category;
+            });
+        });
+
+        // Event listeners
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            currentStories = [...storiesData[currentCategory]].sort(() => Math.random() - 0.5);
+            document.getElementById('total-stories').textContent = currentStories.length;
+            initThreeJS();
+            loadStory();
+        });
+
+        document.getElementById('next-btn').addEventListener('click', nextStory);
+        document.getElementById('hint-btn').addEventListener('click', useHint);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            // Number keys to select word bank items
+            if (e.key >= '1' && e.key <= '9') {
+                const wordBtns = document.querySelectorAll('.word-bank-item:not(.used)');
+                const index = parseInt(e.key) - 1;
+                if (index < wordBtns.length) {
+                    wordBtns[index].click();
+                }
+            }
+            // H for hint
+            if (e.key === 'h' || e.key === 'H') {
+                useHint();
+            }
+            // Tab cycles through blanks (for blank selection after word selected)
+            if (e.key === 'Tab' && selectedWord) {
+                e.preventDefault();
+                const blanks = document.querySelectorAll('.blank:not(.filled)');
+                if (blanks.length > 0) {
+                    blanks[0].click();
+                }
+            }
+            // Enter/Space for next story when visible
+            if ((e.key === 'Enter' || e.key === ' ') && document.getElementById('next-btn').style.display === 'block') {
+                nextStory();
+            }
+        });
+
+        // Hide loading screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>함수 탐험가 3D | 동아출판 중학 수학</title>
+    <meta name="description" content="3D 공간에서 함수 그래프를 탐험하고 일차함수를 배워보세요!">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f43f5e; --secondary: #8b5cf6; --accent: #fbbf24;
+            --success: #10b981; --danger: #ef4444; --dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            color: #fff;
+        }
+        #game-container { width: 100vw; height: 100vh; position: relative; }
+        #canvas-container { width: 100%; height: 100%; position: absolute; }
+        #ui-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+
+        #top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 30px; pointer-events: auto;
+            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+        }
+        .stat-box {
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 16px; padding: 14px 24px;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .stat-box .icon { font-size: 22px; }
+        .stat-box .value { font-size: 20px; font-weight: 700; color: var(--accent); }
+
+        #function-selector {
+            position: absolute; top: 100px; left: 20px;
+            background: var(--glass); backdrop-filter: blur(20px);
+            padding: 24px; border-radius: 20px; pointer-events: auto;
+            border: 1px solid rgba(255,255,255,0.2); width: 260px;
+        }
+        #function-selector h3 { color: #fff; margin-bottom: 20px; text-align: center; }
+        .func-btn {
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; padding: 14px; margin: 8px 0;
+            background: rgba(244,63,94,0.2); border: none; border-radius: 12px;
+            color: #fff; font-size: 14px; cursor: pointer; transition: all 0.3s;
+        }
+        .func-btn:hover { background: rgba(244,63,94,0.4); transform: translateX(5px); }
+        .func-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .func-btn .func-icon { font-size: 24px; }
+
+        #graph-panel {
+            position: absolute; top: 100px; right: 20px;
+            background: var(--glass); backdrop-filter: blur(20px);
+            padding: 24px; border-radius: 20px; pointer-events: auto;
+            border: 1px solid rgba(255,255,255,0.2); width: 320px;
+        }
+        #graph-panel h3 { color: var(--accent); margin-bottom: 16px; text-align: center; }
+        #graph-display {
+            background: rgba(0,0,0,0.4); border-radius: 16px;
+            height: 250px; position: relative; overflow: hidden;
+        }
+        #graph-display svg { width: 100%; height: 100%; }
+        .axis { stroke: rgba(255,255,255,0.3); stroke-width: 1; }
+        .grid-line { stroke: rgba(255,255,255,0.1); stroke-width: 0.5; }
+        .function-line { fill: none; stroke: var(--primary); stroke-width: 3; }
+
+        .equation-display {
+            background: rgba(0,0,0,0.3); padding: 16px; border-radius: 12px;
+            margin-top: 16px; text-align: center;
+        }
+        .equation-display .equation {
+            font-size: 28px; font-weight: 700; font-family: 'Courier New', monospace;
+            color: var(--accent);
+        }
+        .slider-group { margin-top: 16px; }
+        .slider-group label { display: block; font-size: 14px; margin-bottom: 8px; }
+        .slider-group input[type="range"] {
+            width: 100%; height: 8px; border-radius: 4px;
+            background: rgba(255,255,255,0.2); appearance: none;
+        }
+        .slider-group input[type="range"]::-webkit-slider-thumb {
+            appearance: none; width: 20px; height: 20px; border-radius: 50%;
+            background: var(--accent); cursor: pointer;
+        }
+
+        #game-area {
+            position: absolute; bottom: 150px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 600px; text-align: center; pointer-events: auto;
+        }
+        #problem-display {
+            background: var(--glass); backdrop-filter: blur(20px);
+            padding: 30px; border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        #problem-text { font-size: 20px; margin-bottom: 20px; line-height: 1.6; }
+        #answer-area { display: flex; justify-content: center; align-items: center; gap: 12px; }
+        #answer-input {
+            width: 120px; height: 55px; font-size: 24px; text-align: center;
+            border: 3px solid rgba(255,255,255,0.3); border-radius: 14px;
+            background: rgba(255,255,255,0.95); color: var(--dark);
+        }
+        #answer-input:focus { outline: none; border-color: var(--accent); }
+
+        #action-buttons { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+        .action-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none; border-radius: 14px; padding: 14px 28px;
+            color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s;
+        }
+        .action-btn:hover { transform: translateY(-2px); }
+        .action-btn.submit { background: linear-gradient(135deg, var(--success), #059669); }
+        .action-btn.hint { background: linear-gradient(135deg, var(--accent), #f59e0b); color: var(--dark); }
+
+        #hint-display {
+            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+            background: rgba(251,191,36,0.2); border: 2px solid var(--accent);
+            padding: 16px 24px; border-radius: 14px; color: var(--accent);
+            font-size: 16px; display: none;
+        }
+        #hint-display.show { display: block; }
+
+        #feedback-message {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 64px; font-weight: 900; opacity: 0; pointer-events: none; z-index: 100;
+        }
+        #feedback-message.show { opacity: 1; animation: pop 0.5s ease; }
+        @keyframes pop { 50% { transform: translate(-50%,-50%) scale(1.2); } }
+
+        #start-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0f172a, #1e1b4b, #312e81);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100;
+        }
+        #start-screen h1 {
+            font-size: clamp(40px, 8vw, 72px); font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--accent), var(--primary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+        #start-screen .subtitle {
+            font-size: clamp(16px, 3vw, 22px); color: rgba(255,255,255,0.8);
+            margin-bottom: 48px; max-width: 600px; line-height: 1.6; text-align: center;
+        }
+        #start-btn {
+            background: linear-gradient(135deg, var(--accent), #f59e0b);
+            border: none; border-radius: 50px; padding: 22px 64px;
+            color: var(--dark); font-size: 24px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 10px 40px rgba(251,191,36,0.5); transition: all 0.3s;
+        }
+        #start-btn:hover { transform: scale(1.05) translateY(-3px); }
+
+        @media (max-width: 1024px) {
+            #function-selector, #graph-panel { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="canvas-container"></div>
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box"><span class="icon">📈</span><span>레벨</span><span class="value" id="level">1</span></div>
+                <div class="stat-box"><span class="icon">⭐</span><span>점수</span><span class="value" id="score">0</span></div>
+                <div class="stat-box"><span class="icon">✅</span><span>정답</span><span class="value" id="correct">0</span></div>
+            </div>
+
+            <div id="function-selector">
+                <h3>📊 함수 유형</h3>
+                <button class="func-btn active" data-func="linear"><span class="func-icon">📈</span>일차함수 y = ax + b</button>
+                <button class="func-btn" data-func="value"><span class="func-icon">🎯</span>함숫값 구하기</button>
+                <button class="func-btn" data-func="slope"><span class="func-icon">📐</span>기울기 구하기</button>
+                <button class="func-btn" data-func="intercept"><span class="func-icon">🔵</span>y절편 구하기</button>
+            </div>
+
+            <div id="graph-panel">
+                <h3>📉 그래프</h3>
+                <div id="graph-display">
+                    <svg viewBox="0 0 300 250">
+                        <line class="axis" x1="20" y1="125" x2="280" y2="125"/>
+                        <line class="axis" x1="150" y1="20" x2="150" y2="230"/>
+                        <path class="function-line" id="function-path"/>
+                        <text x="275" y="120" fill="white" font-size="12">x</text>
+                        <text x="155" y="30" fill="white" font-size="12">y</text>
+                    </svg>
+                </div>
+                <div class="equation-display">
+                    <div class="equation" id="current-equation">y = 2x + 1</div>
+                </div>
+                <div class="slider-group">
+                    <label>기울기 (a): <span id="slope-value">2</span></label>
+                    <input type="range" id="slope-slider" min="-5" max="5" value="2" step="0.5">
+                </div>
+                <div class="slider-group">
+                    <label>y절편 (b): <span id="intercept-value">1</span></label>
+                    <input type="range" id="intercept-slider" min="-5" max="5" value="1" step="1">
+                </div>
+            </div>
+
+            <div id="game-area">
+                <div id="problem-display">
+                    <div id="problem-text">y = 2x + 1일 때, x = 3이면 y의 값은?</div>
+                    <div id="answer-area">
+                        <span style="font-size: 20px;">y =</span>
+                        <input type="number" id="answer-input" placeholder="?" autocomplete="off">
+                    </div>
+                </div>
+                <div id="action-buttons">
+                    <button class="action-btn hint" id="hint-btn">💡 힌트</button>
+                    <button class="action-btn submit" id="submit-btn">✓ 제출</button>
+                </div>
+            </div>
+
+            <div id="hint-display"></div>
+        </div>
+        <div id="feedback-message"></div>
+        <div id="start-screen">
+            <h1>📈 함수 탐험가 3D</h1>
+            <p class="subtitle">3D 공간에서 함수 그래프를 탐험하세요! 일차함수의 기울기, y절편, 함숫값을 마스터해요!</p>
+            <button id="start-btn">탐험 시작! 🚀</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        let currentFuncType = 'linear', currentProblem = null;
+        let score = 0, level = 1, correct = 0, gameStarted = false;
+        let currentSlope = 2, currentIntercept = 1;
+        let scene, camera, renderer, functionLine;
+
+        const problemGenerators = {
+            linear: (lvl) => {
+                const a = Math.floor(Math.random() * 5) + 1;
+                const b = Math.floor(Math.random() * 10) - 5;
+                const x = Math.floor(Math.random() * 6) + 1;
+                return {
+                    text: `y = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} 일 때, x = ${x}이면 y의 값은?`,
+                    answer: a * x + b, hint: `y = ${a} × ${x} ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ?`,
+                    slope: a, intercept: b
+                };
+            },
+            value: (lvl) => {
+                const a = Math.floor(Math.random() * 4) + 1;
+                const b = Math.floor(Math.random() * 8) - 4;
+                const x = Math.floor(Math.random() * 5) + 1;
+                return {
+                    text: `f(x) = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} 일 때, f(${x})의 값은?`,
+                    answer: a * x + b, hint: `f(${x}) = ${a} × ${x} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`,
+                    slope: a, intercept: b
+                };
+            },
+            slope: (lvl) => {
+                const a = Math.floor(Math.random() * 8) - 4;
+                const b = Math.floor(Math.random() * 6) - 3;
+                if (a === 0) return problemGenerators.slope(lvl);
+                return {
+                    text: `y = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} 의 기울기는?`,
+                    answer: a, hint: `y = ax + b에서 기울기는 a입니다`,
+                    slope: a, intercept: b
+                };
+            },
+            intercept: (lvl) => {
+                const a = Math.floor(Math.random() * 5) + 1;
+                const b = Math.floor(Math.random() * 10) - 5;
+                return {
+                    text: `y = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} 의 y절편은?`,
+                    answer: b, hint: `y = ax + b에서 y절편은 b입니다`,
+                    slope: a, intercept: b
+                };
+            }
+        };
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x0f172a, 0.015);
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 15, 30);
+            camera.lookAt(0, 0, 0);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            const ambient = new THREE.AmbientLight(0x404080, 0.5);
+            scene.add(ambient);
+            const light = new THREE.DirectionalLight(0xffffff, 0.8);
+            light.position.set(10, 20, 10);
+            scene.add(light);
+            const pink = new THREE.PointLight(0xf43f5e, 0.6, 50);
+            pink.position.set(-10, 10, 10);
+            scene.add(pink);
+
+            // Grid
+            const grid = new THREE.GridHelper(30, 30, 0xf43f5e, 0x312e81);
+            scene.add(grid);
+
+            // Axes
+            const axisX = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 30), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+            axisX.rotation.z = Math.PI / 2;
+            scene.add(axisX);
+            const axisY = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 20), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+            scene.add(axisY);
+
+            createFunctionLine(2, 1);
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            animate();
+        }
+
+        function createFunctionLine(slope, intercept) {
+            if (functionLine) scene.remove(functionLine);
+            const points = [];
+            for (let x = -10; x <= 10; x += 0.5) {
+                const y = slope * x + intercept;
+                points.push(new THREE.Vector3(x, y, 0));
+            }
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ color: 0xf43f5e, linewidth: 3 });
+            functionLine = new THREE.Line(geometry, material);
+            scene.add(functionLine);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now() * 0.001;
+            camera.position.x = Math.sin(time * 0.2) * 5;
+            camera.lookAt(0, 2, 0);
+            renderer.render(scene, camera);
+        }
+
+        function updateGraph() {
+            const path = document.getElementById('function-path');
+            let d = '';
+            for (let x = -5; x <= 5; x += 0.1) {
+                const y = currentSlope * x + currentIntercept;
+                const px = 150 + x * 25;
+                const py = 125 - y * 20;
+                d += (x === -5 ? 'M' : 'L') + `${px},${py}`;
+            }
+            path.setAttribute('d', d);
+            const b = currentIntercept;
+            document.getElementById('current-equation').textContent = 
+                `y = ${currentSlope}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
+        }
+
+        function generateProblem() {
+            currentProblem = problemGenerators[currentFuncType](level);
+            document.getElementById('problem-text').textContent = currentProblem.text;
+            document.getElementById('answer-input').value = '';
+            document.getElementById('answer-input').focus();
+            document.getElementById('hint-display').classList.remove('show');
+            currentSlope = currentProblem.slope;
+            currentIntercept = currentProblem.intercept;
+            document.getElementById('slope-slider').value = currentSlope;
+            document.getElementById('intercept-slider').value = currentIntercept;
+            document.getElementById('slope-value').textContent = currentSlope;
+            document.getElementById('intercept-value').textContent = currentIntercept;
+            updateGraph();
+            createFunctionLine(currentSlope, currentIntercept);
+        }
+
+        function submitAnswer() {
+            const userAnswer = parseFloat(document.getElementById('answer-input').value);
+            if (isNaN(userAnswer)) { showFeedback('❓', '#fbbf24'); return; }
+            if (Math.abs(userAnswer - currentProblem.answer) < 0.01) {
+                correct++; score += 100 + level * 20;
+                if (correct % 5 === 0) level++;
+                showFeedback('🎉 정답!', '#10b981');
+                document.getElementById('score').textContent = score;
+                document.getElementById('correct').textContent = correct;
+                document.getElementById('level').textContent = level;
+                setTimeout(generateProblem, 1200);
+            } else {
+                score = Math.max(0, score - 20);
+                showFeedback(`❌ ${currentProblem.answer}`, '#ef4444');
+                document.getElementById('score').textContent = score;
+            }
+        }
+
+        function showHint() {
+            document.getElementById('hint-display').textContent = '💡 ' + currentProblem.hint;
+            document.getElementById('hint-display').classList.add('show');
+            score = Math.max(0, score - 10);
+            document.getElementById('score').textContent = score;
+        }
+
+        function showFeedback(msg, color) {
+            const fb = document.getElementById('feedback-message');
+            fb.textContent = msg; fb.style.color = color; fb.style.textShadow = `0 0 40px ${color}`;
+            fb.classList.add('show');
+            setTimeout(() => fb.classList.remove('show'), 1200);
+        }
+
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('start-screen').style.display = 'none';
+                initThreeJS();
+                generateProblem();
+            }, 500);
+        });
+        document.getElementById('submit-btn').addEventListener('click', submitAnswer);
+        document.getElementById('hint-btn').addEventListener('click', showHint);
+        document.getElementById('answer-input').addEventListener('keypress', e => { if (e.key === 'Enter') submitAnswer(); });
+        document.querySelectorAll('.func-btn').forEach(b => b.addEventListener('click', () => {
+            currentFuncType = b.dataset.func;
+            document.querySelectorAll('.func-btn').forEach(btn => btn.classList.remove('active'));
+            b.classList.add('active');
+            generateProblem();
+        }));
+        document.getElementById('slope-slider').addEventListener('input', e => {
+            currentSlope = parseFloat(e.target.value);
+            document.getElementById('slope-value').textContent = currentSlope;
+            updateGraph();
+            createFunctionLine(currentSlope, currentIntercept);
+        });
+        document.getElementById('intercept-slider').addEventListener('input', e => {
+            currentIntercept = parseFloat(e.target.value);
+            document.getElementById('intercept-value').textContent = currentIntercept;
+            updateGraph();
+            createFunctionLine(currentSlope, currentIntercept);
+        });
+    </script>
+</body>
+</html>

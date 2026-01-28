@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문제 해결 아레나 | 동아출판 중학 수학</title>
+    <meta name="description" content="다양한 수학 문제를 풀며 실력을 겨뤄보세요!">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10b981; --secondary: #06b6d4; --accent: #fbbf24;
+            --danger: #ef4444; --purple: #8b5cf6; --pink: #ec4899;
+            --dark: #0f172a; --glass: rgba(255, 255, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f172a 0%, #064e3b 50%, #065f46 100%);
+            color: #fff;
+        }
+        #game-container { width: 100vw; height: 100vh; position: relative; }
+        #canvas-container { width: 100%; height: 100%; position: absolute; }
+        #ui-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+
+        #top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 24px; pointer-events: auto;
+            background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+        }
+        .stat-box {
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 16px; padding: 12px 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .stat-box .icon { font-size: 20px; }
+        .stat-box .label { font-size: 13px; opacity: 0.8; }
+        .stat-box .value { font-size: 20px; font-weight: 700; color: var(--accent); }
+
+        #timer-display {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            border-radius: 50px; padding: 12px 28px;
+            font-size: 24px; font-weight: 900;
+            box-shadow: 0 0 30px rgba(239,68,68,0.5);
+        }
+        #timer-display.warning { animation: pulse 0.5s infinite; }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        #category-bar {
+            display: flex; justify-content: center; gap: 12px;
+            padding: 16px; pointer-events: auto;
+        }
+        .category-btn {
+            background: var(--glass); backdrop-filter: blur(20px);
+            border: 2px solid transparent; border-radius: 50px;
+            padding: 10px 20px; color: #fff; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .category-btn:hover { background: rgba(16,185,129,0.3); }
+        .category-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: var(--primary);
+        }
+        .category-btn .cat-icon { font-size: 18px; }
+
+        #arena-area {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 800px; pointer-events: auto;
+        }
+
+        #problem-card {
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 24px; padding: 40px;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+        #problem-badge {
+            display: inline-block; background: linear-gradient(135deg, var(--purple), var(--pink));
+            padding: 8px 20px; border-radius: 50px; font-size: 14px; font-weight: 600;
+            margin-bottom: 20px;
+        }
+        #problem-text {
+            font-size: 26px; font-weight: 700; margin-bottom: 30px; line-height: 1.5;
+        }
+
+        #answer-section { margin-bottom: 24px; }
+        .answer-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+            max-width: 500px; margin: 0 auto;
+        }
+        .answer-choice {
+            background: rgba(16,185,129,0.2); border: 3px solid rgba(16,185,129,0.4);
+            border-radius: 16px; padding: 20px; font-size: 20px; font-weight: 700;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .answer-choice:hover { background: rgba(16,185,129,0.4); transform: scale(1.02); }
+        .answer-choice.correct {
+            background: linear-gradient(135deg, var(--primary), #059669);
+            border-color: var(--primary);
+            animation: correctPop 0.5s ease;
+        }
+        .answer-choice.wrong {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            border-color: var(--danger);
+            animation: shake 0.5s ease;
+        }
+        @keyframes correctPop { 50% { transform: scale(1.1); } }
+        @keyframes shake { 25%,75% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
+
+        .input-answer {
+            display: flex; justify-content: center; align-items: center; gap: 16px;
+        }
+        .input-answer input {
+            width: 150px; height: 60px; font-size: 28px; text-align: center;
+            border: 3px solid rgba(255,255,255,0.3); border-radius: 16px;
+            background: rgba(255,255,255,0.95); color: var(--dark);
+        }
+        .input-answer input:focus { outline: none; border-color: var(--accent); }
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), #059669);
+            border: none; border-radius: 16px; padding: 16px 32px;
+            color: #fff; font-size: 18px; font-weight: 700; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .submit-btn:hover { transform: translateY(-2px); }
+
+        #streak-display {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 20px; pointer-events: auto;
+        }
+        .streak-item {
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 16px; padding: 16px 28px; text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .streak-item .label { font-size: 12px; opacity: 0.7; margin-bottom: 4px; }
+        .streak-item .value { font-size: 28px; font-weight: 900; }
+        .streak-item .value.fire { color: var(--accent); }
+        .streak-item .value.star { color: var(--purple); }
+
+        #rank-display {
+            position: absolute; top: 120px; right: 20px;
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 20px; padding: 24px; width: 250px;
+            border: 1px solid rgba(255,255,255,0.2); pointer-events: auto;
+        }
+        #rank-display h3 { color: var(--accent); margin-bottom: 16px; text-align: center; }
+        .rank-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px; border-radius: 10px; margin-bottom: 8px;
+            background: rgba(0,0,0,0.2);
+        }
+        .rank-item.current { background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(6,182,212,0.3)); }
+        .rank-num { font-size: 18px; font-weight: 900; width: 30px; }
+        .rank-name { flex: 1; font-size: 14px; }
+        .rank-score { font-weight: 700; color: var(--accent); }
+
+        #combo-display {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 80px; font-weight: 900; opacity: 0; pointer-events: none; z-index: 100;
+        }
+        #combo-display.show { opacity: 1; animation: comboPop 0.8s ease forwards; }
+        @keyframes comboPop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            20% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1) translateY(-50px); opacity: 0; }
+        }
+
+        #start-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0f172a, #064e3b, #065f46);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100;
+        }
+        #start-screen h1 {
+            font-size: clamp(40px, 8vw, 72px); font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--accent), var(--primary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+        #start-screen .subtitle {
+            font-size: clamp(16px, 3vw, 22px); color: rgba(255,255,255,0.8);
+            margin-bottom: 48px; max-width: 600px; line-height: 1.6; text-align: center;
+        }
+        #start-btn {
+            background: linear-gradient(135deg, var(--accent), #f59e0b);
+            border: none; border-radius: 50px; padding: 22px 64px;
+            color: var(--dark); font-size: 24px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 10px 40px rgba(251,191,36,0.5); transition: all 0.3s;
+        }
+        #start-btn:hover { transform: scale(1.05) translateY(-3px); }
+        .mode-selector { display: flex; gap: 16px; margin-bottom: 32px; }
+        .mode-btn {
+            background: var(--glass); border: 2px solid transparent;
+            border-radius: 16px; padding: 20px 30px; color: #fff;
+            cursor: pointer; transition: all 0.3s; text-align: center;
+        }
+        .mode-btn:hover { border-color: var(--primary); }
+        .mode-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .mode-btn .mode-icon { font-size: 36px; margin-bottom: 8px; }
+        .mode-btn .mode-name { font-size: 16px; font-weight: 700; }
+
+        @media (max-width: 768px) {
+            #rank-display { display: none; }
+            #problem-text { font-size: 20px; }
+            .answer-grid { grid-template-columns: 1fr; }
+            .answer-choice { padding: 14px; font-size: 18px; }
+            #category-bar { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="canvas-container"></div>
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box"><span class="icon">⚔️</span><span class="label">라운드</span><span class="value" id="round">1</span></div>
+                <div id="timer-display">⏱️ <span id="timer">60</span></div>
+                <div class="stat-box"><span class="icon">⭐</span><span class="label">점수</span><span class="value" id="score">0</span></div>
+            </div>
+
+            <div id="category-bar">
+                <button class="category-btn active" data-cat="all"><span class="cat-icon">🎯</span>전체</button>
+                <button class="category-btn" data-cat="calc"><span class="cat-icon">🔢</span>계산</button>
+                <button class="category-btn" data-cat="eq"><span class="cat-icon">📐</span>방정식</button>
+                <button class="category-btn" data-cat="geo"><span class="cat-icon">📏</span>도형</button>
+                <button class="category-btn" data-cat="word"><span class="cat-icon">📝</span>문장제</button>
+            </div>
+
+            <div id="arena-area">
+                <div id="problem-card">
+                    <div id="problem-badge">계산 문제</div>
+                    <div id="problem-text">25 × 4 + 50 = ?</div>
+                    <div id="answer-section"></div>
+                </div>
+            </div>
+
+            <div id="streak-display">
+                <div class="streak-item"><div class="label">연속 정답</div><div class="value fire">🔥 <span id="streak">0</span></div></div>
+                <div class="streak-item"><div class="label">최고 기록</div><div class="value star">👑 <span id="max-streak">0</span></div></div>
+                <div class="streak-item"><div class="label">정확도</div><div class="value" id="accuracy">100%</div></div>
+            </div>
+
+            <div id="rank-display">
+                <h3>🏆 리더보드</h3>
+                <div class="rank-item"><span class="rank-num">1</span><span class="rank-name">수학천재</span><span class="rank-score">9,500</span></div>
+                <div class="rank-item"><span class="rank-num">2</span><span class="rank-name">문제왕</span><span class="rank-score">8,200</span></div>
+                <div class="rank-item"><span class="rank-num">3</span><span class="rank-name">계산마스터</span><span class="rank-score">7,800</span></div>
+                <div class="rank-item current"><span class="rank-num">-</span><span class="rank-name">나</span><span class="rank-score" id="my-rank-score">0</span></div>
+            </div>
+        </div>
+
+        <div id="combo-display"></div>
+
+        <div id="start-screen">
+            <h1>⚔️ 문제 해결 아레나</h1>
+            <p class="subtitle">제한 시간 안에 최대한 많은 문제를 풀어보세요! 연속 정답으로 콤보 보너스를 획득하세요!</p>
+            <div class="mode-selector">
+                <div class="mode-btn active" data-mode="timed">
+                    <div class="mode-icon">⏱️</div>
+                    <div class="mode-name">시간 제한</div>
+                </div>
+                <div class="mode-btn" data-mode="endless">
+                    <div class="mode-icon">♾️</div>
+                    <div class="mode-name">무한 모드</div>
+                </div>
+                <div class="mode-btn" data-mode="challenge">
+                    <div class="mode-icon">🏆</div>
+                    <div class="mode-name">도전 모드</div>
+                </div>
+            </div>
+            <button id="start-btn">아레나 입장! 🚀</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        const problemBank = {
+            calc: [
+                () => { const a = Math.floor(Math.random()*50)+10, b = Math.floor(Math.random()*50)+10; return { q: `${a} + ${b} = ?`, a: a+b, type: 'input' }; },
+                () => { const a = Math.floor(Math.random()*30)+20, b = Math.floor(Math.random()*20)+5; return { q: `${a} - ${b} = ?`, a: a-b, type: 'input' }; },
+                () => { const a = Math.floor(Math.random()*12)+2, b = Math.floor(Math.random()*12)+2; return { q: `${a} × ${b} = ?`, a: a*b, type: 'input' }; },
+                () => { const b = Math.floor(Math.random()*10)+2, a = b * (Math.floor(Math.random()*10)+2); return { q: `${a} ÷ ${b} = ?`, a: a/b, type: 'input' }; },
+                () => { const a = Math.floor(Math.random()*20)+5, b = Math.floor(Math.random()*5)+2, c = Math.floor(Math.random()*30)+10; return { q: `${a} × ${b} + ${c} = ?`, a: a*b+c, type: 'input' }; }
+            ],
+            eq: [
+                () => { const x = Math.floor(Math.random()*10)+1, a = Math.floor(Math.random()*5)+1, b = a*x; return { q: `${a}x = ${b} 일 때, x = ?`, a: x, type: 'input' }; },
+                () => { const x = Math.floor(Math.random()*8)+2, a = Math.floor(Math.random()*4)+1, b = Math.floor(Math.random()*10), c = a*x+b; return { q: `${a}x + ${b} = ${c} 일 때, x = ?`, a: x, type: 'input' }; },
+                () => { const x = Math.floor(Math.random()*5)+1; return { q: `x = ${x} 일 때, 2x + 3 = ?`, a: 2*x+3, type: 'input' }; }
+            ],
+            geo: [
+                () => { const w = Math.floor(Math.random()*10)+3, h = Math.floor(Math.random()*8)+2; return { q: `가로 ${w}cm, 세로 ${h}cm 직사각형의 넓이는? (cm²)`, a: w*h, type: 'input' }; },
+                () => { const b = Math.floor(Math.random()*10)+4, h = Math.floor(Math.random()*8)+2; return { q: `밑변 ${b}cm, 높이 ${h}cm 삼각형의 넓이는? (cm²)`, a: (b*h)/2, type: 'input' }; },
+                () => { const s = Math.floor(Math.random()*5)+2; return { q: `한 변이 ${s}cm인 정사각형의 둘레는? (cm)`, a: s*4, type: 'input' }; }
+            ],
+            word: [
+                () => { const a = Math.floor(Math.random()*20)+10, b = Math.floor(Math.random()*15)+5; return { q: `사과 ${a}개와 배 ${b}개가 있습니다. 총 과일은 몇 개?`, a: a+b, type: 'input' }; },
+                () => { const t = Math.floor(Math.random()*30)+20, u = Math.floor(Math.random()*10)+5; return { q: `${t}명 중 ${u}명이 떠났습니다. 남은 사람은?`, a: t-u, type: 'input' }; },
+                () => { const p = Math.floor(Math.random()*5)+2, c = Math.floor(Math.random()*8)+3; return { q: `${p}명에게 사탕을 ${c}개씩 주려면 총 몇 개 필요?`, a: p*c, type: 'input' }; }
+            ]
+        };
+
+        let currentCategory = 'all', currentProblem = null, currentMode = 'timed';
+        let score = 0, round = 1, streak = 0, maxStreak = 0, correct = 0, total = 0;
+        let timeLeft = 60, timerInterval = null, gameStarted = false;
+        let scene, camera, renderer;
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x064e3b, 0.02);
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 10, 25);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            const ambient = new THREE.AmbientLight(0x404040, 0.5);
+            scene.add(ambient);
+            const light = new THREE.DirectionalLight(0xffffff, 0.8);
+            light.position.set(10, 20, 10);
+            scene.add(light);
+            const green = new THREE.PointLight(0x10b981, 0.6, 50);
+            green.position.set(-10, 10, 10);
+            scene.add(green);
+
+            // Arena floor
+            const floor = new THREE.Mesh(
+                new THREE.RingGeometry(8, 15, 32),
+                new THREE.MeshPhongMaterial({ color: 0x064e3b, side: THREE.DoubleSide })
+            );
+            floor.rotation.x = -Math.PI / 2;
+            scene.add(floor);
+
+            // Pillars
+            for (let i = 0; i < 8; i++) {
+                const pillar = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.5, 0.5, 8, 8),
+                    new THREE.MeshPhongMaterial({ color: 0x10b981 })
+                );
+                const angle = (i / 8) * Math.PI * 2;
+                pillar.position.set(Math.cos(angle) * 12, 4, Math.sin(angle) * 12);
+                scene.add(pillar);
+            }
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now() * 0.001;
+            camera.position.x = Math.sin(time * 0.2) * 3;
+            camera.lookAt(0, 2, 0);
+            renderer.render(scene, camera);
+        }
+
+        function generateProblem() {
+            const categories = currentCategory === 'all' ? Object.keys(problemBank) : [currentCategory];
+            const cat = categories[Math.floor(Math.random() * categories.length)];
+            const generators = problemBank[cat];
+            currentProblem = generators[Math.floor(Math.random() * generators.length)]();
+            currentProblem.category = cat;
+            displayProblem();
+        }
+
+        function displayProblem() {
+            const badges = { calc: '🔢 계산', eq: '📐 방정식', geo: '📏 도형', word: '📝 문장제' };
+            document.getElementById('problem-badge').textContent = badges[currentProblem.category];
+            document.getElementById('problem-text').textContent = currentProblem.q;
+            document.getElementById('answer-section').innerHTML = `
+                <div class="input-answer">
+                    <input type="number" id="answer-input" placeholder="?" autocomplete="off">
+                    <button class="submit-btn" onclick="submitAnswer()">제출</button>
+                </div>
+            `;
+            document.getElementById('answer-input').focus();
+            document.getElementById('answer-input').addEventListener('keypress', e => { if (e.key === 'Enter') submitAnswer(); });
+        }
+
+        function submitAnswer() {
+            const userAnswer = parseFloat(document.getElementById('answer-input').value);
+            if (isNaN(userAnswer)) return;
+            total++;
+
+            if (Math.abs(userAnswer - currentProblem.a) < 0.01) {
+                streak++; correct++;
+                if (streak > maxStreak) maxStreak = streak;
+                const bonus = Math.min(streak * 10, 50);
+                score += 100 + bonus;
+                if (streak >= 5) showCombo(streak);
+                showFeedback('🎉', '#10b981');
+                if (currentMode === 'timed') timeLeft += 3;
+            } else {
+                streak = 0;
+                score = Math.max(0, score - 20);
+                showFeedback('❌', '#ef4444');
+            }
+            updateStats();
+            setTimeout(generateProblem, 500);
+        }
+
+        function updateStats() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('my-rank-score').textContent = score.toLocaleString();
+            document.getElementById('streak').textContent = streak;
+            document.getElementById('max-streak').textContent = maxStreak;
+            document.getElementById('accuracy').textContent = total > 0 ? Math.round((correct/total)*100) + '%' : '100%';
+            round = Math.floor(correct / 5) + 1;
+            document.getElementById('round').textContent = round;
+        }
+
+        function showFeedback(emoji, color) {
+            const combo = document.getElementById('combo-display');
+            combo.textContent = emoji;
+            combo.style.color = color;
+            combo.classList.add('show');
+            setTimeout(() => combo.classList.remove('show'), 800);
+        }
+
+        function showCombo(count) {
+            const combo = document.getElementById('combo-display');
+            combo.textContent = `🔥 ${count} COMBO!`;
+            combo.style.color = '#fbbf24';
+            combo.classList.add('show');
+            setTimeout(() => combo.classList.remove('show'), 1000);
+        }
+
+        function updateTimer() {
+            if (currentMode !== 'timed') return;
+            timeLeft--;
+            document.getElementById('timer').textContent = timeLeft;
+            document.getElementById('timer-display').classList.toggle('warning', timeLeft <= 10);
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                alert(`⏱️ 시간 종료!\n\n점수: ${score}\n정답: ${correct}문제\n최고 콤보: ${maxStreak}`);
+                location.reload();
+            }
+        }
+
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('start-screen').style.display = 'none';
+                initThreeJS();
+                generateProblem();
+                if (currentMode === 'timed') {
+                    timerInterval = setInterval(updateTimer, 1000);
+                } else {
+                    document.getElementById('timer-display').textContent = '♾️ ∞';
+                }
+            }, 500);
+        });
+
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentMode = btn.dataset.mode;
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentCategory = btn.dataset.cat;
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                if (gameStarted) generateProblem();
+            });
+        });
+    </script>
+</body>
+</html>

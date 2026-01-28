@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Builder 3D - Middle School English</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 12px 24px;
+            color: #fff;
+            font-size: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #builder-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 900px;
+            text-align: center;
+            pointer-events: auto;
+        }
+
+        #sentence-prompt {
+            font-size: 24px;
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            border-left: 5px solid #00ffff;
+        }
+
+        #sentence-construction {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border: 2px dashed rgba(0, 255, 255, 0.3);
+        }
+
+        .word-block {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            user-select: none;
+        }
+
+        .word-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.5);
+        }
+
+        .word-block.selected {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            transform: scale(1.1);
+        }
+
+        #word-bank {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            min-height: 100px;
+        }
+
+        .bank-word {
+            background: rgba(102, 126, 234, 0.8);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .bank-word:hover {
+            background: rgba(118, 75, 162, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .bank-word.used {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        #action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(56, 239, 125, 0.4);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 239, 125, 0.6);
+        }
+
+        .action-btn.reset {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            box-shadow: 0 4px 15px rgba(235, 51, 73, 0.4);
+        }
+
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        #start-screen h1 {
+            font-size: 56px;
+            color: #00ffff;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #start-screen p {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        #start-btn {
+            background: linear-gradient(135deg, #00ffff 0%, #0080ff 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 20px 60px;
+            color: #1a1a2e;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.5);
+        }
+
+        #start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.7);
+        }
+
+        #feedback-message {
+            position: absolute;
+            top: 38%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            text-shadow: 0 0 20px currentColor;
+            z-index: 10;
+        }
+
+        #feedback-message.show {
+            opacity: 1;
+        }
+
+        #progress-bar-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #0080ff);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        #grammar-tip {
+            position: absolute;
+            bottom: 40px;
+            right: 20px;
+            background: rgba(0, 255, 255, 0.1);
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: #00ffff;
+            font-size: 14px;
+            max-width: 300px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        #celebration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        #celebration h2 {
+            font-size: 64px;
+            color: #00ffff;
+            text-shadow: 0 0 40px rgba(0, 255, 255, 0.8);
+            animation: celebrate 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes celebrate {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        #level-info {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+            color: #fff;
+        }
+
+        #level-info h3 {
+            color: #00ffff;
+            margin-bottom: 15px;
+        }
+
+        #level-info p {
+            font-size: 14px;
+            margin: 10px 0;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="canvas-container"></div>
+
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box">📝 Sentence: <span id="sentence-number">1</span>/10</div>
+                <div class="stat-box">⭐ Score: <span id="score">0</span></div>
+                <div class="stat-box">✅ Correct: <span id="correct-count">0</span></div>
+            </div>
+
+            <div id="builder-area">
+                <div id="sentence-prompt"></div>
+                <div id="sentence-construction"></div>
+                <div id="word-bank"></div>
+                <div id="action-buttons">
+                    <button class="action-btn reset" id="reset-btn">🔄 Reset</button>
+                    <button class="action-btn" id="check-btn">✓ Check Sentence</button>
+                </div>
+            </div>
+
+            <div id="level-info">
+                <h3 id="grammar-concept">Grammar Concept</h3>
+                <p id="concept-explanation"></p>
+            </div>
+
+            <div id="grammar-tip">💡 Tip: Click words in order to build your sentence</div>
+
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div id="feedback-message"></div>
+        <div id="celebration"><h2>🏆 Grammar Master! 🏆</h2></div>
+
+        <div id="start-screen">
+            <h1>🏗️ Grammar Builder 3D</h1>
+            <p>Welcome to the Grammar Construction Site! Your task is to build grammatically correct sentences by arranging word blocks in the right order. Pay attention to sentence structure, grammar rules, and create perfect sentences!</p>
+            <button id="start-btn">Start Building!</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        // Sentence building data for middle school level
+        const sentenceData = [
+            {
+                prompt: "Create a sentence about a cat chasing a mouse",
+                grammarConcept: "Simple Subject-Verb-Object",
+                conceptExplanation: "SVO structure: Subject performs action (verb) on object. Basic sentence pattern in English.",
+                words: ["the", "cat", "chased", "a", "mouse"],
+                correctOrder: [0, 1, 2, 3, 4],
+                tip: "Start with who or what (subject), then the action (verb), then what received the action (object)"
+            },
+            {
+                prompt: "Write a sentence about reading an interesting book",
+                grammarConcept: "Compound Sentence",
+                conceptExplanation: "Compound sentences join two independent clauses with conjunctions like 'and', 'but', 'or'.",
+                words: ["I", "read", "a", "book", "and", "learned", "many", "new", "things"],
+                correctOrder: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                tip: "Combine two complete ideas with 'and'"
+            },
+            {
+                prompt: "Describe a beautiful sunset using a prepositional phrase",
+                grammarConcept: "Prepositional Phrases",
+                conceptExplanation: "Prepositional phrases start with prepositions and describe location, time, or manner.",
+                words: ["The", "sun", "set", "behind", "the", "mountains"],
+                correctOrder: [0, 1, 2, 3, 4, 5],
+                tip: "Prepositions like 'behind', 'under', 'across' show where something is"
+            },
+            {
+                prompt: "Write a question about homework",
+                grammarConcept: "Question Formation",
+                conceptExplanation: "Questions often start with question words and use auxiliary verbs before the subject.",
+                words: ["Did", "you", "finish", "your", "homework", "?"],
+                correctOrder: [0, 1, 2, 3, 4, 5],
+                tip: "Questions start with helper verbs like 'did', 'do', 'will'"
+            },
+            {
+                prompt: "Create a sentence about a talented musician",
+                grammarConcept: "Adjective Placement",
+                conceptExplanation: "Adjectives typically come before the noun they modify and add descriptive detail.",
+                words: ["The", "talented", "musician", "played", "beautifully"],
+                correctOrder: [0, 1, 2, 3, 4],
+                tip: "Adjectives describe nouns and usually go before them"
+            },
+            {
+                prompt: "Write a sentence with a compound subject",
+                grammarConcept: "Compound Subjects",
+                conceptExplanation: "Compound subjects use 'and', 'or', or 'but' to join two or more subjects sharing the same verb.",
+                words: ["My", "brother", "and", "I", "studied", "for", "the", "test"],
+                correctOrder: [0, 1, 2, 3, 4, 5, 6, 7],
+                tip: "Join two subjects with 'and' when they do the same action"
+            },
+            {
+                prompt: "Create a sentence about future plans using 'going to'",
+                grammarConcept: "Future Tense",
+                conceptExplanation: "'Going to' expresses future plans and intentions that are already decided.",
+                words: ["We", "are", "going", "to", "visit", "the", "zoo", "tomorrow"],
+                correctOrder: [0, 1, 2, 3, 4, 5, 6, 7],
+                tip: "'Going to' followed by a verb shows future plans"
+            },
+            {
+                prompt: "Write a sentence using a comparative adjective",
+                grammarConcept: "Comparative Adjectives",
+                conceptExplanation: "Comparative adjectives compare two things and often end in '-er' or use 'more'.",
+                words: ["This", "test", "is", "harder", "than", "the", "last", "one"],
+                correctOrder: [0, 1, 2, 3, 4, 5, 6, 7],
+                tip: "Add '-er' to adjectives or use 'more' for comparisons"
+            },
+            {
+                prompt: "Create a sentence with a direct and indirect object",
+                grammarConcept: "Direct and Indirect Objects",
+                conceptExplanation: "Direct objects receive the action. Indirect objects receive the direct object.",
+                words: ["She", "gave", "him", "a", "gift"],
+                correctOrder: [0, 1, 2, 3, 4],
+                tip: "'Him' is the indirect object (who receives), 'gift' is the direct object (what is received)"
+            },
+            {
+                prompt: "Write a sentence using perfect tense",
+                grammarConcept: "Present Perfect Tense",
+                conceptExplanation: "Present perfect uses 'have/has + past participle' for actions that happened at unspecified times.",
+                words: ["I", "have", "completed", "my", "project"],
+                correctOrder: [0, 1, 2, 3, 4],
+                tip: "Use 'have' + past participle (-ed) for present perfect tense"
+            }
+        ];
+
+        // Game state
+        let currentSentenceIndex = 0;
+        let score = 0;
+        let correctCount = 0;
+        let selectedWords = [];
+        let gameStarted = false;
+
+        // Three.js setup
+        let scene, camera, renderer;
+        let buildingBlocks = [];
+        let floatingLetters = [];
+        let constructionBeams = [];
+
+        function initThreeJS() {
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 40;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Create construction environment
+            createBuildingBlocks();
+            createFloatingLetters();
+            createConstructionBeams();
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const pointLight1 = new THREE.PointLight(0x00ffff, 1, 100);
+            pointLight1.position.set(30, 20, 30);
+            scene.add(pointLight1);
+
+            const pointLight2 = new THREE.PointLight(0x667eea, 0.8, 100);
+            pointLight2.position.set(-30, -10, 20);
+            scene.add(pointLight2);
+
+            // Handle resize
+            window.addEventListener('resize', onWindowResize);
+
+            // Start animation
+            animate();
+        }
+
+        function createBuildingBlocks() {
+            const colors = [0x667eea, 0x764ba2, 0x00ffff, 0x38ef7d];
+
+            for (let i = 0; i < 20; i++) {
+                const geometry = new THREE.BoxGeometry(2, 1, 1);
+                const material = new THREE.MeshPhongMaterial({
+                    color: colors[i % colors.length],
+                    shininess: 100
+                });
+                const block = new THREE.Mesh(geometry, material);
+
+                block.position.x = (Math.random() - 0.5) * 60;
+                block.position.y = (Math.random() - 0.5) * 40;
+                block.position.z = (Math.random() - 0.5) * 30 - 10;
+
+                block.userData = {
+                    rotationSpeed: (Math.random() - 0.5) * 0.01,
+                    floatSpeed: Math.random() * 0.01,
+                    floatOffset: Math.random() * Math.PI * 2
+                };
+
+                scene.add(block);
+                buildingBlocks.push(block);
+            }
+        }
+
+        function createFloatingLetters() {
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const letterGeometry = new THREE.BoxGeometry(1, 1, 1);
+            const letterMaterial = new THREE.MeshPhongMaterial({
+                color: 0xffd700,
+                shininess: 80,
+                transparent: true,
+                opacity: 0.6
+            });
+
+            for (let i = 0; i < 26; i++) {
+                const letter = new THREE.Mesh(letterGeometry, letterMaterial);
+                letter.position.x = (Math.random() - 0.5) * 70;
+                letter.position.y = (Math.random() - 0.5) * 50;
+                letter.position.z = (Math.random() - 0.5) * 40 - 15;
+
+                letter.userData = {
+                    rotationSpeed: (Math.random() - 0.5) * 0.02,
+                    floatSpeed: Math.random() * 0.015,
+                    floatOffset: Math.random() * Math.PI * 2
+                };
+
+                scene.add(letter);
+                floatingLetters.push(letter);
+            }
+        }
+
+        function createConstructionBeams() {
+            const beamGeometry = new THREE.CylinderGeometry(0.3, 0.3, 20, 8);
+            const beamMaterial = new THREE.MeshPhongMaterial({
+                color: 0xff6b6b,
+                shininess: 100
+            });
+
+            for (let i = 0; i < 5; i++) {
+                const beam = new THREE.Mesh(beamGeometry, beamMaterial);
+                beam.position.x = (Math.random() - 0.5) * 50;
+                beam.position.y = (Math.random() - 0.5) * 30;
+                beam.position.z = (Math.random() - 0.5) * 25 - 20;
+                beam.rotation.z = (Math.random() - 0.5) * 0.5;
+
+                beam.userData = {
+                    rotationSpeed: (Math.random() - 0.5) * 0.005
+                };
+
+                scene.add(beam);
+                constructionBeams.push(beam);
+            }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.001;
+
+            // Animate building blocks
+            buildingBlocks.forEach(block => {
+                block.rotation.x += block.userData.rotationSpeed;
+                block.rotation.y += block.userData.rotationSpeed;
+                block.position.y += Math.sin(time + block.userData.floatOffset) * block.userData.floatSpeed;
+            });
+
+            // Animate floating letters
+            floatingLetters.forEach(letter => {
+                letter.rotation.x += letter.userData.rotationSpeed;
+                letter.rotation.y += letter.userData.rotationSpeed;
+                letter.rotation.z += letter.userData.rotationSpeed;
+                letter.position.y += Math.sin(time + letter.userData.floatOffset) * letter.userData.floatSpeed;
+            });
+
+            // Animate construction beams
+            constructionBeams.forEach(beam => {
+                beam.rotation.y += beam.userData.rotationSpeed;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        function showSentence() {
+            if (currentSentenceIndex >= sentenceData.length) {
+                showCelebration();
+                return;
+            }
+
+            const sentence = sentenceData[currentSentenceIndex];
+            document.getElementById('sentence-number').textContent = currentSentenceIndex + 1;
+            document.getElementById('sentence-prompt').textContent = sentence.prompt;
+            document.getElementById('grammar-concept').textContent = sentence.grammarConcept;
+            document.getElementById('concept-explanation').textContent = sentence.conceptExplanation;
+            document.getElementById('grammar-tip').textContent = '💡 Tip: ' + sentence.tip;
+
+            // Reset selected words
+            selectedWords = [];
+
+            // Clear construction area
+            document.getElementById('sentence-construction').innerHTML = '';
+
+            // Shuffle and display word bank
+            const wordBank = document.getElementById('word-bank');
+            wordBank.innerHTML = '';
+
+            const shuffledWords = [...sentence.words]
+                .map((word, index) => ({ word, originalIndex: index }))
+                .sort(() => Math.random() - 0.5);
+
+            shuffledWords.forEach(item => {
+                const wordEl = document.createElement('span');
+                wordEl.className = 'bank-word';
+                wordEl.textContent = item.word;
+                wordEl.dataset.index = item.originalIndex;
+                wordEl.addEventListener('click', () => selectWord(wordEl));
+                wordBank.appendChild(wordEl);
+            });
+
+            // Update progress bar
+            const progress = (currentSentenceIndex / sentenceData.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        }
+
+        function selectWord(wordElement) {
+            const index = parseInt(wordElement.dataset.index);
+            const word = wordElement.textContent;
+
+            if (wordElement.classList.contains('used')) return;
+
+            // Add to selected words
+            selectedWords.push({ word, index, element: wordElement });
+            wordElement.classList.add('used');
+
+            // Create word block in construction area
+            const constructionArea = document.getElementById('sentence-construction');
+            const wordBlock = document.createElement('div');
+            wordBlock.className = 'word-block';
+            wordBlock.textContent = word;
+            wordBlock.dataset.index = index;
+            wordBlock.addEventListener('click', () => removeWordBlock(wordBlock, wordElement));
+            constructionArea.appendChild(wordBlock);
+        }
+
+        function removeWordBlock(wordBlock, bankWord) {
+            const index = parseInt(wordBlock.dataset.index);
+
+            // Remove from selected words
+            selectedWords = selectedWords.filter(w => w.index !== index);
+
+            // Remove block from construction
+            wordBlock.remove();
+
+            // Re-enable bank word
+            bankWord.classList.remove('used');
+        }
+
+        function checkSentence() {
+            const sentence = sentenceData[currentSentenceIndex];
+            const feedback = document.getElementById('feedback-message');
+
+            // Check if all words are selected
+            if (selectedWords.length !== sentence.words.length) {
+                feedback.textContent = '⚠️ Please select all words!';
+                feedback.style.color = '#ffaa00';
+                feedback.classList.add('show');
+                setTimeout(() => feedback.classList.remove('show'), 2000);
+                return;
+            }
+
+            // Check word order
+            let isCorrect = true;
+            for (let i = 0; i < selectedWords.length; i++) {
+                if (selectedWords[i].index !== sentence.correctOrder[i]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+
+            if (isCorrect) {
+                feedback.textContent = '✅ Perfect!';
+                feedback.style.color = '#38ef7d';
+                score += 150;
+                correctCount++;
+                document.getElementById('score').textContent = score;
+                document.getElementById('correct-count').textContent = correctCount;
+
+                // Add celebration effect
+                const wordBlocks = document.querySelectorAll('.word-block');
+                wordBlocks.forEach(block => {
+                    block.style.background = 'linear-gradient(135deg, #38ef7d 0%, #11998e 100%)';
+                });
+            } else {
+                feedback.textContent = '❌ Try again!';
+                feedback.style.color = '#f45c43';
+
+                // Highlight wrong words
+                const wordBlocks = document.querySelectorAll('.word-block');
+                wordBlocks.forEach((block, i) => {
+                    if (selectedWords[i].index !== sentence.correctOrder[i]) {
+                        block.style.background = 'linear-gradient(135deg, #eb3349 0%, #f45c43 100%)';
+                    }
+                });
+            }
+
+            feedback.classList.add('show');
+
+            setTimeout(() => {
+                feedback.classList.remove('show');
+                if (isCorrect) {
+                    currentSentenceIndex++;
+                    showSentence();
+                }
+            }, 2000);
+        }
+
+        function resetSentence() {
+            selectedWords = [];
+            document.getElementById('sentence-construction').innerHTML = '';
+
+            const bankWords = document.querySelectorAll('.bank-word');
+            bankWords.forEach(word => word.classList.remove('used'));
+        }
+
+        function showCelebration() {
+            document.getElementById('celebration').style.display = 'flex';
+            document.getElementById('progress-bar').style.width = '100%';
+
+            setTimeout(() => {
+                alert(`🏆 Congratulations! You completed all sentences! Score: ${score} (${correctCount}/10 correct) 🏆`);
+                location.reload();
+            }, 2000);
+        }
+
+        // Event listeners
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            gameStarted = true;
+            initThreeJS();
+            showSentence();
+        });
+
+        document.getElementById('check-btn').addEventListener('click', checkSentence);
+        document.getElementById('reset-btn').addEventListener('click', resetSentence);
+
+        // Keyboard navigation for accessibility
+        document.addEventListener('keydown', (e) => {
+            if (!gameStarted) return;
+            
+            const availableWords = document.querySelectorAll('.bank-word:not(.used)');
+            
+            // Number keys 1-9 to select words
+            if (e.key >= '1' && e.key <= '9' && availableWords.length > 0) {
+                const index = parseInt(e.key) - 1;
+                if (index < availableWords.length) {
+                    availableWords[index].click();
+                }
+            }
+            
+            // Enter to check sentence
+            if (e.key === 'Enter') {
+                checkSentence();
+            }
+            
+            // R to reset
+            if (e.key === 'r' || e.key === 'R') {
+                resetSentence();
+            }
+            
+            // Backspace to remove last word
+            if (e.key === 'Backspace' && selectedWords.length > 0) {
+                const lastWord = selectedWords.pop();
+                const bankWords = document.querySelectorAll('.bank-word');
+                bankWords[lastWord.index].classList.remove('used');
+                showSentence();
+            }
+        });
+    </script>
+</body>
+</html>

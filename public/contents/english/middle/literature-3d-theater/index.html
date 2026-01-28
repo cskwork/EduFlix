@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Literature 3D Theater - Dong-A Middle School English</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+        #game-container { width: 100vw; height: 100vh; position: relative; }
+        #canvas-container { width: 100%; height: 100%; }
+
+        /* Dramatic lighting effect */
+        .spotlight-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.5) 100%);
+            z-index: 5;
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            z-index: 10;
+        }
+
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 12px 22px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .stat-box:hover {
+            border-color: rgba(255, 215, 0, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .stat-value { color: #ffd700; font-weight: 700; }
+
+        #scene-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: auto;
+            width: 95%;
+            max-width: 950px;
+        }
+
+        #work-info {
+            font-size: 12px;
+            color: rgba(255,215,0,0.7);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+
+        #scene-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(24px, 5vw, 40px);
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        #scene-dialogue {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(18px, 3vw, 26px);
+            color: #fff;
+            background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(20,20,40,0.9) 100%);
+            padding: 35px 45px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            line-height: 1.9;
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(255,215,0,0.05);
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #scene-dialogue::before, #scene-dialogue::after {
+            content: '"';
+            font-size: 60px;
+            color: rgba(255,215,0,0.3);
+            position: absolute;
+            font-family: 'Playfair Display', serif;
+        }
+
+        #scene-dialogue::before { top: 10px; left: 20px; }
+        #scene-dialogue::after { bottom: 10px; right: 20px; transform: rotate(180deg); }
+
+        .speaker-name {
+            color: #ffd700;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #question-panel {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #question-text {
+            font-size: clamp(16px, 2.5vw, 22px);
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .option-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 18px 35px;
+            color: white;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            min-width: 320px;
+            max-width: 100%;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .option-btn:hover {
+            transform: translateX(10px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .option-btn:hover::before { left: 100%; }
+
+        .option-btn.correct {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            animation: correctPulse 0.5s ease-out;
+        }
+
+        .option-btn.wrong {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            animation: wrongShake 0.5s ease-out;
+        }
+
+        @keyframes correctPulse {
+            50% { transform: translateX(10px) scale(1.05); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(10px); }
+            25% { transform: translateX(0); }
+            75% { transform: translateX(20px); }
+        }
+
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .theater-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: maskSwing 3s ease-in-out infinite;
+        }
+
+        @keyframes maskSwing {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        #start-screen h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(36px, 10vw, 72px);
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 0 50px rgba(255, 215, 0, 0.6);
+            margin-bottom: 15px;
+            font-style: italic;
+            text-align: center;
+        }
+
+        #start-screen p {
+            font-size: clamp(16px, 3vw, 22px);
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 35px;
+            text-align: center;
+            max-width: 700px;
+            line-height: 1.7;
+        }
+
+        /* Era selection */
+        #era-selection {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .era-card {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,215,0,0.3);
+            border-radius: 15px;
+            padding: 20px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .era-card:hover { transform: translateY(-5px); border-color: #ffd700; }
+        .era-card.active {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(255,140,0,0.2) 100%);
+            border-color: #ffd700;
+        }
+
+        .era-card .icon { font-size: 35px; margin-bottom: 8px; }
+        .era-card .label { color: white; font-weight: 700; font-size: 14px; }
+
+        #start-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 20px 55px;
+            color: #1a1a2e;
+            font-size: clamp(20px, 4vw, 26px);
+            font-weight: 800;
+            font-family: 'Source Sans Pro', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 12px 40px rgba(255, 215, 0, 0.5);
+        }
+
+        #start-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 18px 50px rgba(255, 215, 0, 0.7);
+        }
+
+        #start-btn::after { content: ' 🎭'; }
+
+        #feedback-message {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(28px, 7vw, 42px);
+            font-weight: 800;
+            opacity: 0;
+            transition: opacity 0.3s;
+            text-shadow: 0 0 30px currentColor;
+            z-index: 60;
+        }
+
+        #feedback-message.show {
+            opacity: 1;
+            animation: feedbackPop 0.5s ease-out;
+        }
+
+        @keyframes feedbackPop {
+            0% { transform: translateX(-50%) scale(0.5); }
+            50% { transform: translateX(-50%) scale(1.2); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        #explanation {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            color: #fff;
+            background: linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(20,20,40,0.95) 100%);
+            padding: 25px 35px;
+            border-radius: 20px;
+            max-width: 750px;
+            width: 90%;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.4s;
+            pointer-events: auto;
+            border: 2px solid rgba(255,215,0,0.5);
+            line-height: 1.7;
+        }
+
+        #explanation.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
+
+        #progress-bar-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(70%, 450px);
+            height: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(255,215,0,0.3);
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ff8c00);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 8px;
+        }
+
+        #character-info {
+            position: absolute;
+            bottom: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            pointer-events: auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .character-badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 8px 18px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #celebration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            z-index: 50;
+            background: rgba(0,0,0,0.85);
+        }
+
+        #celebration h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(45px, 12vw, 80px);
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 0 60px rgba(255, 215, 0, 0.8);
+            animation: celebrateSpin 0.5s ease-in-out infinite alternate;
+            font-style: italic;
+        }
+
+        @keyframes celebrateSpin {
+            from { transform: scale(1) rotate(-2deg); }
+            to { transform: scale(1.1) rotate(2deg); }
+        }
+
+        #celebration p { font-size: 24px; color: white; margin-top: 20px; }
+
+        #next-scene-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 16px 40px;
+            color: white;
+            font-size: 18px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            display: none;
+            margin-top: 20px;
+        }
+
+        #next-scene-btn:hover { transform: scale(1.05); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #top-bar { justify-content: center; }
+            .stat-box { padding: 10px 16px; font-size: 13px; }
+            #scene-dialogue { padding: 25px 30px; }
+            .option-btn { min-width: 100%; padding: 15px 25px; font-size: 14px; }
+            #explanation { bottom: 70px; padding: 18px 25px; font-size: 14px; }
+        }
+
+        /* Loading */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .curtain-loader {
+            width: 80px;
+            height: 60px;
+            position: relative;
+        }
+
+        .curtain-loader::before, .curtain-loader::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 35px;
+            height: 100%;
+            background: #8B0000;
+            animation: curtainOpen 1.5s ease-in-out infinite;
+        }
+
+        .curtain-loader::before { left: 0; transform-origin: left; }
+        .curtain-loader::after { right: 0; transform-origin: right; animation-delay: 0.1s; }
+
+        @keyframes curtainOpen {
+            0%, 100% { transform: scaleX(1); }
+            50% { transform: scaleX(0.3); }
+        }
+
+        #loading-screen p { color: #ffd700; margin-top: 30px; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="curtain-loader"></div>
+        <p>Opening the Curtains...</p>
+    </div>
+
+    <div id="game-container">
+        <div id="canvas-container"></div>
+        <div class="spotlight-effect"></div>
+
+        <div id="ui-overlay">
+            <div id="top-bar">
+                <div class="stat-box">📚 Score: <span class="stat-value" id="score">0</span></div>
+                <div class="stat-box">⭐ Scene: <span class="stat-value" id="scene-number">1</span>/<span id="total-scenes">12</span></div>
+                <div class="stat-box">❤️ Lives: <span class="stat-value" id="lives">3</span></div>
+                <div class="stat-box">🔥 Streak: <span class="stat-value" id="streak">0</span></div>
+            </div>
+
+            <div id="scene-panel">
+                <div id="work-info">William Shakespeare</div>
+                <div id="scene-title"></div>
+                <div id="scene-dialogue"></div>
+
+                <div id="question-panel">
+                    <div id="question-text"></div>
+                    <div id="options-container"></div>
+                </div>
+
+                <button id="next-scene-btn">Next Scene →</button>
+            </div>
+
+            <div id="character-info">
+                <div class="character-badge">🎭 Characters loading...</div>
+            </div>
+
+            <div id="feedback-message"></div>
+            <div id="explanation"></div>
+
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div id="celebration">
+            <h2>🎭 Literature Master! 🎭</h2>
+            <p>You've conquered the theater of the greats!</p>
+        </div>
+
+        <div id="start-screen">
+            <div class="theater-icon">🎭</div>
+            <h1>Literature 3D Theater</h1>
+            <p>Experience classic literature scenes in an immersive 3D theater! Watch iconic characters come to life, understand their dialogue, and explore timeless literary themes from Shakespeare to modern classics.</p>
+            
+            <div id="era-selection">
+                <div class="era-card active" data-era="shakespeare">
+                    <div class="icon">🏰</div>
+                    <div class="label">Shakespeare</div>
+                </div>
+                <div class="era-card" data-era="classic">
+                    <div class="icon">📖</div>
+                    <div class="label">Classic Novels</div>
+                </div>
+                <div class="era-card" data-era="modern">
+                    <div class="icon">🌟</div>
+                    <div class="label">Modern Classics</div>
+                </div>
+            </div>
+            
+            <button id="start-btn">Enter Theater</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+    <script>
+        // Extended literature scenes by era
+        const literatureScenes = {
+            shakespeare: [
+                {
+                    work: "Romeo and Juliet",
+                    title: "The Balcony Scene",
+                    dialogue: "O Romeo, Romeo! wherefore art thou Romeo? Deny thy father and refuse thy name; Or, if thou wilt not, be but sworn my love, And I'll no longer be a Capulet.",
+                    speaker: "Juliet",
+                    characters: ["Romeo", "Juliet"],
+                    question: "What does Juliet mean by 'wherefore art thou Romeo'?",
+                    options: ["Where are you, Romeo?", "Why are you Romeo (of the rival family)?", "Romeo, come here!", "Who is Romeo?"],
+                    correct: 1,
+                    explanation: "'Wherefore' means 'why'. Juliet is lamenting that Romeo must be a Montague, her family's sworn enemy, not asking where he is."
+                },
+                {
+                    work: "Hamlet",
+                    title: "The Soliloquy",
+                    dialogue: "To be, or not to be: that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune, or to take arms against a sea of troubles...",
+                    speaker: "Hamlet",
+                    characters: ["Hamlet"],
+                    question: "What is Hamlet contemplating in this famous speech?",
+                    options: ["Whether to seek revenge", "Whether to continue living or end his life", "Whether to trust his friends", "Whether to leave Denmark"],
+                    correct: 1,
+                    explanation: "Hamlet is contemplating existence itself - whether it's better to endure life's hardships ('slings and arrows') or to end them by taking one's own life."
+                },
+                {
+                    work: "Macbeth",
+                    title: "The Dagger Vision",
+                    dialogue: "Is this a dagger which I see before me, The handle toward my hand? Come, let me clutch thee. I have thee not, and yet I see thee still.",
+                    speaker: "Macbeth",
+                    characters: ["Macbeth"],
+                    question: "What does the floating dagger symbolize?",
+                    options: ["A real weapon from the king", "His ambition and guilt driving him to murder", "A gift from Lady Macbeth", "Protection from enemies"],
+                    correct: 1,
+                    explanation: "The dagger represents Macbeth's inner conflict - his ambition pulling him toward murder while his conscience makes him question his actions."
+                },
+                {
+                    work: "A Midsummer Night's Dream",
+                    title: "The Forest Magic",
+                    dialogue: "Lord, what fools these mortals be!",
+                    speaker: "Puck",
+                    characters: ["Puck", "Oberon"],
+                    question: "What does Puck's statement reveal about the play's themes?",
+                    options: ["Humans are unintelligent", "Love makes people act irrationally", "Fairies are superior beings", "Mortals cannot see magic"],
+                    correct: 1,
+                    explanation: "Puck's observation reflects the play's central theme that love causes even the wisest people to behave foolishly."
+                }
+            ],
+            classic: [
+                {
+                    work: "The Great Gatsby",
+                    title: "The Green Light",
+                    dialogue: "Gatsby believed in the green light, the orgastic future that year by year recedes before us. It eluded us then, but that's no matter—tomorrow we will run faster, stretch out our arms farther...",
+                    speaker: "Nick Carraway",
+                    characters: ["Nick", "Gatsby"],
+                    question: "What does the green light symbolize?",
+                    options: ["Gatsby's wealth", "Gatsby's dreams and the elusive future", "The American flag", "Daisy's love for Tom"],
+                    correct: 1,
+                    explanation: "The green light across the bay symbolizes Gatsby's hopes, dreams, and the elusive nature of the American Dream that always seems just out of reach."
+                },
+                {
+                    work: "To Kill a Mockingbird",
+                    title: "The Courtroom",
+                    dialogue: "The one thing that doesn't abide by majority rule is a person's conscience. The one place where a man ought to get a square deal is in a courtroom, be he any color of the rainbow.",
+                    speaker: "Atticus Finch",
+                    characters: ["Atticus", "Tom Robinson"],
+                    question: "What theme does Atticus's speech emphasize?",
+                    options: ["The importance of winning", "Justice should not depend on majority opinion or prejudice", "Courts always make fair decisions", "Lawyers should never lose"],
+                    correct: 1,
+                    explanation: "Atticus emphasizes that true justice and moral conscience should prevail over prejudice and the tyranny of majority opinion."
+                },
+                {
+                    work: "Pride and Prejudice",
+                    title: "Mr. Darcy's Proposal",
+                    dialogue: "In vain have I struggled. It will not do. My feelings will not be repressed. You must allow me to tell you how ardently I admire and love you.",
+                    speaker: "Mr. Darcy",
+                    characters: ["Mr. Darcy", "Elizabeth"],
+                    question: "What does Darcy's 'struggle' reveal about his character?",
+                    options: ["He is afraid of commitment", "His pride battles against his genuine feelings", "He doesn't really love Elizabeth", "He is naturally shy"],
+                    correct: 1,
+                    explanation: "Darcy's struggle shows his internal conflict between his social pride (she is 'beneath' him) and his genuine, overwhelming love for Elizabeth."
+                },
+                {
+                    work: "Jane Eyre",
+                    title: "Declaration of Equality",
+                    dialogue: "Do you think, because I am poor, obscure, plain, and little, I am soulless and heartless? You think wrong!—I have as much soul as you,—and full as much heart!",
+                    speaker: "Jane Eyre",
+                    characters: ["Jane", "Rochester"],
+                    question: "What does Jane's declaration assert?",
+                    options: ["That she is wealthy", "That all people deserve equal respect regardless of status", "That she wants to leave", "That Rochester is cruel"],
+                    correct: 1,
+                    explanation: "Jane asserts her fundamental human dignity and equality, revolutionary ideas for a woman of her time and social position."
+                }
+            ],
+            modern: [
+                {
+                    work: "1984",
+                    title: "Room 101",
+                    dialogue: "The thing that is in Room 101 is the worst thing in the world... In your case, the worst thing in the world happens to be rats.",
+                    speaker: "O'Brien",
+                    characters: ["Winston", "O'Brien"],
+                    question: "What is the significance of Room 101?",
+                    options: ["A storage room", "A place where prisoners face their deepest fears", "The cafeteria", "A meeting room"],
+                    correct: 1,
+                    explanation: "Room 101 represents the Party's ultimate weapon - using each person's worst fear to break their spirit and force complete submission."
+                },
+                {
+                    work: "The Catcher in the Rye",
+                    title: "Holden's Dream",
+                    dialogue: "I keep picturing all these little kids playing some game in this big field of rye... And I have to catch everybody if they start to go over the cliff.",
+                    speaker: "Holden Caulfield",
+                    characters: ["Holden"],
+                    question: "What does Holden's fantasy symbolize?",
+                    options: ["His desire to be a sports player", "His wish to protect childhood innocence", "His fear of heights", "His love of nature"],
+                    correct: 1,
+                    explanation: "Holden imagines himself as a protector saving children from 'falling' - symbolizing his desperate wish to preserve innocence in a corrupt adult world."
+                },
+                {
+                    work: "Lord of the Flies",
+                    title: "The Beast Within",
+                    dialogue: "Maybe there is a beast... maybe it's only us.",
+                    speaker: "Simon",
+                    characters: ["Simon", "Ralph", "Jack"],
+                    question: "What truth does Simon realize about 'the beast'?",
+                    options: ["The beast is a real animal", "The beast is actually the boys' own savage nature", "There is no danger at all", "The beast comes from the sea"],
+                    correct: 1,
+                    explanation: "Simon realizes the true horror: the 'beast' is not external but the darkness and savagery within human nature itself."
+                },
+                {
+                    work: "The Outsiders",
+                    title: "Stay Gold",
+                    dialogue: "Stay gold, Ponyboy. Stay gold...",
+                    speaker: "Johnny Cade",
+                    characters: ["Ponyboy", "Johnny"],
+                    question: "What does Johnny mean by 'stay gold'?",
+                    options: ["Become wealthy", "Keep your innocence and goodness", "Wear golden colors", "Join their gang"],
+                    correct: 1,
+                    explanation: "Johnny urges Ponyboy to retain his innocence, kindness, and wonder - to not become hardened by the violence and hardship of their lives."
+                }
+            ]
+        };
+
+        // Game state
+        let currentEra = 'shakespeare';
+        let currentScenes = [];
+        let currentSceneIndex = 0;
+        let score = 0;
+        let lives = 3;
+        let streak = 0;
+        let maxStreak = 0;
+        let gameStarted = false;
+
+        // Three.js variables
+        let scene, camera, renderer;
+        let stage, curtains = [];
+        let characters = [];
+        let spotlights = [];
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 5, 30);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setClearColor(0x0a0a1a, 1);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            createTheater();
+            createCurtains();
+            createAudience();
+            createLights();
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function createTheater() {
+            // Stage floor with wood texture effect
+            const stageGeometry = new THREE.BoxGeometry(40, 1, 20);
+            const stageMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x8B4513,
+                shininess: 30
+            });
+            const stageFloor = new THREE.Mesh(stageGeometry, stageMaterial);
+            stageFloor.position.y = -6;
+            stageFloor.receiveShadow = true;
+            scene.add(stageFloor);
+
+            // Backdrop
+            const backdropGeometry = new THREE.PlaneGeometry(40, 18);
+            const backdropMaterial = new THREE.MeshPhongMaterial({
+                color: 0x1a1a3e,
+                side: THREE.DoubleSide
+            });
+            const backdrop = new THREE.Mesh(backdropGeometry, backdropMaterial);
+            backdrop.position.set(0, 2, -10);
+            scene.add(backdrop);
+
+            // Stage edges/trim
+            const trimGeometry = new THREE.BoxGeometry(42, 0.5, 0.5);
+            const trimMaterial = new THREE.MeshPhongMaterial({ color: 0xffd700 });
+            const frontTrim = new THREE.Mesh(trimGeometry, trimMaterial);
+            frontTrim.position.set(0, -5.5, 10);
+            scene.add(frontTrim);
+
+            // Side walls
+            const sideGeometry = new THREE.BoxGeometry(2, 15, 22);
+            const sideMaterial = new THREE.MeshPhongMaterial({ color: 0x2c2c54 });
+            
+            const leftWall = new THREE.Mesh(sideGeometry, sideMaterial);
+            leftWall.position.set(-20, 1, 0);
+            scene.add(leftWall);
+
+            const rightWall = new THREE.Mesh(sideGeometry, sideMaterial);
+            rightWall.position.set(20, 1, 0);
+            scene.add(rightWall);
+        }
+
+        function createCurtains() {
+            const curtainMaterial = new THREE.MeshPhongMaterial({
+                color: 0x8B0000,
+                shininess: 60,
+                side: THREE.DoubleSide
+            });
+
+            // Draped curtain effect using multiple cylinders
+            for (let side = -1; side <= 1; side += 2) {
+                for (let i = 0; i < 6; i++) {
+                    const curtainGeometry = new THREE.CylinderGeometry(0.6, 0.7, 16, 8);
+                    const curtain = new THREE.Mesh(curtainGeometry, curtainMaterial);
+                    
+                    curtain.position.x = side * (15 - i * 0.8);
+                    curtain.position.y = 2;
+                    curtain.position.z = -8 + Math.random() * 2;
+
+                    curtain.userData = {
+                        swayOffset: Math.random() * Math.PI * 2,
+                        swaySpeed: 0.01 + Math.random() * 0.005,
+                        baseX: curtain.position.x
+                    };
+
+                    scene.add(curtain);
+                    curtains.push(curtain);
+                }
+            }
+
+            // Top valance
+            const valanceGeometry = new THREE.BoxGeometry(44, 3, 1);
+            const valanceMaterial = new THREE.MeshPhongMaterial({ color: 0x8B0000 });
+            const valance = new THREE.Mesh(valanceGeometry, valanceMaterial);
+            valance.position.set(0, 10, -5);
+            scene.add(valance);
+        }
+
+        function createAudience() {
+            // Simple audience silhouettes in background
+            const headGeometry = new THREE.SphereGeometry(0.5, 8, 8);
+            const audienceMaterial = new THREE.MeshBasicMaterial({ color: 0x1a1a1a });
+
+            for (let row = 0; row < 3; row++) {
+                for (let seat = 0; seat < 15; seat++) {
+                    const head = new THREE.Mesh(headGeometry, audienceMaterial);
+                    head.position.set(
+                        (seat - 7) * 2.5 + (Math.random() - 0.5),
+                        -4 - row * 1.5,
+                        15 + row * 3
+                    );
+                    scene.add(head);
+                }
+            }
+        }
+
+        function createCharacter(color, x) {
+            const group = new THREE.Group();
+
+            // Period-appropriate costume body
+            const bodyGeometry = new THREE.CylinderGeometry(0.6, 1.2, 5, 16);
+            const bodyMaterial = new THREE.MeshPhongMaterial({ color: color });
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.position.y = 0;
+            body.castShadow = true;
+            group.add(body);
+
+            // Head
+            const headGeometry = new THREE.SphereGeometry(0.8, 16, 16);
+            const headMaterial = new THREE.MeshPhongMaterial({ color: 0xffdbac });
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.y = 3.2;
+            head.castShadow = true;
+            group.add(head);
+
+            // Simple facial features
+            const eyeGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+            const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+            
+            [-0.25, 0.25].forEach(offset => {
+                const eye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+                eye.position.set(offset, 3.3, 0.7);
+                group.add(eye);
+            });
+
+            group.position.set(x, -3, 0);
+            return group;
+        }
+
+        function updateCharacters() {
+            // Remove old characters
+            characters.forEach(char => scene.remove(char));
+            characters = [];
+
+            const sceneData = currentScenes[currentSceneIndex];
+            const characterColors = [0x4169E1, 0xFF69B4, 0x32CD32, 0xFFD700, 0x9370DB];
+
+            sceneData.characters.forEach((charName, index) => {
+                const spacing = sceneData.characters.length > 1 ? 8 : 0;
+                const char = createCharacter(
+                    characterColors[index % characterColors.length], 
+                    (index - (sceneData.characters.length - 1) / 2) * spacing
+                );
+                scene.add(char);
+                characters.push(char);
+            });
+
+            // Update character info display
+            document.getElementById('character-info').innerHTML = sceneData.characters.map(char =>
+                `<div class="character-badge">🎭 ${char}</div>`
+            ).join('');
+        }
+
+        function createLights() {
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+            scene.add(ambientLight);
+
+            // Main spotlight
+            const spotlight1 = new THREE.SpotLight(0xffd700, 1.5);
+            spotlight1.position.set(0, 15, 10);
+            spotlight1.angle = Math.PI / 6;
+            spotlight1.penumbra = 0.3;
+            spotlight1.castShadow = true;
+            spotlight1.shadow.mapSize.width = 1024;
+            spotlight1.shadow.mapSize.height = 1024;
+            scene.add(spotlight1);
+            spotlights.push(spotlight1);
+
+            // Side spotlights
+            const spotlight2 = new THREE.SpotLight(0xff6b6b, 0.8);
+            spotlight2.position.set(-15, 12, 5);
+            spotlight2.angle = Math.PI / 5;
+            spotlight2.penumbra = 0.4;
+            scene.add(spotlight2);
+            spotlights.push(spotlight2);
+
+            const spotlight3 = new THREE.SpotLight(0x6b6bff, 0.8);
+            spotlight3.position.set(15, 12, 5);
+            spotlight3.angle = Math.PI / 5;
+            spotlight3.penumbra = 0.4;
+            scene.add(spotlight3);
+            spotlights.push(spotlight3);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now() * 0.001;
+
+            // Curtain sway
+            curtains.forEach(curtain => {
+                curtain.userData.swayOffset += curtain.userData.swaySpeed;
+                curtain.position.x = curtain.userData.baseX + Math.sin(curtain.userData.swayOffset) * 0.15;
+                curtain.rotation.z = Math.sin(curtain.userData.swayOffset) * 0.03;
+            });
+
+            // Spotlight movement
+            spotlights.forEach((light, index) => {
+                if (index > 0) {
+                    light.position.x += Math.sin(time + index * 2) * 0.05;
+                }
+            });
+
+            // Character subtle animation
+            characters.forEach((char, index) => {
+                char.rotation.y = Math.sin(time * 0.5 + index) * 0.1;
+                char.position.y = -3 + Math.sin(time * 2 + index * Math.PI) * 0.05;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        function showScene() {
+            if (currentSceneIndex >= currentScenes.length) {
+                showCelebration();
+                return;
+            }
+
+            const sceneData = currentScenes[currentSceneIndex];
+
+            document.getElementById('work-info').textContent = sceneData.work;
+            document.getElementById('scene-title').textContent = sceneData.title;
+            document.getElementById('scene-dialogue').innerHTML = 
+                `<span class="speaker-name">${sceneData.speaker}</span>${sceneData.dialogue}`;
+            document.getElementById('scene-number').textContent = currentSceneIndex + 1;
+            document.getElementById('question-text').textContent = sceneData.question;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            sceneData.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
+                btn.addEventListener('click', () => checkAnswer(index, sceneData));
+                optionsContainer.appendChild(btn);
+            });
+
+            const progress = (currentSceneIndex / currentScenes.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+
+            updateCharacters();
+
+            document.getElementById('next-scene-btn').style.display = 'none';
+            document.getElementById('feedback-message').classList.remove('show');
+            document.getElementById('explanation').classList.remove('show');
+        }
+
+        function checkAnswer(selectedIndex, sceneData) {
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback-message');
+            const explanation = document.getElementById('explanation');
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === sceneData.correct) {
+                buttons[selectedIndex].classList.add('correct');
+                feedback.textContent = '🎉 Excellent!';
+                feedback.style.color = '#38ef7d';
+                
+                streak++;
+                if (streak > maxStreak) maxStreak = streak;
+                score += 100 + (streak * 20);
+                
+            } else {
+                buttons[selectedIndex].classList.add('wrong');
+                buttons[sceneData.correct].classList.add('correct');
+                feedback.textContent = '📚 Not quite!';
+                feedback.style.color = '#f45c43';
+                
+                streak = 0;
+                lives--;
+
+                if (lives <= 0) {
+                    setTimeout(() => {
+                        alert(`The curtain falls! 🎭\n\nFinal Score: ${score}\nMax Streak: ${maxStreak}`);
+                        location.reload();
+                    }, 1500);
+                    return;
+                }
+            }
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
+            document.getElementById('streak').textContent = streak;
+
+            feedback.classList.add('show');
+            explanation.textContent = sceneData.explanation;
+            explanation.classList.add('show');
+
+            document.getElementById('next-scene-btn').style.display = 'block';
+        }
+
+        function showCelebration() {
+            document.getElementById('celebration').style.display = 'flex';
+            document.getElementById('progress-bar').style.width = '100%';
+
+            setTimeout(() => {
+                alert(`🎭 Bravo! Standing Ovation! 🎭\n\nYou are a true literature master!\n\nFinal Score: ${score}\nMax Streak: ${maxStreak}`);
+                location.reload();
+            }, 2500);
+        }
+
+        // Era selection
+        document.querySelectorAll('.era-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.era-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                currentEra = card.dataset.era;
+            });
+        });
+
+        // Event listeners
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            currentScenes = [...literatureScenes[currentEra]].sort(() => Math.random() - 0.5);
+            document.getElementById('total-scenes').textContent = currentScenes.length;
+            initThreeJS();
+            showScene();
+            gameStarted = true;
+        });
+
+        document.getElementById('next-scene-btn').addEventListener('click', () => {
+            currentSceneIndex++;
+            showScene();
+        });
+
+        // Keyboard navigation for accessibility
+        document.addEventListener('keydown', (e) => {
+            if (!gameStarted) return;
+            
+            const buttons = document.querySelectorAll('.option-btn:not(:disabled)');
+            
+            // A, B, C, D keys or 1-4 to select options
+            const keyMap = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, '1': 0, '2': 1, '3': 2, '4': 3 };
+            const key = e.key.toLowerCase();
+            
+            if (keyMap.hasOwnProperty(key) && buttons.length > 0) {
+                const index = keyMap[key];
+                if (index < buttons.length) {
+                    const sceneData = currentScenes[currentSceneIndex];
+                    checkAnswer(index, sceneData);
+                }
+            }
+            
+            // Enter/Space for next scene
+            if ((e.key === 'Enter' || e.key === ' ') && document.getElementById('next-scene-btn').style.display === 'block') {
+                e.preventDefault();
+                currentSceneIndex++;
+                showScene();
+            }
+        });
+
+        // Hide loading screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
