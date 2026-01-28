@@ -14,6 +14,10 @@ import {
   recordContentClick,
   type RecommendedContent,
 } from '../services/api/recommendations'
+import {
+  recordClick as recordLocalClick,
+  calculateSortScore,
+} from '../services/clickTracker'
 
 export const useContentStore = defineStore('content', () => {
   // 상태
@@ -27,6 +31,9 @@ export const useContentStore = defineStore('content', () => {
   // 추천 시스템 상태
   const recommendations = ref<RecommendedContent[]>([])
   const isLoadingRecommendations = ref(false)
+
+  // 클릭 통계 변경 트리거 (localStorage 변경 시 정렬 재계산용)
+  const clickStatsVersion = ref(0)
 
   // 계산된 속성: 필터링된 콘텐츠
   const filteredContents = computed(() => {
@@ -61,8 +68,11 @@ export const useContentStore = defineStore('content', () => {
     }))
   })
 
-  // 계산된 속성: 과목별 그룹화
+  // 계산된 속성: 과목별 그룹화 (클릭 빈도 + 최신순 정렬)
   const contentGroups = computed<ContentGroup[]>(() => {
+    // clickStatsVersion을 의존성으로 포함하여 클릭 시 재계산 트리거
+    void clickStatsVersion.value
+
     const subjects: Subject[] = ['math', 'english', 'science']
     const groups: ContentGroup[] = []
 
@@ -70,10 +80,17 @@ export const useContentStore = defineStore('content', () => {
       const subjectContents = filteredContents.value.filter((c) => c.subject === subject)
 
       if (subjectContents.length > 0) {
+        // 클릭 빈도 + 최신순 점수로 정렬 (높은 점수가 왼쪽)
+        const sortedContents = [...subjectContents].sort((a, b) => {
+          const scoreA = calculateSortScore(a.id, a.createdAt)
+          const scoreB = calculateSortScore(b.id, b.createdAt)
+          return scoreB - scoreA // 내림차순 (높은 점수 먼저)
+        })
+
         groups.push({
           subject,
           subjectLabel: SUBJECT_LABELS[subject],
-          contents: subjectContents.map((c) => ({
+          contents: sortedContents.map((c) => ({
             id: c.id,
             title: c.title,
             thumbnail: c.thumbnail,
@@ -181,8 +198,14 @@ export const useContentStore = defineStore('content', () => {
     }
   }
 
-  // 액션: 콘텐츠 클릭 기록
+  // 액션: 콘텐츠 클릭 기록 (localStorage + API 동시 기록)
   async function trackContentClick(contentId: string) {
+    // localStorage에 항상 기록 (정적/동적 모드 모두)
+    recordLocalClick(contentId)
+
+    // 정렬 재계산 트리거 (Vue 반응성 유발)
+    clickStatsVersion.value++
+
     try {
       await recordContentClick(contentId)
       // 추천 목록 갱신 (백그라운드)

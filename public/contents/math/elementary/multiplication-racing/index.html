@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구구단 레이싱 - 수학 게임</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        #game-container {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+    <script>
+// ═══════════════════════════════════════════════════════════════════════════
+// 구구단 레이싱 - 떨어지는 문제를 맞춰라!
+// 초등학교 2-3학년 대상
+// ═══════════════════════════════════════════════════════════════════════════
+
+const COLORS = {
+    bgPrimary: 0x0f172a,
+    bgSecondary: 0x1e293b,
+    bgCard: 0x334155,
+    primary: 0x3b82f6,
+    secondary: 0x6366f1,
+    accent: 0x8b5cf6,
+    success: 0x22c55e,
+    warning: 0xf59e0b,
+    error: 0xef4444,
+    gold: 0xfbbf24,
+    textPrimary: 0xffffff,
+    textSecondary: 0x94a3b8
+};
+
+const Icons = {
+    drawStar(graphics, x, y, size, color = 0xfbbf24) {
+        graphics.fillStyle(color, 1);
+        const points = [];
+        for (let i = 0; i < 10; i++) {
+            const radius = i % 2 === 0 ? size : size * 0.5;
+            const angle = (i * Math.PI / 5) - Math.PI / 2;
+            points.push({ x: x + Math.cos(angle) * radius, y: y + Math.sin(angle) * radius });
+        }
+        graphics.beginPath();
+        graphics.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) graphics.lineTo(points[i].x, points[i].y);
+        graphics.closePath();
+        graphics.fillPath();
+    },
+    drawRocket(graphics, x, y, size) {
+        // 로켓 몸체
+        graphics.fillStyle(0xe2e8f0, 1);
+        graphics.fillTriangle(x, y - size * 0.5, x - size * 0.2, y + size * 0.3, x + size * 0.2, y + size * 0.3);
+        // 창문
+        graphics.fillStyle(0x3b82f6, 1);
+        graphics.fillCircle(x, y - size * 0.1, size * 0.12);
+        // 날개
+        graphics.fillStyle(0xef4444, 1);
+        graphics.fillTriangle(x - size * 0.2, y + size * 0.2, x - size * 0.4, y + size * 0.5, x - size * 0.15, y + size * 0.4);
+        graphics.fillTriangle(x + size * 0.2, y + size * 0.2, x + size * 0.4, y + size * 0.5, x + size * 0.15, y + size * 0.4);
+        // 불꽃
+        graphics.fillStyle(0xfbbf24, 1);
+        graphics.fillTriangle(x - size * 0.1, y + size * 0.3, x, y + size * 0.6, x + size * 0.1, y + size * 0.3);
+    },
+    drawTrophy(graphics, x, y, size) {
+        graphics.fillStyle(0xfbbf24, 1);
+        graphics.fillRoundedRect(x - size * 0.35, y - size * 0.25, size * 0.7, size * 0.4, 6);
+        graphics.lineStyle(3, 0xfbbf24, 1);
+        graphics.beginPath();
+        graphics.arc(x - size * 0.45, y - size * 0.1, size * 0.12, -Math.PI / 2, Math.PI / 2, false);
+        graphics.strokePath();
+        graphics.beginPath();
+        graphics.arc(x + size * 0.45, y - size * 0.1, size * 0.12, Math.PI / 2, -Math.PI / 2, false);
+        graphics.strokePath();
+        graphics.fillRect(x - size * 0.12, y + size * 0.15, size * 0.24, size * 0.12);
+        graphics.fillRect(x - size * 0.2, y + size * 0.27, size * 0.4, size * 0.08);
+    },
+    drawRobot(graphics, x, y, size) {
+        graphics.fillStyle(0x64748b, 1);
+        graphics.fillRoundedRect(x - size * 0.35, y - size * 0.1, size * 0.7, size * 0.5, 8);
+        graphics.fillStyle(0x94a3b8, 1);
+        graphics.fillRoundedRect(x - size * 0.3, y - size * 0.45, size * 0.6, size * 0.35, 6);
+        graphics.lineStyle(3, 0x64748b, 1);
+        graphics.lineBetween(x, y - size * 0.45, x, y - size * 0.6);
+        graphics.fillStyle(0x22c55e, 1);
+        graphics.fillCircle(x, y - size * 0.65, size * 0.06);
+        graphics.fillStyle(0x3b82f6, 1);
+        graphics.fillCircle(x - size * 0.12, y - size * 0.3, size * 0.08);
+        graphics.fillCircle(x + size * 0.12, y - size * 0.3, size * 0.08);
+    }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BootScene - 에셋 로드
+// ═══════════════════════════════════════════════════════════════════════════
+class BootScene extends Phaser.Scene {
+    constructor() { super('BootScene'); }
+    create() {
+        this.registry.set('score', 0);
+        this.registry.set('combo', 0);
+        this.registry.set('maxCombo', 0);
+        this.registry.set('correct', 0);
+        this.registry.set('wrong', 0);
+        this.scene.start('HookScene');
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HookScene - 흥미 유발
+// ═══════════════════════════════════════════════════════════════════════════
+class HookScene extends Phaser.Scene {
+    constructor() { super('HookScene'); }
+
+    create() {
+        // 배경
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        // 별 배경 효과
+        for (let i = 0; i < 50; i++) {
+            const star = this.add.graphics();
+            star.fillStyle(0xffffff, Phaser.Math.FloatBetween(0.2, 0.8));
+            star.fillCircle(Phaser.Math.Between(0, 600), Phaser.Math.Between(0, 600), Phaser.Math.Between(1, 3));
+        }
+
+        // 로켓 아이콘
+        const rocket = this.add.graphics();
+        Icons.drawRocket(rocket, 300, 180, 100);
+
+        // 타이틀
+        this.add.text(300, 310, '구구단 레이싱', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '42px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        this.add.text(300, 365, '떨어지는 문제를 빠르게 맞춰라!', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '18px',
+            color: '#94a3b8'
+        }).setOrigin(0.5);
+
+        // 시작 버튼
+        this.createButton(300, 460, '게임 시작', () => {
+            this.scene.start('AnchorScene');
+        });
+    }
+
+    createButton(x, y, text, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.primary, 1);
+        bg.fillRoundedRect(-100, -28, 200, 56, 14);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '24px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(200, 56);
+        container.setInteractive({ useHandCursor: true });
+
+        container.on('pointerover', () => {
+            bg.clear();
+            bg.fillStyle(COLORS.secondary, 1);
+            bg.fillRoundedRect(-100, -28, 200, 56, 14);
+            this.tweens.add({ targets: container, scale: 1.05, duration: 100 });
+        });
+
+        container.on('pointerout', () => {
+            bg.clear();
+            bg.fillStyle(COLORS.primary, 1);
+            bg.fillRoundedRect(-100, -28, 200, 56, 14);
+            this.tweens.add({ targets: container, scale: 1, duration: 100 });
+        });
+
+        container.on('pointerdown', onClick);
+        return container;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AnchorScene - 선행학습 복습
+// ═══════════════════════════════════════════════════════════════════════════
+class AnchorScene extends Phaser.Scene {
+    constructor() { super('AnchorScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        this.add.text(300, 50, '📚 구구단 기억나니?', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '26px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        // 구구단 표 미리보기 (4개를 2x2로)
+        const tables = [2, 3, 4, 5];
+        tables.forEach((num, idx) => {
+            const col = idx % 2;
+            const row = Math.floor(idx / 2);
+            const x = 160 + col * 280;
+            const y = 100 + row * 220;
+
+            const card = this.add.graphics();
+            card.fillStyle(COLORS.bgCard, 1);
+            card.fillRoundedRect(x - 120, y, 240, 190, 10);
+            card.lineStyle(2, COLORS.primary, 0.5);
+            card.strokeRoundedRect(x - 120, y, 240, 190, 10);
+
+            this.add.text(x, y + 22, `${num}단`, {
+                fontFamily: 'Noto Sans KR',
+                fontSize: '20px',
+                color: '#fbbf24',
+                fontStyle: 'bold'
+            }).setOrigin(0.5);
+
+            for (let i = 1; i <= 9; i++) {
+                const col2 = (i - 1) % 3;
+                const row2 = Math.floor((i - 1) / 3);
+                this.add.text(x - 70 + col2 * 70, y + 55 + row2 * 38, `${num}×${i}=${num * i}`, {
+                    fontFamily: 'Noto Sans KR',
+                    fontSize: '13px',
+                    color: '#e2e8f0'
+                }).setOrigin(0.5);
+            }
+        });
+
+        this.add.text(300, 520, '게임에서는 2단~9단 문제가 나와요!', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '16px',
+            color: '#94a3b8'
+        }).setOrigin(0.5);
+
+        this.createButton(300, 565, '준비됐어요!', () => {
+            this.scene.start('StoryScene');
+        });
+    }
+
+    createButton(x, y, text, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.success, 1);
+        bg.fillRoundedRect(-90, -25, 180, 50, 12);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '22px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(180, 50);
+        container.setInteractive({ useHandCursor: true });
+        container.on('pointerdown', onClick);
+        return container;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// StoryScene - 캐릭터 스토리
+// ═══════════════════════════════════════════════════════════════════════════
+class StoryScene extends Phaser.Scene {
+    constructor() { super('StoryScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        // 로봇 캐릭터
+        const robot = this.add.graphics();
+        Icons.drawRobot(robot, 100, 250, 120);
+
+        // 말풍선
+        const bubble = this.add.graphics();
+        bubble.fillStyle(0xffffff, 1);
+        bubble.fillRoundedRect(180, 120, 380, 200, 16);
+        bubble.fillTriangle(180, 200, 150, 230, 180, 240);
+
+        // 대사 (타이핑 효과)
+        const dialogue = [
+            '안녕! 나는 멀티봇이야!',
+            '',
+            '하늘에서 떨어지는 구구단 문제를',
+            '빠르게 풀어서 로켓을 우주로',
+            '날려보자! 🚀',
+            '',
+            '연속으로 맞추면 콤보 보너스!'
+        ];
+
+        let y = 145;
+        dialogue.forEach((line, idx) => {
+            const text = this.add.text(370, y, '', {
+                fontFamily: 'Noto Sans KR',
+                fontSize: '16px',
+                color: '#1e293b',
+                fontStyle: idx === 0 ? 'bold' : 'normal'
+            }).setOrigin(0.5);
+
+            this.typeText(text, line, idx * 400);
+            y += 24;
+        });
+
+        // 시작 버튼 (딜레이 후 표시)
+        this.time.delayedCall(2800, () => {
+            this.createButton(300, 480, '출발!', () => {
+                this.scene.start('CoreScene');
+            });
+        });
+    }
+
+    typeText(textObj, fullText, delay) {
+        let i = 0;
+        this.time.delayedCall(delay, () => {
+            this.time.addEvent({
+                delay: 30,
+                repeat: fullText.length - 1,
+                callback: () => {
+                    textObj.setText(fullText.substring(0, ++i));
+                }
+            });
+        });
+    }
+
+    createButton(x, y, text, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.warning, 1);
+        bg.fillRoundedRect(-80, -25, 160, 50, 12);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '24px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(160, 50);
+        container.setInteractive({ useHandCursor: true });
+        container.on('pointerdown', onClick);
+
+        container.setAlpha(0);
+        this.tweens.add({ targets: container, alpha: 1, duration: 300 });
+
+        return container;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CoreScene - 핵심 게임플레이
+// ═══════════════════════════════════════════════════════════════════════════
+class CoreScene extends Phaser.Scene {
+    constructor() { super('CoreScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        // 별 배경
+        for (let i = 0; i < 30; i++) {
+            const star = this.add.graphics();
+            star.fillStyle(0xffffff, Phaser.Math.FloatBetween(0.1, 0.4));
+            star.fillCircle(Phaser.Math.Between(0, 600), Phaser.Math.Between(0, 350), Phaser.Math.Between(1, 2));
+        }
+
+        this.problems = [];
+        this.currentAnswer = '';
+        this.problemCount = 0;
+        this.maxProblems = 15;
+
+        // 점수 표시
+        this.scoreText = this.add.text(520, 25, '점수: 0', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '18px',
+            color: '#fbbf24',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        // 콤보 표시
+        this.comboText = this.add.text(520, 50, '', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '14px',
+            color: '#22c55e'
+        }).setOrigin(0.5);
+
+        // 진행도 표시
+        this.progressText = this.add.text(80, 25, '1 / 15', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '16px',
+            color: '#94a3b8'
+        }).setOrigin(0.5);
+
+        // 입력창
+        this.createInputArea();
+
+        // 숫자 키패드
+        this.createKeypad();
+
+        // 첫 문제 생성
+        this.spawnProblem();
+
+        // 주기적으로 문제 생성 (3초마다)
+        this.problemTimer = this.time.addEvent({
+            delay: 3500,
+            callback: this.spawnProblem,
+            callbackScope: this,
+            loop: true
+        });
+    }
+
+    createInputArea() {
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.bgCard, 1);
+        bg.fillRoundedRect(150, 360, 300, 50, 10);
+        bg.lineStyle(2, COLORS.primary, 1);
+        bg.strokeRoundedRect(150, 360, 300, 50, 10);
+
+        this.inputText = this.add.text(300, 385, '', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '28px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+    }
+
+    createKeypad() {
+        const startX = 130;
+        const startY = 440;
+        const btnSize = 50;
+        const gap = 8;
+
+        // 1-9, 0, 지우기, 확인
+        const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', '✓'];
+
+        keys.forEach((key, idx) => {
+            const row = Math.floor(idx / 3);
+            const col = idx % 3;
+            const x = startX + col * (btnSize + gap);
+            const y = startY + row * 38;
+
+            const btn = this.add.container(x, y);
+            const bg = this.add.graphics();
+
+            let color = COLORS.bgCard;
+            if (key === 'C') color = COLORS.error;
+            if (key === '✓') color = COLORS.success;
+
+            bg.fillStyle(color, 1);
+            bg.fillRoundedRect(-btnSize/2, -16, btnSize, 32, 6);
+
+            const label = this.add.text(0, 0, key, {
+                fontFamily: 'Noto Sans KR',
+                fontSize: '18px',
+                color: '#ffffff',
+                fontStyle: 'bold'
+            }).setOrigin(0.5);
+
+            btn.add([bg, label]);
+            btn.setSize(btnSize, 32);
+            btn.setInteractive({ useHandCursor: true });
+
+            btn.on('pointerdown', () => this.onKeyPress(key));
+        });
+    }
+
+    onKeyPress(key) {
+        if (key === 'C') {
+            this.currentAnswer = '';
+        } else if (key === '✓') {
+            this.checkAnswer();
+        } else {
+            if (this.currentAnswer.length < 3) {
+                this.currentAnswer += key;
+            }
+        }
+        this.inputText.setText(this.currentAnswer);
+    }
+
+    spawnProblem() {
+        if (this.problemCount >= this.maxProblems) return;
+
+        const a = Phaser.Math.Between(2, 9);
+        const b = Phaser.Math.Between(1, 9);
+        const answer = a * b;
+
+        const container = this.add.container(Phaser.Math.Between(100, 500), -40);
+
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.accent, 1);
+        bg.fillRoundedRect(-60, -25, 120, 50, 10);
+
+        const text = this.add.text(0, 0, `${a} × ${b} = ?`, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '20px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, text]);
+        container.answer = answer;
+        container.problemText = `${a} × ${b}`;
+
+        this.problems.push(container);
+        this.problemCount++;
+        this.progressText.setText(`${this.problemCount} / ${this.maxProblems}`);
+
+        // 떨어지는 애니메이션
+        this.tweens.add({
+            targets: container,
+            y: 320,
+            duration: 8000,
+            ease: 'Linear',
+            onComplete: () => {
+                if (container.active) {
+                    this.onMiss(container);
+                }
+            }
+        });
+    }
+
+    checkAnswer() {
+        const input = parseInt(this.currentAnswer);
+        if (isNaN(input)) return;
+
+        // 가장 아래에 있는 문제 찾기
+        let targetProblem = null;
+        let maxY = -1;
+
+        this.problems.forEach(p => {
+            if (p.active && p.y > maxY) {
+                maxY = p.y;
+                targetProblem = p;
+            }
+        });
+
+        if (!targetProblem) return;
+
+        if (input === targetProblem.answer) {
+            this.onCorrect(targetProblem);
+        } else {
+            this.onWrong(targetProblem);
+        }
+
+        this.currentAnswer = '';
+        this.inputText.setText('');
+    }
+
+    onCorrect(problem) {
+        const combo = this.registry.get('combo') + 1;
+        this.registry.set('combo', combo);
+        this.registry.set('maxCombo', Math.max(combo, this.registry.get('maxCombo')));
+        this.registry.inc('correct', 1);
+
+        const baseScore = 10;
+        const comboBonus = Math.min(combo - 1, 5) * 5;
+        const score = baseScore + comboBonus;
+        this.registry.inc('score', score);
+
+        this.scoreText.setText(`점수: ${this.registry.get('score')}`);
+        if (combo > 1) {
+            this.comboText.setText(`${combo} 콤보! +${comboBonus}`);
+            this.tweens.add({ targets: this.comboText, scale: 1.2, duration: 100, yoyo: true });
+        }
+
+        // 성공 효과
+        this.tweens.add({
+            targets: problem,
+            scale: 1.5,
+            alpha: 0,
+            duration: 300,
+            onComplete: () => {
+                const idx = this.problems.indexOf(problem);
+                if (idx > -1) this.problems.splice(idx, 1);
+                problem.destroy();
+            }
+        });
+
+        // 점수 팝업
+        const popup = this.add.text(problem.x, problem.y, `+${score}`, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '28px',
+            color: '#22c55e',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        this.tweens.add({
+            targets: popup,
+            y: problem.y - 60,
+            alpha: 0,
+            duration: 600,
+            onComplete: () => popup.destroy()
+        });
+
+        this.checkGameEnd();
+    }
+
+    onWrong(problem) {
+        this.registry.set('combo', 0);
+        this.registry.inc('wrong', 1);
+        this.comboText.setText('');
+
+        // 흔들기 효과
+        this.tweens.add({
+            targets: problem,
+            x: problem.x + 10,
+            duration: 50,
+            yoyo: true,
+            repeat: 3
+        });
+
+        // 정답 표시
+        const hint = this.add.text(problem.x, problem.y + 40, `정답: ${problem.answer}`, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '16px',
+            color: '#ef4444'
+        }).setOrigin(0.5);
+
+        this.time.delayedCall(1000, () => hint.destroy());
+    }
+
+    onMiss(problem) {
+        this.registry.set('combo', 0);
+        this.registry.inc('wrong', 1);
+        this.comboText.setText('');
+
+        const idx = this.problems.indexOf(problem);
+        if (idx > -1) this.problems.splice(idx, 1);
+
+        this.tweens.add({
+            targets: problem,
+            alpha: 0,
+            duration: 200,
+            onComplete: () => problem.destroy()
+        });
+
+        this.checkGameEnd();
+    }
+
+    checkGameEnd() {
+        const total = this.registry.get('correct') + this.registry.get('wrong');
+        if (total >= this.maxProblems) {
+            this.problemTimer.remove();
+            this.time.delayedCall(500, () => {
+                this.scene.start('VisualizeScene');
+            });
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VisualizeScene - 결과 시각화
+// ═══════════════════════════════════════════════════════════════════════════
+class VisualizeScene extends Phaser.Scene {
+    constructor() { super('VisualizeScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        const score = this.registry.get('score');
+        const correct = this.registry.get('correct');
+        const wrong = this.registry.get('wrong');
+        const maxCombo = this.registry.get('maxCombo');
+        const accuracy = Math.round((correct / 15) * 100);
+
+        this.add.text(300, 45, '🎯 게임 결과', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '30px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        // 점수 카드
+        const cardBg = this.add.graphics();
+        cardBg.fillStyle(COLORS.bgCard, 1);
+        cardBg.fillRoundedRect(50, 80, 500, 300, 14);
+
+        // 별 등급
+        const stars = accuracy >= 90 ? 3 : accuracy >= 70 ? 2 : accuracy >= 50 ? 1 : 0;
+        for (let i = 0; i < 3; i++) {
+            const starIcon = this.add.graphics();
+            const color = i < stars ? COLORS.gold : 0x475569;
+            Icons.drawStar(starIcon, 230 + i * 70, 130, 25, color);
+        }
+
+        // 통계
+        const stats = [
+            { label: '총 점수', value: score, color: '#fbbf24' },
+            { label: '정답', value: `${correct}개`, color: '#22c55e' },
+            { label: '오답', value: `${wrong}개`, color: '#ef4444' },
+            { label: '정확도', value: `${accuracy}%`, color: '#3b82f6' },
+            { label: '최대 콤보', value: `${maxCombo}`, color: '#8b5cf6' }
+        ];
+
+        stats.forEach((stat, idx) => {
+            const y = 180 + idx * 36;
+            this.add.text(120, y, stat.label, {
+                fontFamily: 'Noto Sans KR',
+                fontSize: '18px',
+                color: '#94a3b8'
+            });
+            this.add.text(480, y, stat.value.toString(), {
+                fontFamily: 'Noto Sans KR',
+                fontSize: '20px',
+                color: stat.color,
+                fontStyle: 'bold'
+            }).setOrigin(1, 0);
+        });
+
+        // 메시지
+        let message = '';
+        if (accuracy >= 90) message = '완벽해요! 구구단 마스터! 🏆';
+        else if (accuracy >= 70) message = '잘했어요! 조금만 더 연습하면 완벽!';
+        else if (accuracy >= 50) message = '좋아요! 계속 연습해봐요!';
+        else message = '괜찮아요! 다시 도전해봐요!';
+
+        this.add.text(300, 420, message, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '18px',
+            color: '#e2e8f0'
+        }).setOrigin(0.5);
+
+        this.createButton(300, 500, '퀴즈 풀기', () => {
+            this.scene.start('QuizScene');
+        });
+    }
+
+    createButton(x, y, text, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.primary, 1);
+        bg.fillRoundedRect(-90, -25, 180, 50, 12);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '22px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(180, 50);
+        container.setInteractive({ useHandCursor: true });
+        container.on('pointerdown', onClick);
+        return container;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// QuizScene - 퀴즈
+// ═══════════════════════════════════════════════════════════════════════════
+class QuizScene extends Phaser.Scene {
+    constructor() { super('QuizScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        this.quizzes = [
+            { q: '7 × 8 = ?', a: 56, options: [54, 56, 58, 63] },
+            { q: '9 × 6 = ?', a: 54, options: [48, 52, 54, 56] },
+            { q: '8 × 9 = ?', a: 72, options: [63, 70, 72, 81] },
+            { q: '6 × 7 = ?', a: 42, options: [36, 42, 48, 49] },
+            { q: '4 × 9 = ?', a: 36, options: [32, 34, 36, 40] }
+        ];
+
+        this.currentQuiz = 0;
+        this.quizCorrect = 0;
+
+        this.showQuiz();
+    }
+
+    showQuiz() {
+        this.children.removeAll();
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        const quiz = this.quizzes[this.currentQuiz];
+
+        this.add.text(300, 50, `퀴즈 ${this.currentQuiz + 1} / ${this.quizzes.length}`, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '18px',
+            color: '#94a3b8'
+        }).setOrigin(0.5);
+
+        // 문제 카드
+        const qBg = this.add.graphics();
+        qBg.fillStyle(COLORS.accent, 1);
+        qBg.fillRoundedRect(100, 100, 400, 90, 14);
+
+        this.add.text(300, 145, quiz.q, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '36px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        // 선택지
+        const shuffled = Phaser.Utils.Array.Shuffle([...quiz.options]);
+
+        shuffled.forEach((opt, idx) => {
+            const x = 150 + (idx % 2) * 200 + 50;
+            const y = 270 + Math.floor(idx / 2) * 90;
+
+            this.createOptionButton(x, y, opt.toString(), () => {
+                this.checkQuizAnswer(opt, quiz.a);
+            });
+        });
+    }
+
+    createOptionButton(x, y, text, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.bgCard, 1);
+        bg.fillRoundedRect(-80, -35, 160, 70, 12);
+        bg.lineStyle(2, COLORS.primary, 0.5);
+        bg.strokeRoundedRect(-80, -35, 160, 70, 12);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '28px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(160, 70);
+        container.setInteractive({ useHandCursor: true });
+
+        container.on('pointerover', () => {
+            bg.clear();
+            bg.fillStyle(COLORS.primary, 0.5);
+            bg.fillRoundedRect(-80, -35, 160, 70, 12);
+            bg.lineStyle(2, COLORS.primary, 1);
+            bg.strokeRoundedRect(-80, -35, 160, 70, 12);
+        });
+
+        container.on('pointerout', () => {
+            bg.clear();
+            bg.fillStyle(COLORS.bgCard, 1);
+            bg.fillRoundedRect(-80, -35, 160, 70, 12);
+            bg.lineStyle(2, COLORS.primary, 0.5);
+            bg.strokeRoundedRect(-80, -35, 160, 70, 12);
+        });
+
+        container.on('pointerdown', onClick);
+        return container;
+    }
+
+    checkQuizAnswer(selected, correct) {
+        if (selected === correct) {
+            this.quizCorrect++;
+            this.showFeedback(true, '정답!');
+        } else {
+            this.showFeedback(false, `오답! 정답은 ${correct}`);
+        }
+    }
+
+    showFeedback(isCorrect, message) {
+        const feedback = this.add.text(300, 480, message, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '24px',
+            color: isCorrect ? '#22c55e' : '#ef4444',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        this.time.delayedCall(1200, () => {
+            this.currentQuiz++;
+            if (this.currentQuiz >= this.quizzes.length) {
+                this.registry.set('quizScore', this.quizCorrect);
+                this.scene.start('WrapScene');
+            } else {
+                this.showQuiz();
+            }
+        });
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WrapScene - 완료/보상
+// ═══════════════════════════════════════════════════════════════════════════
+class WrapScene extends Phaser.Scene {
+    constructor() { super('WrapScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        // 축하 파티클
+        for (let i = 0; i < 30; i++) {
+            const particle = this.add.graphics();
+            particle.fillStyle([COLORS.gold, COLORS.success, COLORS.primary, COLORS.accent][i % 4], 1);
+            particle.fillCircle(0, 0, Phaser.Math.Between(3, 6));
+            particle.setPosition(Phaser.Math.Between(50, 550), -50);
+
+            this.tweens.add({
+                targets: particle,
+                y: 650,
+                x: particle.x + Phaser.Math.Between(-80, 80),
+                rotation: Phaser.Math.FloatBetween(-3, 3),
+                duration: Phaser.Math.Between(2000, 4000),
+                delay: i * 100
+            });
+        }
+
+        // 트로피
+        const trophy = this.add.graphics();
+        Icons.drawTrophy(trophy, 300, 140, 100);
+
+        this.add.text(300, 230, '학습 완료!', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '36px',
+            color: '#fbbf24',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        const score = this.registry.get('score');
+        const quizScore = this.registry.get('quizScore') || 0;
+        const totalScore = score + quizScore * 20;
+
+        this.add.text(300, 290, `총 점수: ${totalScore}점`, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '24px',
+            color: '#ffffff'
+        }).setOrigin(0.5);
+
+        this.add.text(300, 330, `게임: ${score}점 | 퀴즈: ${quizScore}/5`, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '16px',
+            color: '#94a3b8'
+        }).setOrigin(0.5);
+
+        // 학습 요약
+        const summary = this.add.graphics();
+        summary.fillStyle(COLORS.bgCard, 0.8);
+        summary.fillRoundedRect(80, 380, 440, 70, 10);
+
+        this.add.text(300, 415, '🎓 오늘 배운 것: 구구단 2~9단\n빠른 암산 연습과 콤보 시스템!', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '14px',
+            color: '#e2e8f0',
+            align: 'center',
+            lineSpacing: 5
+        }).setOrigin(0.5);
+
+        this.createButton(300, 510, '다시 하기', () => {
+            this.registry.set('score', 0);
+            this.registry.set('combo', 0);
+            this.registry.set('maxCombo', 0);
+            this.registry.set('correct', 0);
+            this.registry.set('wrong', 0);
+            this.scene.start('HookScene');
+        });
+    }
+
+    createButton(x, y, text, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.primary, 1);
+        bg.fillRoundedRect(-90, -25, 180, 50, 12);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '22px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(180, 50);
+        container.setInteractive({ useHandCursor: true });
+        container.on('pointerdown', onClick);
+        return container;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Game Configuration
+// ═══════════════════════════════════════════════════════════════════════════
+const config = {
+    type: Phaser.AUTO,
+    width: 600,
+    height: 600,
+    parent: 'game-container',
+    backgroundColor: COLORS.bgPrimary,
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+    },
+    scene: [BootScene, HookScene, AnchorScene, StoryScene, CoreScene, VisualizeScene, QuizScene, WrapScene]
+};
+
+const game = new Phaser.Game(config);
+    </script>
+</body>
+</html>

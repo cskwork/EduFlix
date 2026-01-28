@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-01-28T07:00:00.000Z",
+  "lastUpdated": "2026-01-28T08:10:00.000Z",
   "contents": [
     {
       "id": "fractions-pizza",
@@ -761,6 +761,56 @@
       "description": "산을 오르며 중학교 필수 영어 어휘를 마스터해보세요!",
       "thumbnail": "",
       "path": "/contents/english/middle/vocabulary-mountain/index.html"
+    },
+    {
+      "id": "action-verbs-game",
+      "title": "동작 동사 분류 게임",
+      "subject": "english",
+      "gradeLevel": "elementary",
+      "grade": "elementary-3",
+      "type": "game",
+      "language": "ko",
+      "description": "동작 동사(run, walk, jump 등)를 움직임/만들기/감정 카테고리로 분류하는 Phaser 드래그 앤 드롭 게임",
+      "thumbnail": "/contents/english/elementary/action-verbs-game/assets/thumbnail.svg",
+      "path": "/contents/english/elementary/action-verbs-game/index.html"
+    },
+    {
+      "id": "multiplication-balloon",
+      "title": "구구단 풍선 터트리기",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-2",
+      "type": "game",
+      "language": "ko",
+      "description": "구구단 문제의 정답이 적힌 풍선을 터트려 점수를 획득하는 Phaser 게임",
+      "thumbnail": "/contents/math/elementary/multiplication-balloon/assets/thumbnail.svg",
+      "path": "/contents/math/elementary/multiplication-balloon/index.html"
+    },
+    {
+      "id": "multiplication-racing",
+      "title": "구구단 레이싱",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-2",
+      "type": "game",
+      "language": "ko",
+      "description": "떨어지는 구구단 문제를 빠르게 풀어서 점수를 획득하는 Phaser 게임. 연속 정답 시 콤보 보너스!",
+      "thumbnail": "",
+      "path": "/contents/math/elementary/multiplication-racing/index.html",
+      "createdAt": "2026-01-28T12:00:00.000Z"
+    },
+    {
+      "id": "coordinate-explorer",
+      "title": "좌표 탐험대",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-5",
+      "type": "game",
+      "language": "ko",
+      "description": "좌표평면 위에서 보물을 찾는 Phaser 게임. (x, y) 좌표를 읽고 정확한 위치를 클릭하세요!",
+      "thumbnail": "",
+      "path": "/contents/math/elementary/coordinate-explorer/index.html",
+      "createdAt": "2026-01-28T12:00:00.000Z"
     }
   ]
 }

@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>좌표 탐험대 - 수학 게임</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        #game-container {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+    <script>
+// ═══════════════════════════════════════════════════════════════════════════
+// 좌표 탐험대 - 좌표평면 위의 보물찾기!
+// 초등학교 5-6학년 대상
+// ═══════════════════════════════════════════════════════════════════════════
+
+const COLORS = {
+    bgPrimary: 0x0f172a,
+    bgSecondary: 0x1e293b,
+    bgCard: 0x334155,
+    primary: 0x10b981,
+    secondary: 0x14b8a6,
+    accent: 0x06b6d4,
+    success: 0x22c55e,
+    warning: 0xf59e0b,
+    error: 0xef4444,
+    gold: 0xfbbf24,
+    gridLine: 0x475569,
+    axis: 0x94a3b8,
+    textPrimary: 0xffffff,
+    textSecondary: 0x94a3b8
+};
+
+const Icons = {
+    drawStar(graphics, x, y, size, color = 0xfbbf24) {
+        graphics.fillStyle(color, 1);
+        const points = [];
+        for (let i = 0; i < 10; i++) {
+            const radius = i % 2 === 0 ? size : size * 0.5;
+            const angle = (i * Math.PI / 5) - Math.PI / 2;
+            points.push({ x: x + Math.cos(angle) * radius, y: y + Math.sin(angle) * radius });
+        }
+        graphics.beginPath();
+        graphics.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) graphics.lineTo(points[i].x, points[i].y);
+        graphics.closePath();
+        graphics.fillPath();
+    },
+    drawTreasure(graphics, x, y, size) {
+        // 상자 몸체
+        graphics.fillStyle(0xb45309, 1);
+        graphics.fillRoundedRect(x - size * 0.4, y - size * 0.1, size * 0.8, size * 0.5, 4);
+        // 상자 뚜껑
+        graphics.fillStyle(0xd97706, 1);
+        graphics.fillRoundedRect(x - size * 0.45, y - size * 0.3, size * 0.9, size * 0.25, 4);
+        // 자물쇠
+        graphics.fillStyle(0xfbbf24, 1);
+        graphics.fillCircle(x, y + size * 0.05, size * 0.12);
+        graphics.fillRect(x - size * 0.06, y + size * 0.1, size * 0.12, size * 0.15);
+    },
+    drawExplorer(graphics, x, y, size) {
+        // 몸
+        graphics.fillStyle(0x3b82f6, 1);
+        graphics.fillRoundedRect(x - size * 0.15, y - size * 0.1, size * 0.3, size * 0.4, 4);
+        // 머리
+        graphics.fillStyle(0xfcd34d, 1);
+        graphics.fillCircle(x, y - size * 0.25, size * 0.18);
+        // 모자
+        graphics.fillStyle(0x854d0e, 1);
+        graphics.fillRect(x - size * 0.22, y - size * 0.35, size * 0.44, size * 0.08);
+        graphics.fillRoundedRect(x - size * 0.12, y - size * 0.5, size * 0.24, size * 0.18, 4);
+        // 눈
+        graphics.fillStyle(0x1e293b, 1);
+        graphics.fillCircle(x - size * 0.07, y - size * 0.27, size * 0.04);
+        graphics.fillCircle(x + size * 0.07, y - size * 0.27, size * 0.04);
+    },
+    drawFlag(graphics, x, y, size, color = 0xef4444) {
+        // 깃대
+        graphics.lineStyle(3, 0x78716c, 1);
+        graphics.lineBetween(x, y - size * 0.5, x, y + size * 0.3);
+        // 깃발
+        graphics.fillStyle(color, 1);
+        graphics.fillTriangle(x, y - size * 0.5, x + size * 0.4, y - size * 0.3, x, y - size * 0.1);
+    },
+    drawCompass(graphics, x, y, size) {
+        // 원
+        graphics.lineStyle(3, 0xfbbf24, 1);
+        graphics.strokeCircle(x, y, size * 0.4);
+        // 바늘
+        graphics.fillStyle(0xef4444, 1);
+        graphics.fillTriangle(x, y - size * 0.35, x - size * 0.08, y, x + size * 0.08, y);
+        graphics.fillStyle(0xe2e8f0, 1);
+        graphics.fillTriangle(x, y + size * 0.35, x - size * 0.08, y, x + size * 0.08, y);
+        // 중심
+        graphics.fillStyle(0xfbbf24, 1);
+        graphics.fillCircle(x, y, size * 0.08);
+    },
+    drawMap(graphics, x, y, size) {
+        // 지도 배경
+        graphics.fillStyle(0xfef3c7, 1);
+        graphics.fillRoundedRect(x - size * 0.4, y - size * 0.3, size * 0.8, size * 0.6, 4);
+        // 선들
+        graphics.lineStyle(2, 0xd97706, 0.5);
+        graphics.lineBetween(x - size * 0.3, y - size * 0.1, x + size * 0.3, y - size * 0.15);
+        graphics.lineBetween(x - size * 0.25, y + size * 0.1, x + size * 0.2, y + size * 0.05);
+        // X 표시
+        graphics.lineStyle(3, 0xef4444, 1);
+        graphics.lineBetween(x + size * 0.1, y - size * 0.05, x + size * 0.25, y + size * 0.1);
+        graphics.lineBetween(x + size * 0.25, y - size * 0.05, x + size * 0.1, y + size * 0.1);
+    },
+    drawTrophy(graphics, x, y, size) {
+        graphics.fillStyle(0xfbbf24, 1);
+        graphics.fillRoundedRect(x - size * 0.35, y - size * 0.25, size * 0.7, size * 0.4, 6);
+        graphics.lineStyle(3, 0xfbbf24, 1);
+        graphics.beginPath();
+        graphics.arc(x - size * 0.45, y - size * 0.1, size * 0.12, -Math.PI / 2, Math.PI / 2, false);
+        graphics.strokePath();
+        graphics.beginPath();
+        graphics.arc(x + size * 0.45, y - size * 0.1, size * 0.12, Math.PI / 2, -Math.PI / 2, false);
+        graphics.strokePath();
+        graphics.fillRect(x - size * 0.12, y + size * 0.15, size * 0.24, size * 0.12);
+        graphics.fillRect(x - size * 0.2, y + size * 0.27, size * 0.4, size * 0.08);
+    }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BootScene - 초기화
+// ═══════════════════════════════════════════════════════════════════════════
+class BootScene extends Phaser.Scene {
+    constructor() { super('BootScene'); }
+    create() {
+        this.registry.set('score', 0);
+        this.registry.set('level', 1);
+        this.registry.set('treasuresFound', 0);
+        this.scene.start('HookScene');
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HookScene - 흥미 유발
+// ═══════════════════════════════════════════════════════════════════════════
+class HookScene extends Phaser.Scene {
+    constructor() { super('HookScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        // 지도 아이콘
+        const map = this.add.graphics();
+        Icons.drawMap(map, 300, 160, 150);
+
+        // 타이틀
+        this.add.text(300, 290, '좌표 탐험대', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '40px',
+            color: '#10b981',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        this.add.text(300, 345, '좌표평면 위에서 보물을 찾아라!', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '18px',
+            color: '#94a3b8'
+        }).setOrigin(0.5);
+
+        // 보물상자 장식
+        const treasure1 = this.add.graphics();
+        Icons.drawTreasure(treasure1, 120, 430, 40);
+        const treasure2 = this.add.graphics();
+        Icons.drawTreasure(treasure2, 480, 430, 40);
+
+        // 시작 버튼
+        this.createButton(300, 500, '탐험 시작', () => {
+            this.scene.start('AnchorScene');
+        });
+    }
+
+    createButton(x, y, text, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.primary, 1);
+        bg.fillRoundedRect(-100, -28, 200, 56, 14);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '24px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(200, 56);
+        container.setInteractive({ useHandCursor: true });
+
+        container.on('pointerover', () => {
+            bg.clear();
+            bg.fillStyle(COLORS.secondary, 1);
+            bg.fillRoundedRect(-100, -28, 200, 56, 14);
+            this.tweens.add({ targets: container, scale: 1.05, duration: 100 });
+        });
+
+        container.on('pointerout', () => {
+            bg.clear();
+            bg.fillStyle(COLORS.primary, 1);
+            bg.fillRoundedRect(-100, -28, 200, 56, 14);
+            this.tweens.add({ targets: container, scale: 1, duration: 100 });
+        });
+
+        container.on('pointerdown', onClick);
+        return container;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AnchorScene - 좌표평면 개념 복습
+// ═══════════════════════════════════════════════════════════════════════════
+class AnchorScene extends Phaser.Scene {
+    constructor() { super('AnchorScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        this.add.text(300, 40, '📍 좌표평면 복습', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '26px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        // 미니 좌표평면 그리기
+        this.drawMiniGrid(300, 240, 240);
+
+        // 설명 텍스트
+        const explanations = [
+            '• 가로 방향: x축 (왼쪽이 -, 오른쪽이 +)',
+            '• 세로 방향: y축 (아래가 -, 위가 +)',
+            '• 좌표는 (x, y) 형태로 표현해요',
+            '• 예: (3, 2)는 오른쪽 3, 위로 2!'
+        ];
+
+        explanations.forEach((text, idx) => {
+            this.add.text(300, 410 + idx * 26, text, {
+                fontFamily: 'Noto Sans KR',
+                fontSize: '14px',
+                color: '#e2e8f0'
+            }).setOrigin(0.5);
+        });
+
+        this.createButton(300, 555, '이해했어요!', () => {
+            this.scene.start('StoryScene');
+        });
+    }
+
+    drawMiniGrid(cx, cy, size) {
+        const graphics = this.add.graphics();
+        const half = size / 2;
+        const step = size / 10;
+
+        // 격자
+        graphics.lineStyle(1, COLORS.gridLine, 0.3);
+        for (let i = -5; i <= 5; i++) {
+            graphics.lineBetween(cx - half, cy + i * step, cx + half, cy + i * step);
+            graphics.lineBetween(cx + i * step, cy - half, cx + i * step, cy + half);
+        }
+
+        // 축
+        graphics.lineStyle(2, COLORS.axis, 1);
+        graphics.lineBetween(cx - half - 10, cy, cx + half + 10, cy); // x축
+        graphics.lineBetween(cx, cy - half - 10, cx, cy + half + 10); // y축
+
+        // 축 레이블
+        this.add.text(cx + half + 18, cy, 'x', {
+            fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#94a3b8', fontStyle: 'bold'
+        }).setOrigin(0.5);
+        this.add.text(cx, cy - half - 20, 'y', {
+            fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#94a3b8', fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        // 숫자
+        for (let i = -4; i <= 4; i++) {
+            if (i === 0) continue;
+            this.add.text(cx + i * step, cy + 14, i.toString(), {
+                fontFamily: 'Noto Sans KR', fontSize: '11px', color: '#64748b'
+            }).setOrigin(0.5);
+            this.add.text(cx - 16, cy - i * step, i.toString(), {
+                fontFamily: 'Noto Sans KR', fontSize: '11px', color: '#64748b'
+            }).setOrigin(0.5);
+        }
+
+        // 예시 점 (3, 2)
+        const exX = cx + 3 * step;
+        const exY = cy - 2 * step;
+        graphics.fillStyle(COLORS.warning, 1);
+        graphics.fillCircle(exX, exY, 7);
+        this.add.text(exX + 14, exY - 14, '(3, 2)', {
+            fontFamily: 'Noto Sans KR', fontSize: '13px', color: '#fbbf24', fontStyle: 'bold'
+        });
+    }
+
+    createButton(x, y, text, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.success, 1);
+        bg.fillRoundedRect(-90, -25, 180, 50, 12);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '22px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(180, 50);
+        container.setInteractive({ useHandCursor: true });
+        container.on('pointerdown', onClick);
+        return container;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// StoryScene - 캐릭터 스토리
+// ═══════════════════════════════════════════════════════════════════════════
+class StoryScene extends Phaser.Scene {
+    constructor() { super('StoryScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        // 탐험가 캐릭터
+        const explorer = this.add.graphics();
+        Icons.drawExplorer(explorer, 90, 260, 140);
+
+        // 말풍선
+        const bubble = this.add.graphics();
+        bubble.fillStyle(0xffffff, 1);
+        bubble.fillRoundedRect(170, 100, 400, 200, 14);
+        bubble.fillTriangle(170, 180, 140, 210, 170, 220);
+
+        // 대사 (타이핑 효과)
+        const dialogue = [
+            '안녕! 나는 탐험가 "코디"야!',
+            '',
+            '오래된 지도에 숨겨진 보물의',
+            '좌표가 적혀있어!',
+            '',
+            '좌표를 읽고 정확한 위치를',
+            '클릭해서 보물을 찾아줘! 🗺️'
+        ];
+
+        let y = 125;
+        dialogue.forEach((line, idx) => {
+            const text = this.add.text(370, y, '', {
+                fontFamily: 'Noto Sans KR',
+                fontSize: '15px',
+                color: '#1e293b',
+                fontStyle: idx === 0 ? 'bold' : 'normal'
+            }).setOrigin(0.5);
+
+            this.typeText(text, line, idx * 350);
+            y += 24;
+        });
+
+        // 시작 버튼 (딜레이 후 표시)
+        this.time.delayedCall(2600, () => {
+            this.createButton(300, 460, '보물 찾으러 가자!', () => {
+                this.scene.start('CoreScene');
+            });
+        });
+    }
+
+    typeText(textObj, fullText, delay) {
+        let i = 0;
+        this.time.delayedCall(delay, () => {
+            this.time.addEvent({
+                delay: 25,
+                repeat: fullText.length - 1,
+                callback: () => {
+                    textObj.setText(fullText.substring(0, ++i));
+                }
+            });
+        });
+    }
+
+    createButton(x, y, text, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.warning, 1);
+        bg.fillRoundedRect(-110, -25, 220, 50, 12);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '22px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(220, 50);
+        container.setInteractive({ useHandCursor: true });
+        container.on('pointerdown', onClick);
+
+        container.setAlpha(0);
+        this.tweens.add({ targets: container, alpha: 1, duration: 300 });
+
+        return container;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CoreScene - 핵심 게임플레이 (좌표 찾기)
+// ═══════════════════════════════════════════════════════════════════════════
+class CoreScene extends Phaser.Scene {
+    constructor() { super('CoreScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        this.gridSize = 360;
+        this.gridX = 300;
+        this.gridY = 320;
+        this.step = this.gridSize / 10;
+        this.currentRound = 0;
+        this.maxRounds = 8;
+
+        // 문제 생성
+        this.problems = this.generateProblems();
+
+        // 점수 표시
+        this.scoreText = this.add.text(530, 25, '점수: 0', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '18px',
+            color: '#fbbf24',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        // 라운드 표시
+        this.roundText = this.add.text(70, 25, '', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '16px',
+            color: '#94a3b8'
+        }).setOrigin(0.5);
+
+        // 좌표평면 그리기
+        this.drawGrid();
+
+        // 문제 표시 영역
+        this.questionBg = this.add.graphics();
+        this.questionBg.fillStyle(COLORS.accent, 1);
+        this.questionBg.fillRoundedRect(130, 40, 340, 50, 10);
+
+        this.questionText = this.add.text(300, 65, '', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '22px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        // 피드백 텍스트
+        this.feedbackText = this.add.text(300, 565, '', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '16px',
+            color: '#22c55e'
+        }).setOrigin(0.5);
+
+        // 다음 문제
+        this.nextProblem();
+    }
+
+    generateProblems() {
+        const problems = [];
+        const used = new Set();
+
+        while (problems.length < 8) {
+            const x = Phaser.Math.Between(-4, 4);
+            const y = Phaser.Math.Between(-4, 4);
+            const key = `${x},${y}`;
+
+            if (!used.has(key) && !(x === 0 && y === 0)) {
+                used.add(key);
+                problems.push({ x, y });
+            }
+        }
+        return problems;
+    }
+
+    drawGrid() {
+        const graphics = this.add.graphics();
+        const cx = this.gridX;
+        const cy = this.gridY;
+        const half = this.gridSize / 2;
+        const step = this.step;
+
+        // 격자 배경
+        graphics.fillStyle(COLORS.bgSecondary, 0.5);
+        graphics.fillRect(cx - half, cy - half, this.gridSize, this.gridSize);
+
+        // 격자선
+        graphics.lineStyle(1, COLORS.gridLine, 0.4);
+        for (let i = -5; i <= 5; i++) {
+            graphics.lineBetween(cx - half, cy + i * step, cx + half, cy + i * step);
+            graphics.lineBetween(cx + i * step, cy - half, cx + i * step, cy + half);
+        }
+
+        // 축
+        graphics.lineStyle(3, COLORS.axis, 1);
+        graphics.lineBetween(cx - half - 10, cy, cx + half + 10, cy);
+        graphics.lineBetween(cx, cy - half - 10, cx, cy + half + 10);
+
+        // 축 화살표
+        graphics.fillStyle(COLORS.axis, 1);
+        graphics.fillTriangle(cx + half + 15, cy, cx + half + 5, cy - 6, cx + half + 5, cy + 6);
+        graphics.fillTriangle(cx, cy - half - 15, cx - 6, cy - half - 5, cx + 6, cy - half - 5);
+
+        // 축 레이블
+        this.add.text(cx + half + 30, cy, 'x', {
+            fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#10b981', fontStyle: 'bold'
+        }).setOrigin(0.5);
+        this.add.text(cx, cy - half - 30, 'y', {
+            fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#10b981', fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        // 숫자 레이블
+        for (let i = -4; i <= 4; i++) {
+            if (i === 0) continue;
+            this.add.text(cx + i * step, cy + half + 18, i.toString(), {
+                fontFamily: 'Noto Sans KR', fontSize: '14px', color: '#64748b'
+            }).setOrigin(0.5);
+            this.add.text(cx - half - 18, cy - i * step, i.toString(), {
+                fontFamily: 'Noto Sans KR', fontSize: '14px', color: '#64748b'
+            }).setOrigin(0.5);
+        }
+
+        // 원점 O
+        this.add.text(cx - 15, cy + 15, 'O', {
+            fontFamily: 'Noto Sans KR', fontSize: '14px', color: '#64748b'
+        });
+
+        // 클릭 가능 영역 생성
+        this.clickZones = [];
+        for (let gx = -4; gx <= 4; gx++) {
+            for (let gy = -4; gy <= 4; gy++) {
+                if (gx === 0 && gy === 0) continue;
+
+                const px = cx + gx * step;
+                const py = cy - gy * step;
+
+                const zone = this.add.circle(px, py, step * 0.4, 0x000000, 0);
+                zone.setInteractive({ useHandCursor: true });
+                zone.gridX = gx;
+                zone.gridY = gy;
+
+                zone.on('pointerover', () => {
+                    if (!this.answered) {
+                        zone.setFillStyle(COLORS.primary, 0.3);
+                    }
+                });
+
+                zone.on('pointerout', () => {
+                    if (!this.answered) {
+                        zone.setFillStyle(0x000000, 0);
+                    }
+                });
+
+                zone.on('pointerdown', () => {
+                    if (!this.answered) {
+                        this.checkAnswer(gx, gy, px, py);
+                    }
+                });
+
+                this.clickZones.push(zone);
+            }
+        }
+    }
+
+    nextProblem() {
+        if (this.currentRound >= this.maxRounds) {
+            this.scene.start('VisualizeScene');
+            return;
+        }
+
+        this.answered = false;
+        this.currentProblem = this.problems[this.currentRound];
+        this.currentRound++;
+
+        this.roundText.setText(`${this.currentRound} / ${this.maxRounds}`);
+        this.questionText.setText(`보물 좌표: (${this.currentProblem.x}, ${this.currentProblem.y})`);
+        this.feedbackText.setText('');
+
+        // 이전 마커 제거
+        if (this.treasureMarker) {
+            this.treasureMarker.destroy();
+        }
+    }
+
+    checkAnswer(clickX, clickY, px, py) {
+        this.answered = true;
+
+        const isCorrect = clickX === this.currentProblem.x && clickY === this.currentProblem.y;
+
+        if (isCorrect) {
+            this.registry.inc('score', 10);
+            this.registry.inc('treasuresFound', 1);
+            this.scoreText.setText(`점수: ${this.registry.get('score')}`);
+
+            // 보물 표시
+            this.treasureMarker = this.add.graphics();
+            Icons.drawTreasure(this.treasureMarker, px, py, 35);
+
+            // 성공 파티클
+            this.showSuccessParticles(px, py);
+
+            this.feedbackText.setColor('#22c55e');
+            this.feedbackText.setText('정답! 보물을 찾았어요! 🎉');
+        } else {
+            // 틀린 위치 표시
+            const wrongMarker = this.add.graphics();
+            wrongMarker.lineStyle(4, COLORS.error, 1);
+            wrongMarker.lineBetween(px - 12, py - 12, px + 12, py + 12);
+            wrongMarker.lineBetween(px + 12, py - 12, px - 12, py + 12);
+
+            // 정답 위치 표시
+            const correctPx = this.gridX + this.currentProblem.x * this.step;
+            const correctPy = this.gridY - this.currentProblem.y * this.step;
+
+            this.treasureMarker = this.add.graphics();
+            Icons.drawFlag(this.treasureMarker, correctPx, correctPy, 30, COLORS.success);
+
+            this.feedbackText.setColor('#ef4444');
+            this.feedbackText.setText(`아쉬워요! 정답은 (${this.currentProblem.x}, ${this.currentProblem.y})예요`);
+
+            this.time.delayedCall(1000, () => wrongMarker.destroy());
+        }
+
+        // 다음 문제로
+        this.time.delayedCall(1800, () => {
+            this.nextProblem();
+        });
+    }
+
+    showSuccessParticles(x, y) {
+        for (let i = 0; i < 12; i++) {
+            const particle = this.add.graphics();
+            particle.fillStyle([COLORS.gold, COLORS.success, COLORS.primary][i % 3], 1);
+            particle.fillCircle(0, 0, Phaser.Math.Between(3, 6));
+            particle.setPosition(x, y);
+
+            this.tweens.add({
+                targets: particle,
+                x: x + Phaser.Math.Between(-60, 60),
+                y: y + Phaser.Math.Between(-60, 60),
+                alpha: 0,
+                duration: 600,
+                onComplete: () => particle.destroy()
+            });
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VisualizeScene - 결과 시각화
+// ═══════════════════════════════════════════════════════════════════════════
+class VisualizeScene extends Phaser.Scene {
+    constructor() { super('VisualizeScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        const score = this.registry.get('score');
+        const found = this.registry.get('treasuresFound');
+        const accuracy = Math.round((found / 8) * 100);
+
+        this.add.text(300, 45, '🗺️ 탐험 결과', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '30px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        // 결과 카드
+        const cardBg = this.add.graphics();
+        cardBg.fillStyle(COLORS.bgCard, 1);
+        cardBg.fillRoundedRect(50, 90, 500, 280, 14);
+
+        // 별 등급
+        const stars = accuracy >= 90 ? 3 : accuracy >= 70 ? 2 : accuracy >= 50 ? 1 : 0;
+        for (let i = 0; i < 3; i++) {
+            const starIcon = this.add.graphics();
+            const color = i < stars ? COLORS.gold : 0x475569;
+            Icons.drawStar(starIcon, 230 + i * 70, 145, 26, color);
+        }
+
+        // 통계
+        const stats = [
+            { label: '찾은 보물', value: `${found}/8`, color: '#10b981' },
+            { label: '정확도', value: `${accuracy}%`, color: '#06b6d4' },
+            { label: '총 점수', value: `${score}점`, color: '#fbbf24' }
+        ];
+
+        stats.forEach((stat, idx) => {
+            const y = 200 + idx * 45;
+            this.add.text(120, y, stat.label, {
+                fontFamily: 'Noto Sans KR',
+                fontSize: '20px',
+                color: '#94a3b8'
+            });
+            this.add.text(480, y, stat.value, {
+                fontFamily: 'Noto Sans KR',
+                fontSize: '22px',
+                color: stat.color,
+                fontStyle: 'bold'
+            }).setOrigin(1, 0);
+        });
+
+        // 메시지
+        let message = '';
+        if (accuracy >= 90) message = '완벽해요! 좌표 탐험 마스터! 🏆';
+        else if (accuracy >= 70) message = '잘했어요! 보물을 많이 찾았네요!';
+        else if (accuracy >= 50) message = '좋아요! 조금만 더 연습해요!';
+        else message = '괜찮아요! 좌표를 다시 복습해봐요!';
+
+        this.add.text(300, 415, message, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '18px',
+            color: '#e2e8f0'
+        }).setOrigin(0.5);
+
+        this.createButton(300, 500, '퀴즈 풀기', () => {
+            this.scene.start('QuizScene');
+        });
+    }
+
+    createButton(x, y, text, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.primary, 1);
+        bg.fillRoundedRect(-90, -25, 180, 50, 12);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '22px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(180, 50);
+        container.setInteractive({ useHandCursor: true });
+        container.on('pointerdown', onClick);
+        return container;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// QuizScene - 퀴즈
+// ═══════════════════════════════════════════════════════════════════════════
+class QuizScene extends Phaser.Scene {
+    constructor() { super('QuizScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        this.quizzes = [
+            { q: '점 A가 원점에서 오른쪽 3, 위로 4에 있다면\nA의 좌표는?', a: '(3, 4)', options: ['(4, 3)', '(3, 4)', '(-3, 4)', '(3, -4)'] },
+            { q: '좌표 (-2, 5)는 어느 사분면에 있을까요?', a: '제2사분면', options: ['제1사분면', '제2사분면', '제3사분면', '제4사분면'] },
+            { q: '점 (0, 3)은 어디에 위치할까요?', a: 'y축 위', options: ['x축 위', 'y축 위', '원점', '제1사분면'] },
+            { q: '원점의 좌표는 무엇일까요?', a: '(0, 0)', options: ['(1, 1)', '(0, 1)', '(1, 0)', '(0, 0)'] },
+            { q: '좌표 (4, -3)에서 y값은 무엇을 의미할까요?', a: '아래로 3', options: ['오른쪽으로 3', '왼쪽으로 3', '위로 3', '아래로 3'] }
+        ];
+
+        this.currentQuiz = 0;
+        this.quizCorrect = 0;
+
+        this.showQuiz();
+    }
+
+    showQuiz() {
+        this.children.removeAll();
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        const quiz = this.quizzes[this.currentQuiz];
+
+        this.add.text(300, 35, `퀴즈 ${this.currentQuiz + 1} / ${this.quizzes.length}`, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '18px',
+            color: '#94a3b8'
+        }).setOrigin(0.5);
+
+        // 문제 카드
+        const qBg = this.add.graphics();
+        qBg.fillStyle(COLORS.accent, 1);
+        qBg.fillRoundedRect(30, 70, 540, 110, 14);
+
+        this.add.text(300, 125, quiz.q, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '18px',
+            color: '#ffffff',
+            fontStyle: 'bold',
+            align: 'center',
+            lineSpacing: 6
+        }).setOrigin(0.5);
+
+        // 선택지
+        const shuffled = Phaser.Utils.Array.Shuffle([...quiz.options]);
+
+        shuffled.forEach((opt, idx) => {
+            const x = 150 + (idx % 2) * 200 + 50;
+            const y = 260 + Math.floor(idx / 2) * 90;
+
+            this.createOptionButton(x, y, opt, () => {
+                this.checkQuizAnswer(opt, quiz.a);
+            });
+        });
+    }
+
+    createOptionButton(x, y, text, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.bgCard, 1);
+        bg.fillRoundedRect(-80, -32, 160, 64, 10);
+        bg.lineStyle(2, COLORS.primary, 0.5);
+        bg.strokeRoundedRect(-80, -32, 160, 64, 10);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '17px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(160, 64);
+        container.setInteractive({ useHandCursor: true });
+
+        container.on('pointerover', () => {
+            bg.clear();
+            bg.fillStyle(COLORS.primary, 0.5);
+            bg.fillRoundedRect(-80, -32, 160, 64, 10);
+            bg.lineStyle(2, COLORS.primary, 1);
+            bg.strokeRoundedRect(-80, -32, 160, 64, 10);
+        });
+
+        container.on('pointerout', () => {
+            bg.clear();
+            bg.fillStyle(COLORS.bgCard, 1);
+            bg.fillRoundedRect(-80, -32, 160, 64, 10);
+            bg.lineStyle(2, COLORS.primary, 0.5);
+            bg.strokeRoundedRect(-80, -32, 160, 64, 10);
+        });
+
+        container.on('pointerdown', onClick);
+        return container;
+    }
+
+    checkQuizAnswer(selected, correct) {
+        if (selected === correct) {
+            this.quizCorrect++;
+            this.showFeedback(true, '정답!');
+        } else {
+            this.showFeedback(false, `오답! 정답은 ${correct}`);
+        }
+    }
+
+    showFeedback(isCorrect, message) {
+        const feedback = this.add.text(300, 490, message, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '22px',
+            color: isCorrect ? '#22c55e' : '#ef4444',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        this.time.delayedCall(1500, () => {
+            this.currentQuiz++;
+            if (this.currentQuiz >= this.quizzes.length) {
+                this.registry.set('quizScore', this.quizCorrect);
+                this.scene.start('WrapScene');
+            } else {
+                this.showQuiz();
+            }
+        });
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WrapScene - 완료/보상
+// ═══════════════════════════════════════════════════════════════════════════
+class WrapScene extends Phaser.Scene {
+    constructor() { super('WrapScene'); }
+
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+
+        // 축하 파티클
+        for (let i = 0; i < 30; i++) {
+            const particle = this.add.graphics();
+            particle.fillStyle([COLORS.gold, COLORS.success, COLORS.primary, COLORS.accent][i % 4], 1);
+            particle.fillCircle(0, 0, Phaser.Math.Between(3, 6));
+            particle.setPosition(Phaser.Math.Between(50, 550), -50);
+
+            this.tweens.add({
+                targets: particle,
+                y: 650,
+                x: particle.x + Phaser.Math.Between(-80, 80),
+                rotation: Phaser.Math.FloatBetween(-3, 3),
+                duration: Phaser.Math.Between(2000, 4000),
+                delay: i * 100
+            });
+        }
+
+        // 트로피
+        const trophy = this.add.graphics();
+        Icons.drawTrophy(trophy, 300, 140, 100);
+
+        this.add.text(300, 230, '탐험 완료!', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '36px',
+            color: '#10b981',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        const score = this.registry.get('score');
+        const quizScore = this.registry.get('quizScore') || 0;
+        const totalScore = score + quizScore * 20;
+
+        this.add.text(300, 290, `총 점수: ${totalScore}점`, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '24px',
+            color: '#ffffff'
+        }).setOrigin(0.5);
+
+        this.add.text(300, 330, `보물찾기: ${score}점 | 퀴즈: ${quizScore}/5`, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '16px',
+            color: '#94a3b8'
+        }).setOrigin(0.5);
+
+        // 학습 요약
+        const summary = this.add.graphics();
+        summary.fillStyle(COLORS.bgCard, 0.8);
+        summary.fillRoundedRect(50, 370, 500, 80, 10);
+
+        this.add.text(300, 410, '🎓 오늘 배운 것\n좌표평면 (x, y), 사분면, 원점, x축과 y축', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '14px',
+            color: '#e2e8f0',
+            align: 'center',
+            lineSpacing: 6
+        }).setOrigin(0.5);
+
+        this.createButton(300, 510, '다시 탐험하기', () => {
+            this.registry.set('score', 0);
+            this.registry.set('treasuresFound', 0);
+            this.scene.start('HookScene');
+        });
+    }
+
+    createButton(x, y, text, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.primary, 1);
+        bg.fillRoundedRect(-100, -25, 200, 50, 12);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '20px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(200, 50);
+        container.setInteractive({ useHandCursor: true });
+        container.on('pointerdown', onClick);
+        return container;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Game Configuration
+// ═══════════════════════════════════════════════════════════════════════════
+const config = {
+    type: Phaser.AUTO,
+    width: 600,
+    height: 600,
+    parent: 'game-container',
+    backgroundColor: COLORS.bgPrimary,
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+    },
+    scene: [BootScene, HookScene, AnchorScene, StoryScene, CoreScene, VisualizeScene, QuizScene, WrapScene]
+};
+
+const game = new Phaser.Game(config);
+    </script>
+</body>
+</html>
