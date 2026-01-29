@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 콘텐츠 편집 패널 - 메인 컴포넌트
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import type {
   EditableContent,
   EditableText,
@@ -62,14 +62,18 @@ const tabs = [
 function handleMessage(event: MessageEvent) {
   const { type, payload } = event.data || {}
 
+  console.log('[Editor] 메시지 수신:', type)
+
   switch (type) {
     case 'EDITOR_READY':
       // iframe 준비 완료 - 콘텐츠 추출 요청
+      console.log('[Editor] EDITOR_READY 수신 - EXTRACT_CONTENT 요청')
       sendToIframe({ type: 'EXTRACT_CONTENT' })
       break
 
     case 'CONTENT_EXTRACTED':
       if (payload) {
+        console.log('[Editor] CONTENT_EXTRACTED 수신 - 분석 완료')
         const extracted = payload as ExtractedContentPayload
         texts.value = extracted.texts || []
         styles.value = extracted.styles || []
@@ -192,14 +196,28 @@ function handleCancel() {
 function initEditor() {
   if (props.iframeRef) {
     isLoading.value = true
+    console.log('[Editor] initEditor 호출 - EDITOR_INIT 전송')
     // iframe 로드 완료 후 편집 모드 초기화
     sendToIframe({ type: 'EDITOR_INIT' })
+
+    // 3초 후에도 분석이 안 끝났으면 재시도
+    setTimeout(() => {
+      if (isLoading.value) {
+        console.warn('[Editor] 재시도 - EDITOR_INIT (3초 타임아웃)')
+        sendToIframe({ type: 'EDITOR_INIT' })
+      }
+    }, 3000)
   }
 }
+
+// 컴포넌트 setup 단계에서 즉시 메시지 리스너 등록 (race condition 방지)
+window.addEventListener('message', handleMessage)
+console.log('[Editor] 메시지 리스너 등록 완료 (setup 단계)')
 
 // iframe ref 변경 감지
 watch(() => props.iframeRef, (newRef) => {
   if (newRef) {
+    console.log('[Editor] iframeRef 감지 - readyState:', newRef.contentDocument?.readyState)
     // iframe이 이미 로드되었다면 바로 초기화
     if (newRef.contentDocument?.readyState === 'complete') {
       initEditor()
@@ -209,12 +227,9 @@ watch(() => props.iframeRef, (newRef) => {
   }
 }, { immediate: true })
 
-onMounted(() => {
-  window.addEventListener('message', handleMessage)
-})
-
 onUnmounted(() => {
   window.removeEventListener('message', handleMessage)
+  console.log('[Editor] 메시지 리스너 제거')
 })
 </script>
 

@@ -264,12 +264,15 @@
 
     const { type, payload } = event.data || {};
 
+    console.log('[Bridge] 메시지 수신:', type);
+
     switch (type) {
       case 'EDITOR_INIT':
         isEditMode = true;
         // 편집 모드 시각적 표시
         document.body.classList.add('editor-mode');
         // 준비 완료 응답
+        console.log('[Bridge] EDITOR_INIT 수신 - EDITOR_READY 응답');
         window.parent.postMessage({
           type: 'EDITOR_READY',
           payload: { ready: true }
@@ -359,6 +362,14 @@
     };
 
     console.log('[EduFlix Editor Bridge] 초기화 완료');
+
+    // 초기화 완료 후 자동으로 EDITOR_READY 전송 (race condition 방지)
+    // 부모가 리스너를 등록하기 전에 메시지를 놓쳤을 경우를 대비
+    window.parent.postMessage({
+      type: 'EDITOR_READY',
+      payload: { ready: true, auto: true }
+    }, '*');
+    console.log('[EduFlix Editor Bridge] 자동 EDITOR_READY 전송');
   }
 
   // DOM 로드 후 초기화

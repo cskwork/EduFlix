@@ -29,7 +29,30 @@ const allowAttrs = IFRAME_ALLOW_ATTRS
 function handleLoad() {
   isLoading.value = false
   loadError.value = null
+
+  // 편집 모드일 때 editor-bridge.js 동적 주입
+  if (props.editMode && iframeRef.value?.contentDocument) {
+    injectEditorBridge()
+  }
+
   emit('load')
+}
+
+// editor-bridge.js 동적 주입
+function injectEditorBridge() {
+  if (!iframeRef.value?.contentDocument) return
+
+  const doc = iframeRef.value.contentDocument
+
+  // 이미 주입되었는지 확인
+  if (doc.getElementById('editor-bridge-script')) return
+
+  const script = doc.createElement('script')
+  script.id = 'editor-bridge-script'
+  script.src = '/contents/common/editor-bridge.js'
+  doc.head.appendChild(script)
+
+  console.log('[ContentViewer] editor-bridge.js 동적 주입 완료')
 }
 
 // iframe 로드 에러 핸들러
@@ -69,6 +92,16 @@ watch(
   () => {
     isLoading.value = true
     loadError.value = null
+  }
+)
+
+// editMode 변경 시 editor-bridge 주입
+watch(
+  () => props.editMode,
+  (newEditMode) => {
+    if (newEditMode && !isLoading.value) {
+      injectEditorBridge()
+    }
   }
 )
 

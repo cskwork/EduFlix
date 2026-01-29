@@ -1,5 +1,46 @@
 # Changelog - 2026-01-29
 
+## 콘텐츠 편집기 "분석 중" 버그 수정
+
+### 문제
+- 편집 모드 진입 시 "콘텐츠 분석 중..." 상태가 영원히 유지되는 버그
+
+### 원인
+- **Race Condition**: postMessage 통신 타이밍 문제
+- ContentEditorPanel이 `onMounted`에서 메시지 리스너를 등록하는데, `watch`가 `immediate: true`로 먼저 실행되어 iframe이 이미 로드된 경우 `EDITOR_READY` 메시지를 놓침
+
+### 수정 내용
+
+#### ContentEditorPanel.vue
+1. 메시지 리스너를 `onMounted` 대신 **setup 단계에서 즉시 등록** (race condition 방지)
+2. 3초 타임아웃 후 **재시도 메커니즘** 추가
+3. 디버깅용 console.log 추가
+
+#### editor-bridge.js
+1. 초기화 완료 후 **자동 EDITOR_READY 전송** (부모가 리스너를 등록하기 전에 메시지를 놓쳤을 경우 대비)
+2. 디버깅용 console.log 추가
+
+### 수정된 파일
+```
+src/components/editor/ContentEditorPanel.vue  - 리스너 조기 등록 + 재시도 로직
+public/contents/common/editor-bridge.js       - 자동 EDITOR_READY 전송
+src/components/viewer/ContentViewer.vue       - editor-bridge.js 동적 주입
+```
+
+### 추가 원인 발견 및 수정
+- **editor-bridge.js가 단 1개 콘텐츠(circle-area)에만 포함**되어 있었음
+- ContentViewer.vue에서 편집 모드일 때 **동적으로 스크립트 주입**하도록 수정
+- 모든 콘텐츠 HTML 파일 수정 없이 편집 기능 작동
+
+### 검증 방법
+1. `bun run dev:all`로 개발 서버 실행
+2. 아무 콘텐츠 클릭 → 뷰어 진입
+3. "편집" 버튼 클릭
+4. "콘텐츠 분석 중..." 상태가 3초 내 해제되고 편집 패널 표시 확인
+5. 브라우저 콘솔에서 `[Editor]`, `[Bridge]` 로그 확인
+
+---
+
 ## 콘텐츠 편집기 및 Export/Import 기능 구현
 
 ### 새 기능
