@@ -1,0 +1,12 @@
+{
+  "id": "multiplication-balloon",
+  "title": "구구단 풍선 터트리기",
+  "subject": "math",
+  "gradeLevel": "elementary",
+  "grade": "elementary-2",
+  "type": "game",
+  "language": "ko",
+  "description": "구구단 문제의 정답이 적힌 풍선을 터트려 점수를 획득하는 게임",
+  "thumbnail": "assets/thumbnail.svg",
+  "path": "math/elementary/multiplication-balloon"
+}

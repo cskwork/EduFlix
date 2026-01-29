@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동작 동사 분류 게임 | Action Verbs Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Noto Sans KR', sans-serif;
+            padding: 20px;
+        }
+        #game-container {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        .info {
+            color: #94a3b8;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .info span { color: #60a5fa; }
+    </style>
+</head>
+<body>
+    <div id="game-container"></div>
+    <p class="info">초등 3-4학년 영어 | <span>동작 동사</span>를 올바른 카테고리에 드래그하세요</p>
+
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+    <script>
+        // ===== COLORS =====
+        const COLORS = {
+            bgPrimary: 0x0f172a,
+            bgSecondary: 0x1e293b,
+            bgCard: 0x334155,
+            primary: 0x3b82f6,
+            secondary: 0x6366f1,
+            accent: 0x8b5cf6,
+            success: 0x22c55e,
+            warning: 0xf59e0b,
+            error: 0xef4444,
+            categoryMove: 0x4ade80,
+            categoryMake: 0xfbbf24,
+            categoryFeel: 0xf472b6,
+            gold: 0xfbbf24,
+            white: 0xffffff
+        };
+
+        // ===== TEXT STYLES =====
+        const TEXT_STYLES = {
+            title: { fontFamily: 'Noto Sans KR', fontSize: '42px', color: '#ffffff', fontStyle: 'bold' },
+            subtitle: { fontFamily: 'Noto Sans KR', fontSize: '24px', color: '#94a3b8' },
+            body: { fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#e2e8f0', wordWrap: { width: 700 }, lineSpacing: 8 },
+            button: { fontFamily: 'Noto Sans KR', fontSize: '24px', color: '#ffffff', fontStyle: 'bold' },
+            label: { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#94a3b8' }
+        };
+
+        // ===== GAME DATA =====
+        const GAME_DATA = {
+            verbs: [
+                { word: 'run', meaning: '달리다', category: 'move' },
+                { word: 'walk', meaning: '걷다', category: 'move' },
+                { word: 'jump', meaning: '점프하다', category: 'move' },
+                { word: 'swim', meaning: '수영하다', category: 'move' },
+                { word: 'dance', meaning: '춤추다', category: 'move' },
+                { word: 'climb', meaning: '오르다', category: 'move' },
+                { word: 'draw', meaning: '그리다', category: 'make' },
+                { word: 'write', meaning: '쓰다', category: 'make' },
+                { word: 'cook', meaning: '요리하다', category: 'make' },
+                { word: 'build', meaning: '만들다', category: 'make' },
+                { word: 'paint', meaning: '칠하다', category: 'make' },
+                { word: 'love', meaning: '사랑하다', category: 'feel' },
+                { word: 'like', meaning: '좋아하다', category: 'feel' },
+                { word: 'hate', meaning: '싫어하다', category: 'feel' },
+                { word: 'want', meaning: '원하다', category: 'feel' }
+            ],
+            categories: {
+                move: { name: '움직임', color: COLORS.categoryMove },
+                make: { name: '만들기', color: COLORS.categoryMake },
+                feel: { name: '감정', color: COLORS.categoryFeel }
+            }
+        };
+
+        // ===== ICON DRAWING FUNCTIONS =====
+        const Icons = {
+            drawStar(graphics, x, y, size, color = COLORS.gold) {
+                graphics.fillStyle(color, 1);
+                const points = [];
+                for (let i = 0; i < 10; i++) {
+                    const radius = i % 2 === 0 ? size : size * 0.5;
+                    const angle = (i * Math.PI / 5) - Math.PI / 2;
+                    points.push({ x: x + Math.cos(angle) * radius, y: y + Math.sin(angle) * radius });
+                }
+                graphics.beginPath();
+                graphics.moveTo(points[0].x, points[0].y);
+                for (let i = 1; i < points.length; i++) {
+                    graphics.lineTo(points[i].x, points[i].y);
+                }
+                graphics.closePath();
+                graphics.fillPath();
+            },
+
+            drawTrophy(graphics, x, y, size) {
+                // Cup body
+                graphics.fillStyle(COLORS.gold, 1);
+                graphics.fillRoundedRect(x - size * 0.4, y - size * 0.3, size * 0.8, size * 0.5, 8);
+                // Handles
+                graphics.lineStyle(4, COLORS.gold, 1);
+                graphics.beginPath();
+                graphics.arc(x - size * 0.5, y - size * 0.1, size * 0.15, -Math.PI / 2, Math.PI / 2, false);
+                graphics.strokePath();
+                graphics.beginPath();
+                graphics.arc(x + size * 0.5, y - size * 0.1, size * 0.15, Math.PI / 2, -Math.PI / 2, false);
+                graphics.strokePath();
+                // Base
+                graphics.fillStyle(COLORS.gold, 1);
+                graphics.fillRect(x - size * 0.15, y + size * 0.2, size * 0.3, size * 0.15);
+                graphics.fillRect(x - size * 0.25, y + size * 0.35, size * 0.5, size * 0.1);
+                // Star on trophy
+                this.drawStar(graphics, x, y - size * 0.1, size * 0.15, 0xffffff);
+            },
+
+            drawPlay(graphics, x, y, size) {
+                graphics.fillStyle(COLORS.white, 1);
+                graphics.beginPath();
+                graphics.moveTo(x - size * 0.3, y - size * 0.4);
+                graphics.lineTo(x + size * 0.4, y);
+                graphics.lineTo(x - size * 0.3, y + size * 0.4);
+                graphics.closePath();
+                graphics.fillPath();
+            },
+
+            drawRefresh(graphics, x, y, size) {
+                graphics.lineStyle(3, COLORS.white, 1);
+                graphics.beginPath();
+                graphics.arc(x, y, size * 0.35, -Math.PI * 0.8, Math.PI * 0.5, false);
+                graphics.strokePath();
+                // Arrow head
+                graphics.fillStyle(COLORS.white, 1);
+                graphics.beginPath();
+                graphics.moveTo(x + size * 0.1, y + size * 0.35);
+                graphics.lineTo(x + size * 0.35, y + size * 0.2);
+                graphics.lineTo(x + size * 0.35, y + size * 0.5);
+                graphics.closePath();
+                graphics.fillPath();
+            },
+
+            drawHeart(graphics, x, y, size, color = COLORS.categoryFeel) {
+                graphics.fillStyle(color, 1);
+                // Draw heart using two circles and a triangle (Phaser compatible)
+                const r = size * 0.25;
+                // Left circle
+                graphics.fillCircle(x - r, y - r * 0.5, r);
+                // Right circle
+                graphics.fillCircle(x + r, y - r * 0.5, r);
+                // Bottom triangle
+                graphics.fillTriangle(
+                    x - size * 0.45, y - r * 0.3,
+                    x + size * 0.45, y - r * 0.3,
+                    x, y + size * 0.4
+                );
+            },
+
+            drawPencil(graphics, x, y, size, color = COLORS.categoryMake) {
+                // Body
+                graphics.fillStyle(color, 1);
+                graphics.save();
+                graphics.translateCanvas(x, y);
+                graphics.rotateCanvas(-Math.PI / 4);
+                graphics.fillRect(-size * 0.08, -size * 0.4, size * 0.16, size * 0.6);
+                // Tip
+                graphics.fillStyle(0xf5deb3, 1);
+                graphics.beginPath();
+                graphics.moveTo(-size * 0.08, size * 0.2);
+                graphics.lineTo(size * 0.08, size * 0.2);
+                graphics.lineTo(0, size * 0.4);
+                graphics.closePath();
+                graphics.fillPath();
+                // Eraser
+                graphics.fillStyle(0xff9999, 1);
+                graphics.fillRect(-size * 0.08, -size * 0.5, size * 0.16, size * 0.1);
+                graphics.restore();
+            },
+
+            drawRunner(graphics, x, y, size, color = COLORS.white) {
+                graphics.lineStyle(2.5, color, 1);
+                // Head
+                graphics.strokeCircle(x, y - size * 0.35, size * 0.12);
+                // Body
+                graphics.lineBetween(x, y - size * 0.23, x, y + size * 0.1);
+                // Arms (running pose)
+                graphics.lineBetween(x, y - size * 0.1, x - size * 0.25, y - size * 0.25);
+                graphics.lineBetween(x, y - size * 0.1, x + size * 0.2, y + size * 0.05);
+                // Legs (running pose)
+                graphics.lineBetween(x, y + size * 0.1, x - size * 0.2, y + size * 0.4);
+                graphics.lineBetween(x, y + size * 0.1, x + size * 0.25, y + size * 0.3);
+            },
+
+            drawRobot(graphics, x, y, size) {
+                // Body
+                graphics.fillStyle(0x64748b, 1);
+                graphics.fillRoundedRect(x - size * 0.35, y - size * 0.1, size * 0.7, size * 0.5, 8);
+                // Head
+                graphics.fillStyle(0x94a3b8, 1);
+                graphics.fillRoundedRect(x - size * 0.3, y - size * 0.45, size * 0.6, size * 0.35, 6);
+                // Antenna
+                graphics.lineStyle(3, 0x64748b, 1);
+                graphics.lineBetween(x, y - size * 0.45, x, y - size * 0.6);
+                graphics.fillStyle(0x22c55e, 1);
+                graphics.fillCircle(x, y - size * 0.65, size * 0.06);
+                // Eyes
+                graphics.fillStyle(0x3b82f6, 1);
+                graphics.fillCircle(x - size * 0.12, y - size * 0.3, size * 0.08);
+                graphics.fillCircle(x + size * 0.12, y - size * 0.3, size * 0.08);
+                // Eye highlights
+                graphics.fillStyle(0xffffff, 1);
+                graphics.fillCircle(x - size * 0.1, y - size * 0.32, size * 0.03);
+                graphics.fillCircle(x + size * 0.14, y - size * 0.32, size * 0.03);
+                // Mouth
+                graphics.fillStyle(0x334155, 1);
+                graphics.fillRoundedRect(x - size * 0.15, y - size * 0.15, size * 0.3, size * 0.08, 4);
+                // Arms
+                graphics.fillStyle(0x64748b, 1);
+                graphics.fillRoundedRect(x - size * 0.5, y - size * 0.05, size * 0.12, size * 0.3, 4);
+                graphics.fillRoundedRect(x + size * 0.38, y - size * 0.05, size * 0.12, size * 0.3, 4);
+                // Legs
+                graphics.fillRoundedRect(x - size * 0.25, y + size * 0.4, size * 0.15, size * 0.2, 4);
+                graphics.fillRoundedRect(x + size * 0.1, y + size * 0.4, size * 0.15, size * 0.2, 4);
+            },
+
+            drawBook(graphics, x, y, size) {
+                // Book cover
+                graphics.fillStyle(0x3b82f6, 1);
+                graphics.fillRoundedRect(x - size * 0.4, y - size * 0.3, size * 0.8, size * 0.6, 4);
+                // Pages
+                graphics.fillStyle(0xffffff, 1);
+                graphics.fillRect(x - size * 0.35, y - size * 0.25, size * 0.35, size * 0.5);
+                // Lines on page
+                graphics.lineStyle(1, 0xcccccc, 1);
+                for (let i = 0; i < 4; i++) {
+                    graphics.lineBetween(x - size * 0.3, y - size * 0.15 + i * size * 0.12, x - size * 0.05, y - size * 0.15 + i * size * 0.12);
+                }
+                // Spine shadow
+                graphics.fillStyle(0x2563eb, 1);
+                graphics.fillRect(x - size * 0.02, y - size * 0.3, size * 0.04, size * 0.6);
+            },
+
+            drawLightbulb(graphics, x, y, size) {
+                // Bulb
+                graphics.fillStyle(COLORS.gold, 1);
+                graphics.fillCircle(x, y - size * 0.15, size * 0.3);
+                // Base
+                graphics.fillStyle(0x94a3b8, 1);
+                graphics.fillRect(x - size * 0.12, y + size * 0.1, size * 0.24, size * 0.15);
+                graphics.lineStyle(2, 0x64748b, 1);
+                graphics.lineBetween(x - size * 0.1, y + size * 0.15, x + size * 0.1, y + size * 0.15);
+                graphics.lineBetween(x - size * 0.1, y + size * 0.2, x + size * 0.1, y + size * 0.2);
+                // Glow effect
+                graphics.fillStyle(COLORS.gold, 0.2);
+                graphics.fillCircle(x, y - size * 0.15, size * 0.45);
+            }
+        };
+
+        // ===== HOOK SCENE =====
+        class HookScene extends Phaser.Scene {
+            constructor() { super('HookScene'); }
+
+            create() {
+                const { width, height } = this.cameras.main;
+
+                this.add.rectangle(0, 0, width, height, COLORS.bgPrimary).setOrigin(0);
+
+                // Floating particles
+                for (let i = 0; i < 15; i++) {
+                    const colors = [COLORS.categoryMove, COLORS.categoryMake, COLORS.categoryFeel, COLORS.primary];
+                    const particle = this.add.graphics();
+                    particle.fillStyle(Phaser.Utils.Array.GetRandom(colors), 0.3);
+                    particle.fillCircle(0, 0, Phaser.Math.Between(8, 20));
+                    particle.setPosition(Phaser.Math.Between(50, width - 50), Phaser.Math.Between(50, height - 50));
+                    this.tweens.add({
+                        targets: particle, y: particle.y - 30, alpha: 0.5,
+                        duration: 2000 + Math.random() * 1000, yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
+                    });
+                }
+
+                // Title
+                const title = this.add.text(width / 2, height / 2 - 80, '동사 분류 게임', TEXT_STYLES.title).setOrigin(0.5).setScale(0);
+                this.tweens.add({ targets: title, scale: 1, duration: 800, ease: 'Back.easeOut' });
+
+                // Subtitle
+                const subtitle = this.add.text(width / 2, height / 2 - 20, 'Action Verbs Classification', TEXT_STYLES.subtitle).setOrigin(0.5).setAlpha(0);
+                this.tweens.add({ targets: subtitle, alpha: 1, delay: 500, duration: 500 });
+
+                // Question
+                const question = this.add.text(width / 2, height / 2 + 50, '"run"과 "draw"는 같은 종류의 동사일까요?', { ...TEXT_STYLES.body, fontSize: '26px' }).setOrigin(0.5).setAlpha(0);
+                this.tweens.add({ targets: question, alpha: 1, delay: 1000, duration: 500 });
+
+                // Start button
+                this.time.delayedCall(1500, () => {
+                    this.createButton(width / 2, height / 2 + 150, '알아보기', () => this.scene.start('AnchorScene'));
+                });
+            }
+
+            createButton(x, y, text, onClick) {
+                const container = this.add.container(x, y);
+                const bg = this.add.graphics();
+                bg.fillStyle(COLORS.primary, 1);
+                bg.fillRoundedRect(-100, -28, 200, 56, 12);
+                const label = this.add.text(0, 0, text, TEXT_STYLES.button).setOrigin(0.5);
+                container.add([bg, label]);
+                container.setSize(200, 56).setInteractive({ useHandCursor: true });
+                container.on('pointerover', () => { bg.clear(); bg.fillStyle(COLORS.secondary, 1); bg.fillRoundedRect(-100, -28, 200, 56, 12); this.tweens.add({ targets: container, scale: 1.05, duration: 100 }); });
+                container.on('pointerout', () => { bg.clear(); bg.fillStyle(COLORS.primary, 1); bg.fillRoundedRect(-100, -28, 200, 56, 12); this.tweens.add({ targets: container, scale: 1, duration: 100 }); });
+                container.on('pointerdown', onClick);
+                return container;
+            }
+        }
+
+        // ===== ANCHOR SCENE =====
+        class AnchorScene extends Phaser.Scene {
+            constructor() { super('AnchorScene'); }
+
+            create() {
+                const { width, height } = this.cameras.main;
+                this.add.rectangle(0, 0, width, height, COLORS.bgPrimary).setOrigin(0);
+
+                // Book icon + title
+                const bookIcon = this.add.graphics();
+                Icons.drawBook(bookIcon, width / 2 - 140, 60, 40);
+                this.add.text(width / 2, 60, '동사(Verb)란?', TEXT_STYLES.title).setOrigin(0.5);
+
+                const content = [
+                    '동사는 행동이나 상태를 나타내는 말이에요.',
+                    '', '예를 들어:',
+                    '  I run. (나는 달린다) - 움직임',
+                    '  I draw. (나는 그린다) - 만들기',
+                    '  I love you. (나는 너를 사랑해) - 감정',
+                    '', '동사는 종류에 따라 분류할 수 있어요!'
+                ];
+
+                let y = 140;
+                content.forEach((line, i) => {
+                    const text = this.add.text(width / 2, y, line, TEXT_STYLES.body).setOrigin(0.5).setAlpha(0);
+                    this.tweens.add({ targets: text, alpha: 1, delay: i * 200, duration: 400 });
+                    y += 42;
+                });
+
+                // Category boxes - crisp, professional design
+                const categories = Object.entries(GAME_DATA.categories);
+                const boxWidth = 160, boxHeight = 70, boxSpacing = 180;
+                const startX = width / 2 - boxSpacing;
+                categories.forEach(([key, cat], i) => {
+                    const boxX = startX + i * boxSpacing;
+                    const boxY = 480;
+
+                    // Shadow layer
+                    const shadow = this.add.graphics();
+                    shadow.fillStyle(0x000000, 0.3);
+                    shadow.fillRoundedRect(boxX - boxWidth/2 + 4, boxY - boxHeight/2 + 4, boxWidth, boxHeight, 14);
+                    shadow.setAlpha(0);
+
+                    // Main box with full opacity and border
+                    const box = this.add.graphics();
+                    box.fillStyle(cat.color, 1);
+                    box.fillRoundedRect(boxX - boxWidth/2, boxY - boxHeight/2, boxWidth, boxHeight, 14);
+                    box.lineStyle(3, 0xffffff, 0.4);
+                    box.strokeRoundedRect(boxX - boxWidth/2, boxY - boxHeight/2, boxWidth, boxHeight, 14);
+                    box.setAlpha(0);
+
+                    const icon = this.add.graphics().setAlpha(0);
+                    if (key === 'move') Icons.drawRunner(icon, boxX - 40, boxY, 26, 0x000000);
+                    else if (key === 'make') Icons.drawPencil(icon, boxX - 40, boxY, 24, 0x000000);
+                    else Icons.drawHeart(icon, boxX - 40, boxY, 22, 0x000000);
+
+                    const label = this.add.text(boxX + 12, boxY, cat.name, { fontFamily: 'Noto Sans KR', fontSize: '22px', color: '#000000', fontStyle: 'bold' }).setOrigin(0, 0.5).setAlpha(0);
+
+                    this.tweens.add({ targets: [shadow, box, icon, label], alpha: 1, delay: 1600 + i * 200, duration: 400 });
+                });
+
+                // Next button
+                this.time.delayedCall(2400, () => this.createButton(width / 2, 560, '다음', () => this.scene.start('StoryScene')));
+            }
+
+            createButton(x, y, text, onClick) {
+                const container = this.add.container(x, y);
+                const bg = this.add.graphics();
+                bg.fillStyle(COLORS.primary, 1);
+                bg.fillRoundedRect(-80, -25, 160, 50, 12);
+                const label = this.add.text(0, 0, text, TEXT_STYLES.button).setOrigin(0.5);
+                container.add([bg, label]).setSize(160, 50).setInteractive({ useHandCursor: true });
+                container.on('pointerover', () => { bg.clear(); bg.fillStyle(COLORS.secondary, 1); bg.fillRoundedRect(-80, -25, 160, 50, 12); });
+                container.on('pointerout', () => { bg.clear(); bg.fillStyle(COLORS.primary, 1); bg.fillRoundedRect(-80, -25, 160, 50, 12); });
+                container.on('pointerdown', onClick);
+            }
+        }
+
+        // ===== STORY SCENE =====
+        class StoryScene extends Phaser.Scene {
+            constructor() { super('StoryScene'); }
+
+            create() {
+                const { width, height } = this.cameras.main;
+                this.add.rectangle(0, 0, width, height, COLORS.bgPrimary).setOrigin(0);
+
+                // Robot
+                const robotGfx = this.add.graphics();
+                Icons.drawRobot(robotGfx, 150, height / 2 - 30, 100);
+                this.tweens.add({ targets: robotGfx, y: robotGfx.y - 15, duration: 1500, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+
+                // Speech bubble
+                const bubble = this.add.graphics();
+                bubble.fillStyle(0xffffff, 0.95);
+                bubble.fillRoundedRect(250, 120, 500, 340, 20);
+                bubble.fillTriangle(280, 290, 230, 340, 280, 340);
+
+                // Story text
+                const story = ['안녕! 나는 버비(Verby)야!', '', '오늘 동사들이 뒤죽박죽 섞여버렸어.', '', '움직임 동사, 만들기 동사, 감정 동사를', '올바른 상자에 분류해줘!', '', '동사를 드래그해서 맞는 곳에 넣으면 돼.'];
+                let textY = 150;
+                const textObjects = [];
+                story.forEach((line) => {
+                    const text = this.add.text(280, textY, '', { fontFamily: 'Noto Sans KR', fontSize: '22px', color: '#1e293b', wordWrap: { width: 460 } });
+                    textObjects.push({ text, fullText: line, charIndex: 0 });
+                    textY += line ? 36 : 18;
+                });
+
+                // Typewriter
+                let currentLine = 0;
+                const typeTimer = this.time.addEvent({
+                    delay: 40,
+                    callback: () => {
+                        if (currentLine >= textObjects.length) { typeTimer.remove(); return; }
+                        const obj = textObjects[currentLine];
+                        if (obj.charIndex < obj.fullText.length) {
+                            obj.text.setText(obj.fullText.substring(0, ++obj.charIndex));
+                        } else { currentLine++; }
+                    },
+                    loop: true
+                });
+
+                // Start button
+                this.time.delayedCall(3000, () => {
+                    const container = this.add.container(width / 2 + 100, 510);
+                    const bg = this.add.graphics();
+                    bg.fillStyle(COLORS.success, 1);
+                    bg.fillRoundedRect(-90, -28, 180, 56, 12);
+                    const playIcon = this.add.graphics();
+                    Icons.drawPlay(playIcon, -55, 0, 20);
+                    const label = this.add.text(0, 0, '시작', TEXT_STYLES.button).setOrigin(0, 0.5);
+                    container.add([bg, playIcon, label]).setSize(180, 56).setInteractive({ useHandCursor: true });
+                    container.on('pointerover', () => { bg.clear(); bg.fillStyle(0x4ade80, 1); bg.fillRoundedRect(-90, -28, 180, 56, 12); });
+                    container.on('pointerout', () => { bg.clear(); bg.fillStyle(COLORS.success, 1); bg.fillRoundedRect(-90, -28, 180, 56, 12); });
+                    container.on('pointerdown', () => { this.registry.set('score', 0); this.registry.set('round', 1); this.scene.start('CoreScene'); });
+                });
+            }
+        }
+
+        // ===== CORE SCENE =====
+        class CoreScene extends Phaser.Scene {
+            constructor() {
+                super('CoreScene');
+                this.verbsPerRound = 5;
+                this.totalRounds = 3;
+            }
+
+            create() {
+                const { width, height } = this.cameras.main;
+                this.add.rectangle(0, 0, width, height, COLORS.bgPrimary).setOrigin(0);
+
+                const round = this.registry.get('round') || 1;
+                this.add.text(width / 2, 30, `라운드 ${round} / ${this.totalRounds}`, { ...TEXT_STYLES.subtitle, fontSize: '18px' }).setOrigin(0.5);
+
+                // Score display
+                this.createScoreDisplay(width - 80, 30);
+
+                // Drop zones - crisp design with better contrast
+                this.dropZones = {};
+                const categories = Object.entries(GAME_DATA.categories);
+                const zoneWidth = 210, zoneHeight = 270;
+                const startX = (width - (categories.length * zoneWidth + 50)) / 2 + zoneWidth / 2;
+
+                categories.forEach(([key, cat], i) => {
+                    const x = startX + i * (zoneWidth + 25);
+                    const y = 365;
+
+                    // Outer glow/shadow
+                    const glow = this.add.graphics();
+                    glow.fillStyle(cat.color, 0.1);
+                    glow.fillRoundedRect(x - zoneWidth/2 - 6, y - zoneHeight/2 - 6, zoneWidth + 12, zoneHeight + 12, 18);
+
+                    // Main zone background
+                    const bg = this.add.graphics();
+                    bg.fillStyle(cat.color, 0.2);
+                    bg.fillRoundedRect(x - zoneWidth/2, y - zoneHeight/2, zoneWidth, zoneHeight, 14);
+                    bg.lineStyle(4, cat.color, 1);
+                    bg.strokeRoundedRect(x - zoneWidth/2, y - zoneHeight/2, zoneWidth, zoneHeight, 14);
+
+                    // Header bar
+                    const header = this.add.graphics();
+                    header.fillStyle(cat.color, 0.85);
+                    header.fillRoundedRect(x - zoneWidth/2, y - zoneHeight/2, zoneWidth, 50, { tl: 14, tr: 14, bl: 0, br: 0 });
+
+                    const icon = this.add.graphics();
+                    if (key === 'move') Icons.drawRunner(icon, x - 42, y - zoneHeight/2 + 25, 20, 0x000000);
+                    else if (key === 'make') Icons.drawPencil(icon, x - 42, y - zoneHeight/2 + 25, 18, 0x000000);
+                    else Icons.drawHeart(icon, x - 42, y - zoneHeight/2 + 25, 16, 0x000000);
+
+                    this.add.text(x + 5, y - zoneHeight/2 + 25, cat.name, { fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#000000', fontStyle: 'bold' }).setOrigin(0.5);
+
+                    const zone = this.add.zone(x, y + 30, zoneWidth - 20, zoneHeight - 90).setRectangleDropZone(zoneWidth - 20, zoneHeight - 90);
+                    zone.categoryKey = key;
+                    this.dropZones[key] = zone;
+                });
+
+                // Verbs
+                const shuffled = Phaser.Utils.Array.Shuffle([...GAME_DATA.verbs]);
+                this.currentVerbs = shuffled.slice(0, this.verbsPerRound);
+                this.correctCount = 0;
+                this.verbObjects = [];
+
+                const spacing = 145;
+                const verbStartX = (width - (this.currentVerbs.length - 1) * spacing) / 2;
+
+                this.currentVerbs.forEach((verb, i) => {
+                    const card = this.createDraggableCard(verbStartX + i * spacing, 85, verb);
+                    this.verbObjects.push(card);
+                });
+
+                // Drag events
+                this.input.on('drag', (pointer, gameObject, dragX, dragY) => {
+                    if (gameObject.isPlaced) return;
+                    gameObject.x = dragX;
+                    gameObject.y = dragY;
+                });
+
+                this.input.on('dragend', (pointer, gameObject, dropped) => {
+                    if (gameObject.isPlaced) return;
+                    gameObject.setDepth(0);
+                    this.tweens.add({ targets: gameObject, scale: 1, duration: 100 });
+                    if (!dropped) {
+                        this.tweens.add({ targets: gameObject, x: gameObject.originalX, y: gameObject.originalY, duration: 300, ease: 'Back' });
+                    }
+                });
+
+                this.input.on('drop', (pointer, gameObject, dropZone) => {
+                    if (gameObject.isPlaced) return;
+                    const isCorrect = gameObject.verbData.category === dropZone.categoryKey;
+                    isCorrect ? this.handleCorrect(gameObject, dropZone) : this.handleWrong(gameObject);
+                });
+            }
+
+            createScoreDisplay(x, y) {
+                const container = this.add.container(x, y);
+                const bg = this.add.graphics();
+                bg.fillStyle(COLORS.bgCard, 0.8);
+                bg.fillRoundedRect(-55, -18, 110, 36, 8);
+                const starIcon = this.add.graphics();
+                Icons.drawStar(starIcon, -32, 0, 12, COLORS.gold);
+                this.scoreText = this.add.text(5, 0, (this.registry.get('score') || 0).toString(), { fontFamily: 'Noto Sans KR', fontSize: '22px', color: '#fbbf24', fontStyle: 'bold' }).setOrigin(0, 0.5);
+                container.add([bg, starIcon, this.scoreText]);
+            }
+
+            createDraggableCard(x, y, verb) {
+                const container = this.add.container(x, y);
+                const cardW = 115, cardH = 80;
+
+                // Shadow
+                const shadow = this.add.graphics();
+                shadow.fillStyle(0x000000, 0.4);
+                shadow.fillRoundedRect(-cardW/2 + 4, -cardH/2 + 4, cardW, cardH, 10);
+
+                // Card background with gradient effect
+                const bg = this.add.graphics();
+                bg.fillStyle(COLORS.primary, 1);
+                bg.fillRoundedRect(-cardW/2, -cardH/2, cardW, cardH, 10);
+                bg.lineStyle(2, 0x93c5fd, 1);
+                bg.strokeRoundedRect(-cardW/2, -cardH/2, cardW, cardH, 10);
+                // Top highlight
+                bg.fillStyle(0x60a5fa, 0.3);
+                bg.fillRoundedRect(-cardW/2 + 2, -cardH/2 + 2, cardW - 4, 20, { tl: 8, tr: 8, bl: 0, br: 0 });
+
+                const wordText = this.add.text(0, -12, verb.word, { fontFamily: 'Noto Sans KR', fontSize: '26px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5);
+                const meaningText = this.add.text(0, 18, verb.meaning, { fontFamily: 'Noto Sans KR', fontSize: '14px', color: '#dbeafe' }).setOrigin(0.5);
+
+                container.add([shadow, bg, wordText, meaningText]).setSize(cardW, cardH).setInteractive({ draggable: true, useHandCursor: true });
+                container.verbData = verb;
+                container.originalX = x;
+                container.originalY = y;
+                container.isPlaced = false;
+                container.bg = bg;
+
+                container.on('dragstart', () => {
+                    if (container.isPlaced) return;
+                    container.setDepth(100);
+                    this.tweens.add({ targets: container, scale: 1.1, duration: 100 });
+                });
+
+                return container;
+            }
+
+            handleCorrect(gameObject, dropZone) {
+                gameObject.isPlaced = true;
+                gameObject.disableInteractive();
+                this.correctCount++;
+
+                const newScore = (this.registry.get('score') || 0) + 10;
+                this.registry.set('score', newScore);
+                this.scoreText.setText(newScore.toString());
+                this.tweens.add({ targets: this.scoreText, scale: 1.3, duration: 100, yoyo: true });
+
+                const cat = GAME_DATA.categories[dropZone.categoryKey];
+                const cardW = 115, cardH = 80;
+                gameObject.bg.clear();
+                gameObject.bg.fillStyle(cat.color, 1);
+                gameObject.bg.fillRoundedRect(-cardW/2, -cardH/2, cardW, cardH, 10);
+                gameObject.bg.lineStyle(2, 0xffffff, 1);
+                gameObject.bg.strokeRoundedRect(-cardW/2, -cardH/2, cardW, cardH, 10);
+
+                const placedCount = this.verbObjects.filter(v => v.isPlaced && v.verbData.category === dropZone.categoryKey).length;
+                this.tweens.add({ targets: gameObject, x: dropZone.x, y: dropZone.y - 40 + (placedCount - 1) * 36, scale: 0.7, duration: 300, ease: 'Back' });
+
+                this.showSuccessEffect(gameObject.x, gameObject.y);
+                this.showScorePopup(gameObject.x, gameObject.y - 50, 10);
+
+                if (this.correctCount === this.verbsPerRound) {
+                    this.time.delayedCall(1000, () => this.roundComplete());
+                }
+            }
+
+            handleWrong(gameObject) {
+                this.tweens.add({
+                    targets: gameObject, x: gameObject.x + 8, duration: 50, yoyo: true, repeat: 4, ease: 'Sine.easeInOut',
+                    onComplete: () => this.tweens.add({ targets: gameObject, x: gameObject.originalX, y: gameObject.originalY, duration: 400, ease: 'Back' })
+                });
+
+                const errorMark = this.add.graphics();
+                errorMark.lineStyle(4, COLORS.error, 1);
+                errorMark.lineBetween(-10, -10, 10, 10);
+                errorMark.lineBetween(-10, 10, 10, -10);
+                errorMark.setPosition(gameObject.x, gameObject.y - 50);
+                this.tweens.add({ targets: errorMark, y: errorMark.y - 30, alpha: 0, duration: 800, onComplete: () => errorMark.destroy() });
+            }
+
+            showSuccessEffect(x, y) {
+                for (let i = 0; i < 8; i++) {
+                    const particle = this.add.graphics();
+                    particle.fillStyle(COLORS.success, 1);
+                    particle.fillCircle(0, 0, Phaser.Math.Between(4, 8));
+                    particle.setPosition(x, y);
+                    this.tweens.add({ targets: particle, x: x + Phaser.Math.Between(-80, 80), y: y + Phaser.Math.Between(-80, 80), alpha: 0, scale: 0, duration: 600, onComplete: () => particle.destroy() });
+                }
+            }
+
+            showScorePopup(x, y, points) {
+                const popup = this.add.text(x, y, `+${points}`, { fontFamily: 'Noto Sans KR', fontSize: '26px', color: '#fbbf24', fontStyle: 'bold' }).setOrigin(0.5);
+                this.tweens.add({ targets: popup, y: y - 50, alpha: 0, duration: 800, ease: 'Cubic.easeOut', onComplete: () => popup.destroy() });
+            }
+
+            roundComplete() {
+                const round = this.registry.get('round') || 1;
+                if (round < this.totalRounds) {
+                    this.registry.set('round', round + 1);
+                    this.scene.restart();
+                } else {
+                    this.scene.start('VisualizeScene');
+                }
+            }
+        }
+
+        // ===== VISUALIZE SCENE =====
+        class VisualizeScene extends Phaser.Scene {
+            constructor() { super('VisualizeScene'); }
+
+            create() {
+                const { width, height } = this.cameras.main;
+                this.add.rectangle(0, 0, width, height, COLORS.bgPrimary).setOrigin(0);
+
+                const lightbulb = this.add.graphics();
+                Icons.drawLightbulb(lightbulb, width / 2 - 150, 50, 35);
+                this.add.text(width / 2, 50, '동사 분류 정리', TEXT_STYLES.title).setOrigin(0.5);
+
+                const categories = Object.entries(GAME_DATA.categories);
+                const boxWidth = 230;
+                const startX = (width - (categories.length * boxWidth + 40)) / 2;
+
+                categories.forEach(([key, cat], i) => {
+                    const x = startX + i * (boxWidth + 20) + boxWidth / 2;
+                    const y = 200;
+
+                    const box = this.add.graphics();
+                    box.fillStyle(cat.color, 0.15);
+                    box.fillRoundedRect(x - boxWidth / 2, y - 30, boxWidth, 280, 12);
+                    box.lineStyle(2, cat.color, 0.8);
+                    box.strokeRoundedRect(x - boxWidth / 2, y - 30, boxWidth, 280, 12);
+
+                    this.add.text(x, y - 5, `${cat.name} 동사`, { fontFamily: 'Noto Sans KR', fontSize: '22px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5);
+
+                    const verbs = GAME_DATA.verbs.filter(v => v.category === key).slice(0, 5);
+                    verbs.forEach((verb, j) => {
+                        this.add.text(x, y + 35 + j * 42, verb.word, { fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5);
+                        this.add.text(x, y + 58 + j * 42, `(${verb.meaning})`, { fontFamily: 'Noto Sans KR', fontSize: '14px', color: '#94a3b8' }).setOrigin(0.5);
+                    });
+                });
+
+                this.add.text(width / 2, 480, '동사를 배울 때 카테고리로 묶어서 외우면 더 잘 기억나요!', { fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#fbbf24' }).setOrigin(0.5);
+
+                this.createButton(width / 2, 540, '퀴즈 풀기', () => this.scene.start('QuizScene'));
+            }
+
+            createButton(x, y, text, onClick) {
+                const container = this.add.container(x, y);
+                const bg = this.add.graphics();
+                bg.fillStyle(COLORS.primary, 1);
+                bg.fillRoundedRect(-80, -25, 160, 50, 12);
+                container.add([bg, this.add.text(0, 0, text, TEXT_STYLES.button).setOrigin(0.5)]).setSize(160, 50).setInteractive({ useHandCursor: true });
+                container.on('pointerover', () => { bg.clear(); bg.fillStyle(COLORS.secondary, 1); bg.fillRoundedRect(-80, -25, 160, 50, 12); });
+                container.on('pointerout', () => { bg.clear(); bg.fillStyle(COLORS.primary, 1); bg.fillRoundedRect(-80, -25, 160, 50, 12); });
+                container.on('pointerdown', onClick);
+            }
+        }
+
+        // ===== QUIZ SCENE =====
+        class QuizScene extends Phaser.Scene {
+            constructor() {
+                super('QuizScene');
+                this.quizData = [
+                    { q: '"swim"은 어떤 종류의 동사일까요?', a: 'move', options: ['move', 'make', 'feel'] },
+                    { q: '"love"는 어떤 동사 카테고리에 속할까요?', a: 'feel', options: ['move', 'make', 'feel'] },
+                    { q: '"draw"는 무엇을 나타내는 동사일까요?', a: 'make', options: ['move', 'make', 'feel'] },
+                    { q: '"jump"와 같은 카테고리의 동사는?', a: 'run', options: ['run', 'cook', 'like'] },
+                    { q: '"hate"의 반대말은 무슨 카테고리의 동사?', a: 'feel', options: ['move', 'make', 'feel'] }
+                ];
+                this.currentQuestion = 0;
+                this.quizScore = 0;
+            }
+
+            create() {
+                const { width, height } = this.cameras.main;
+                this.add.rectangle(0, 0, width, height, COLORS.bgPrimary).setOrigin(0);
+                this.add.text(width / 2, 40, '퀴즈 타임', TEXT_STYLES.title).setOrigin(0.5);
+                this.questionText = this.add.text(width / 2, 130, '', { ...TEXT_STYLES.body, fontSize: '26px' }).setOrigin(0.5);
+                this.optionButtons = [];
+                this.feedbackText = this.add.text(width / 2, 440, '', { fontFamily: 'Noto Sans KR', fontSize: '22px', color: '#fbbf24' }).setOrigin(0.5);
+                this.progressText = this.add.text(width / 2, 510, '', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#64748b' }).setOrigin(0.5);
+                this.showQuestion();
+            }
+
+            showQuestion() {
+                const { width } = this.cameras.main;
+                const q = this.quizData[this.currentQuestion];
+                this.questionText.setText(q.q);
+                this.feedbackText.setText('');
+                this.progressText.setText(`문제 ${this.currentQuestion + 1} / ${this.quizData.length}`);
+                this.optionButtons.forEach(b => b.destroy());
+                this.optionButtons = [];
+
+                q.options.forEach((opt, i) => {
+                    const cat = GAME_DATA.categories[opt];
+                    const label = cat ? cat.name : opt;
+                    const container = this.add.container(width / 2, 220 + i * 70);
+                    const bg = this.add.graphics();
+                    bg.fillStyle(COLORS.bgCard, 1);
+                    bg.fillRoundedRect(-140, -26, 280, 52, 10);
+                    container.add([bg, this.add.text(0, 0, label, { fontFamily: 'Noto Sans KR', fontSize: '24px', color: '#ffffff' }).setOrigin(0.5)]);
+                    container.setSize(280, 52).setInteractive({ useHandCursor: true });
+                    container.answer = opt;
+                    container.bg = bg;
+                    container.on('pointerover', () => { bg.clear(); bg.fillStyle(COLORS.primary, 0.5); bg.fillRoundedRect(-140, -26, 280, 52, 10); });
+                    container.on('pointerout', () => { bg.clear(); bg.fillStyle(COLORS.bgCard, 1); bg.fillRoundedRect(-140, -26, 280, 52, 10); });
+                    container.on('pointerdown', () => this.checkAnswer(container, q.a));
+                    this.optionButtons.push(container);
+                });
+            }
+
+            checkAnswer(btn, correctAnswer) {
+                const isCorrect = btn.answer === correctAnswer;
+                this.optionButtons.forEach(b => b.disableInteractive());
+
+                if (isCorrect) {
+                    btn.bg.clear(); btn.bg.fillStyle(COLORS.success, 1); btn.bg.fillRoundedRect(-140, -26, 280, 52, 10);
+                    this.feedbackText.setText('정답이에요!').setColor('#22c55e');
+                    this.quizScore++;
+                    this.registry.set('score', (this.registry.get('score') || 0) + 20);
+                } else {
+                    btn.bg.clear(); btn.bg.fillStyle(COLORS.error, 1); btn.bg.fillRoundedRect(-140, -26, 280, 52, 10);
+                    const cat = GAME_DATA.categories[correctAnswer];
+                    this.feedbackText.setText(`아쉬워요! 정답은 ${cat ? cat.name : correctAnswer}이에요.`).setColor('#ef4444');
+                }
+
+                this.time.delayedCall(1500, () => {
+                    this.currentQuestion++;
+                    if (this.currentQuestion < this.quizData.length) this.showQuestion();
+                    else { this.registry.set('quizScore', this.quizScore); this.scene.start('WrapScene'); }
+                });
+            }
+        }
+
+        // ===== WRAP SCENE =====
+        class WrapScene extends Phaser.Scene {
+            constructor() { super('WrapScene'); }
+
+            create() {
+                const { width, height } = this.cameras.main;
+                this.add.rectangle(0, 0, width, height, COLORS.bgPrimary).setOrigin(0);
+
+                // Confetti
+                for (let i = 0; i < 30; i++) {
+                    const colors = [COLORS.categoryMove, COLORS.categoryMake, COLORS.categoryFeel, COLORS.primary, COLORS.accent];
+                    const confetti = this.add.graphics();
+                    confetti.fillStyle(Phaser.Utils.Array.GetRandom(colors), 1);
+                    confetti.fillRect(0, 0, Phaser.Math.Between(6, 14), Phaser.Math.Between(6, 14));
+                    confetti.setPosition(Phaser.Math.Between(0, width), -20);
+                    this.tweens.add({ targets: confetti, y: height + 50, x: confetti.x + Phaser.Math.Between(-100, 100), angle: Phaser.Math.Between(180, 720), duration: Phaser.Math.Between(2000, 4000), delay: i * 100, repeat: -1 });
+                }
+
+                // Trophy
+                const trophyGfx = this.add.graphics();
+                Icons.drawTrophy(trophyGfx, width / 2, 100, 60);
+                this.tweens.add({ targets: trophyGfx, scale: 1.15, duration: 500, yoyo: true, repeat: -1 });
+
+                this.add.text(width / 2, 190, '축하해요!', { ...TEXT_STYLES.title, fontSize: '46px' }).setOrigin(0.5);
+                this.add.text(width / 2, 240, '동사 분류 게임을 완료했어요!', TEXT_STYLES.subtitle).setOrigin(0.5);
+
+                // Score box
+                const scoreBox = this.add.graphics();
+                scoreBox.fillStyle(COLORS.bgSecondary, 1);
+                scoreBox.fillRoundedRect(width / 2 - 140, 280, 280, 100, 12);
+                scoreBox.lineStyle(2, COLORS.primary, 1);
+                scoreBox.strokeRoundedRect(width / 2 - 140, 280, 280, 100, 12);
+                this.add.text(width / 2, 310, '최종 점수', { fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#94a3b8' }).setOrigin(0.5);
+
+                const starIcon = this.add.graphics();
+                Icons.drawStar(starIcon, width / 2 - 55, 355, 16, COLORS.gold);
+                this.add.text(width / 2 + 5, 355, `${this.registry.get('score') || 0}점`, { fontFamily: 'Noto Sans KR', fontSize: '36px', color: '#fbbf24', fontStyle: 'bold' }).setOrigin(0, 0.5);
+
+                // Summary
+                ['오늘 배운 것:', '움직임 동사: run, walk, jump, swim...', '만들기 동사: draw, write, cook, build...', '감정 동사: love, like, hate, want...'].forEach((line, i) => {
+                    this.add.text(width / 2, 410 + i * 26, line, { fontFamily: 'Noto Sans KR', fontSize: '16px', color: i === 0 ? '#ffffff' : '#94a3b8' }).setOrigin(0.5);
+                });
+
+                // Restart button
+                const btn = this.add.container(width / 2, 540);
+                const btnBg = this.add.graphics();
+                btnBg.fillStyle(COLORS.success, 1);
+                btnBg.fillRoundedRect(-90, -26, 180, 52, 12);
+                const refreshIcon = this.add.graphics();
+                Icons.drawRefresh(refreshIcon, -55, 0, 18);
+                btn.add([btnBg, refreshIcon, this.add.text(0, 0, '다시 하기', TEXT_STYLES.button).setOrigin(0, 0.5)]).setSize(180, 52).setInteractive({ useHandCursor: true });
+                btn.on('pointerover', () => { btnBg.clear(); btnBg.fillStyle(0x4ade80, 1); btnBg.fillRoundedRect(-90, -26, 180, 52, 12); });
+                btn.on('pointerout', () => { btnBg.clear(); btnBg.fillStyle(COLORS.success, 1); btnBg.fillRoundedRect(-90, -26, 180, 52, 12); });
+                btn.on('pointerdown', () => { this.registry.set('score', 0); this.registry.set('round', 1); this.scene.start('HookScene'); });
+            }
+        }
+
+        // ===== GAME CONFIG =====
+        const config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            parent: 'game-container',
+            backgroundColor: COLORS.bgPrimary,
+            scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+            scene: [HookScene, AnchorScene, StoryScene, CoreScene, VisualizeScene, QuizScene, WrapScene]
+        };
+
+        const game = new Phaser.Game(config);
+    </script>
+</body>
+</html>

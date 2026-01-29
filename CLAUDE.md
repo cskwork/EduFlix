@@ -163,6 +163,16 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
 - **인터랙티브 요소**: `.control-point`, `.slider-input`, `.coin` (hover/active 상태 + 필터 효과)
 - **3D 콘텐츠 패턴**: `.three-container` (고정 크기 + border-radius + shadow), `.control-panel` (glassmorphic), `.size-controls`, `.step-buttons`
 
+**콘텐츠 정렬 알고리즘** (홈 화면):
+- **정렬 기준**: 클릭 빈도 + 최신순 조합 (자주 클릭한 콘텐츠가 왼쪽)
+- **구현**: `src/services/clickTracker.ts` (localStorage 기반)
+- **점수 계산** (`calculateSortScore`):
+  - 클릭 점수: 클릭 수 × 10 (가장 높은 가중치)
+  - 최신순 점수: 최근 30일 내 생성 시 최대 30점 (매일 1점 감소)
+  - 최근 클릭 가산점: 최근 7일 내 클릭 시 최대 7점
+- **반응성**: `clickStatsVersion` ref로 클릭 시 contentGroups 재계산 트리거
+- **저장소**: localStorage (`eduflix_click_stats`) - 정적/동적 모드 모두 작동
+
 **UI 상호작용 패턴** (홈 화면):
 - **AppHeader 레이아웃**: `.header-content` (flex, gap xl, padding 0 content-padding) - width 전체 사용, max-width/margin 제거
   - `.logo-text`: font-size 3xl, font-weight bold, letter-spacing -0.5px
@@ -188,6 +198,8 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
 **API Endpoints**:
 - `GET/POST /api/content` - 콘텐츠 CRUD (카탈로그 경로: `public/contents/index.json`)
 - `POST /api/generate` - AI 콘텐츠 생성
+- `GET /api/recommendations` - 인기 콘텐츠 목록 (SQLite 기반, 서버 필수)
+- `POST /api/recommendations/click` - 콘텐츠 클릭 기록
   - **Claude 응답 검증** (server/routes/generate.ts):
     1. JSON 파싱: 마크다운 코드 블록 추출 후 파싱
     2. 타입 가드: `typeof parsed === 'object' && !Array.isArray(parsed) && parsed !== null` (null/배열/원시값 제외)
@@ -236,3 +248,19 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
 ## Notes
 - API 키는 `.env`에만 저장 (git 제외)
 - 콘텐츠는 `/public/contents/` 디렉토리에서 정적 제공
+
+## ⚠️ Critical: Backend Required
+**백엔드 서버는 항상 실행되어야 함!**
+
+추천 시스템("🔥 인기 콘텐츠" 섹션)은 SQLite DB 기반이며 API 서버가 필요:
+- 개발: `./start.sh` 또는 `bun run dev:all` (Vite + API 서버 동시 실행)
+- 프로덕션: `PORT=9888 bun run start` (정적 파일 + API 통합)
+
+**서버 미실행 시:**
+- `/api/recommendations` 호출 실패 → 빈 배열 반환 → "인기 콘텐츠" 섹션 안 보임
+- 콘텐츠 클릭 추적 안 됨
+
+**의존성 흐름:**
+```
+Frontend → /api/recommendations → server/routes/recommendations.ts → SQLite (server/db/recommendations.db)
+```

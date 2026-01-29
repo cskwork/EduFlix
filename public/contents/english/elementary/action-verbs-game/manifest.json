@@ -1,0 +1,12 @@
+{
+  "id": "action-verbs-game",
+  "title": "동작 동사 분류 게임",
+  "subject": "english",
+  "gradeLevel": "elementary",
+  "grade": "elementary-3",
+  "type": "game",
+  "language": "ko",
+  "description": "동작 동사(run, walk, jump 등)를 움직임/만들기/감정 카테고리로 분류하는 드래그 앤 드롭 게임",
+  "thumbnail": "assets/thumbnail.svg",
+  "path": "english/elementary/action-verbs-game"
+}
