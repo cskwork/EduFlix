@@ -273,5 +273,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="script.js"></script>
+    <!-- 편집 브릿지 (편집 모드에서만 활성화) -->
+    <script>
+      if (new URLSearchParams(window.location.search).get('editor') === 'true') {
+        const script = document.createElement('script');
+        script.src = '../../../common/editor-bridge.js';
+        document.head.appendChild(script);
+      }
+    </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useContentStore } from '../stores/content'
 import ContentViewer from '../components/viewer/ContentViewer.vue'
+import ContentEditorPanel from '../components/editor/ContentEditorPanel.vue'
 import { getContentHtmlPath } from '../services/content/loader'
 import { useViewportHeight } from '../composables/useViewportHeight'
 import {
@@ -12,6 +13,7 @@ import {
   CONTENT_TYPE_LABELS,
 } from '../types/content'
 import type { ContentManifest } from '../types/content'
+import type { EditableContent } from '../types/editor'
 
 const props = defineProps<{
   id: string
@@ -25,6 +27,7 @@ const isLoading = ref(true)
 const error = ref<string | null>(null)
 const content = ref<ContentManifest | null>(null)
 const viewerRef = ref<InstanceType<typeof ContentViewer> | null>(null)
+const isEditing = ref(false)
 useViewportHeight()
 
 // 콘텐츠 HTML 경로
@@ -87,6 +90,25 @@ function toggleFullscreen() {
   viewerRef.value?.toggleFullscreen()
 }
 
+// 편집 모드 토글
+function toggleEditMode() {
+  isEditing.value = !isEditing.value
+}
+
+// 편집 저장 핸들러
+function handleEditorSave(_content: EditableContent) {
+  // 저장 완료 후 처리
+  console.log('콘텐츠 저장 완료')
+}
+
+// 편집 패널 닫기 핸들러
+function handleEditorClose() {
+  isEditing.value = false
+}
+
+// iframe ref 계산
+const iframeRef = computed(() => viewerRef.value?.getIframeRef() || null)
+
 // 콘텐츠 로드 완료 핸들러
 function handleViewerLoad() {
   // 추후 analytics 등 추가 가능
@@ -141,6 +163,28 @@ onMounted(() => {
       </div>
 
       <div class="header-actions">
+        <button
+          class="action-btn edit-btn"
+          :class="{ active: isEditing }"
+          aria-label="편집 모드"
+          title="콘텐츠 편집"
+          @click="toggleEditMode"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </button>
         <button class="action-btn" aria-label="전체화면" @click="toggleFullscreen">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -177,18 +221,29 @@ onMounted(() => {
     </div>
 
     <!-- 콘텐츠 뷰어 -->
-    <div v-else class="viewer-container">
+    <div v-else class="viewer-container" :class="{ 'with-editor': isEditing }">
       <ContentViewer
         ref="viewerRef"
         :src="contentSrc"
         :title="content?.title || '콘텐츠'"
+        :edit-mode="isEditing"
         @load="handleViewerLoad"
         @error="handleViewerError"
       />
     </div>
 
-    <!-- 콘텐츠 설명 (선택적) -->
-    <aside v-if="content && content.description" class="content-sidebar">
+    <!-- 편집 패널 -->
+    <aside v-if="isEditing && content" class="editor-sidebar">
+      <ContentEditorPanel
+        :content-id="content.id"
+        :iframe-ref="iframeRef"
+        @save="handleEditorSave"
+        @close="handleEditorClose"
+      />
+    </aside>
+
+    <!-- 콘텐츠 설명 (편집 모드가 아닐 때만 표시) -->
+    <aside v-else-if="content && content.description && !isEditing" class="content-sidebar">
       <section class="sidebar-section">
         <h3>설명</h3>
         <p>{{ content.description }}</p>
@@ -324,6 +379,11 @@ onMounted(() => {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
+.edit-btn.active {
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-primary);
+}
+
 /* 로딩 상태 */
 .content-loading {
   flex: 1;
@@ -429,6 +489,11 @@ onMounted(() => {
   display: none;
 }
 
+/* 편집 사이드바 */
+.editor-sidebar {
+  display: none;
+}
+
 @media (min-width: 1200px) {
   .content-view {
     flex-direction: row;
@@ -453,6 +518,10 @@ onMounted(() => {
     min-height: 0;
   }
 
+  .viewer-container.with-editor {
+    right: 360px;
+  }
+
   .content-sidebar {
     display: block;
     width: 300px;
@@ -467,6 +536,18 @@ onMounted(() => {
     overflow-y: auto;
   }
 
+  .editor-sidebar {
+    display: block;
+    width: 360px;
+    height: 100vh;
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding-top: var(--header-height);
+    background-color: var(--color-bg-secondary);
+    border-left: 1px solid var(--color-bg-card);
+    z-index: var(--z-fixed);
+  }
 }
 
 .sidebar-section {

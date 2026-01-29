@@ -6,6 +6,7 @@ import { IFRAME_SANDBOX_ATTRS, IFRAME_ALLOW_ATTRS } from '../../services/content
 const props = defineProps<{
   src: string
   title: string
+  editMode?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -15,6 +16,7 @@ const emit = defineEmits<{
 }>()
 
 const containerRef = ref<HTMLDivElement | null>(null)
+const iframeRef = ref<HTMLIFrameElement | null>(null)
 const isLoading = ref(true)
 const loadError = ref<string | null>(null)
 const isFullscreen = ref(false)
@@ -78,10 +80,26 @@ onUnmounted(() => {
   document.removeEventListener('fullscreenchange', handleFullscreenChange)
 })
 
+// iframe src 계산 (편집 모드일 때 editor-bridge.js 포함)
+const computedSrc = computed(() => {
+  if (!props.editMode) return props.src
+
+  // 편집 모드: URL에 editor 쿼리 파라미터 추가
+  const url = new URL(props.src, window.location.origin)
+  url.searchParams.set('editor', 'true')
+  return url.toString()
+})
+
+// iframe ref getter
+function getIframeRef(): HTMLIFrameElement | null {
+  return iframeRef.value
+}
+
 // 외부에서 전체화면 토글 메서드 사용 가능하도록 expose
 defineExpose({
   toggleFullscreen,
   isFullscreen,
+  getIframeRef,
 })
 </script>
 
@@ -101,7 +119,8 @@ defineExpose({
 
     <!-- iframe 콘텐츠 -->
     <iframe
-      :src="src"
+      ref="iframeRef"
+      :src="computedSrc"
       :title="title"
       :sandbox="sandboxAttrs"
       :allow="allowAttrs"
