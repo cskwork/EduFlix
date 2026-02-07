@@ -39,3 +39,4 @@ temp-vite
 server/db/*.db
 server/db/*.db-wal
 server/db/*.db-shm
+.env*.local
