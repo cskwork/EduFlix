@@ -3,283 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>원의 넓이: 피자의 비밀</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Jua&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="../../../common/mobile.css">
+    <title>사이버 에이전트: 코어 분석 - 원의 넓이</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Noto Sans KR', 'Orbitron', sans-serif;
+            overflow: hidden;
+        }
+        #game-container {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(14, 165, 233, 0.4), inset 0 0 20px rgba(217, 70, 239, 0.2);
+            border: 2px solid #1e293b;
+            position: relative;
+        }
+        #game-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
-    <div id="app">
-        <!-- Progress Bar -->
-        <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
-
-        <!-- 1. Hook Scene: 피자 크기 비교 -->
-        <section id="hook-scene" class="scene active">
-            <div class="content-wrapper">
-                <div class="question-box">
-                    <h1 class="main-title">피자 대결!</h1>
-                    <p class="sub-text">지름 30cm 피자 1판 vs 지름 20cm 피자 2판<br>어느 쪽이 더 많을까요?</p>
-                </div>
-                <div class="visual-area">
-                    <div class="pizza-comparison">
-                        <div class="pizza-option" id="option-large">
-                            <div class="pizza-visual large">
-                                <svg viewBox="0 0 200 200" class="pizza-svg">
-                                    <circle cx="100" cy="100" r="90" fill="#FFCA28" stroke="#E65100" stroke-width="4"/>
-                                    <circle cx="60" cy="70" r="8" fill="#D84315"/>
-                                    <circle cx="120" cy="60" r="7" fill="#D84315"/>
-                                    <circle cx="80" cy="120" r="9" fill="#D84315"/>
-                                    <circle cx="130" cy="110" r="6" fill="#D84315"/>
-                                    <circle cx="100" cy="140" r="8" fill="#D84315"/>
-                                    <circle cx="140" cy="80" r="7" fill="#D84315"/>
-                                </svg>
-                            </div>
-                            <span class="pizza-label">30cm 1판</span>
-                        </div>
-                        <div class="vs-text">VS</div>
-                        <div class="pizza-option" id="option-small">
-                            <div class="pizza-visual small">
-                                <svg viewBox="0 0 200 200" class="pizza-svg">
-                                    <circle cx="60" cy="70" r="50" fill="#FFCA28" stroke="#E65100" stroke-width="3"/>
-                                    <circle cx="50" cy="60" r="5" fill="#D84315"/>
-                                    <circle cx="70" cy="55" r="4" fill="#D84315"/>
-                                    <circle cx="55" cy="80" r="5" fill="#D84315"/>
-                                    <circle cx="140" cy="130" r="50" fill="#FFCA28" stroke="#E65100" stroke-width="3"/>
-                                    <circle cx="130" cy="120" r="5" fill="#D84315"/>
-                                    <circle cx="150" cy="115" r="4" fill="#D84315"/>
-                                    <circle cx="135" cy="140" r="5" fill="#D84315"/>
-                                </svg>
-                            </div>
-                            <span class="pizza-label">20cm 2판</span>
-                        </div>
-                    </div>
-                    <div class="controls">
-                        <button class="btn-primary" onclick="ContentApp.nextScene()">정답 알아보기</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. Anchor Scene: 원의 둘레 복습 -->
-        <section id="anchor-scene" class="scene">
-            <div class="content-wrapper">
-                <div class="anchor-content">
-                    <h2>잠깐! 원의 둘레 기억나나요?</h2>
-                    <div class="circle-review">
-                        <div class="circle-diagram">
-                            <img src="/contents/diagrams/diagram-circle-anatomy-parts-20260125.svg" alt="원의 구성요소" class="diagram-img">
-                        </div>
-                        <div class="formula-reminder">
-                            <div class="formula-card">
-                                <span class="formula-label">원의 둘레</span>
-                                <span class="formula">C = 2$\pi$r</span>
-                            </div>
-                            <div class="formula-card highlight">
-                                <span class="formula-label">또는</span>
-                                <span class="formula">C = $\pi$d</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="tip-text">원주율 $\pi$ = 3.14159... (약 3.14)</p>
-                    <button class="btn-primary fade-in-delay" onclick="ContentApp.nextScene()">원의 넓이도 알아볼까요?</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. Story Scene: 피자킹의 고민 -->
-        <section id="story-scene" class="scene">
-            <div class="content-wrapper">
-                <div class="story-card">
-                    <div class="character-area">
-                        <div class="pizza-king">
-                            <svg viewBox="0 0 100 100" class="character-svg bounce">
-                                <circle cx="50" cy="50" r="40" fill="#FFCA28" stroke="#E65100" stroke-width="3"/>
-                                <circle cx="35" cy="40" r="5" fill="#333"/>
-                                <circle cx="65" cy="40" r="5" fill="#333"/>
-                                <path d="M35 65 Q50 80 65 65" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round"/>
-                                <polygon points="50,5 45,15 55,15" fill="#FFD54F" stroke="#E65100" stroke-width="1"/>
-                                <circle cx="30" cy="55" r="4" fill="#D84315"/>
-                                <circle cx="55" cy="60" r="3" fill="#D84315"/>
-                                <circle cx="70" cy="50" r="4" fill="#D84315"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="dialogue-box">
-                        <h3>피자킹의 고민</h3>
-                        <p id="typewriter-text"></p>
-                    </div>
-                </div>
-                <div class="problem-visual">
-                    <div class="pricing-problem">
-                        <div class="price-tag tag-large">
-                            <span class="size">30cm</span>
-                            <span class="price">15,000원</span>
-                        </div>
-                        <div class="price-tag tag-small">
-                            <span class="size">20cm</span>
-                            <span class="price">???원</span>
-                        </div>
-                    </div>
-                </div>
-                <button class="btn-primary" onclick="ContentApp.nextScene()">원의 넓이 공식 찾기</button>
-            </div>
-        </section>
-
-        <!-- 4. Core Scene: 부채꼴 분할 인터랙션 -->
-        <section id="core-scene" class="scene">
-            <div class="content-wrapper">
-                <h2>원을 펼쳐볼까요?</h2>
-                <p class="instruction">원을 부채꼴로 잘라서 직사각형처럼 펼쳐봐요!</p>
-
-                <div class="interaction-container" id="slice-area">
-                    <div class="circle-container" id="circle-container">
-                        <!-- 원과 부채꼴이 여기에 렌더링됩니다 -->
-                    </div>
-                    <div class="rectangle-container" id="rectangle-container">
-                        <!-- 펼쳐진 직사각형이 여기에 렌더링됩니다 -->
-                    </div>
-                </div>
-
-                <div class="slice-controls">
-                    <label>조각 수: <span id="slice-count">8</span>개</label>
-                    <input type="range" id="slice-slider" min="4" max="32" step="4" value="8">
-                    <button id="unfold-btn" class="btn-secondary">펼치기</button>
-                </div>
-
-                <button id="core-next-btn" class="btn-primary hidden" onclick="ContentApp.nextScene()">공식 확인하기</button>
-            </div>
-        </section>
-
-        <!-- 5. Visualize Scene: 공식 도출 -->
-        <section id="visualize-scene" class="scene">
-            <div class="content-wrapper">
-                <h2>직사각형의 비밀</h2>
-                <div class="derivation-container">
-                    <div class="derivation-step" id="step1">
-                        <div class="step-visual">
-                            <svg viewBox="0 0 300 150" class="rect-formula-svg">
-                                <!-- 직사각형 -->
-                                <rect x="20" y="30" width="260" height="80" fill="#FFE0B2" stroke="#FF7043" stroke-width="3"/>
-                                <!-- 가로 표시 -->
-                                <line x1="20" y1="125" x2="280" y2="125" stroke="#2196F3" stroke-width="2"/>
-                                <text x="150" y="145" text-anchor="middle" fill="#2196F3" font-weight="bold">$\pi$r (원주의 절반)</text>
-                                <!-- 세로 표시 -->
-                                <line x1="295" y1="30" x2="295" y2="110" stroke="#EF4444" stroke-width="2"/>
-                                <text x="310" y="75" fill="#EF4444" font-weight="bold">r</text>
-                            </svg>
-                        </div>
-                        <p class="step-text">부채꼴을 펼치면 <strong>가로 = $\pi$r</strong>, <strong>세로 = r</strong>인 직사각형!</p>
-                    </div>
-                    <div class="derivation-step" id="step2">
-                        <div class="formula-derivation">
-                            <div class="formula-line">직사각형 넓이 = 가로 $\times$ 세로</div>
-                            <div class="formula-line">= $\pi$r $\times$ r</div>
-                            <div class="formula-line final">= <span class="highlight-formula">$\pi$r$^2$</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="final-formula-box">
-                    <span class="formula-title">원의 넓이 공식</span>
-                    <span class="big-formula">S = $\pi$r$^2$</span>
-                </div>
-                <button class="btn-primary" onclick="ContentApp.nextScene()">문제 풀어보기</button>
-            </div>
-        </section>
-
-        <!-- 6. Quiz Scene -->
-        <section id="quiz-scene" class="scene">
-            <div class="content-wrapper">
-                <div class="quiz-header">
-                    <span class="badge">Quiz</span>
-                    <h3>피자 넓이 계산하기</h3>
-                </div>
-                <div class="quiz-visual">
-                    <div class="quiz-pizza">
-                        <svg viewBox="0 0 200 200" class="quiz-pizza-svg">
-                            <circle cx="100" cy="100" r="80" fill="#FFCA28" stroke="#E65100" stroke-width="4"/>
-                            <line x1="100" y1="100" x2="180" y2="100" stroke="#EF4444" stroke-width="3"/>
-                            <circle cx="100" cy="100" r="4" fill="#333"/>
-                            <text x="140" y="95" fill="#EF4444" font-weight="bold" font-size="14">10cm</text>
-                        </svg>
-                    </div>
-                    <p class="quiz-question">반지름 10cm인 원의 넓이는?<br><small>($\pi$ = 3.14로 계산)</small></p>
-                </div>
-                <div class="quiz-interaction">
-                    <p>$\pi$ $\times$ 10$^2$ = ?</p>
-                    <div class="options">
-                        <button class="opt-btn" onclick="ContentApp.checkAnswer(62.8)">62.8 cm$^2$</button>
-                        <button class="opt-btn" onclick="ContentApp.checkAnswer(314)">314 cm$^2$</button>
-                        <button class="opt-btn" onclick="ContentApp.checkAnswer(628)">628 cm$^2$</button>
-                    </div>
-                </div>
-                <div id="quiz-feedback" class="quiz-feedback hidden"></div>
-            </div>
-        </section>
-
-        <!-- 7. Wrap Scene -->
-        <section id="wrap-scene" class="scene">
-            <div class="content-wrapper">
-                <div class="reward-area">
-                    <img src="/contents/icons/icon-trophy-achievement-cute-20260124.svg" alt="Trophy" class="trophy-anim">
-                    <h2>축하합니다!</h2>
-                </div>
-                <div class="summary-card">
-                    <h3>오늘 배운 내용</h3>
-                    <ul>
-                        <li>원을 부채꼴로 나눠 직사각형으로 펼칠 수 있어요.</li>
-                        <li>원의 넓이 공식: <strong>S = $\pi$r$^2$</strong></li>
-                        <li>30cm 피자 1판 > 20cm 피자 2판! (706.5 > 628)</li>
-                    </ul>
-                </div>
-                <div class="pizza-answer">
-                    <div class="answer-card">
-                        <span class="answer-title">피자 대결 정답!</span>
-                        <div class="answer-comparison">
-                            <div class="answer-item">
-                                <span>30cm 1판</span>
-                                <span class="area">$\pi \times 15^2$ = <strong>706.5 cm$^2$</strong></span>
-                            </div>
-                            <div class="answer-vs">VS</div>
-                            <div class="answer-item">
-                                <span>20cm 2판</span>
-                                <span class="area">$\pi \times 10^2 \times 2$ = <strong>628 cm$^2$</strong></span>
-                            </div>
-                        </div>
-                        <p class="winner">30cm 피자 1판이 약 78.5cm$^2$ 더 많아요!</p>
-                    </div>
-                </div>
-                <div class="action-buttons">
-                    <button class="btn-secondary" onclick="location.reload()">다시 하기</button>
-                    <button class="btn-primary">다음 주제로</button>
-                </div>
-            </div>
-            <!-- 3D 구 배경 장식 -->
-            <canvas id="sphere-canvas" class="sphere-decoration"></canvas>
-        </section>
-    </div>
-
-    <!-- MathJax -->
-    <script>
-        window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <!-- Three.js for 3D sphere -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <div id="game-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
     <script src="script.js"></script>
-    <!-- 편집 브릿지 (편집 모드에서만 활성화) -->
-    <script>
-      if (new URLSearchParams(window.location.search).get('editor') === 'true') {
-        const script = document.createElement('script');
-        script.src = '../../../common/editor-bridge.js';
-        document.head.appendChild(script);
-      }
-    </script>
 </body>
 </html>

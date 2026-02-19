@@ -31,6 +31,9 @@ const ContentApp = {
         if (this.scenes[index] === 'quiz') {
             this.resetQuiz();
         }
+        if (this.scenes[index] === 'wrap') {
+            this.createConfetti();
+        }
     },
 
     nextScene() {
@@ -92,9 +95,8 @@ const ContentApp = {
         transformBtn.classList.remove('disabled');
         mergeBtn.disabled = true;
         mergeBtn.classList.add('disabled');
-        feedback.textContent = '';
+        feedback.innerHTML = '';
         feedback.className = 'feedback-box';
-        document.querySelector('.fraction-lab').classList.remove('merged');
     },
 
     transformFractions() {
@@ -107,15 +109,11 @@ const ContentApp = {
         const label2 = document.querySelector('#f2 .label');
         const feedback = document.getElementById('feedback-area');
 
-        // Apply classes to trigger CSS changes (conceptually)
-        // Here we manually replace innerHTML to animate splitting visually
-        
-        // 1/2 -> 3/6
+        // Animation split logic
         f1.innerHTML = '<div class="bar active-1"></div><div class="bar active-1"></div><div class="bar active-1"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>';
         f1.classList.add('sixths');
         label1.textContent = '3/6';
 
-        // 1/3 -> 2/6
         f2.innerHTML = '<div class="bar active-2"></div><div class="bar active-2"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>';
         f2.classList.add('sixths');
         label2.textContent = '2/6';
@@ -126,12 +124,14 @@ const ContentApp = {
         transformBtn.disabled = true;
         transformBtn.classList.add('disabled');
         
-        // Slight delay before enabling merge for UX
+        // Delightful delay
         setTimeout(() => {
             mergeBtn.disabled = false;
             mergeBtn.classList.remove('disabled');
-            feedback.innerHTML = "통분 완료! 조각 크기가 모두 1/6로 같아졌어요.";
-        }, 500);
+            feedback.innerHTML = "✨ 통분 완료! 조각 크기가 모두 1/6로 같아졌어요! ✨";
+            feedback.classList.add('show');
+            this.createConfetti(15);
+        }, 600);
     },
 
     mergeFractions() {
@@ -139,28 +139,26 @@ const ContentApp = {
         this.isMerged = true;
         
         const feedback = document.getElementById('feedback-area');
-        const f2 = document.getElementById('f2'); // Hide the second block visually or conceptually merge
+        const f2 = document.getElementById('f2');
         
-        // Animation simulation
-        f2.style.opacity = '0.5';
-        document.querySelector('.fraction-lab').classList.add('merged');
+        f2.style.transform = 'scale(0.8)';
+        f2.style.opacity = '0.3';
         
-        // Change labels to show result
+        feedback.classList.remove('show');
+        
         setTimeout(() => {
-            feedback.innerHTML = "분자끼리 더하기: 3 + 2 = 5<br>결과: <strong>5/6</strong>";
-            feedback.style.background = '#e8f5e9'; // Light green
+            feedback.innerHTML = "분자끼리 더하기: 3 + 2 = 5<br>🍕 하프앤하프 피자 완성! 결과: <strong>5/6</strong>";
+            feedback.classList.add('show');
             
-            // Visual update on bars (optional visual merge)
             const f1Bars = document.querySelectorAll('#f1 .bar');
             f1Bars.forEach(b => b.classList.remove('active-1'));
-            // Highlight first 5
             for(let i=0; i<5; i++) {
-                f1Bars[i].style.background = '#F5A623'; // Accent color
+                f1Bars[i].style.backgroundColor = '#fb923c';
             }
             
-            // Update label to result
             document.querySelector('#f1 .label').textContent = '5/6';
-        }, 800);
+            this.createConfetti(30);
+        }, 500);
     },
 
     // --- Quiz Logic ---
@@ -168,47 +166,69 @@ const ContentApp = {
         const options = document.querySelectorAll('.option-btn');
         options.forEach(btn => {
             btn.disabled = false;
-            btn.style.background = 'white';
-            btn.style.borderColor = 'var(--primary-color)';
+            btn.classList.remove('correct-ans', 'wrong-ans');
+            btn.style.opacity = '1';
         });
-        document.getElementById('quiz-feedback').innerHTML = '';
+        const feedback = document.getElementById('quiz-feedback');
+        feedback.innerHTML = '';
+        feedback.className = 'feedback-msg';
         document.getElementById('quiz-next').style.display = 'none';
     },
 
     checkAnswer(btn, isCorrect) {
         const options = document.querySelectorAll('.option-btn');
-        options.forEach(b => b.disabled = true);
+        options.forEach(b => b.disabled = true); // lock out
         
         const feedback = document.getElementById('quiz-feedback');
+        feedback.className = 'feedback-msg';
         
         if (isCorrect) {
-            btn.style.background = 'var(--success-color)';
-            btn.style.color = 'white';
-            btn.style.borderColor = 'var(--success-color)';
-            feedback.innerHTML = '<span class="correct">정답! 2/5 = 4/10, 4/10 + 1/10 = 5/10 = 1/2 이에요.</span>';
+            btn.classList.add('correct-ans');
+            feedback.classList.add('correct');
+            feedback.innerHTML = '🎉 정답! 2/5 = 4/10, 4/10 + 1/10 = 5/10 = 1/2 이에요. 🎉';
             document.getElementById('quiz-next').style.display = 'inline-block';
+            this.createConfetti(50);
         } else {
-            btn.style.background = 'var(--error-color)';
-            btn.style.color = 'white';
-            btn.style.borderColor = 'var(--error-color)';
-            feedback.innerHTML = '<span class="incorrect">틀렸어요. 분모를 먼저 통분해보세요 (공통분모 10).</span>';
+            btn.classList.add('wrong-ans');
+            feedback.classList.add('incorrect');
+            feedback.innerHTML = '💡 틀렸어요. 분모를 먼저 통분해보세요 (공통분모 10).';
             
-            // Allow retry after delay
             setTimeout(() => {
                 options.forEach(b => {
-                    if(b !== btn) b.disabled = false;
+                    if(b !== btn) {
+                        b.disabled = false;
+                        b.classList.remove('wrong-ans');
+                    }
                 });
-                btn.style.opacity = '0.5';
-            }, 1500);
+                btn.style.opacity = '0.4';
+                feedback.innerHTML = '';
+                feedback.classList.remove('incorrect');
+            }, 2000);
         }
     },
 
-    capitalizeFirst(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
+    createConfetti(amount = 50) {
+        let container = document.getElementById('confetti-container');
+        if(!container) {
+            container = document.createElement('div');
+            container.id = 'confetti-container';
+            document.body.appendChild(container);
+        }
+        
+        const colors = ['#f97316', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#8b5cf6'];
+        for(let i=0; i<amount; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = (Math.random() * 100) + 'vw';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+            confetti.style.animationDelay = (Math.random() * 0.5) + 's';
+            container.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 4000);
+        }
     },
 
     bindEvents() {
-        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') this.nextScene();
             if (e.key === 'ArrowLeft') this.prevScene();
@@ -216,5 +236,4 @@ const ContentApp = {
     }
 };
 
-// Start app
 document.addEventListener('DOMContentLoaded', () => ContentApp.init());

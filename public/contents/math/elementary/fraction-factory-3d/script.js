@@ -1,11 +1,6 @@
 const ContentApp = {
     currentScene: 0,
     scenes: ['hook', 'anchor', 'story', 'core', 'visualize', 'quiz', 'wrap'],
-    simState: { 
-        num1: 1.5, 
-        num2: 2.4,
-        isAnimating: false 
-    },
 
     init() {
         this.renderNavDots();
@@ -32,7 +27,7 @@ const ContentApp = {
             if (sceneName === 'story') this.initStoryScene();
             if (sceneName === 'core') this.initCoreScene();
             if (sceneName === 'quiz') this.initQuizScene();
-            if (sceneName === 'wrap') this.createStarConfetti(80);
+            if (sceneName === 'wrap') this.createConfetti(60);
         }
     },
 
@@ -69,7 +64,7 @@ const ContentApp = {
     },
 
     initStoryScene() {
-        const text = "\"이번 탐험을 위해 특별한 우주 사과 1.5kg이 필요해.\\nkg당 2,400원이라는데...\\n소수점이 있는 계산, 자연수처럼 할 수 없을까?\"";
+        const text = "\"안녕! 나는 이 분수 공장의 공장장 뚜룹이다 삐리릭!\\n최상급 우주선 부품을 만들려면 컨베이어 벨트에 에너지를 주입해야 해.\\n에너지는 (1/2)과 (1/3)을 더해야 만들어진다 삐리릭!\"";
         const el = document.getElementById('typewriter-text');
         if (!el) return;
 
@@ -88,55 +83,51 @@ const ContentApp = {
     },
 
     initCoreScene() {
-        this.simState.isAnimating = false;
-        document.getElementById('fuel-fill').style.width = '0%';
-        document.getElementById('calc-display').innerHTML = '시뮬레이션 대기 중...';
-        const feedback = document.getElementById('feedback-area');
-        feedback.classList.remove('active');
-        document.getElementById('core-start-btn').disabled = false;
-        document.getElementById('core-next-btn').classList.add('hidden');
+        const pipe = document.querySelector('.pipe-middle');
+        const feedback = document.getElementById('machine-feedback');
+        const nextBtn = document.getElementById('core-next-btn');
+        const outPipe = document.getElementById('pipe-out');
+        const machineBtn = document.getElementById('machine-btn');
+        
+        pipe.classList.remove('flow');
+        feedback.className = 'machine-feedback';
+        feedback.innerHTML = '대기 중...';
+        outPipe.innerHTML = '?';
+        outPipe.style.background = '#334155';
+        outPipe.style.boxShadow = 'inset 0 0 10px rgba(0,0,0,0.5)';
+        nextBtn.classList.add('hidden');
+        machineBtn.disabled = false;
     },
 
-    runCoreSimulation() {
-        if (this.simState.isAnimating) return;
-        this.simState.isAnimating = true;
-        
-        const btn = document.getElementById('core-start-btn');
-        btn.disabled = true;
-        
-        const display = document.getElementById('calc-display');
-        const fuel = document.getElementById('fuel-fill');
-        const feedback = document.getElementById('feedback-area');
-        
-        // Step 1
-        display.innerHTML = `자연수 변환: 15 x 24...`;
-        fuel.style.width = '30%';
+    runMachine() {
+        const pipe = document.querySelector('.pipe-middle');
+        const feedback = document.getElementById('machine-feedback');
+        const nextBtn = document.getElementById('core-next-btn');
+        const outPipe = document.getElementById('pipe-out');
+        const machineBtn = document.getElementById('machine-btn');
+
+        if(machineBtn.disabled) return;
+        machineBtn.disabled = true;
+
+        feedback.innerHTML = '에너지 주입 중... (통분 진행)';
         
         setTimeout(() => {
-            // Step 2
-            display.innerHTML = `자연수 계산: 15 x 24 = <span class="calc-highlight" style="color:#0ea5e9;">360</span>`;
-            fuel.style.width = '60%';
+            pipe.classList.add('flow');
             
             setTimeout(() => {
-                // Step 3
-                display.innerHTML = `소수점 이동: 1자리 + 1자리 = 2자리 뒤로!`;
-                fuel.style.width = '85%';
+                feedback.innerHTML = '결합 완료! 5/6 에너지 생성!';
+                feedback.classList.add('active');
                 
-                setTimeout(() => {
-                    // Final
-                    display.innerHTML = `최종 엔진 출력: <span class="calc-highlight">3.6</span>`;
-                    fuel.style.width = '100%';
-                    fuel.style.boxShadow = 'inset 0 2px 5px rgba(255,255,255,0.3), 0 0 20px #f43f5e';
-                    
-                    feedback.innerHTML = '시뮬레이션 완료! 원리를 확인하러 갈까요?';
-                    feedback.classList.add('active');
-                    document.getElementById('core-next-btn').classList.remove('hidden');
-                    
-                    this.createStarConfetti(30);
-                    this.simState.isAnimating = false;
-                }, 1500);
-            }, 1500);
-        }, 1500);
+                outPipe.innerHTML = '5/6';
+                outPipe.style.background = 'var(--primary)';
+                outPipe.style.color = '#fff';
+                outPipe.style.boxShadow = 'var(--glow-green)';
+                
+                this.createConfetti(20);
+                nextBtn.classList.remove('hidden');
+            }, 2000);
+            
+        }, 500);
     },
 
     initQuizScene() {
@@ -156,13 +147,14 @@ const ContentApp = {
 
         buttons.forEach(btn => btn.disabled = true);
 
-        const isCorrect = answer === '0.96';
+        // 2/3 * 3/4 = 6/12
+        const isCorrect = answer === '6/12';
 
         buttons.forEach(btn => {
-            if (btn.textContent === answer) {
+            if (btn.textContent.includes(answer)) {
                 btn.classList.add(isCorrect ? 'correct' : 'wrong');
             }
-            if (btn.textContent === '0.96' && !isCorrect) {
+            if (btn.textContent.includes('6/12') && !isCorrect) {
                 setTimeout(() => btn.classList.add('correct'), 1000);
             }
         });
@@ -170,20 +162,24 @@ const ContentApp = {
         feedbackEl.style.display = 'block';
 
         if (isCorrect) {
-            feedbackEl.className = 'quiz-feedback success';
-            feedbackEl.innerHTML = '🚀 완벽해요! 0.8 x 1.2 = 0.96 (총 2자리 이동) 🚀';
-            this.createStarConfetti(50);
+            feedbackEl.className = 'quiz-feedback correct';
+            feedbackEl.style.color = '#86efac';
+            feedbackEl.style.textShadow = 'var(--glow-green)';
+            feedbackEl.innerHTML = '⚙️ 정답입니다! 위아래로 척척! 6/12 (1/2) ⚙️';
+            this.createConfetti(40);
             setTimeout(() => this.nextScene(), 2500);
         } else {
-            feedbackEl.className = 'quiz-feedback error';
-            feedbackEl.innerHTML = '💡 아쉬워요! 0.8(1자리) + 1.2(1자리) = 2자리 이동해야 해요!';
+            feedbackEl.className = 'quiz-feedback wrong';
+            feedbackEl.style.color = '#fca5a5';
+            feedbackEl.style.textShadow = 'var(--glow-red)';
+            feedbackEl.innerHTML = '💥 삐빅! 분수 곱셈은 분자는 분자끼리, 분모는 분모끼리 곱해야 합니다!';
             setTimeout(() => {
                 this.initQuizScene(); 
             }, 3000);
         }
     },
 
-    createStarConfetti(amount = 50) {
+    createConfetti(amount = 40) {
         let container = document.getElementById('confetti-container');
         if(!container) {
             container = document.createElement('div');
@@ -191,20 +187,14 @@ const ContentApp = {
             document.body.appendChild(container);
         }
         
-        const colors = ['#8b5cf6', '#a855f7', '#06b6d4', '#f43f5e', '#ffffff'];
+        const gears = ['⚙️', '🔩', '🔧', '✨'];
         for(let i=0; i<amount; i++) {
             const confetti = document.createElement('div');
-            confetti.className = 'confetti';
+            confetti.className = 'confetti-gear';
             confetti.style.left = (Math.random() * 100) + 'vw';
-            confetti.style.bottom = '-20px'; // Because animation is floatUp
-            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.innerHTML = gears[Math.floor(Math.random() * gears.length)];
             confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
             confetti.style.animationDelay = (Math.random() * 0.5) + 's';
-            
-            // Randomize size slightly
-            const size = Math.random() * 6 + 4;
-            confetti.style.width = size + 'px';
-            confetti.style.height = size + 'px';
             
             container.appendChild(confetti);
             setTimeout(() => confetti.remove(), 4500);

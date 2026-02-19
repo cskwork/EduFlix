@@ -7,8 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Jua&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="../../../common/mobile.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="app">
@@ -29,7 +28,7 @@
                         <!-- Three.js 3D 피자 모델 렌더링 영역 -->
                     </div>
                     <div class="hook-hint">
-                        <img src="/contents/icons/icon-help-question-cute-20260124.svg" alt="힌트" class="hint-icon bounce">
+                        <img src="../../../icons/icon-help-question-cute-20260124.svg" alt="힌트" class="hint-icon bounce">
                         <span>피자 3/4가 남았어요!</span>
                     </div>
                 </div>
@@ -43,7 +42,7 @@
         <section id="anchor-scene" class="scene">
             <div class="content-wrapper">
                 <div class="anchor-content">
-                    <img src="/contents/icons/icon-arithmetic-basic-color-20260124.svg" alt="수학" class="section-icon">
+                    <img src="../../../icons/icon-arithmetic-basic-color-20260124.svg" alt="수학" class="section-icon">
                     <h2>분수의 곱셈, 기억나요?</h2>
                     <div class="formula-review">
                         <div class="formula-card">
@@ -58,7 +57,7 @@
                         <p class="example-text">예: <span class="highlight">2/3 x 1/4 = 2/12 = 1/6</span></p>
                     </div>
                     <div class="anchor-visual">
-                        <img src="/contents/diagrams/diagram-fraction-pie-thirds-20260124.svg" alt="분수 파이" class="diagram-img">
+                        <img src="../../../diagrams/diagram-fraction-pie-thirds-20260124.svg" alt="분수 파이" class="diagram-img">
                     </div>
                     <p class="intro-text">이제 나눗셈을 배워볼까요?</p>
                     <button class="btn-primary fade-in-delay" onclick="ContentApp.nextScene()">좋아요!</button>
@@ -71,20 +70,29 @@
             <div class="content-wrapper">
                 <div class="story-card">
                     <div class="character-area">
-                        <div class="character-badge">유튜버</div>
+                        <div class="character-badge">해적 선장</div>
                         <div class="character-avatar">
-                            <svg viewBox="0 0 80 80" class="chef-avatar">
-                                <circle cx="40" cy="40" r="38" fill="#FFE0B2"/>
-                                <circle cx="30" cy="35" r="4" fill="#333"/>
-                                <circle cx="50" cy="35" r="4" fill="#333"/>
-                                <path d="M 30 50 Q 40 60 50 50" stroke="#333" stroke-width="3" fill="none"/>
-                                <ellipse cx="40" cy="10" rx="30" ry="10" fill="#FFF" stroke="#333" stroke-width="2"/>
+                            <svg viewBox="0 0 80 80" class="pirate-avatar">
+                                <!-- 해적 모자 -->
+                                <path d="M 10 30 Q 40 10 70 30 L 60 40 L 20 40 Z" fill="#1e293b"/>
+                                <!-- 해골 장식 -->
+                                <circle cx="40" cy="30" r="4" fill="#fff"/>
+                                <path d="M 36 34 L 44 34 L 42 37 L 38 37 Z" fill="#fff"/>
+                                <!-- 얼굴 -->
+                                <circle cx="40" cy="50" r="20" fill="#FFE0B2"/>
+                                <!-- 안대 -->
+                                <circle cx="33" cy="45" r="5" fill="#1e293b"/>
+                                <path d="M 20 40 L 45 50" stroke="#1e293b" stroke-width="2"/>
+                                <!-- 다른 눈 -->
+                                <circle cx="47" cy="45" r="3" fill="#333"/>
+                                <!-- 콧수염 -->
+                                <path d="M 33 55 Q 40 52 47 55" stroke="#333" stroke-width="3" fill="none"/>
                             </svg>
                         </div>
                     </div>
                     <div class="dialogue-box">
-                        <h3>쿡왕 민수의 먹방 촬영</h3>
-                        <p id="typewriter-text"></p>
+                        <h3>해적 선장 잭의 보물 피자 조각</h3>
+                        <p id="typewriter-text">"으하하! 나는 바다를 누비는 해적 선장 <strong>'잭'</strong>이다! 🏴‍☠️<br>우리가 어렵게 구한 전설의 황금 피자가 딱 <strong>3/4</strong>판 남았군.<br>나의 충직한 선원 2명(나 빼고)이 이 남은 피자를 <strong>똑같이 나누어</strong> 먹어야 한다는데, 각자 얼마나 먹을 수 있는 거지?"</p>
                     </div>
                 </div>
                 <div class="story-visual">
@@ -128,25 +136,25 @@
                     <!-- 피자 영역 -->
                     <div class="pizza-source" id="pizza-source">
                         <svg viewBox="0 0 240 240" class="pizza-interactive" id="pizza-svg">
-                            <!-- 피자 베이스 -->
-                            <circle cx="120" cy="120" r="100" fill="#FFCC80" stroke="#E65100" stroke-width="4"/>
+                            <!-- 피자 베이스 (황금 피자) -->
+                            <circle cx="120" cy="120" r="100" fill="#fcd34d" stroke="#d97706" stroke-width="4"/>
                             <!-- 먹은 조각 배경 -->
-                            <path d="M 120 120 L 120 20 A 100 100 0 0 1 220 120 Z" fill="#f5f5f5" stroke="#ddd" stroke-width="2"/>
+                            <path d="M 120 120 L 120 20 A 100 100 0 0 1 220 120 Z" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
                             <!-- 드래그 가능한 조각들 (3개) -->
                             <g id="slice-1" class="pizza-slice draggable" data-slice="1">
-                                <path d="M 120 120 L 20 120 A 100 100 0 0 0 120 220 Z" fill="#FFB74D" stroke="#E65100" stroke-width="2"/>
-                                <circle cx="70" cy="150" r="10" fill="#D32F2F"/>
-                                <circle cx="90" cy="180" r="8" fill="#388E3C"/>
+                                <path d="M 120 120 L 20 120 A 100 100 0 0 0 120 220 Z" fill="#fcd34d" stroke="#d97706" stroke-width="2"/>
+                                <circle cx="70" cy="150" r="10" fill="#ef4444"/> <!-- 페퍼로니 -->
+                                <circle cx="90" cy="180" r="8" fill="#10b981"/> <!-- 피망 -->
                             </g>
                             <g id="slice-2" class="pizza-slice draggable" data-slice="2">
-                                <path d="M 120 120 L 120 220 A 100 100 0 0 0 220 120 Z" fill="#FFB74D" stroke="#E65100" stroke-width="2"/>
-                                <circle cx="170" cy="150" r="10" fill="#D32F2F"/>
-                                <circle cx="150" cy="180" r="8" fill="#388E3C"/>
+                                <path d="M 120 120 L 120 220 A 100 100 0 0 0 220 120 Z" fill="#fcd34d" stroke="#d97706" stroke-width="2"/>
+                                <circle cx="170" cy="150" r="10" fill="#ef4444"/>
+                                <circle cx="150" cy="180" r="8" fill="#10b981"/>
                             </g>
                             <g id="slice-3" class="pizza-slice draggable" data-slice="3">
-                                <path d="M 120 120 L 20 120 A 100 100 0 0 1 120 20 Z" fill="#FFB74D" stroke="#E65100" stroke-width="2"/>
-                                <circle cx="70" cy="70" r="10" fill="#D32F2F"/>
-                                <circle cx="90" cy="50" r="8" fill="#388E3C"/>
+                                <path d="M 120 120 L 20 120 A 100 100 0 0 1 120 20 Z" fill="#fcd34d" stroke="#d97706" stroke-width="2"/>
+                                <circle cx="70" cy="70" r="10" fill="#ef4444"/>
+                                <circle cx="90" cy="50" r="8" fill="#10b981"/>
                             </g>
                         </svg>
                         <div class="source-label">3/4 피자</div>
@@ -181,7 +189,7 @@
 
                 <div id="feedback-area" class="feedback-area hidden">
                     <div class="feedback-content">
-                        <img src="/contents/icons/icon-star-reward-cute-20260124.svg" alt="별" class="feedback-icon">
+                        <img src="../../../icons/icon-star-reward-cute-20260124.svg" alt="별" class="feedback-icon">
                         <p id="feedback-text"></p>
                     </div>
                 </div>
@@ -258,20 +266,6 @@
                     <h3>2/3 케이크를 4명이 나누면?</h3>
                 </div>
                 <div class="quiz-visual">
-                    <svg viewBox="0 0 200 150" class="cake-svg">
-                        <!-- 케이크 -->
-                        <ellipse cx="100" cy="120" rx="80" ry="20" fill="#8D6E63"/>
-                        <rect x="20" y="60" width="160" height="60" fill="#FFCC80"/>
-                        <ellipse cx="100" cy="60" rx="80" ry="20" fill="#FFE0B2"/>
-                        <!-- 초코 장식 -->
-                        <rect x="30" y="70" width="140" height="10" fill="#5D4037"/>
-                        <rect x="30" y="100" width="140" height="10" fill="#5D4037"/>
-                        <!-- 2/3 표시 -->
-                        <line x1="100" y1="40" x2="100" y2="140" stroke="#333" stroke-width="2" stroke-dasharray="5"/>
-                        <line x1="155" y1="40" x2="155" y2="140" stroke="#333" stroke-width="2" stroke-dasharray="5"/>
-                        <text x="50" y="95" fill="#333" font-size="14" font-weight="bold">2/3</text>
-                        <path d="M 100 60 L 100 120 L 180 120 L 180 60 A 80 20 0 0 0 100 60" fill="rgba(0,0,0,0.1)"/>
-                    </svg>
                     <div class="quiz-equation">
                         <span class="frac"><span class="num">2</span><span class="denom">3</span></span>
                         <span class="operator">나누기</span>
@@ -296,7 +290,7 @@
         <section id="wrap-scene" class="scene">
             <div class="content-wrapper">
                 <div class="reward-area">
-                    <img src="/contents/icons/icon-trophy-achievement-cute-20260124.svg" alt="트로피" class="trophy-anim">
+                    <img src="../../../icons/icon-trophy-achievement-cute-20260124.svg" alt="트로피" class="trophy-anim">
                     <h2>축하합니다!</h2>
                 </div>
                 <div class="summary-card">
@@ -308,9 +302,9 @@
                     </ul>
                 </div>
                 <div class="star-rating">
-                    <img src="/contents/icons/icon-star-reward-cute-20260124.svg" alt="별" class="star filled">
-                    <img src="/contents/icons/icon-star-reward-cute-20260124.svg" alt="별" class="star filled">
-                    <img src="/contents/icons/icon-star-reward-cute-20260124.svg" alt="별" class="star filled">
+                    <img src="../../../icons/icon-star-reward-cute-20260124.svg" alt="별" class="star filled">
+                    <img src="../../../icons/icon-star-reward-cute-20260124.svg" alt="별" class="star filled">
+                    <img src="../../../icons/icon-star-reward-cute-20260124.svg" alt="별" class="star filled">
                 </div>
                 <div class="action-buttons">
                     <button class="btn-secondary" onclick="location.reload()">다시 하기</button>

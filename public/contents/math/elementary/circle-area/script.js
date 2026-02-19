@@ -1,439 +1,624 @@
-/**
- * 원의 넓이 인터랙티브 콘텐츠
- * 부채꼴 분할 및 직사각형 변환 애니메이션
- */
-const ContentApp = {
-    currentScene: 0,
-    scenes: ['hook', 'anchor', 'story', 'core', 'visualize', 'quiz', 'wrap'],
-    sliceCount: 8,
-    isUnfolded: false,
-
-    init() {
-        this.updateProgress();
-        this.bindEvents();
-        this.initHookScene();
-    },
-
-    nextScene() {
-        if (this.currentScene < this.scenes.length - 1) {
-            this.changeScene(this.currentScene + 1);
-        }
-    },
-
-    changeScene(index) {
-        // 현재 씬 숨기기
-        document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-
-        // 인덱스 업데이트
-        this.currentScene = index;
-        this.updateProgress();
-
-        // 새 씬 표시
-        const sceneName = this.scenes[index];
-        const sceneEl = document.getElementById(`${sceneName}-scene`);
-
-        if (sceneEl) {
-            sceneEl.classList.add('active');
-
-            // 씬별 초기화
-            const initFn = this[`init${this.capitalize(sceneName)}Scene`];
-            if (initFn) initFn.call(this);
-
-            // MathJax 재렌더링
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([sceneEl]);
-            }
-        }
-    },
-
-    updateProgress() {
-        const pct = ((this.currentScene + 1) / this.scenes.length) * 100;
-        document.getElementById('progress-bar').style.width = `${pct}%`;
-    },
-
-    capitalize(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    },
-
-    // --- Scene Logic ---
-
-    initHookScene() {
-        // 피자 애니메이션 (펄스 효과)
-        const pizzas = document.querySelectorAll('.pizza-visual');
-        pizzas.forEach((pizza, i) => {
-            setTimeout(() => {
-                pizza.style.animation = 'pulse 1s ease infinite';
-            }, i * 300);
-        });
-    },
-
-    initAnchorScene() {
-        // 다이어그램 페이드인
-        const diagram = document.querySelector('.diagram-img');
-        if (diagram) {
-            diagram.style.opacity = '0';
-            diagram.style.transition = 'opacity 0.5s ease';
-            setTimeout(() => {
-                diagram.style.opacity = '1';
-            }, 200);
-        }
-    },
-
-    initStoryScene() {
-        const text = "30cm 피자와 20cm 피자의 가격을 어떻게 정해야 할까? 크기가 1.5배 차이면 가격도 1.5배면 될까? 아니면 원의 넓이를 계산해서 정해야 할까?";
-        const el = document.getElementById('typewriter-text');
-        el.textContent = '';
-        let i = 0;
-
-        // 타이핑 효과
-        const type = () => {
-            if (i < text.length) {
-                el.textContent += text.charAt(i);
-                i++;
-                setTimeout(type, 40);
-            }
-        };
-        type();
-    },
-
-    initCoreScene() {
-        this.isUnfolded = false;
-        this.sliceCount = 8;
-
-        // 슬라이더 이벤트
-        const slider = document.getElementById('slice-slider');
-        const countLabel = document.getElementById('slice-count');
-        const unfoldBtn = document.getElementById('unfold-btn');
-
-        slider.value = this.sliceCount;
-        countLabel.textContent = this.sliceCount;
-
-        slider.oninput = () => {
-            this.sliceCount = parseInt(slider.value);
-            countLabel.textContent = this.sliceCount;
-            this.isUnfolded = false;
-            unfoldBtn.textContent = '펼치기';
-            this.renderCircleSlices();
-            this.clearRectangle();
-        };
-
-        unfoldBtn.onclick = () => {
-            if (!this.isUnfolded) {
-                this.unfoldToRectangle();
-                unfoldBtn.textContent = '다시 접기';
-                this.isUnfolded = true;
-
-                // 16조각 이상이면 다음 버튼 표시
-                if (this.sliceCount >= 16) {
-                    setTimeout(() => {
-                        document.getElementById('core-next-btn').classList.remove('hidden');
-                    }, 1500);
-                }
-            } else {
-                this.renderCircleSlices();
-                this.clearRectangle();
-                unfoldBtn.textContent = '펼치기';
-                this.isUnfolded = false;
-            }
-        };
-
-        // 초기 렌더링
-        this.renderCircleSlices();
-        this.clearRectangle();
-        document.getElementById('core-next-btn').classList.add('hidden');
-    },
-
-    renderCircleSlices() {
-        const container = document.getElementById('circle-container');
-        const radius = 80;
-        const cx = 100;
-        const cy = 100;
-        const slices = this.sliceCount;
-        const anglePerSlice = (2 * Math.PI) / slices;
-
-        // SVG 생성
-        let svg = `<svg viewBox="0 0 200 200">`;
-
-        // 색상 배열 (번갈아가며)
-        const colors = ['#FF7043', '#FFCA28'];
-
-        for (let i = 0; i < slices; i++) {
-            const startAngle = i * anglePerSlice - Math.PI / 2;
-            const endAngle = (i + 1) * anglePerSlice - Math.PI / 2;
-
-            const x1 = cx + radius * Math.cos(startAngle);
-            const y1 = cy + radius * Math.sin(startAngle);
-            const x2 = cx + radius * Math.cos(endAngle);
-            const y2 = cy + radius * Math.sin(endAngle);
-
-            const largeArc = anglePerSlice > Math.PI ? 1 : 0;
-
-            const pathData = `M ${cx} ${cy} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`;
-
-            svg += `<path d="${pathData}" fill="${colors[i % 2]}" stroke="#fff" stroke-width="1" class="slice slice-${i}"/>`;
-        }
-
-        // 중심점
-        svg += `<circle cx="${cx}" cy="${cy}" r="3" fill="#333"/>`;
-
-        // 반지름 표시
-        svg += `<line x1="${cx}" y1="${cy}" x2="${cx + radius}" y2="${cy}" stroke="#EF4444" stroke-width="2"/>`;
-        svg += `<text x="${cx + radius/2}" y="${cy - 8}" text-anchor="middle" fill="#EF4444" font-size="12" font-weight="bold">r</text>`;
-
-        svg += `</svg>`;
-        container.innerHTML = svg;
-    },
-
-    clearRectangle() {
-        const container = document.getElementById('rectangle-container');
-        container.innerHTML = '';
-    },
-
-    unfoldToRectangle() {
-        const container = document.getElementById('rectangle-container');
-        const slices = this.sliceCount;
-        const radius = 80;
-        const circumference = 2 * Math.PI * radius;
-        const halfCircum = circumference / 2;
-
-        // 직사각형 크기 계산
-        const rectWidth = Math.min(400, halfCircum * 1.2);
-        const rectHeight = radius * 0.8;
-        const sliceWidth = rectWidth / (slices / 2);
-
-        // 색상
-        const colors = ['#FF7043', '#FFCA28'];
-
-        let svg = `<svg viewBox="0 0 ${rectWidth + 40} ${rectHeight + 60}" style="overflow: visible;">`;
-
-        // 가로 레이블 (피r)
-        svg += `<line x1="20" y1="${rectHeight + 35}" x2="${rectWidth + 20}" y2="${rectHeight + 35}" stroke="#2196F3" stroke-width="2"/>`;
-        svg += `<text x="${(rectWidth + 40) / 2}" y="${rectHeight + 55}" text-anchor="middle" fill="#2196F3" font-size="12" font-weight="bold">pi r (원주의 절반)</text>`;
-
-        // 세로 레이블 (r)
-        svg += `<line x1="${rectWidth + 30}" y1="10" x2="${rectWidth + 30}" y2="${rectHeight + 10}" stroke="#EF4444" stroke-width="2"/>`;
-        svg += `<text x="${rectWidth + 38}" y="${rectHeight / 2 + 10}" fill="#EF4444" font-size="12" font-weight="bold">r</text>`;
-
-        // 부채꼴 조각들 (지그재그로 배치)
-        for (let i = 0; i < slices; i++) {
-            const isTop = i % 2 === 0;
-            const pairIndex = Math.floor(i / 2);
-            const x = 20 + pairIndex * sliceWidth;
-
-            // 삼각형 모양으로 표현
-            let pathData;
-            if (isTop) {
-                // 위쪽 (뾰족한 부분이 위)
-                pathData = `M ${x} ${rectHeight + 10} L ${x + sliceWidth / 2} 10 L ${x + sliceWidth} ${rectHeight + 10} Z`;
-            } else {
-                // 아래쪽 (뾰족한 부분이 아래)
-                pathData = `M ${x} 10 L ${x + sliceWidth / 2} ${rectHeight + 10} L ${x + sliceWidth} 10 Z`;
-            }
-
-            // 애니메이션 딜레이
-            const delay = i * 0.05;
-
-            svg += `<path d="${pathData}" fill="${colors[i % 2]}" stroke="#fff" stroke-width="1"
-                    style="opacity: 0; animation: fadeSlice 0.3s ease ${delay}s forwards;"/>`;
-        }
-
-        svg += `</svg>`;
-
-        // CSS 애니메이션 추가
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeSlice {
-                from { opacity: 0; transform: translateY(-20px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-        `;
-        document.head.appendChild(style);
-
-        container.innerHTML = svg;
-    },
-
-    initVisualizeScene() {
-        // 단계별 애니메이션
-        const steps = document.querySelectorAll('.derivation-step');
-        steps.forEach((step, i) => {
-            step.style.opacity = '0';
-            step.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                step.style.transition = 'all 0.5s ease';
-                step.style.opacity = '1';
-                step.style.transform = 'translateY(0)';
-            }, i * 500);
-        });
-
-        // 최종 공식 박스 애니메이션
-        const formulaBox = document.querySelector('.final-formula-box');
-        if (formulaBox) {
-            formulaBox.style.opacity = '0';
-            formulaBox.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                formulaBox.style.transition = 'all 0.5s ease';
-                formulaBox.style.opacity = '1';
-                formulaBox.style.transform = 'scale(1)';
-            }, 1200);
-        }
-    },
-
-    checkAnswer(val) {
-        const buttons = document.querySelectorAll('.opt-btn');
-        const feedback = document.getElementById('quiz-feedback');
-
-        // 모든 버튼 비활성화
-        buttons.forEach(btn => btn.disabled = true);
-
-        if (val === 314) {
-            // 정답
-            buttons.forEach(btn => {
-                if (btn.textContent.includes('314')) {
-                    btn.classList.add('correct');
-                }
-            });
-
-            feedback.textContent = '정답! pi x 10^2 = 3.14 x 100 = 314 cm^2';
-            feedback.className = 'quiz-feedback success';
-            feedback.classList.remove('hidden');
-
-            setTimeout(() => {
-                this.nextScene();
-            }, 2000);
-        } else {
-            // 오답
-            buttons.forEach(btn => {
-                const btnVal = parseFloat(btn.textContent);
-                if (btnVal === val) {
-                    btn.classList.add('wrong');
-                }
-            });
-
-            feedback.textContent = '다시 생각해보세요. pi x r^2 = 3.14 x 10 x 10 = ?';
-            feedback.className = 'quiz-feedback error';
-            feedback.classList.remove('hidden');
-
-            // 재시도 허용
-            setTimeout(() => {
-                buttons.forEach(btn => {
-                    btn.disabled = false;
-                    btn.classList.remove('wrong');
-                });
-            }, 1500);
-        }
-    },
-
-    initWrapScene() {
-        // 3D 구 로딩 (Three.js)
-        this.init3DSphere();
-    },
-
-    init3DSphere() {
-        const canvas = document.getElementById('sphere-canvas');
-        if (!canvas || !window.THREE) return;
-
-        try {
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({
-                canvas: canvas,
-                alpha: true,
-                antialias: true
-            });
-
-            renderer.setSize(100, 100);
-            renderer.setClearColor(0x000000, 0);
-
-            // GLB 로더
-            const loader = new THREE.GLTFLoader();
-            loader.load(
-                '../../3d/3d-elementary-sphere-red-20260125.glb',
-                (gltf) => {
-                    const model = gltf.scene;
-                    model.scale.set(1.5, 1.5, 1.5);
-                    scene.add(model);
-
-                    // 조명
-                    const light = new THREE.DirectionalLight(0xffffff, 1);
-                    light.position.set(5, 5, 5);
-                    scene.add(light);
-
-                    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
-                    scene.add(ambient);
-
-                    camera.position.z = 3;
-
-                    // 애니메이션
-                    const animate = () => {
-                        requestAnimationFrame(animate);
-                        model.rotation.y += 0.01;
-                        model.rotation.x += 0.005;
-                        renderer.render(scene, camera);
-                    };
-                    animate();
-                },
-                undefined,
-                (error) => {
-                    // GLB 로드 실패 시 기본 구 생성
-                    console.log('GLB 로드 실패, 기본 구 사용');
-                    const geometry = new THREE.SphereGeometry(1, 32, 32);
-                    const material = new THREE.MeshPhongMaterial({
-                        color: 0xff7043,
-                        shininess: 100
-                    });
-                    const sphere = new THREE.Mesh(geometry, material);
-                    scene.add(sphere);
-
-                    const light = new THREE.DirectionalLight(0xffffff, 1);
-                    light.position.set(5, 5, 5);
-                    scene.add(light);
-
-                    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
-                    scene.add(ambient);
-
-                    camera.position.z = 3;
-
-                    const animate = () => {
-                        requestAnimationFrame(animate);
-                        sphere.rotation.y += 0.01;
-                        sphere.rotation.x += 0.005;
-                        renderer.render(scene, camera);
-                    };
-                    animate();
-                }
-            );
-        } catch (e) {
-            console.log('Three.js 초기화 실패:', e);
-        }
-    },
-
-    bindEvents() {
-        // 키보드 네비게이션
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === ' ') {
-                this.nextScene();
-            }
-        });
-
-        // 터치 스와이프 (모바일)
-        let touchStartX = 0;
-        document.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-        }, { passive: true });
-
-        document.addEventListener('touchend', (e) => {
-            const touchEndX = e.changedTouches[0].clientX;
-            const diff = touchStartX - touchEndX;
-
-            // 오른쪽에서 왼쪽으로 스와이프 (다음)
-            if (diff > 50) {
-                this.nextScene();
-            }
-        }, { passive: true });
+// ═══════════════════════════════════════════════════════════════════════════
+// 원의 넓이 - CYBERPUNK EDITION
+// 초등학교 5-6학년 대상 (원의 넓이 공식 도출)
+// ═══════════════════════════════════════════════════════════════════════════
+
+const COLORS = {
+    bgPrimary: 0x020617,
+    bgSecondary: 0x0f172a,
+    bgCard: 0x1e293b,
+    primary: 0x0ea5e9, // Cyan
+    primaryGlow: 0x38bdf8,
+    secondary: 0xc026d3, // Magenta
+    secondaryGlow: 0xe879f9,
+    accent: 0xd946ef,
+    success: 0x10b981, // Emerald neon
+    warning: 0xf59e0b,
+    error: 0xf43f5e,
+    gold: 0xfcd34d,
+    textPrimary: 0xffffff,
+    textSecondary: 0x94a3b8
+};
+
+// UI 헬퍼
+const UI = {
+    drawCyberBox(graphics, x, y, width, height, color, alpha = 0.8, borderColor = COLORS.primary) {
+        graphics.fillStyle(color, alpha);
+        graphics.beginPath();
+        graphics.moveTo(x + 10, y);
+        graphics.lineTo(x + width, y);
+        graphics.lineTo(x + width, y + height - 10);
+        graphics.lineTo(x + width - 10, y + height);
+        graphics.lineTo(x, y + height);
+        graphics.lineTo(x, y + 10);
+        graphics.closePath();
+        graphics.fillPath();
+        graphics.lineStyle(2, borderColor, 1);
+        graphics.strokePath();
+
+        graphics.fillStyle(borderColor, 1);
+        graphics.fillRect(x, y + 10, 4, 10);
+        graphics.fillRect(x + width - 4, y + height - 20, 4, 10);
     }
 };
 
-// 시작
-document.addEventListener('DOMContentLoaded', () => {
-    ContentApp.init();
-});
+const Icons = {
+    drawEnergyCore(graphics, x, y, size, color = COLORS.primary, innerColor = COLORS.primaryGlow) {
+        // Outer Rings
+        graphics.lineStyle(3, color, 0.8);
+        graphics.strokeCircle(x, y, size);
+        graphics.lineStyle(1, color, 0.4);
+        graphics.strokeCircle(x, y, size * 1.2);
+        
+        // Inner Core
+        graphics.fillStyle(innerColor, 0.3);
+        graphics.fillCircle(x, y, size * 0.8);
+        graphics.fillStyle(color, 0.8);
+        graphics.fillCircle(x, y, size * 0.4);
+        
+        // Sparkles / Nodes
+        graphics.fillStyle(COLORS.textPrimary, 1);
+        graphics.fillCircle(x, y, size * 0.1);
+        for(let i=0; i<4; i++) {
+            const angle = i * Math.PI/2;
+            graphics.fillCircle(x + Math.cos(angle)*size*0.8, y + Math.sin(angle)*size*0.8, 3);
+        }
+    },
+    drawWedge(graphics, x, y, radius, startAngle, endAngle, color, strokeColor) {
+        graphics.fillStyle(color, 0.4);
+        graphics.lineStyle(2, strokeColor, 1);
+        graphics.beginPath();
+        graphics.moveTo(x, y);
+        graphics.arc(x, y, radius, startAngle, endAngle, false);
+        graphics.closePath();
+        graphics.fillPath();
+        graphics.strokePath();
+    }
+};
+
+class CyberScene extends Phaser.Scene {
+    createButton(x, y, text, width, height, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        
+        const drawBtn = (bgColor, strokeColor, scaleY=1) => {
+            bg.clear();
+            const w = width; const h = height;
+            const hx = -w/2; const hy = -h/2 * scaleY;
+            UI.drawCyberBox(bg, hx, hy, w, h * scaleY, bgColor, 1, strokeColor);
+        };
+        drawBtn(COLORS.bgSecondary, COLORS.primary);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#ffffff', fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(width, height);
+        container.setInteractive({ useHandCursor: true });
+
+        container.on('pointerover', () => {
+            drawBtn(COLORS.bgCard, COLORS.primaryGlow, 1.05);
+            this.tweens.add({ targets: label, scale: 1.05, duration: 100 });
+        });
+        container.on('pointerout', () => {
+            drawBtn(COLORS.bgSecondary, COLORS.primary, 1);
+            this.tweens.add({ targets: label, scale: 1, duration: 100 });
+        });
+        container.on('pointerdown', () => {
+             drawBtn(COLORS.primary, COLORS.textPrimary, 0.95);
+             this.time.delayedCall(100, onClick);
+        });
+        return container;
+    }
+
+    createHeader(title) {
+        const headerText = this.add.text(300, 40, title, {
+            fontFamily: 'Orbitron', fontSize: '24px', color: '#0ea5e9', fontStyle: 'bold', letterSpacing: 2
+        }).setOrigin(0.5);
+        
+        const line = this.add.graphics();
+        line.lineStyle(2, COLORS.primary, 0.5);
+        line.lineBetween(50, 60, 550, 60);
+        line.fillStyle(COLORS.primaryGlow, 1);
+        line.fillRect(250, 58, 100, 4);
+
+        return headerText;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 1. BootScene
+// ═══════════════════════════════════════════════════════════════════════════
+class BootScene extends CyberScene {
+    constructor() { super('BootScene'); }
+    create() {
+        this.scene.start('HookScene');
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 2. HookScene - 피자 비교 -> 에너지 코어 비교
+// ═══════════════════════════════════════════════════════════════════════════
+class HookScene extends CyberScene {
+    constructor() { super('HookScene'); }
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+        
+        this.add.text(300, 100, 'ENERGY CORE ANALYSIS', {
+            fontFamily: 'Orbitron', fontSize: '36px', color: '#0ea5e9', fontStyle: '900', shadow: { blur: 10, color: '#0ea5e9', fill: true }
+        }).setOrigin(0.5);
+
+        this.add.text(300, 140, '어느 쪽의 에너지 용량이 더 클까?', {
+            fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#94a3b8'
+        }).setOrigin(0.5);
+
+        // 큰 코어 (지름 30cm)
+        const core1 = this.add.graphics();
+        Icons.drawEnergyCore(core1, 150, 300, 90, COLORS.primary, COLORS.primaryGlow);
+        this.add.text(150, 430, '지름 30cm (1개)', { fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#38bdf8' }).setOrigin(0.5);
+
+        // VS Text
+        const vsText = this.add.text(300, 300, 'VS', {
+            fontFamily: 'Orbitron', fontSize: '40px', color: '#f43f5e', fontStyle: 'bold'
+        }).setOrigin(0.5);
+        this.tweens.add({ targets: vsText, scale: 1.1, yoyo: true, repeat: -1, duration: 800 });
+
+        // 작은 코어 2개 (지름 20cm)
+        const core2a = this.add.graphics();
+        Icons.drawEnergyCore(core2a, 450, 240, 60, COLORS.secondary, COLORS.secondaryGlow);
+        const core2b = this.add.graphics();
+        Icons.drawEnergyCore(core2b, 450, 380, 60, COLORS.secondary, COLORS.secondaryGlow);
+        this.add.text(450, 480, '지름 20cm (2개)', { fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#e879f9' }).setOrigin(0.5);
+
+        this.createButton(300, 540, '스캔 시작', 200, 50, () => {
+             this.cameras.main.fadeOut(300, 0, 0, 0);
+             this.time.delayedCall(300, () => this.scene.start('AnchorScene'));
+        });
+        this.cameras.main.fadeIn(500, 0, 0, 0);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 3. AnchorScene - 원의 둘레 복습
+// ═══════════════════════════════════════════════════════════════════════════
+class AnchorScene extends CyberScene {
+    constructor() { super('AnchorScene'); }
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+        this.createHeader('DATA RETRIEVAL: CIRCUMFERENCE');
+
+        this.add.text(300, 120, '원주 (원의 둘레) 공식을 기억하나요?', { fontFamily: 'Noto Sans KR', fontSize: '22px', color: '#ffffff' }).setOrigin(0.5);
+
+        const circleG = this.add.graphics();
+        // 원 그리기
+        circleG.lineStyle(4, COLORS.primary, 0.8);
+        circleG.strokeCircle(300, 280, 100);
+        
+        // 중심점과 반지름
+        circleG.fillStyle(COLORS.error, 1);
+        circleG.fillCircle(300, 280, 5);
+        circleG.lineStyle(2, COLORS.error, 1);
+        circleG.lineBetween(300, 280, 400, 280);
+
+        this.add.text(350, 260, 'r (반지름)', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#f43f5e', fontStyle: 'bold' }).setOrigin(0.5);
+
+        // 둘레 텍스트 애니메이션 (원을 따라 도는 점)
+        const dot = this.add.graphics();
+        dot.fillStyle(COLORS.gold, 1);
+        dot.fillCircle(0, 0, 6);
+        
+        this.tweens.addCounter({
+            from: 0, to: Math.PI * 2, duration: 4000, repeat: -1,
+            onUpdate: (tween) => {
+                const angle = tween.getValue();
+                dot.setPosition(300 + Math.cos(angle)*100, 280 + Math.sin(angle)*100);
+            }
+        });
+
+        const boxRect = this.add.graphics();
+        UI.drawCyberBox(boxRect, 180, 420, 240, 80, COLORS.bgSecondary, 0.9, COLORS.success);
+        
+        this.add.text(300, 460, '원주 (C) = 2 × π × r', { fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#10b981', fontStyle: 'bold' }).setOrigin(0.5);
+
+        this.createButton(300, 540, '다음 [데이터 접속]', 220, 50, () => {
+            this.cameras.main.fadeOut(300, 0, 0, 0);
+             this.time.delayedCall(300, () => this.scene.start('StoryScene'));
+        });
+        
+        this.cameras.main.fadeIn(500, 0, 0, 0);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 4. StoryScene - 사이퍼 요원의 임무
+// ═══════════════════════════════════════════════════════════════════════════
+class StoryScene extends CyberScene {
+    constructor() { super('StoryScene'); }
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+        this.createHeader('INCOMING TRANSMISSION');
+
+        const boxParams = { x: 50, y: 150, w: 500, h: 250 };
+        const dialogBox = this.add.graphics();
+        UI.drawCyberBox(dialogBox, boxParams.x, boxParams.y, boxParams.w, boxParams.h, COLORS.bgSecondary, 0.8, COLORS.primary);
+
+        const avatar = this.add.graphics();
+        avatar.fillStyle(COLORS.bgPrimary, 1);
+        avatar.fillCircle(120, 270, 40);
+        avatar.lineStyle(2, COLORS.primaryGlow, 1);
+        avatar.strokeCircle(120, 270, 40);
+        
+        const eyesText = this.add.text(120, 270, '>_<', { fontFamily: 'Orbitron', fontSize: '24px', color: '#0ea5e9', fontStyle: 'bold'}).setOrigin(0.5);
+        this.add.text(120, 330, 'AGENT BORA', { fontFamily: 'Orbitron', fontSize: '14px', color: '#94a3b8' }).setOrigin(0.5);
+
+        const msg = "안녕! 난 사이버 요원 '보라'야.\n우주선의 메인 시스템을 가동하려면 에너지가\n가장 많은 코어를 장착해야 해.\n\n그런데 코어가 얼마나 많은 에너지를\n담고 있는지 (원의 넓이) 계산하는\n방법을 잊어버렸어. 나를 도와줄래?";
+        
+        const textObj = this.add.text(190, 190, '', {
+            fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#ffffff', lineSpacing: 10
+        });
+
+        let i = 0;
+        this.time.addEvent({
+            delay: 30, repeat: msg.length - 1,
+            callback: () => {
+                textObj.text += msg[i];
+                if(i % 5 === 0) eyesText.text = ['>_<', '-_-', 'O_O'][Math.floor(Math.random()*3)];
+                i++;
+            }
+        });
+
+        this.time.delayedCall(msg.length * 30 + 500, () => {
+             this.createButton(300, 480, '분석 시스템 가동', 240, 50, () => {
+                this.cameras.main.fadeOut(300, 0, 0, 0);
+                this.time.delayedCall(300, () => this.scene.start('CoreScene'));
+            });
+        });
+
+        this.cameras.main.fadeIn(500, 0, 0, 0);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 5. CoreScene - 부채꼴 분할 인터랙션
+// ═══════════════════════════════════════════════════════════════════════════
+class CoreScene extends CyberScene {
+    constructor() { super('CoreScene'); }
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+        this.createHeader('CORE VISUALIZATION MODE');
+
+        this.add.text(300, 100, '코어를 여러 개의 부채꼴로 잘라서 펼쳐보자.', {
+            fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#94a3b8'
+        }).setOrigin(0.5);
+
+        this.radius = 80;
+        this.cx = 300;
+        this.cy = 300;
+        
+        this.wedges = [];
+        this.isUnfolded = false;
+
+        this.drawCircle(16); // 처음엔 16조각
+
+        // 버튼
+        this.btnUnfold = this.createButton(200, 520, '펼치기', 150, 50, () => this.unfold());
+        this.btnReset = this.createButton(400, 520, '다시 합치기', 150, 50, () => this.fold());
+
+        this.cameras.main.fadeIn(500, 0, 0, 0);
+        
+        this.btnNext = this.createButton(300, 520, '다음 [공식 확인]', 200, 50, () => {
+             this.cameras.main.fadeOut(300, 0, 0, 0);
+             this.time.delayedCall(300, () => this.scene.start('VisualizeScene'));
+        });
+        this.btnNext.setVisible(false);
+    }
+
+    drawCircle(numSlices) {
+        // 기존 조각 제거
+        this.wedges.forEach(w => w.destroy());
+        this.wedges = [];
+
+        const sliceAngle = (Math.PI * 2) / numSlices;
+
+        for (let i = 0; i < numSlices; i++) {
+            const startAngle = i * sliceAngle;
+            const endAngle = (i + 1) * sliceAngle;
+            const color = i % 2 === 0 ? COLORS.primary : COLORS.secondary;
+            const strokeColor = i % 2 === 0 ? COLORS.primaryGlow : COLORS.secondaryGlow;
+
+            const wedge = this.add.graphics();
+            Icons.drawWedge(wedge, 0, 0, this.radius, startAngle, endAngle, color, strokeColor);
+            
+            // 컨테이너로 묶기
+            const container = this.add.container(this.cx, this.cy, [wedge]);
+            container.originalAngle = i * sliceAngle;
+            container.index = i;
+            container.numSlices = numSlices;
+            
+            this.wedges.push(container);
+        }
+    }
+
+    unfold() {
+        if(this.isUnfolded) return;
+        this.isUnfolded = true;
+
+        this.btnUnfold.setVisible(false);
+        this.btnReset.setVisible(false);
+
+        const numSlices = this.wedges.length;
+        // 직사각형이 만들어질 위치 (아래쪽 중심)
+        const rectY = 320;
+        // 한 조각이 차지하는 폭 (대략적으로)
+        // 원의 둘레의 절반이 가로 길이
+        const halfCircumference = Math.PI * this.radius;
+        const widthPerSlice = halfCircumference / (numSlices / 2);
+        
+        const startX = 300 - halfCircumference / 2 + (widthPerSlice / 2);
+
+        this.wedges.forEach((w, i) => {
+            const isUp = i % 2 !== 0; // 홀수 인덱스는 포인트가 위를 향함
+            const targetX = startX + Math.floor(i / 2) * widthPerSlice + (isUp ? widthPerSlice/2 : 0);
+            const targetY = rectY + (isUp ? this.radius/2 : -this.radius/2);
+            
+            // 부채꼴의 중심회전
+            // 기본 부채꼴은 [0, sliceAngle] 사이에 그려짐. 회전축 포인트가 (0,0)임
+            const sliceAngleDeg = (360 / numSlices);
+            
+            // 목표 회전각도
+            // 짝수(위에서 아래로 향하는 꼭짓점): -90도 회전
+            // 홀수(아래서 위로 향하는 꼭짓점): 90도 회전
+            const targetRot = isUp ? Phaser.Math.DegToRad(90 - sliceAngleDeg/2) : Phaser.Math.DegToRad(-90 - sliceAngleDeg/2);
+
+            this.tweens.add({
+                targets: w,
+                x: targetX,
+                y: targetY,
+                rotation: targetRot,
+                duration: 1500,
+                ease: 'Cubic.easeInOut'
+            });
+        });
+
+        this.time.delayedCall(1600, () => {
+            this.btnReset.setVisible(true);
+            this.btnReset.setPosition(200, 520);
+            this.btnNext.setVisible(true);
+            this.btnNext.setPosition(400, 520);
+            
+            // 설명 텍스트 표시
+            this.explText = this.add.text(300, 430, '직사각형과 거의 비슷한 모양이 되었죠?', {
+                fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#10b981', fontStyle: 'bold'
+            }).setOrigin(0.5);
+        });
+    }
+
+    fold() {
+        if(!this.isUnfolded) return;
+        this.isUnfolded = false;
+
+        this.btnReset.setVisible(false);
+        this.btnNext.setVisible(false);
+        if(this.explText) this.explText.destroy();
+
+        this.wedges.forEach((w, i) => {
+            this.tweens.add({
+                targets: w,
+                x: this.cx,
+                y: this.cy,
+                rotation: 0,
+                duration: 1500,
+                ease: 'Cubic.easeInOut'
+            });
+        });
+
+        this.time.delayedCall(1600, () => {
+            this.btnUnfold.setVisible(true);
+            this.btnReset.setVisible(true);
+            this.btnReset.setPosition(400, 520);
+        });
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 6. VisualizeScene - 공식 도출
+// ═══════════════════════════════════════════════════════════════════════════
+class VisualizeScene extends CyberScene {
+    constructor() { super('VisualizeScene'); }
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+        this.createHeader('FORMULA DERIVATION');
+
+        // 직사각형 시각화
+        const rectW = 260;
+        const rectH = 80;
+        const rX = 300 - rectW/2;
+        const rY = 180;
+
+        const rect = this.add.graphics();
+        rect.fillStyle(COLORS.bgCard, 1);
+        rect.lineStyle(3, COLORS.primary, 1);
+        rect.fillRect(rX, rY, rectW, rectH);
+        rect.strokeRect(rX, rY, rectW, rectH);
+
+        // 안쪽에 지그재그 선 (펼친 모양 암시)
+        rect.lineStyle(1, COLORS.primaryGlow, 0.4);
+        for(let i=0; i<16; i++) {
+            const x1 = rX + (i * rectW/16);
+            if(i%2===0) { rect.lineBetween(x1, rY, x1 + rectW/16, rY + rectH); }
+            else { rect.lineBetween(x1, rY+rectH, x1 + rectW/16, rY); }
+        }
+
+        // 라벨
+        this.add.text(300, rY - 20, '가로 = 원주의 1/2 = π × r', { fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#0ea5e9' }).setOrigin(0.5);
+        this.add.text(rX + rectW + 60, rY + rectH/2, '세로\n=\nr', { fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#f43f5e', align: 'center' }).setOrigin(0.5);
+
+        // 공식 애니메이션
+        const step1 = this.add.text(300, 350, '직사각형 넓이 = 가로 × 세로', { fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#94a3b8' }).setOrigin(0.5).setAlpha(0);
+        const step2 = this.add.text(300, 390, '= (π × r) × r', { fontFamily: 'Noto Sans KR', fontSize: '24px', color: '#38bdf8' }).setOrigin(0.5).setAlpha(0);
+        
+        const box = this.add.graphics().setAlpha(0);
+        UI.drawCyberBox(box, 150, 430, 300, 80, COLORS.bgSecondary, 0.9, COLORS.success);
+        const step3 = this.add.text(300, 470, '원의 넓이 (S) = πr²', { fontFamily: 'Noto Sans KR', fontSize: '28px', color: '#10b981', fontStyle: 'bold' }).setOrigin(0.5).setAlpha(0);
+
+        this.tweens.add({ targets: step1, alpha: 1, duration: 800, delay: 500 });
+        this.tweens.add({ targets: step2, alpha: 1, duration: 800, delay: 1500 });
+        this.tweens.add({ targets: [box, step3], alpha: 1, duration: 800, delay: 2500 });
+
+        this.time.delayedCall(3500, () => {
+             this.createButton(300, 550, '연산 돌입 [도전]', 240, 50, () => {
+                 this.cameras.main.fadeOut(300, 0, 0, 0);
+                 this.time.delayedCall(300, () => this.scene.start('QuizScene'));
+             });
+        });
+        
+        this.cameras.main.fadeIn(500, 0, 0, 0);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 7. QuizScene - 마지막 연산
+// ═══════════════════════════════════════════════════════════════════════════
+class QuizScene extends CyberScene {
+    constructor() { super('QuizScene'); }
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+        this.createHeader('TARGET DECRYPTION');
+
+        this.add.text(300, 100, '다음 에너지 코어의 총 용량(넓이)을 계산하라.', {
+            fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#ffffff'
+        }).setOrigin(0.5);
+        this.add.text(300, 130, '(원주율 π는 약 3.14 로 계산)', {
+            fontFamily: 'Noto Sans KR', fontSize: '14px', color: '#94a3b8'
+        }).setOrigin(0.5);
+
+        // 문제 시각화
+        const core = this.add.graphics();
+        Icons.drawEnergyCore(core, 300, 260, 80, COLORS.warning, COLORS.gold);
+        core.lineStyle(2, COLORS.textPrimary, 1);
+        core.lineBetween(300, 260, 380, 260);
+        this.add.text(340, 245, '10cm', { fontFamily: 'Orbitron', fontSize: '16px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5);
+
+        this.add.text(300, 370, 'S = 3.14 × 10 × 10 = ?', { fontFamily: 'Orbitron', fontSize: '24px', color: '#38bdf8', fontStyle: 'bold' }).setOrigin(0.5);
+
+        // 옵션 버튼
+        const options = [
+            { text: '62.8 cm²', val: false },
+            { text: '314 cm²', val: true },
+            { text: '628 cm²', val: false }
+        ];
+
+        Phaser.Utils.Array.Shuffle(options);
+
+        options.forEach((opt, idx) => {
+            const bx = 120 + (idx * 180);
+            this.createButton(bx, 450, opt.text, 140, 50, () => this.checkAnswer(opt.val, bx, 450));
+        });
+
+        this.feedback = this.add.text(300, 530, '', { fontFamily: 'Noto Sans KR', fontSize: '22px', fontStyle: 'bold' }).setOrigin(0.5);
+
+        this.cameras.main.fadeIn(500, 0, 0, 0);
+    }
+
+    checkAnswer(isCorrect, x, y) {
+        if (isCorrect) {
+            this.feedback.setText('DECRYPTION SUCCESS!').setColor('#10b981');
+            this.cameras.main.flash(500, 16, 185, 129); // success flash
+            
+            // 파티클 터지는 효과
+            for(let i=0; i<20; i++) {
+                const p = this.add.rectangle(x, y, 6, 6, COLORS.success);
+                this.tweens.add({
+                    targets: p,
+                    x: x + Phaser.Math.Between(-100, 100),
+                    y: y + Phaser.Math.Between(-100, 100),
+                    alpha: 0,
+                    rotation: Phaser.Math.FloatBetween(0, Math.PI*2),
+                    duration: 1000,
+                    ease: 'Power2'
+                });
+            }
+
+            this.time.delayedCall(1500, () => {
+                this.cameras.main.fadeOut(300, 0, 0, 0);
+                this.time.delayedCall(300, () => this.scene.start('WrapScene'));
+            });
+        } else {
+            this.feedback.setText('ACCESS DENIED. 넓이(S) = π × r × r').setColor('#f43f5e');
+            this.cameras.main.shake(200, 0.01);
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 8. WrapScene - 요약 및 피자 대결 결론
+// ═══════════════════════════════════════════════════════════════════════════
+class WrapScene extends CyberScene {
+    constructor() { super('WrapScene'); }
+    create() {
+        this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
+        this.createHeader('MISSION COMPLETE');
+
+        const box = this.add.graphics();
+        UI.drawCyberBox(box, 50, 100, 500, 200, COLORS.bgSecondary, 0.8, COLORS.primary);
+        
+        this.add.text(300, 130, '[ SYSTEM LOG: 원의 넓이 확보 ]', { fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#0ea5e9', fontStyle: 'bold' }).setOrigin(0.5);
+        this.add.text(100, 170, '▶ 원을 잘라 펼치면 직사각형이 된다.\n▶ 직사각형의 가로는 (원주의 절반), 세로는 (반지름)\n▶ S = π r²', {
+            fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#ffffff', lineSpacing: 10
+        });
+
+        // 처음에 제기된 문제 해결 (30cm 1개 vs 20cm 2개)
+        this.add.text(300, 340, '초기 의문 해독 완료!', { fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#10b981', fontStyle: 'bold' }).setOrigin(0.5);
+
+        // 결과창
+        const uiLine = this.add.graphics();
+        uiLine.lineStyle(1, COLORS.textSecondary, 0.5);
+        uiLine.strokeRect(80, 380, 440, 100);
+
+        this.add.text(180, 410, '지름 30cm (1개)\n= 706.5', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#38bdf8', align: 'center' }).setOrigin(0.5);
+        this.add.text(300, 410, '>', { fontFamily: 'Orbitron', fontSize: '24px', color: '#fcd34d' }).setOrigin(0.5);
+        this.add.text(420, 410, '지름 20cm (2개)\n= 314 × 2 = 628', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#e879f9', align: 'center' }).setOrigin(0.5);
+
+        this.add.text(300, 450, '지름 30cm 코어 하나가 훨씬 에너지가 큽니다.', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#10b981' }).setOrigin(0.5);
+
+        // 다시하기
+        this.createButton(300, 530, '시스템 재부팅', 200, 50, () => {
+            this.cameras.main.fadeOut(300, 0, 0, 0);
+            this.time.delayedCall(300, () => this.scene.start('HookScene'));
+        });
+
+        this.cameras.main.fadeIn(500, 0, 0, 0);
+        
+        // 종료 파티클 효과
+        for(let i=0; i<30; i++) {
+             const spark = this.add.rectangle(Phaser.Math.Between(0, 600), -20, 4, 10, COLORS.success);
+             this.tweens.add({
+                 targets: spark,
+                 y: 620,
+                 alpha: 0,
+                 duration: Phaser.Math.Between(1500, 3500),
+                 delay: Phaser.Math.Between(0, 1000),
+                 repeat: -1
+             });
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 게임 설정 및 실행
+// ═══════════════════════════════════════════════════════════════════════════
+const config = {
+    type: Phaser.AUTO,
+    width: 600,
+    height: 600,
+    parent: 'game-container',
+    backgroundColor: '#020617',
+    scene: [BootScene, HookScene, AnchorScene, StoryScene, CoreScene, VisualizeScene, QuizScene, WrapScene],
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+    }
+};
+
+new Phaser.Game(config);

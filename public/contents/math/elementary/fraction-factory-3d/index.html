@@ -3,1489 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>분수 공장 3D | 동아출판 수학</title>
-    <meta name="description" content="3D 시각화로 분수의 덧셈, 뺄셈, 곱셈, 나눗셈을 배워보세요!">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #f43f5e;
-            --primary-dark: #e11d48;
-            --secondary: #8b5cf6;
-            --accent: #fbbf24;
-            --success: #10b981;
-            --danger: #ef4444;
-            --dark: #0f172a;
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            overflow: hidden;
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
-            color: #fff;
-        }
-
-        #game-container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-        }
-
-        #canvas-container {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        #ui-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        /* Top bar */
-        #top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 30px;
-            pointer-events: auto;
-            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
-        }
-
-        .stat-box {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 16px;
-            padding: 14px 24px;
-            color: #fff;
-            font-size: 15px;
-            font-weight: 500;
-            border: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s;
-        }
-
-        .stat-box:hover {
-            transform: translateY(-2px);
-        }
-
-        .stat-box .icon {
-            font-size: 22px;
-        }
-
-        .stat-box .value {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        /* Level info panel */
-        #level-info {
-            position: absolute;
-            top: 100px;
-            left: 20px;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            padding: 24px;
-            border-radius: 20px;
-            pointer-events: auto;
-            max-width: 280px;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-
-        #level-info h3 {
-            color: var(--accent);
-            margin-bottom: 12px;
-            font-size: 22px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        #level-info p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
-
-        .level-progress {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            height: 10px;
-            overflow: hidden;
-        }
-
-        .level-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--success), #34d399);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-
-        .level-buttons {
-            display: flex;
-            gap: 8px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-
-        .level-btn {
-            flex: 1;
-            min-width: 80px;
-            padding: 10px 12px;
-            background: rgba(139, 92, 246, 0.3);
-            border: 2px solid transparent;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .level-btn:hover {
-            background: rgba(139, 92, 246, 0.5);
-        }
-
-        .level-btn.active {
-            background: linear-gradient(135deg, var(--secondary) 0%, #7c3aed 100%);
-            border-color: var(--secondary);
-        }
-
-        .level-btn.completed {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-        }
-
-        /* Main game area */
-        #game-area {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 900px;
-            text-align: center;
-            pointer-events: auto;
-        }
-
-        /* Fraction visualization */
-        #visual-area {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 40px;
-            margin-bottom: 30px;
-            min-height: 200px;
-        }
-
-        .fraction-visual {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            padding: 24px;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .fraction-visual:hover {
-            transform: scale(1.02);
-            box-shadow: 0 12px 40px rgba(244, 63, 94, 0.3);
-        }
-
-        .fraction-visual-label {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .pie-container {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            margin: 0 auto;
-        }
-
-        .pie-chart {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            position: relative;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 2px 10px rgba(255, 255, 255, 0.1);
-        }
-
-        .pie-segment {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 50% 0%);
-            transform-origin: center;
-        }
-
-        .pie-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #1e1b4b, #312e81);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 700;
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-        }
-
-        .visual-operator {
-            font-size: 48px;
-            color: var(--accent);
-            font-weight: 900;
-            text-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
-        }
-
-        .visual-equals {
-            font-size: 48px;
-            color: var(--success);
-            font-weight: 900;
-            text-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
-        }
-
-        /* Problem display */
-        #problem-display {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            padding: 36px;
-            border-radius: 24px;
-            margin-bottom: 24px;
-            border: 2px solid var(--glass-border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-
-        #fraction-problem {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 28px;
-        }
-
-        .fraction {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 8px 16px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 16px;
-            transition: transform 0.3s;
-        }
-
-        .fraction:hover {
-            transform: scale(1.05);
-        }
-
-        .numerator {
-            font-size: 42px;
-            font-weight: 900;
-            color: #fff;
-            border-bottom: 4px solid var(--accent);
-            padding: 8px 20px;
-            min-width: 60px;
-        }
-
-        .denominator {
-            font-size: 42px;
-            font-weight: 900;
-            color: #fff;
-            padding: 8px 20px;
-            min-width: 60px;
-        }
-
-        .operator {
-            font-size: 48px;
-            color: var(--accent);
-            font-weight: 900;
-        }
-
-        .equals {
-            font-size: 48px;
-            color: var(--success);
-            font-weight: 900;
-        }
-
-        .answer-fraction {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(52, 211, 153, 0.2) 100%);
-            border: 2px solid var(--success);
-        }
-
-        .answer-fraction .numerator,
-        .answer-fraction .denominator {
-            color: var(--success);
-        }
-
-        #answer-input-area {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .input-fraction {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .fraction-input {
-            width: 80px;
-            height: 60px;
-            font-size: 32px;
-            font-weight: 700;
-            text-align: center;
-            border: 3px solid var(--glass-border);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--dark);
-            transition: all 0.3s;
-        }
-
-        .fraction-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
-        }
-
-        .fraction-line {
-            width: 80px;
-            height: 4px;
-            background: var(--accent);
-            border-radius: 2px;
-        }
-
-        /* Action buttons */
-        #action-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-        }
-
-        .action-btn {
-            background: linear-gradient(135deg, var(--secondary) 0%, #7c3aed 100%);
-            border: none;
-            border-radius: 16px;
-            padding: 16px 36px;
-            color: white;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.6);
-        }
-
-        .action-btn:active {
-            transform: scale(0.98);
-        }
-
-        .action-btn.submit {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .action-btn.submit:hover {
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6);
-        }
-
-        .action-btn.hint {
-            background: linear-gradient(135deg, var(--accent) 0%, #f59e0b 100%);
-            color: var(--dark);
-            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
-        }
-
-        .action-btn.skip {
-            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-            box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
-        }
-
-        /* Hint display */
-        #hint-display {
-            position: absolute;
-            bottom: 150px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%);
-            border: 2px solid var(--accent);
-            padding: 20px 30px;
-            border-radius: 16px;
-            color: var(--accent);
-            font-size: 16px;
-            font-weight: 600;
-            max-width: 500px;
-            text-align: center;
-            display: none;
-            animation: slideUp 0.3s ease;
-            box-shadow: 0 8px 32px rgba(251, 191, 36, 0.3);
-        }
-
-        #hint-display.show {
-            display: block;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        /* Feedback message */
-        #feedback-message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 72px;
-            font-weight: 900;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 100;
-            transition: opacity 0.3s;
-        }
-
-        #feedback-message.show {
-            opacity: 1;
-            animation: feedbackPop 0.5s ease;
-        }
-
-        @keyframes feedbackPop {
-            0% { transform: translate(-50%, -50%) scale(0.5); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
-
-        /* Progress bar */
-        #progress-container {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60%;
-            max-width: 600px;
-        }
-
-        #progress-bar {
-            height: 12px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        #progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--success));
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite;
-            border-radius: 6px;
-            transition: width 0.5s ease;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        #progress-text {
-            text-align: center;
-            margin-top: 8px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        /* Start screen */
-        #start-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            overflow: hidden;
-        }
-
-        .factory-gears {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .gear {
-            position: absolute;
-            opacity: 0.1;
-            animation: rotate 20s linear infinite;
-        }
-
-        .gear:nth-child(odd) {
-            animation-direction: reverse;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        #start-screen h1 {
-            font-size: clamp(40px, 8vw, 72px);
-            font-weight: 900;
-            background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 16px;
-            text-align: center;
-            animation: glow 3s infinite alternate;
-        }
-
-        @keyframes glow {
-            from { filter: drop-shadow(0 0 20px rgba(244, 63, 94, 0.3)); }
-            to { filter: drop-shadow(0 0 40px rgba(251, 191, 36, 0.5)); }
-        }
-
-        #start-screen .subtitle {
-            font-size: clamp(16px, 3vw, 22px);
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 48px;
-            text-align: center;
-            max-width: 600px;
-            line-height: 1.6;
-            padding: 0 20px;
-        }
-
-        #start-btn {
-            background: linear-gradient(135deg, var(--accent) 0%, #f59e0b 100%);
-            border: none;
-            border-radius: 50px;
-            padding: 22px 64px;
-            color: var(--dark);
-            font-size: 24px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 40px rgba(251, 191, 36, 0.5);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        #start-btn:hover {
-            transform: scale(1.05) translateY(-3px);
-            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.7);
-        }
-
-        .features {
-            display: flex;
-            gap: 40px;
-            margin-top: 60px;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 0 20px;
-        }
-
-        .feature {
-            text-align: center;
-            max-width: 180px;
-        }
-
-        .feature-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-
-        .feature-title {
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #fff;
-        }
-
-        .feature-desc {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        /* Streak counter */
-        #streak-display {
-            position: absolute;
-            top: 100px;
-            right: 20px;
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%);
-            border: 2px solid var(--accent);
-            padding: 16px 24px;
-            border-radius: 16px;
-            pointer-events: auto;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(251, 191, 36, 0.2);
-        }
-
-        #streak-display .streak-label {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 4px;
-        }
-
-        #streak-display .streak-value {
-            font-size: 36px;
-            font-weight: 900;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        /* Celebration animation */
-        .confetti {
-            position: fixed;
-            width: 12px;
-            height: 12px;
-            pointer-events: none;
-            z-index: 1000;
-            animation: fall 3s ease-out forwards;
-        }
-
-        @keyframes fall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            #level-info {
-                position: fixed;
-                top: auto;
-                bottom: 80px;
-                left: 10px;
-                right: 10px;
-                max-width: none;
-                display: none;
-            }
-
-            #level-info.mobile-open {
-                display: block;
-            }
-
-            #visual-area {
-                flex-direction: column;
-                gap: 20px;
-                min-height: auto;
-            }
-
-            .visual-operator, .visual-equals {
-                font-size: 32px;
-            }
-
-            .pie-container {
-                width: 100px;
-                height: 100px;
-            }
-
-            .numerator, .denominator {
-                font-size: 32px;
-            }
-
-            .operator, .equals {
-                font-size: 36px;
-            }
-
-            .fraction-input {
-                width: 60px;
-                height: 50px;
-                font-size: 24px;
-            }
-
-            #action-buttons {
-                flex-wrap: wrap;
-            }
-
-            .action-btn {
-                padding: 14px 24px;
-                font-size: 16px;
-            }
-
-            #streak-display {
-                position: fixed;
-                top: auto;
-                bottom: 80px;
-                right: 10px;
-                padding: 12px 16px;
-            }
-
-            #streak-display .streak-value {
-                font-size: 28px;
-            }
-
-            .stat-box {
-                padding: 10px 14px;
-                font-size: 13px;
-            }
-
-            #top-bar {
-                flex-wrap: wrap;
-                gap: 8px;
-                justify-content: center;
-                padding: 15px;
-            }
-        }
-    </style>
+    <title>분수 공장 - 분수의 사칙연산</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../../common/mobile.css">
 </head>
 <body>
-    <div id="game-container">
-        <div id="canvas-container"></div>
+  
+  <div class="factory-background">
+      <div class="gear gear-big">⚙️</div>
+      <div class="gear gear-small">⚙️</div>
+  </div>
 
-        <div id="ui-overlay">
-            <div id="top-bar">
-                <div class="stat-box">
-                    <span class="icon">🏭</span>
-                    <span>문제</span>
-                    <span class="value"><span id="problem-number">1</span>/<span id="total-problems">15</span></span>
-                </div>
-                <div class="stat-box">
-                    <span class="icon">⭐</span>
-                    <span>점수</span>
-                    <span class="value" id="score">0</span>
-                </div>
-                <div class="stat-box">
-                    <span class="icon">✅</span>
-                    <span>정답</span>
-                    <span class="value" id="correct-count">0</span>
-                </div>
+  <div id="app">
+    <!-- Navigation Dots -->
+    <div class="nav-dots" id="nav-dots"></div>
+
+    <!-- 1. Hook Scene -->
+    <section id="hook-scene" class="scene active">
+      <div class="content-wrapper">
+        <h1 class="main-title">외계인 분수 공장!</h1>
+        <p class="sub-text">부품들을 모아 강력한 UFO를 만들어라!</p>
+        
+        <svg viewBox="0 0 100 100" class="factory-visual hook-bounce">
+            <rect x="30" y="30" width="40" height="40" rx="10" fill="#475569" stroke="#94a3b8" stroke-width="3"/>
+            <circle cx="40" cy="45" r="5" fill="#22c55e" />
+            <circle cx="60" cy="45" r="5" fill="#22c55e" />
+            <line x1="50" y1="30" x2="50" y2="15" stroke="#94a3b8" stroke-width="3" />
+            <circle cx="50" cy="12" r="4" fill="#ef4444" />
+            <rect x="40" y="55" width="20" height="4" fill="#1e293b" />
+            <rect x="25" y="40" width="5" height="15" fill="#94a3b8" />
+            <rect x="70" y="40" width="5" height="15" fill="#94a3b8" />
+        </svg>
+        
+        <p>삐리릭! 공장을 가동하려면 패스워드가 필요해...<br>패스워드는 바로 분수의 사칙연산!</p>
+        
+        <button class="btn-primary" onclick="ContentApp.nextScene()">공장 점검 시작</button>
+      </div>
+    </section>
+
+    <!-- 2. Anchor Scene -->
+    <section id="anchor-scene" class="scene">
+      <div class="content-wrapper">
+        <h2>공장 튜토리얼: 지난 기억을 되살려봐!</h2>
+        <p>지금까지 배운 분수의 덧셈, 뺄셈, 곱셈, 나눗셈을 떠올려보자!</p>
+
+        <div class="blueprint-grid">
+            <div class="blueprint-card">
+                <h3>➕ 덧셈 / ➖ 뺄셈</h3>
+                <p>통분이 필수야! 분모를 똑같이 맞추자.</p>
             </div>
-
-            <div id="level-info">
-                <h3><span id="level-icon">➕</span> <span id="level-title">레벨 1: 덧셈</span></h3>
-                <p id="level-description">같은 분모를 가진 분수의 덧셈을 연습해요!</p>
-                <div class="level-progress">
-                    <div class="level-progress-fill" id="level-progress" style="width: 0%"></div>
-                </div>
-                <div class="level-buttons">
-                    <button class="level-btn active" data-level="0">➕ 덧셈</button>
-                    <button class="level-btn" data-level="1">➖ 뺄셈</button>
-                    <button class="level-btn" data-level="2">✖️ 곱셈</button>
-                    <button class="level-btn" data-level="3">➗ 나눗셈</button>
-                </div>
+            <div class="blueprint-card">
+                <h3>✖️ 곱셈</h3>
+                <p>분자는 분자끼리, 분모는 분모끼리!</p>
             </div>
-
-            <div id="streak-display">
-                <div class="streak-label">연속 정답</div>
-                <div class="streak-value">🔥 <span id="streak">0</span></div>
-            </div>
-
-            <div id="game-area">
-                <div id="visual-area">
-                    <div class="fraction-visual" id="visual-1">
-                        <div class="fraction-visual-label">첫 번째 분수</div>
-                        <div class="pie-container">
-                            <div class="pie-chart" id="pie1"></div>
-                            <div class="pie-center" id="pie1-label">1/4</div>
-                        </div>
-                    </div>
-                    <div class="visual-operator" id="visual-op">+</div>
-                    <div class="fraction-visual" id="visual-2">
-                        <div class="fraction-visual-label">두 번째 분수</div>
-                        <div class="pie-container">
-                            <div class="pie-chart" id="pie2"></div>
-                            <div class="pie-center" id="pie2-label">2/4</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="problem-display">
-                    <div id="fraction-problem"></div>
-                    <div id="answer-input-area">
-                        <div class="input-fraction">
-                            <input type="number" class="fraction-input" id="answer-numerator" placeholder="?" autocomplete="off">
-                            <div class="fraction-line"></div>
-                            <input type="number" class="fraction-input" id="answer-denominator" placeholder="?" autocomplete="off">
-                        </div>
-                    </div>
-                </div>
-
-                <div id="action-buttons">
-                    <button class="action-btn hint" id="hint-btn">💡 힌트</button>
-                    <button class="action-btn skip" id="skip-btn">⏭️ 건너뛰기</button>
-                    <button class="action-btn submit" id="submit-btn">✓ 제출하기</button>
-                </div>
-            </div>
-
-            <div id="hint-display"></div>
-
-            <div id="progress-container">
-                <div id="progress-bar">
-                    <div id="progress-fill" style="width: 0%"></div>
-                </div>
-                <div id="progress-text">진행률: 0%</div>
+            <div class="blueprint-card" style="grid-column: span 2;">
+                <h3>➗ 나눗셈</h3>
+                <p>뒤집고 곱하자! (역수)</p>
             </div>
         </div>
 
-        <div id="feedback-message"></div>
+        <button class="btn-primary" onclick="ContentApp.nextScene()">다음으로</button>
+        <button class="btn-secondary" onclick="ContentApp.prevScene()">이전</button>
+      </div>
+    </section>
 
-        <div id="start-screen">
-            <div class="factory-gears">
-                <div class="gear" style="top: 10%; left: 10%; font-size: 120px;">⚙️</div>
-                <div class="gear" style="top: 60%; left: 5%; font-size: 80px;">⚙️</div>
-                <div class="gear" style="top: 20%; right: 15%; font-size: 100px;">⚙️</div>
-                <div class="gear" style="bottom: 15%; right: 10%; font-size: 140px;">⚙️</div>
-                <div class="gear" style="bottom: 30%; left: 20%; font-size: 60px;">⚙️</div>
+    <!-- 3. Story Scene -->
+    <section id="story-scene" class="scene">
+      <div class="content-wrapper">
+        <h2>고장난 컨베이어 벨트</h2>
+        
+        <div class="story-card">
+          <div class="character-area">
+            <svg width="100" height="100" viewBox="0 0 100 100" class="alien-avatar">
+                <rect x="25" y="25" width="50" height="50" rx="10" fill="#22c55e" stroke="#166534" stroke-width="4"/>
+                <circle cx="35" cy="45" r="8" fill="#fff"/>
+                <circle cx="65" cy="45" r="8" fill="#fff"/>
+                <circle cx="35" cy="45" r="3" fill="#000"/>
+                <circle cx="65" cy="45" r="3" fill="#000"/>
+                <rect x="40" y="60" width="20" height="5" fill="#166534"/>
+                <line x1="25" y1="25" x2="10" y2="10" stroke="#22c55e" stroke-width="4" stroke-linecap="round"/>
+                <line x1="75" y1="25" x2="90" y2="10" stroke="#22c55e" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="10" cy="10" r="5" fill="#ef4444"/>
+                <circle cx="90" cy="10" r="5" fill="#ef4444"/>
+            </svg>
+            <div class="character-badge">공장장 뚜룹</div>
+          </div>
+          <div class="dialogue-box">
+            <p id="typewriter-text"></p>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="ContentApp.nextScene()">기계 수리하러 가기</button>
+        <button class="btn-secondary" onclick="ContentApp.prevScene()">이전</button>
+      </div>
+    </section>
+
+    <!-- 4. Core Scene -->
+    <section id="core-scene" class="scene">
+      <div class="content-wrapper">
+        <h2>수리 시뮬레이터: 분수 조각 맞추기</h2>
+        <p>파이프를 연결해서 에너지의 흐름을 계산해봐!</p>
+
+        <div class="machine-container">
+            <!-- Machine SVG animation area -->
+            <div class="pipe-system">
+                <div class="pipe-start" id="pipe-in-1">1/2</div>
+                <div class="pipe-operator">➕</div>
+                <div class="pipe-start" id="pipe-in-2">1/3</div>
+                <div class="pipe-middle"></div>
+                <div class="pipe-end" id="pipe-out">?</div>
             </div>
-            <h1>🏭 분수 공장 3D</h1>
-            <p class="subtitle">분수 공장에 오신 것을 환영합니다! 파이 차트로 분수를 시각화하고, 덧셈, 뺄셈, 곱셈, 나눗셈을 마스터하세요!</p>
-            <button id="start-btn">
-                <span>공장 시작!</span>
-                <span>🚀</span>
-            </button>
-            <div class="features">
-                <div class="feature">
-                    <div class="feature-icon">📊</div>
-                    <div class="feature-title">시각적 학습</div>
-                    <div class="feature-desc">파이 차트로 분수를 이해해요</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🎯</div>
-                    <div class="feature-title">단계별 학습</div>
-                    <div class="feature-desc">쉬운 것부터 어려운 것까지</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🏆</div>
-                    <div class="feature-title">연속 정답 보너스</div>
-                    <div class="feature-desc">연속으로 맞추면 보너스!</div>
-                </div>
+            
+            <div class="machine-controls">
+                <button class="btn-machine" id="machine-btn" onclick="ContentApp.runMachine()">기계 가동!</button>
+            </div>
+            <div id="machine-feedback" class="machine-feedback">대기 중...</div>
+        </div>
+
+        <button class="btn-secondary hidden" id="core-next-btn" onclick="ContentApp.nextScene()">원리 확인</button>
+      </div>
+    </section>
+
+    <!-- 5. Visualize Scene -->
+    <section id="visualize-scene" class="scene">
+      <div class="content-wrapper">
+        <h2>공장 설명서 해독</h2>
+        <p>기계 속에서 일어난 일을 분해해보자!</p>
+
+        <div class="explain-grid">
+            <div class="explain-step">
+                <div class="step-num">1. 통분</div>
+                <div class="step-math">1/2 = <span class="highlight-text">3/6</span>, 1/3 = <span class="highlight-text">2/6</span></div>
+            </div>
+            <div class="explain-step">
+                <div class="step-num">2. 더하기</div>
+                <div class="step-math">3/6 + 2/6 = <span class="highlight-alert">5/6</span></div>
             </div>
         </div>
-    </div>
 
-    <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
-    <script>
-        // Level data
-        const levelsData = [
-            {
-                level: 1,
-                title: "덧셈",
-                icon: "➕",
-                description: "같은 분모를 가진 분수의 덧셈을 연습해요!",
-                operator: "+",
-                problems: [
-                    { num1: 1, den1: 4, num2: 2, den2: 4 },
-                    { num1: 2, den1: 5, num2: 1, den2: 5 },
-                    { num1: 1, den1: 3, num2: 1, den2: 3 },
-                    { num1: 3, den1: 8, num2: 2, den2: 8 },
-                    { num1: 1, den1: 6, num2: 4, den2: 6 }
-                ]
-            },
-            {
-                level: 2,
-                title: "뺄셈",
-                icon: "➖",
-                description: "같은 분모를 가진 분수의 뺄셈을 연습해요!",
-                operator: "-",
-                problems: [
-                    { num1: 3, den1: 4, num2: 1, den2: 4 },
-                    { num1: 4, den1: 5, num2: 2, den2: 5 },
-                    { num1: 5, den1: 6, num2: 2, den2: 6 },
-                    { num1: 7, den1: 8, num2: 3, den2: 8 },
-                    { num1: 2, den1: 3, num2: 1, den2: 3 }
-                ]
-            },
-            {
-                level: 3,
-                title: "곱셈",
-                icon: "✖️",
-                description: "분수의 곱셈: 분자는 분자끼리, 분모는 분모끼리!",
-                operator: "×",
-                problems: [
-                    { num1: 1, den1: 2, num2: 1, den2: 2 },
-                    { num1: 2, den1: 3, num2: 1, den2: 4 },
-                    { num1: 3, den1: 4, num2: 1, den2: 2 },
-                    { num1: 2, den1: 5, num2: 3, den2: 4 },
-                    { num1: 1, den1: 3, num2: 2, den2: 3 }
-                ]
-            },
-            {
-                level: 4,
-                title: "나눗셈",
-                icon: "➗",
-                description: "분수의 나눗셈: 뒤집어서 곱해요!",
-                operator: "÷",
-                problems: [
-                    { num1: 1, den1: 2, num2: 1, den2: 2 },
-                    { num1: 2, den1: 3, num2: 1, den2: 3 },
-                    { num1: 3, den1: 4, num2: 1, den2: 2 },
-                    { num1: 1, den1: 2, num2: 1, den2: 4 },
-                    { num1: 2, den1: 5, num2: 1, den2: 5 }
-                ]
-            }
-        ];
-
-        // Game state
-        let currentLevel = 0;
-        let currentProblemIndex = 0;
-        let score = 0;
-        let correctCount = 0;
-        let streak = 0;
-        let maxStreak = 0;
-        let hintsUsed = 0;
-        let totalProblemsAnswered = 0;
-        let gameStarted = false;
-
-        // Three.js
-        let scene, camera, renderer;
-        let gears = [];
-        let conveyorParts = [];
-        let floatingShapes = [];
-
-        function initThreeJS() {
-            scene = new THREE.Scene();
-            scene.fog = new THREE.Fog(0x1e1b4b, 20, 80);
-
-            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 5, 25);
-            camera.lookAt(0, 0, 0);
-
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-            setupLighting();
-            createFactory();
-            createParticles();
-
-            window.addEventListener('resize', onWindowResize);
-            animate();
-        }
-
-        function setupLighting() {
-            const ambient = new THREE.AmbientLight(0x404080, 0.4);
-            scene.add(ambient);
-
-            const mainLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            mainLight.position.set(10, 20, 10);
-            mainLight.castShadow = true;
-            scene.add(mainLight);
-
-            const pinkLight = new THREE.PointLight(0xf43f5e, 0.6, 40);
-            pinkLight.position.set(-15, 10, 10);
-            scene.add(pinkLight);
-
-            const purpleLight = new THREE.PointLight(0x8b5cf6, 0.6, 40);
-            purpleLight.position.set(15, 5, -10);
-            scene.add(purpleLight);
-
-            const goldLight = new THREE.PointLight(0xfbbf24, 0.4, 30);
-            goldLight.position.set(0, -5, 15);
-            scene.add(goldLight);
-        }
-
-        function createFactory() {
-            // Create gears
-            const gearMaterial = new THREE.MeshPhongMaterial({
-                color: 0x8b5cf6,
-                shininess: 80,
-                transparent: true,
-                opacity: 0.6
-            });
-
-            for (let i = 0; i < 8; i++) {
-                const gearGeometry = new THREE.CylinderGeometry(2 + Math.random() * 2, 2 + Math.random() * 2, 0.5, 12);
-                const gear = new THREE.Mesh(gearGeometry, gearMaterial.clone());
-                
-                gear.material.color.setHex([0xf43f5e, 0x8b5cf6, 0xfbbf24, 0x10b981][i % 4]);
-                
-                gear.position.set(
-                    (Math.random() - 0.5) * 40,
-                    (Math.random() - 0.5) * 20,
-                    (Math.random() - 0.5) * 20 - 15
-                );
-                gear.rotation.x = Math.PI / 2;
-                gear.userData = {
-                    rotationSpeed: (Math.random() - 0.5) * 0.02
-                };
-
-                // Add teeth
-                const toothGeometry = new THREE.BoxGeometry(0.3, 1, 0.5);
-                const teeth = 8 + Math.floor(Math.random() * 8);
-                for (let j = 0; j < teeth; j++) {
-                    const tooth = new THREE.Mesh(toothGeometry, gear.material);
-                    const angle = (j / teeth) * Math.PI * 2;
-                    tooth.position.x = Math.cos(angle) * (gear.geometry.parameters.radiusTop + 0.3);
-                    tooth.position.y = Math.sin(angle) * (gear.geometry.parameters.radiusTop + 0.3);
-                    gear.add(tooth);
-                }
-
-                scene.add(gear);
-                gears.push(gear);
-            }
-
-            // Create conveyor belt effect
-            const conveyorGeometry = new THREE.BoxGeometry(30, 0.5, 6);
-            const conveyorMaterial = new THREE.MeshPhongMaterial({
-                color: 0x1e1b4b,
-                shininess: 20
-            });
-            const conveyor = new THREE.Mesh(conveyorGeometry, conveyorMaterial);
-            conveyor.position.y = -6;
-            conveyor.position.z = 5;
-            conveyor.receiveShadow = true;
-            scene.add(conveyor);
-
-            // Floating fraction pieces
-            for (let i = 0; i < 20; i++) {
-                const pieGeometry = new THREE.CylinderGeometry(0.8, 0.8, 0.2, 32, 1, false, 0, Math.PI * 2 * Math.random());
-                const pieMaterial = new THREE.MeshPhongMaterial({
-                    color: [0xf43f5e, 0x8b5cf6, 0xfbbf24, 0x10b981][Math.floor(Math.random() * 4)],
-                    shininess: 60
-                });
-                const piece = new THREE.Mesh(pieGeometry, pieMaterial);
-                
-                piece.position.set(
-                    (Math.random() - 0.5) * 50,
-                    (Math.random() - 0.5) * 30,
-                    (Math.random() - 0.5) * 30 - 10
-                );
-                piece.rotation.x = Math.random() * Math.PI;
-                piece.userData = {
-                    rotationSpeed: (Math.random() - 0.5) * 0.02,
-                    floatSpeed: 0.005 + Math.random() * 0.01,
-                    floatOffset: Math.random() * Math.PI * 2,
-                    originalY: piece.position.y
-                };
-
-                scene.add(piece);
-                floatingShapes.push(piece);
-            }
-        }
-
-        function createParticles() {
-            const particleCount = 150;
-            const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(particleCount * 3);
-            const colors = new Float32Array(particleCount * 3);
-
-            for (let i = 0; i < particleCount; i++) {
-                positions[i * 3] = (Math.random() - 0.5) * 60;
-                positions[i * 3 + 1] = (Math.random() - 0.5) * 40;
-                positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
-
-                const colorChoice = Math.random();
-                if (colorChoice < 0.25) {
-                    colors[i * 3] = 0.96; colors[i * 3 + 1] = 0.25; colors[i * 3 + 2] = 0.37;
-                } else if (colorChoice < 0.5) {
-                    colors[i * 3] = 0.55; colors[i * 3 + 1] = 0.36; colors[i * 3 + 2] = 0.96;
-                } else if (colorChoice < 0.75) {
-                    colors[i * 3] = 0.98; colors[i * 3 + 1] = 0.75; colors[i * 3 + 2] = 0.14;
-                } else {
-                    colors[i * 3] = 0.06; colors[i * 3 + 1] = 0.73; colors[i * 3 + 2] = 0.51;
-                }
-            }
-
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-            const material = new THREE.PointsMaterial({
-                size: 0.1,
-                vertexColors: true,
-                transparent: true,
-                opacity: 0.7,
-                blending: THREE.AdditiveBlending
-            });
-
-            const particles = new THREE.Points(geometry, material);
-            scene.add(particles);
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-            const time = Date.now() * 0.001;
-
-            // Animate gears
-            gears.forEach(gear => {
-                gear.rotation.z += gear.userData.rotationSpeed;
-            });
-
-            // Animate floating shapes
-            floatingShapes.forEach(shape => {
-                shape.rotation.x += shape.userData.rotationSpeed;
-                shape.rotation.y += shape.userData.rotationSpeed * 0.5;
-                shape.position.y = shape.userData.originalY + Math.sin(time + shape.userData.floatOffset) * 0.5;
-            });
-
-            renderer.render(scene, camera);
-        }
-
-        function getCurrentProblem() {
-            const level = levelsData[currentLevel];
-            return level.problems[currentProblemIndex % level.problems.length];
-        }
-
-        function calculateAnswer(problem, operator) {
-            let numResult, denResult;
-
-            switch (operator) {
-                case '+':
-                    if (problem.den1 === problem.den2) {
-                        numResult = problem.num1 + problem.num2;
-                        denResult = problem.den1;
-                    } else {
-                        denResult = problem.den1 * problem.den2;
-                        numResult = problem.num1 * problem.den2 + problem.num2 * problem.den1;
-                    }
-                    break;
-                case '-':
-                    if (problem.den1 === problem.den2) {
-                        numResult = problem.num1 - problem.num2;
-                        denResult = problem.den1;
-                    } else {
-                        denResult = problem.den1 * problem.den2;
-                        numResult = problem.num1 * problem.den2 - problem.num2 * problem.den1;
-                    }
-                    break;
-                case '×':
-                    numResult = problem.num1 * problem.num2;
-                    denResult = problem.den1 * problem.den2;
-                    break;
-                case '÷':
-                    numResult = problem.num1 * problem.den2;
-                    denResult = problem.den1 * problem.num2;
-                    break;
-            }
-
-            return { num: numResult, den: denResult };
-        }
-
-        function simplifyFraction(num, den) {
-            const gcd = findGCD(Math.abs(num), Math.abs(den));
-            return { num: num / gcd, den: den / gcd };
-        }
-
-        function findGCD(a, b) {
-            while (b) {
-                const temp = b;
-                b = a % b;
-                a = temp;
-            }
-            return a;
-        }
-
-        function showProblem() {
-            const level = levelsData[currentLevel];
-            const problem = getCurrentProblem();
-            const operator = level.operator;
-
-            document.getElementById('level-title').textContent = `레벨 ${level.level}: ${level.title}`;
-            document.getElementById('level-icon').textContent = level.icon;
-            document.getElementById('level-description').textContent = level.description;
-
-            // Update problem display
-            document.getElementById('fraction-problem').innerHTML = `
-                <div class="fraction">
-                    <span class="numerator">${problem.num1}</span>
-                    <span class="denominator">${problem.den1}</span>
-                </div>
-                <span class="operator">${operator}</span>
-                <div class="fraction">
-                    <span class="numerator">${problem.num2}</span>
-                    <span class="denominator">${problem.den2}</span>
-                </div>
-                <span class="equals">=</span>
-                <div class="fraction answer-fraction">
-                    <span class="numerator">?</span>
-                    <span class="denominator">?</span>
-                </div>
-            `;
-
-            // Update visual operator
-            document.getElementById('visual-op').textContent = operator;
-
-            // Update pie charts
-            updatePieChart('pie1', problem.num1, problem.den1, '#f43f5e');
-            updatePieChart('pie2', problem.num2, problem.den2, '#8b5cf6');
-            document.getElementById('pie1-label').textContent = `${problem.num1}/${problem.den1}`;
-            document.getElementById('pie2-label').textContent = `${problem.num2}/${problem.den2}`;
-
-            // Clear inputs
-            document.getElementById('answer-numerator').value = '';
-            document.getElementById('answer-denominator').value = '';
-            document.getElementById('answer-numerator').focus();
-
-            // Hide hint
-            document.getElementById('hint-display').classList.remove('show');
-
-            // Update problem number
-            document.getElementById('problem-number').textContent = totalProblemsAnswered + 1;
-        }
-
-        function updatePieChart(chartId, numerator, denominator, color) {
-            const chart = document.getElementById(chartId);
-            const percentage = numerator / denominator;
-            const angle = percentage * 360;
-            
-            chart.style.background = `conic-gradient(${color} 0deg, ${color} ${angle}deg, rgba(255, 255, 255, 0.1) ${angle}deg, rgba(255, 255, 255, 0.1) 360deg)`;
-        }
-
-        function submitAnswer() {
-            const numInput = parseInt(document.getElementById('answer-numerator').value);
-            const denInput = parseInt(document.getElementById('answer-denominator').value);
-
-            if (isNaN(numInput) || isNaN(denInput) || denInput === 0) {
-                showFeedback('❓', '#fbbf24');
-                return;
-            }
-
-            const level = levelsData[currentLevel];
-            const problem = getCurrentProblem();
-            const correctAnswer = calculateAnswer(problem, level.operator);
-            const simplified = simplifyFraction(correctAnswer.num, correctAnswer.den);
-
-            // Check both simplified and unsimplified answers
-            const userSimplified = simplifyFraction(numInput, denInput);
-            const isCorrect = (userSimplified.num === simplified.num && userSimplified.den === simplified.den) ||
-                             (numInput === correctAnswer.num && denInput === correctAnswer.den);
-
-            totalProblemsAnswered++;
-
-            if (isCorrect) {
-                streak++;
-                if (streak > maxStreak) maxStreak = streak;
-                correctCount++;
-                
-                const basePoints = 100;
-                const streakBonus = Math.min(streak * 20, 100);
-                const levelBonus = currentLevel * 25;
-                const points = basePoints + streakBonus + levelBonus;
-                score += points;
-
-                showFeedback('🎉 정답!', '#10b981');
-                createConfetti();
-
-                document.getElementById('score').textContent = score;
-                document.getElementById('correct-count').textContent = correctCount;
-                document.getElementById('streak').textContent = streak;
-
-                // Update level progress
-                const progress = ((currentProblemIndex + 1) / level.problems.length) * 100;
-                document.getElementById('level-progress').style.width = progress + '%';
-
-                setTimeout(() => {
-                    currentProblemIndex++;
-                    if (currentProblemIndex >= level.problems.length) {
-                        currentProblemIndex = 0;
-                        // Mark level as completed
-                        document.querySelectorAll('.level-btn')[currentLevel].classList.add('completed');
-                    }
-                    showProblem();
-                }, 1200);
-            } else {
-                streak = 0;
-                score = Math.max(0, score - 20);
-                
-                showFeedback(`❌ 다시 해봐요! (정답: ${simplified.num}/${simplified.den})`, '#ef4444');
-                
-                document.getElementById('score').textContent = score;
-                document.getElementById('streak').textContent = streak;
-            }
-
-            updateProgress();
-        }
-
-        function showFeedback(message, color) {
-            const feedback = document.getElementById('feedback-message');
-            feedback.innerHTML = message;
-            feedback.style.color = color;
-            feedback.style.textShadow = `0 0 40px ${color}`;
-            feedback.classList.add('show');
-
-            setTimeout(() => {
-                feedback.classList.remove('show');
-            }, 1500);
-        }
-
-        function showHint() {
-            const level = levelsData[currentLevel];
-            const problem = getCurrentProblem();
-            const operator = level.operator;
-            let hintText = '';
-
-            switch (operator) {
-                case '+':
-                    if (problem.den1 === problem.den2) {
-                        hintText = `💡 분모가 같으면 분자만 더해요! ${problem.num1} + ${problem.num2} = ${problem.num1 + problem.num2}, 분모는 ${problem.den1}`;
-                    } else {
-                        const lcm = problem.den1 * problem.den2;
-                        hintText = `💡 분모를 같게 만들어요! 공통분모: ${lcm}`;
-                    }
-                    break;
-                case '-':
-                    hintText = `💡 분모가 같으면 분자만 빼요! ${problem.num1} - ${problem.num2} = ${problem.num1 - problem.num2}`;
-                    break;
-                case '×':
-                    hintText = `💡 분자×분자, 분모×분모! ${problem.num1}×${problem.num2}=${problem.num1*problem.num2}, ${problem.den1}×${problem.den2}=${problem.den1*problem.den2}`;
-                    break;
-                case '÷':
-                    hintText = `💡 나눗셈은 뒤집어서 곱해요! ${problem.num1}/${problem.den1} × ${problem.den2}/${problem.num2}`;
-                    break;
-            }
-
-            document.getElementById('hint-display').textContent = hintText;
-            document.getElementById('hint-display').classList.add('show');
-            
-            hintsUsed++;
-            score = Math.max(0, score - 15);
-            document.getElementById('score').textContent = score;
-        }
-
-        function skipProblem() {
-            streak = 0;
-            document.getElementById('streak').textContent = streak;
-            totalProblemsAnswered++;
-            currentProblemIndex++;
-            
-            const level = levelsData[currentLevel];
-            if (currentProblemIndex >= level.problems.length) {
-                currentProblemIndex = 0;
-            }
-            
-            showProblem();
-            updateProgress();
-        }
-
-        function selectLevel(levelIndex) {
-            currentLevel = levelIndex;
-            currentProblemIndex = 0;
-            
-            document.querySelectorAll('.level-btn').forEach((btn, i) => {
-                btn.classList.toggle('active', i === levelIndex);
-            });
-            
-            document.getElementById('level-progress').style.width = '0%';
-            showProblem();
-        }
-
-        function updateProgress() {
-            const totalProblems = 15;
-            const progress = (totalProblemsAnswered / totalProblems) * 100;
-            document.getElementById('progress-fill').style.width = progress + '%';
-            document.getElementById('progress-text').textContent = `진행률: ${Math.round(progress)}%`;
-            document.getElementById('total-problems').textContent = totalProblems;
-
-            if (totalProblemsAnswered >= totalProblems) {
-                setTimeout(() => {
-                    alert(`🎉 축하합니다! 모든 문제를 완료했어요!\n\n최종 점수: ${score}\n정답률: ${correctCount}/${totalProblemsAnswered}\n최대 연속 정답: ${maxStreak}🔥`);
-                }, 500);
-            }
-        }
-
-        function createConfetti() {
-            const colors = ['#f43f5e', '#8b5cf6', '#fbbf24', '#10b981', '#06b6d4'];
-            
-            for (let i = 0; i < 30; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDelay = Math.random() * 0.5 + 's';
-                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-                document.body.appendChild(confetti);
-
-                setTimeout(() => confetti.remove(), 3000);
-            }
-        }
-
-        // Event listeners
-        document.getElementById('start-btn').addEventListener('click', () => {
-            document.getElementById('start-screen').style.opacity = '0';
-            document.getElementById('start-screen').style.transition = 'opacity 0.5s';
-            
-            setTimeout(() => {
-                document.getElementById('start-screen').style.display = 'none';
-                gameStarted = true;
-                initThreeJS();
-                showProblem();
-            }, 500);
-        });
-
-        document.getElementById('submit-btn').addEventListener('click', submitAnswer);
-        document.getElementById('hint-btn').addEventListener('click', showHint);
-        document.getElementById('skip-btn').addEventListener('click', skipProblem);
-
-        document.querySelectorAll('.level-btn').forEach((btn, index) => {
-            btn.addEventListener('click', () => selectLevel(index));
-        });
-
-        // Enter key submission
-        document.getElementById('answer-numerator').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                document.getElementById('answer-denominator').focus();
-            }
-        });
-
-        document.getElementById('answer-denominator').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                submitAnswer();
-            }
-        });
-    </script>
+        <div style="background:rgba(239, 68, 68, 0.1); padding:15px; border-radius:12px; margin-top:20px; border:1px solid var(--primary); text-align:center;">
+            <strong>주의!</strong> 분모끼리 더하면 절대 안 돼! (2+3=5가 아님!)
+        </div>
+
+        <button class="btn-primary" onclick="ContentApp.nextScene()">수리 테스트</button>
+        <button class="btn-secondary" onclick="ContentApp.prevScene()">이전</button>
+      </div>
+    </section>
+
+    <!-- 6. Quiz Scene -->
+    <section id="quiz-scene" class="scene">
+      <div class="content-wrapper">
+        <h2>마지막 안전 퀴즈</h2>
+        <p>알맞은 부품 카드를 선택해서 기계를 고치세요!</p>
+
+        <div class="quiz-panel">
+            <div class="quiz-equation">
+                2/3 <span class="quiz-op">x</span> 3/4 = <span class="quiz-focus">?</span>
+            </div>
+
+            <div class="options-grid">
+                <button class="opt-btn" onclick="ContentApp.checkAnswer('5/7')">5/7</button>
+                <button class="opt-btn" onclick="ContentApp.checkAnswer('6/12')">6/12 (1/2)</button>
+                <button class="opt-btn" onclick="ContentApp.checkAnswer('8/9')">8/9</button>
+                <button class="opt-btn" onclick="ContentApp.checkAnswer('1/4')">1/4</button>
+            </div>
+            <div id="quiz-feedback" class="quiz-feedback"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 7. Wrap Scene -->
+    <section id="wrap-scene" class="scene">
+      <div class="content-wrapper">
+        <img src="../../../icons/icon-trophy-achievement-cute-20260124.svg" alt="Trophy" class="badge-anim">
+        <h2>공장 100% 정상 가동!</h2>
+        
+        <div class="summary-card">
+            <h3>팩토리 마스터 가이드</h3>
+            <ul>
+                <li>덧셈/뺄셈 공정: 무조건 통분부터!</li>
+                <li>곱셈 공정: 위아래끼리 척척 곱하기!</li>
+                <li>나눗셈 공정: 뒤집고 곱하기!</li>
+            </ul>
+        </div>
+
+        <div style="display:flex; gap:15px; margin-top:20px;">
+            <button class="btn-secondary" onclick="location.reload()">다시 수리하기</button>
+            <button class="btn-primary">완료 (돌아가기)</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

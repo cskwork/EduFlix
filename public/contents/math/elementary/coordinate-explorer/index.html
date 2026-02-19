@@ -3,22 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>좌표 탐험대 - 수학 게임</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <title>사이버 에이전트: 좌표 해제 - 수학 게임</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%);
+            background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: 'Noto Sans KR', 'Orbitron', sans-serif;
+            overflow: hidden;
         }
         #game-container {
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 40px rgba(14, 165, 233, 0.4), inset 0 0 20px rgba(217, 70, 239, 0.2);
+            border: 2px solid #1e293b;
+            position: relative;
+        }
+        #game-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+            z-index: 10;
         }
     </style>
 </head>
@@ -27,33 +38,59 @@
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
     <script>
 // ═══════════════════════════════════════════════════════════════════════════
-// 좌표 탐험대 - 좌표평면 위의 보물찾기!
-// 초등학교 5-6학년 대상
+// 좌표 탐험대 - CYBERPUNK EDITION
+// 초등학교 5-6학년 대상 (좌표평면과 사분면)
 // ═══════════════════════════════════════════════════════════════════════════
 
 const COLORS = {
-    bgPrimary: 0x0f172a,
-    bgSecondary: 0x1e293b,
-    bgCard: 0x334155,
-    primary: 0x10b981,
-    secondary: 0x14b8a6,
-    accent: 0x06b6d4,
-    success: 0x22c55e,
+    bgPrimary: 0x020617,
+    bgSecondary: 0x0f172a,
+    bgCard: 0x1e293b,
+    primary: 0x0ea5e9, // Cyan
+    primaryGlow: 0x38bdf8,
+    secondary: 0xc026d3, // Magenta
+    secondaryGlow: 0xe879f9,
+    accent: 0xd946ef,
+    success: 0x10b981, // Emerald neon
     warning: 0xf59e0b,
-    error: 0xef4444,
-    gold: 0xfbbf24,
-    gridLine: 0x475569,
-    axis: 0x94a3b8,
+    error: 0xf43f5e,
+    gold: 0xfcd34d,
+    gridLine: 0x0ea5e9,
+    axis: 0x38bdf8,
     textPrimary: 0xffffff,
     textSecondary: 0x94a3b8
 };
 
+// UI 헬퍼
+const UI = {
+    drawCyberBox(graphics, x, y, width, height, color, alpha = 0.8, borderColor = COLORS.primary) {
+        graphics.fillStyle(color, alpha);
+        graphics.beginPath();
+        graphics.moveTo(x + 10, y);
+        graphics.lineTo(x + width, y);
+        graphics.lineTo(x + width, y + height - 10);
+        graphics.lineTo(x + width - 10, y + height);
+        graphics.lineTo(x, y + height);
+        graphics.lineTo(x, y + 10);
+        graphics.closePath();
+        graphics.fillPath();
+
+        graphics.lineStyle(2, borderColor, 1);
+        graphics.strokePath();
+
+        // Corner accents
+        graphics.fillStyle(borderColor, 1);
+        graphics.fillRect(x, y + 10, 4, 10);
+        graphics.fillRect(x + width - 4, y + height - 20, 4, 10);
+    }
+};
+
 const Icons = {
-    drawStar(graphics, x, y, size, color = 0xfbbf24) {
+    drawStar(graphics, x, y, size, color = COLORS.primaryGlow) {
         graphics.fillStyle(color, 1);
         const points = [];
         for (let i = 0; i < 10; i++) {
-            const radius = i % 2 === 0 ? size : size * 0.5;
+            const radius = i % 2 === 0 ? size : size * 0.4;
             const angle = (i * Math.PI / 5) - Math.PI / 2;
             points.push({ x: x + Math.cos(angle) * radius, y: y + Math.sin(angle) * radius });
         }
@@ -63,87 +100,122 @@ const Icons = {
         graphics.closePath();
         graphics.fillPath();
     },
-    drawTreasure(graphics, x, y, size) {
-        // 상자 몸체
-        graphics.fillStyle(0xb45309, 1);
-        graphics.fillRoundedRect(x - size * 0.4, y - size * 0.1, size * 0.8, size * 0.5, 4);
-        // 상자 뚜껑
-        graphics.fillStyle(0xd97706, 1);
-        graphics.fillRoundedRect(x - size * 0.45, y - size * 0.3, size * 0.9, size * 0.25, 4);
-        // 자물쇠
-        graphics.fillStyle(0xfbbf24, 1);
-        graphics.fillCircle(x, y + size * 0.05, size * 0.12);
-        graphics.fillRect(x - size * 0.06, y + size * 0.1, size * 0.12, size * 0.15);
+    drawDataPacket(graphics, x, y, size) {
+        // glowing cube
+        graphics.fillStyle(COLORS.secondary, 0.8);
+        graphics.fillRoundedRect(x - size * 0.4, y - size * 0.4, size * 0.8, size * 0.8, 4);
+        graphics.lineStyle(2, COLORS.secondaryGlow, 1);
+        graphics.strokeRoundedRect(x - size * 0.4, y - size * 0.4, size * 0.8, size * 0.8, 4);
+        
+        graphics.fillStyle(COLORS.textPrimary, 1);
+        graphics.fillRect(x - size * 0.2, y - size * 0.1, size * 0.4, size * 0.05);
+        graphics.fillRect(x - size * 0.2, y + size * 0.1, size * 0.4, size * 0.05);
+        graphics.fillStyle(COLORS.primaryGlow, 1);
+        graphics.fillCircle(x, y, size * 0.15);
     },
-    drawExplorer(graphics, x, y, size) {
-        // 몸
-        graphics.fillStyle(0x3b82f6, 1);
-        graphics.fillRoundedRect(x - size * 0.15, y - size * 0.1, size * 0.3, size * 0.4, 4);
-        // 머리
-        graphics.fillStyle(0xfcd34d, 1);
-        graphics.fillCircle(x, y - size * 0.25, size * 0.18);
-        // 모자
-        graphics.fillStyle(0x854d0e, 1);
-        graphics.fillRect(x - size * 0.22, y - size * 0.35, size * 0.44, size * 0.08);
-        graphics.fillRoundedRect(x - size * 0.12, y - size * 0.5, size * 0.24, size * 0.18, 4);
-        // 눈
-        graphics.fillStyle(0x1e293b, 1);
-        graphics.fillCircle(x - size * 0.07, y - size * 0.27, size * 0.04);
-        graphics.fillCircle(x + size * 0.07, y - size * 0.27, size * 0.04);
-    },
-    drawFlag(graphics, x, y, size, color = 0xef4444) {
-        // 깃대
-        graphics.lineStyle(3, 0x78716c, 1);
-        graphics.lineBetween(x, y - size * 0.5, x, y + size * 0.3);
-        // 깃발
+    drawFlag(graphics, x, y, size, color = COLORS.error) {
+        // Red target crosshair
+        graphics.lineStyle(2, color, 1);
+        graphics.beginPath();
+        graphics.arc(x, y, size * 0.6, 0, Math.PI * 2);
+        graphics.strokePath();
+        graphics.lineBetween(x - size, y, x - size * 0.2, y);
+        graphics.lineBetween(x + size, y, x + size * 0.2, y);
+        graphics.lineBetween(x, y - size, x, y - size * 0.2);
+        graphics.lineBetween(x, y + size, x, y + size * 0.2);
         graphics.fillStyle(color, 1);
-        graphics.fillTriangle(x, y - size * 0.5, x + size * 0.4, y - size * 0.3, x, y - size * 0.1);
+        graphics.fillCircle(x, y, 4);
     },
-    drawCompass(graphics, x, y, size) {
-        // 원
-        graphics.lineStyle(3, 0xfbbf24, 1);
-        graphics.strokeCircle(x, y, size * 0.4);
-        // 바늘
-        graphics.fillStyle(0xef4444, 1);
-        graphics.fillTriangle(x, y - size * 0.35, x - size * 0.08, y, x + size * 0.08, y);
-        graphics.fillStyle(0xe2e8f0, 1);
-        graphics.fillTriangle(x, y + size * 0.35, x - size * 0.08, y, x + size * 0.08, y);
-        // 중심
-        graphics.fillStyle(0xfbbf24, 1);
-        graphics.fillCircle(x, y, size * 0.08);
-    },
-    drawMap(graphics, x, y, size) {
-        // 지도 배경
-        graphics.fillStyle(0xfef3c7, 1);
-        graphics.fillRoundedRect(x - size * 0.4, y - size * 0.3, size * 0.8, size * 0.6, 4);
-        // 선들
-        graphics.lineStyle(2, 0xd97706, 0.5);
-        graphics.lineBetween(x - size * 0.3, y - size * 0.1, x + size * 0.3, y - size * 0.15);
-        graphics.lineBetween(x - size * 0.25, y + size * 0.1, x + size * 0.2, y + size * 0.05);
-        // X 표시
-        graphics.lineStyle(3, 0xef4444, 1);
-        graphics.lineBetween(x + size * 0.1, y - size * 0.05, x + size * 0.25, y + size * 0.1);
-        graphics.lineBetween(x + size * 0.25, y - size * 0.05, x + size * 0.1, y + size * 0.1);
+    drawRadar(graphics, x, y, size) {
+        graphics.lineStyle(2, COLORS.primary, 0.8);
+        graphics.strokeCircle(x, y, size);
+        graphics.strokeCircle(x, y, size * 0.6);
+        graphics.strokeCircle(x, y, size * 0.2);
+        graphics.lineStyle(1, COLORS.primary, 0.4);
+        graphics.lineBetween(x - size, y, x + size, y);
+        graphics.lineBetween(x, y - size, x, y + size);
+
+        // Blip
+        graphics.fillStyle(COLORS.secondaryGlow, 1);
+        graphics.fillCircle(x + size * 0.4, y - size * 0.4, 5);
+        graphics.fillStyle(COLORS.success, 1);
+        graphics.fillCircle(x - size * 0.6, y + size * 0.2, 4);
     },
     drawTrophy(graphics, x, y, size) {
-        graphics.fillStyle(0xfbbf24, 1);
-        graphics.fillRoundedRect(x - size * 0.35, y - size * 0.25, size * 0.7, size * 0.4, 6);
-        graphics.lineStyle(3, 0xfbbf24, 1);
+        // Cyber Trophy (Hexagon core)
+        graphics.lineStyle(4, COLORS.primaryGlow, 1);
+        const pts = [];
+        for(let i=0; i<6; i++) {
+            const angle = i * Math.PI / 3;
+            pts.push({x: x + Math.cos(angle) * size, y: y + Math.sin(angle) * size});
+        }
         graphics.beginPath();
-        graphics.arc(x - size * 0.45, y - size * 0.1, size * 0.12, -Math.PI / 2, Math.PI / 2, false);
+        graphics.moveTo(pts[0].x, pts[0].y);
+        for(let i=1; i<6; i++) graphics.lineTo(pts[i].x, pts[i].y);
+        graphics.closePath();
         graphics.strokePath();
-        graphics.beginPath();
-        graphics.arc(x + size * 0.45, y - size * 0.1, size * 0.12, Math.PI / 2, -Math.PI / 2, false);
-        graphics.strokePath();
-        graphics.fillRect(x - size * 0.12, y + size * 0.15, size * 0.24, size * 0.12);
-        graphics.fillRect(x - size * 0.2, y + size * 0.27, size * 0.4, size * 0.08);
+
+        graphics.fillStyle(COLORS.secondaryGlow, 0.3);
+        graphics.fillPath();
+        
+        UI.drawCyberBox(graphics, x - size * 0.5, y + size * 1.2, size, size * 0.4, COLORS.bgCard, 1, COLORS.primary);
+        
+        graphics.fillStyle(COLORS.success, 1);
+        graphics.fillCircle(x, y, size * 0.4);
     }
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Base Scene with Custom UI Factory
+// ═══════════════════════════════════════════════════════════════════════════
+class CyberScene extends Phaser.Scene {
+    createButton(x, y, text, width, height, onClick) {
+        const container = this.add.container(x, y);
+        const bg = this.add.graphics();
+        
+        const drawBtn = (bgColor, strokeColor, scaleY=1) => {
+            bg.clear();
+            const w = width; const h = height;
+            const hx = -w/2; const hy = -h/2 * scaleY;
+            UI.drawCyberBox(bg, hx, hy, w, h * scaleY, bgColor, 1, strokeColor);
+        };
+        
+        drawBtn(COLORS.bgSecondary, COLORS.primary);
+
+        const label = this.add.text(0, 0, text, {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '20px',
+            color: '#ffffff',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        container.add([bg, label]);
+        container.setSize(width, height);
+        container.setInteractive({ useHandCursor: true });
+
+        container.on('pointerover', () => {
+            drawBtn(COLORS.bgCard, COLORS.primaryGlow, 1.05);
+            this.tweens.add({ targets: label, scale: 1.05, duration: 100 });
+        });
+
+        container.on('pointerout', () => {
+            drawBtn(COLORS.bgSecondary, COLORS.primary, 1);
+            this.tweens.add({ targets: label, scale: 1, duration: 100 });
+        });
+
+        container.on('pointerdown', () => {
+             drawBtn(COLORS.primary, COLORS.textPrimary, 0.95);
+             this.time.delayedCall(100, onClick);
+        });
+
+        return container;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // BootScene - 초기화
 // ═══════════════════════════════════════════════════════════════════════════
-class BootScene extends Phaser.Scene {
+class BootScene extends CyberScene {
     constructor() { super('BootScene'); }
     create() {
         this.registry.set('score', 0);
@@ -156,114 +228,117 @@ class BootScene extends Phaser.Scene {
 // ═══════════════════════════════════════════════════════════════════════════
 // HookScene - 흥미 유발
 // ═══════════════════════════════════════════════════════════════════════════
-class HookScene extends Phaser.Scene {
+class HookScene extends CyberScene {
     constructor() { super('HookScene'); }
 
     create() {
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
 
-        // 지도 아이콘
-        const map = this.add.graphics();
-        Icons.drawMap(map, 300, 160, 150);
+        // 글리치 텍스트 효과
+        const title1 = this.add.text(300 + 2, 270, 'CYBER AGENT', { fontFamily: 'Orbitron', fontSize: '46px', color: '#0284c7', fontStyle: '900' }).setOrigin(0.5);
+        const title2 = this.add.text(300 - 2, 270, 'CYBER AGENT', { fontFamily: 'Orbitron', fontSize: '46px', color: '#c026d3', fontStyle: '900' }).setOrigin(0.5);
+        const title = this.add.text(300, 270, 'CYBER AGENT', { fontFamily: 'Orbitron', fontSize: '46px', color: '#ffffff', fontStyle: '900' }).setOrigin(0.5);
 
-        // 타이틀
-        this.add.text(300, 290, '좌표 탐험대', {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '40px',
-            color: '#10b981',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
+        this.tweens.add({
+            targets: [title1, title2],
+            alpha: { start: 0.8, to: 0.2 },
+            x: { value: '+=Phaser.Math.Between(-3, 3)' },
+            y: { value: '+=Phaser.Math.Between(-2, 2)' },
+            yoyo: true,
+            repeat: -1,
+            duration: 100
+        });
 
-        this.add.text(300, 345, '좌표평면 위에서 보물을 찾아라!', {
+        this.add.text(300, 320, 'SYSTEM OVERRIDE : COORDINATES', {
             fontFamily: 'Noto Sans KR',
             fontSize: '18px',
+            color: '#0ea5e9',
+            letterSpacing: 2
+        }).setOrigin(0.5);
+
+        // 레이더 그래픽
+        const radar = this.add.graphics();
+        Icons.drawRadar(radar, 300, 140, 80);
+        
+        // 레이더 스윕 (회전하는 빔)
+        const sweep = this.add.graphics();
+        sweep.fillStyle(COLORS.primary, 0.2);
+        sweep.moveTo(300, 140);
+        sweep.arc(300, 140, 80, 0, Math.PI / 4);
+        sweep.closePath();
+        sweep.fillPath();
+        this.tweens.add({
+            targets: sweep,
+            angle: 360,
+            duration: 3000,
+            repeat: -1,
+            ease: 'Linear'
+        });
+
+        const storyTextContainer = this.add.graphics();
+        UI.drawCyberBox(storyTextContainer, 80, 370, 440, 80, COLORS.bgSecondary, 0.7, COLORS.success);
+
+        this.add.text(300, 410, '"블랙해커들이 탈취한 암호화 데이터 패킷이\n좌표평면 곳곳에 숨겨져 있다."', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '16px',
+            lineSpacing: 8,
+            align: 'center',
             color: '#94a3b8'
         }).setOrigin(0.5);
 
-        // 보물상자 장식
-        const treasure1 = this.add.graphics();
-        Icons.drawTreasure(treasure1, 120, 430, 40);
-        const treasure2 = this.add.graphics();
-        Icons.drawTreasure(treasure2, 480, 430, 40);
 
         // 시작 버튼
-        this.createButton(300, 500, '탐험 시작', () => {
-            this.scene.start('AnchorScene');
+        const btn = this.createButton(300, 510, '시스템 부팅', 240, 56, () => {
+            this.cameras.main.fadeOut(300, 0, 0, 0);
+            this.time.delayedCall(300, () => this.scene.start('AnchorScene'));
         });
-    }
-
-    createButton(x, y, text, onClick) {
-        const container = this.add.container(x, y);
-        const bg = this.add.graphics();
-        bg.fillStyle(COLORS.primary, 1);
-        bg.fillRoundedRect(-100, -28, 200, 56, 14);
-
-        const label = this.add.text(0, 0, text, {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '24px',
-            color: '#ffffff',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-
-        container.add([bg, label]);
-        container.setSize(200, 56);
-        container.setInteractive({ useHandCursor: true });
-
-        container.on('pointerover', () => {
-            bg.clear();
-            bg.fillStyle(COLORS.secondary, 1);
-            bg.fillRoundedRect(-100, -28, 200, 56, 14);
-            this.tweens.add({ targets: container, scale: 1.05, duration: 100 });
-        });
-
-        container.on('pointerout', () => {
-            bg.clear();
-            bg.fillStyle(COLORS.primary, 1);
-            bg.fillRoundedRect(-100, -28, 200, 56, 14);
-            this.tweens.add({ targets: container, scale: 1, duration: 100 });
-        });
-
-        container.on('pointerdown', onClick);
-        return container;
+        
+        this.cameras.main.fadeIn(500, 0, 0, 0);
     }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // AnchorScene - 좌표평면 개념 복습
 // ═══════════════════════════════════════════════════════════════════════════
-class AnchorScene extends Phaser.Scene {
+class AnchorScene extends CyberScene {
     constructor() { super('AnchorScene'); }
 
     create() {
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
 
-        this.add.text(300, 40, '📍 좌표평면 복습', {
+        this.add.text(300, 40, '📍 스캔 매뉴얼', {
             fontFamily: 'Noto Sans KR',
             fontSize: '26px',
             color: '#ffffff',
             fontStyle: 'bold'
         }).setOrigin(0.5);
 
-        // 미니 좌표평면 그리기
-        this.drawMiniGrid(300, 240, 240);
+        // 미니 좌표평면 
+        this.drawMiniGrid(300, 220, 240);
 
-        // 설명 텍스트
+        // 설명 박스
+        const box = this.add.graphics();
+        UI.drawCyberBox(box, 40, 370, 520, 120, COLORS.bgCard, 0.8, COLORS.primary);
+
         const explanations = [
-            '• 가로 방향: x축 (왼쪽이 -, 오른쪽이 +)',
-            '• 세로 방향: y축 (아래가 -, 위가 +)',
-            '• 좌표는 (x, y) 형태로 표현해요',
-            '• 예: (3, 2)는 오른쪽 3, 위로 2!'
+            '• 기준점 O(Origin): 모든 스캔의 시작점 (0, 0)',
+            '• 가로축(x축): 오른쪽(+), 왼쪽(-)',
+            '• 세로축(y축): 위쪽(+), 아래쪽(-)',
+            '• 표기법: 항상 (x, y) 순서로 해독한다.'
         ];
 
         explanations.forEach((text, idx) => {
-            this.add.text(300, 410 + idx * 26, text, {
+            this.add.text(60, 390 + idx * 24, text, {
                 fontFamily: 'Noto Sans KR',
-                fontSize: '14px',
+                fontSize: '15px',
                 color: '#e2e8f0'
-            }).setOrigin(0.5);
+            });
         });
 
-        this.createButton(300, 555, '이해했어요!', () => {
+        this.createButton(200, 540, '← 뒤로', 160, 50, () => {
+            this.scene.start('HookScene');
+        });
+        this.createButton(400, 540, '다음 [스캔]', 160, 50, () => {
             this.scene.start('StoryScene');
         });
     }
@@ -274,115 +349,119 @@ class AnchorScene extends Phaser.Scene {
         const step = size / 10;
 
         // 격자
-        graphics.lineStyle(1, COLORS.gridLine, 0.3);
+        graphics.lineStyle(1, COLORS.gridLine, 0.2);
         for (let i = -5; i <= 5; i++) {
             graphics.lineBetween(cx - half, cy + i * step, cx + half, cy + i * step);
             graphics.lineBetween(cx + i * step, cy - half, cx + i * step, cy + half);
         }
 
         // 축
-        graphics.lineStyle(2, COLORS.axis, 1);
+        graphics.lineStyle(2, COLORS.primaryGlow, 0.8);
         graphics.lineBetween(cx - half - 10, cy, cx + half + 10, cy); // x축
         graphics.lineBetween(cx, cy - half - 10, cx, cy + half + 10); // y축
 
         // 축 레이블
-        this.add.text(cx + half + 18, cy, 'x', {
-            fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#94a3b8', fontStyle: 'bold'
-        }).setOrigin(0.5);
-        this.add.text(cx, cy - half - 20, 'y', {
-            fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#94a3b8', fontStyle: 'bold'
-        }).setOrigin(0.5);
+        this.add.text(cx + half + 18, cy, 'X', { fontFamily: 'Orbitron', fontSize: '18px', color: '#38bdf8' }).setOrigin(0.5);
+        this.add.text(cx, cy - half - 20, 'Y', { fontFamily: 'Orbitron', fontSize: '18px', color: '#38bdf8' }).setOrigin(0.5);
 
         // 숫자
         for (let i = -4; i <= 4; i++) {
             if (i === 0) continue;
-            this.add.text(cx + i * step, cy + 14, i.toString(), {
-                fontFamily: 'Noto Sans KR', fontSize: '11px', color: '#64748b'
-            }).setOrigin(0.5);
-            this.add.text(cx - 16, cy - i * step, i.toString(), {
-                fontFamily: 'Noto Sans KR', fontSize: '11px', color: '#64748b'
-            }).setOrigin(0.5);
+            this.add.text(cx + i * step, cy + 14, i.toString(), { fontFamily: 'Orbitron', fontSize: '10px', color: '#64748b' }).setOrigin(0.5);
+            this.add.text(cx - 16, cy - i * step, i.toString(), { fontFamily: 'Orbitron', fontSize: '10px', color: '#64748b' }).setOrigin(0.5);
         }
 
-        // 예시 점 (3, 2)
+        // 예시 점 (3, -2)
         const exX = cx + 3 * step;
-        const exY = cy - 2 * step;
-        graphics.fillStyle(COLORS.warning, 1);
-        graphics.fillCircle(exX, exY, 7);
-        this.add.text(exX + 14, exY - 14, '(3, 2)', {
-            fontFamily: 'Noto Sans KR', fontSize: '13px', color: '#fbbf24', fontStyle: 'bold'
-        });
-    }
-
-    createButton(x, y, text, onClick) {
-        const container = this.add.container(x, y);
-        const bg = this.add.graphics();
-        bg.fillStyle(COLORS.success, 1);
-        bg.fillRoundedRect(-90, -25, 180, 50, 12);
-
-        const label = this.add.text(0, 0, text, {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '22px',
-            color: '#ffffff',
-            fontStyle: 'bold'
+        const exY = cy + 2 * step; // 아래로
+        graphics.fillStyle(COLORS.secondaryGlow, 1);
+        graphics.fillCircle(exX, exY, 5);
+        
+        const labelBox = this.add.graphics();
+        labelBox.fillStyle(COLORS.bgPrimary, 0.8);
+        labelBox.lineStyle(1, COLORS.secondary, 1);
+        labelBox.fillRect(exX + 10, exY - 20, 50, 20);
+        labelBox.strokeRect(exX + 10, exY - 20, 50, 20);
+        
+        this.add.text(exX + 35, exY - 10, '(3, -2)', {
+            fontFamily: 'Orbitron', fontSize: '12px', color: '#e879f9', fontStyle: 'bold'
         }).setOrigin(0.5);
-
-        container.add([bg, label]);
-        container.setSize(180, 50);
-        container.setInteractive({ useHandCursor: true });
-        container.on('pointerdown', onClick);
-        return container;
     }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // StoryScene - 캐릭터 스토리
 // ═══════════════════════════════════════════════════════════════════════════
-class StoryScene extends Phaser.Scene {
+class StoryScene extends CyberScene {
     constructor() { super('StoryScene'); }
 
     create() {
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
 
-        // 탐험가 캐릭터
+        this.add.text(300, 40, '통신 연결 중...', {
+            fontFamily: 'Noto Sans KR',
+            fontSize: '16px',
+            color: COLORS.success,
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+        // Hacker Avatar
+        const avatarBox = this.add.graphics();
+        UI.drawCyberBox(avatarBox, 40, 80, 140, 140, COLORS.bgSecondary, 1, COLORS.secondary);
+        
         const explorer = this.add.graphics();
-        Icons.drawExplorer(explorer, 90, 260, 140);
+        // Cyber Cat / Hacker
+        explorer.fillStyle(0xffffff, 1);
+        explorer.fillCircle(110, 150, 35);
+        // Visor
+        explorer.fillStyle(COLORS.secondary, 0.9);
+        explorer.fillRoundedRect(80, 140, 60, 15, 3);
+        explorer.lineStyle(2, COLORS.secondaryGlow, 1);
+        explorer.strokeRoundedRect(80, 140, 60, 15, 3);
+        // Cat Ears Cybernetic
+        explorer.lineStyle(3, COLORS.primary, 1);
+        explorer.strokeTriangle(85, 120, 95, 90, 110, 115);
+        explorer.strokeTriangle(135, 120, 125, 90, 110, 115);
+
+        this.add.text(110, 240, '요원 CIPHER', { fontFamily: 'Orbitron', fontSize: '18px', color: '#e879f9', fontStyle: 'bold' }).setOrigin(0.5);
 
         // 말풍선
         const bubble = this.add.graphics();
-        bubble.fillStyle(0xffffff, 1);
-        bubble.fillRoundedRect(170, 100, 400, 200, 14);
-        bubble.fillTriangle(170, 180, 140, 210, 170, 220);
+        UI.drawCyberBox(bubble, 200, 80, 360, 200, COLORS.bgCard, 0.9, COLORS.primary);
+        bubble.lineStyle(2, COLORS.primary, 1);
+        bubble.lineBetween(180, 150, 200, 160);
+        bubble.lineBetween(180, 150, 200, 140);
 
         // 대사 (타이핑 효과)
         const dialogue = [
-            '안녕! 나는 탐험가 "코디"야!',
+            '에이전트, 스캐너에 접속한 것을 환영한다.',
             '',
-            '오래된 지도에 숨겨진 보물의',
-            '좌표가 적혀있어!',
+            '우리의 타겟 데이터가 암호화되어',
+            '그리드 좌표 내부에 숨겨져 있다.',
             '',
-            '좌표를 읽고 정확한 위치를',
-            '클릭해서 보물을 찾아줘! 🗺️'
+            '시스템이 알려주는 목표 (X, Y) 좌표를',
+            '정확히 클릭해서 데이터를 해킹하라. 운을 빈다.'
         ];
 
-        let y = 125;
+        let y = 110;
         dialogue.forEach((line, idx) => {
-            const text = this.add.text(370, y, '', {
+            const text = this.add.text(220, y, '', {
                 fontFamily: 'Noto Sans KR',
                 fontSize: '15px',
-                color: '#1e293b',
-                fontStyle: idx === 0 ? 'bold' : 'normal'
-            }).setOrigin(0.5);
+                color: '#e2e8f0'
+            });
 
-            this.typeText(text, line, idx * 350);
+            this.typeText(text, line, idx * 500);
             y += 24;
         });
 
         // 시작 버튼 (딜레이 후 표시)
-        this.time.delayedCall(2600, () => {
-            this.createButton(300, 460, '보물 찾으러 가자!', () => {
+        this.time.delayedCall(4000, () => {
+             const btn = this.createButton(300, 480, '스캐너 가동', 240, 60, () => {
                 this.scene.start('CoreScene');
             });
+            btn.setAlpha(0);
+            this.tweens.add({ targets: btn, alpha: 1, duration: 500 });
         });
     }
 
@@ -390,7 +469,7 @@ class StoryScene extends Phaser.Scene {
         let i = 0;
         this.time.delayedCall(delay, () => {
             this.time.addEvent({
-                delay: 25,
+                delay: 20,
                 repeat: fullText.length - 1,
                 callback: () => {
                     textObj.setText(fullText.substring(0, ++i));
@@ -398,36 +477,12 @@ class StoryScene extends Phaser.Scene {
             });
         });
     }
-
-    createButton(x, y, text, onClick) {
-        const container = this.add.container(x, y);
-        const bg = this.add.graphics();
-        bg.fillStyle(COLORS.warning, 1);
-        bg.fillRoundedRect(-110, -25, 220, 50, 12);
-
-        const label = this.add.text(0, 0, text, {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '22px',
-            color: '#ffffff',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-
-        container.add([bg, label]);
-        container.setSize(220, 50);
-        container.setInteractive({ useHandCursor: true });
-        container.on('pointerdown', onClick);
-
-        container.setAlpha(0);
-        this.tweens.add({ targets: container, alpha: 1, duration: 300 });
-
-        return container;
-    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CoreScene - 핵심 게임플레이 (좌표 찾기)
 // ═══════════════════════════════════════════════════════════════════════════
-class CoreScene extends Phaser.Scene {
+class CoreScene extends CyberScene {
     constructor() { super('CoreScene'); }
 
     create() {
@@ -439,60 +494,40 @@ class CoreScene extends Phaser.Scene {
         this.step = this.gridSize / 10;
         this.currentRound = 0;
         this.maxRounds = 8;
+        this.score = 0;
 
-        // 문제 생성
-        this.problems = this.generateProblems();
+        // 헤더 패널
+        const header = this.add.graphics();
+        UI.drawCyberBox(header, 20, 20, 560, 60, COLORS.bgCard, 0.8, COLORS.primary);
+        
+        this.roundText = this.add.text(50, 50, 'ROUND 1/8', { fontFamily: 'Orbitron', fontSize: '18px', color: '#38bdf8' }).setOrigin(0, 0.5);
+        this.scoreText = this.add.text(550, 50, 'SCORE: 000', { fontFamily: 'Orbitron', fontSize: '18px', color: '#fcd34d' }).setOrigin(1, 0.5);
 
-        // 점수 표시
-        this.scoreText = this.add.text(530, 25, '점수: 0', {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '18px',
-            color: '#fbbf24',
-            fontStyle: 'bold'
+        // 중앙 좌표 지시
+        this.targetLabel = this.add.text(300, 35, 'TARGET', { fontFamily: 'Orbitron', fontSize: '12px', color: '#94a3b8' }).setOrigin(0.5);
+        this.questionText = this.add.text(300, 55, '(0, 0)', {
+            fontFamily: 'Orbitron', fontSize: '24px', color: '#e879f9', fontStyle: 'bold'
         }).setOrigin(0.5);
 
-        // 라운드 표시
-        this.roundText = this.add.text(70, 25, '', {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '16px',
-            color: '#94a3b8'
+        // 피드백 텍스트
+        this.feedbackText = this.add.text(300, 540, 'SYSTEM READY', {
+            fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#10b981', fontStyle: 'bold'
         }).setOrigin(0.5);
 
         // 좌표평면 그리기
         this.drawGrid();
 
-        // 문제 표시 영역
-        this.questionBg = this.add.graphics();
-        this.questionBg.fillStyle(COLORS.accent, 1);
-        this.questionBg.fillRoundedRect(130, 40, 340, 50, 10);
-
-        this.questionText = this.add.text(300, 65, '', {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '22px',
-            color: '#ffffff',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-
-        // 피드백 텍스트
-        this.feedbackText = this.add.text(300, 565, '', {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '16px',
-            color: '#22c55e'
-        }).setOrigin(0.5);
-
-        // 다음 문제
+        this.problems = this.generateProblems();
         this.nextProblem();
     }
 
     generateProblems() {
         const problems = [];
         const used = new Set();
-
-        while (problems.length < 8) {
+        while (problems.length < this.maxRounds) {
             const x = Phaser.Math.Between(-4, 4);
             const y = Phaser.Math.Between(-4, 4);
             const key = `${x},${y}`;
-
             if (!used.has(key) && !(x === 0 && y === 0)) {
                 used.add(key);
                 problems.push({ x, y });
@@ -508,52 +543,39 @@ class CoreScene extends Phaser.Scene {
         const half = this.gridSize / 2;
         const step = this.step;
 
-        // 격자 배경
-        graphics.fillStyle(COLORS.bgSecondary, 0.5);
+        // 망 레이더 느낌
+        graphics.fillStyle(COLORS.bgSecondary, 0.6);
         graphics.fillRect(cx - half, cy - half, this.gridSize, this.gridSize);
+        graphics.lineStyle(2, COLORS.primary, 1);
+        graphics.strokeRect(cx - half, cy - half, this.gridSize, this.gridSize);
 
         // 격자선
-        graphics.lineStyle(1, COLORS.gridLine, 0.4);
+        graphics.lineStyle(1, COLORS.gridLine, 0.2);
         for (let i = -5; i <= 5; i++) {
             graphics.lineBetween(cx - half, cy + i * step, cx + half, cy + i * step);
             graphics.lineBetween(cx + i * step, cy - half, cx + i * step, cy + half);
         }
 
         // 축
-        graphics.lineStyle(3, COLORS.axis, 1);
-        graphics.lineBetween(cx - half - 10, cy, cx + half + 10, cy);
-        graphics.lineBetween(cx, cy - half - 10, cx, cy + half + 10);
+        graphics.lineStyle(2, COLORS.primaryGlow, 0.8);
+        graphics.lineBetween(cx - half, cy, cx + half, cy);
+        graphics.lineBetween(cx, cy - half, cx, cy + half);
 
-        // 축 화살표
-        graphics.fillStyle(COLORS.axis, 1);
-        graphics.fillTriangle(cx + half + 15, cy, cx + half + 5, cy - 6, cx + half + 5, cy + 6);
-        graphics.fillTriangle(cx, cy - half - 15, cx - 6, cy - half - 5, cx + 6, cy - half - 5);
+        // 텍스트
+        this.add.text(cx + half + 20, cy, 'X', { fontFamily: 'Orbitron', fontSize: '20px', color: '#38bdf8' }).setOrigin(0.5);
+        this.add.text(cx, cy - half - 20, 'Y', { fontFamily: 'Orbitron', fontSize: '20px', color: '#38bdf8' }).setOrigin(0.5);
 
-        // 축 레이블
-        this.add.text(cx + half + 30, cy, 'x', {
-            fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#10b981', fontStyle: 'bold'
-        }).setOrigin(0.5);
-        this.add.text(cx, cy - half - 30, 'y', {
-            fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#10b981', fontStyle: 'bold'
-        }).setOrigin(0.5);
-
-        // 숫자 레이블
         for (let i = -4; i <= 4; i++) {
             if (i === 0) continue;
-            this.add.text(cx + i * step, cy + half + 18, i.toString(), {
-                fontFamily: 'Noto Sans KR', fontSize: '14px', color: '#64748b'
-            }).setOrigin(0.5);
-            this.add.text(cx - half - 18, cy - i * step, i.toString(), {
-                fontFamily: 'Noto Sans KR', fontSize: '14px', color: '#64748b'
-            }).setOrigin(0.5);
+            this.add.text(cx + i * step, cy + half + 14, i.toString(), { fontFamily: 'Orbitron', fontSize: '12px', color: '#64748b' }).setOrigin(0.5);
+            this.add.text(cx - half - 14, cy - i * step, i.toString(), { fontFamily: 'Orbitron', fontSize: '12px', color: '#64748b' }).setOrigin(0.5);
         }
 
-        // 원점 O
-        this.add.text(cx - 15, cy + 15, 'O', {
-            fontFamily: 'Noto Sans KR', fontSize: '14px', color: '#64748b'
-        });
+        this.add.text(cx - 12, cy + 12, 'O', { fontFamily: 'Orbitron', fontSize: '12px', color: '#38bdf8' }).setOrigin(0.5);
 
-        // 클릭 가능 영역 생성
+        // 클릭 존 배치 및 호버링 이펙트
+        this.hoverGlow = this.add.graphics();
+        
         this.clickZones = [];
         for (let gx = -4; gx <= 4; gx++) {
             for (let gy = -4; gy <= 4; gy++) {
@@ -562,30 +584,24 @@ class CoreScene extends Phaser.Scene {
                 const px = cx + gx * step;
                 const py = cy - gy * step;
 
-                const zone = this.add.circle(px, py, step * 0.4, 0x000000, 0);
+                const zone = this.add.rectangle(px, py, step*0.8, step*0.8, 0x000000, 0);
                 zone.setInteractive({ useHandCursor: true });
-                zone.gridX = gx;
-                zone.gridY = gy;
 
                 zone.on('pointerover', () => {
                     if (!this.answered) {
-                        zone.setFillStyle(COLORS.primary, 0.3);
+                        this.hoverGlow.clear();
+                        this.hoverGlow.lineStyle(2, COLORS.secondaryGlow, 0.8);
+                        this.hoverGlow.strokeRect(px - 10, py - 10, 20, 20);
                     }
                 });
 
                 zone.on('pointerout', () => {
-                    if (!this.answered) {
-                        zone.setFillStyle(0x000000, 0);
-                    }
+                    if (!this.answered) this.hoverGlow.clear();
                 });
 
                 zone.on('pointerdown', () => {
-                    if (!this.answered) {
-                        this.checkAnswer(gx, gy, px, py);
-                    }
+                    if (!this.answered) this.checkAnswer(gx, gy, px, py);
                 });
-
-                this.clickZones.push(zone);
             }
         }
     }
@@ -597,77 +613,81 @@ class CoreScene extends Phaser.Scene {
         }
 
         this.answered = false;
+        this.hoverGlow.clear();
         this.currentProblem = this.problems[this.currentRound];
         this.currentRound++;
 
-        this.roundText.setText(`${this.currentRound} / ${this.maxRounds}`);
-        this.questionText.setText(`보물 좌표: (${this.currentProblem.x}, ${this.currentProblem.y})`);
+        this.roundText.setText(`ROUND ${this.currentRound}/${this.maxRounds}`);
+        this.questionText.setText(`( ${this.currentProblem.x}, ${this.currentProblem.y} )`);
         this.feedbackText.setText('');
 
-        // 이전 마커 제거
-        if (this.treasureMarker) {
-            this.treasureMarker.destroy();
-        }
+        // 카메라 쉐이크 후 타겟 팝업
+        this.tweens.add({
+            targets: this.questionText,
+            scale: { from: 1.5, to: 1 },
+            alpha: { from: 0, to: 1 },
+            duration: 300,
+            ease: 'Back.easeOut'
+        });
+
+        if (this.treasureMarker) this.treasureMarker.destroy();
     }
 
     checkAnswer(clickX, clickY, px, py) {
         this.answered = true;
+        this.hoverGlow.clear();
 
         const isCorrect = clickX === this.currentProblem.x && clickY === this.currentProblem.y;
 
         if (isCorrect) {
-            this.registry.inc('score', 10);
+            this.score += 10;
+            this.registry.set('score', this.score);
             this.registry.inc('treasuresFound', 1);
-            this.scoreText.setText(`점수: ${this.registry.get('score')}`);
+            this.scoreText.setText(`SCORE: ${this.score.toString().padStart(3,'0')}`);
 
             // 보물 표시
             this.treasureMarker = this.add.graphics();
-            Icons.drawTreasure(this.treasureMarker, px, py, 35);
+            Icons.drawDataPacket(this.treasureMarker, px, py, 26);
 
-            // 성공 파티클
             this.showSuccessParticles(px, py);
 
-            this.feedbackText.setColor('#22c55e');
-            this.feedbackText.setText('정답! 보물을 찾았어요! 🎉');
+            this.feedbackText.setColor('#10b981');
+            this.feedbackText.setText('> DECRYPT SUCCESS_ 데이터 코어 획득!');
         } else {
-            // 틀린 위치 표시
+            // 틀린 위치
             const wrongMarker = this.add.graphics();
-            wrongMarker.lineStyle(4, COLORS.error, 1);
-            wrongMarker.lineBetween(px - 12, py - 12, px + 12, py + 12);
-            wrongMarker.lineBetween(px + 12, py - 12, px - 12, py + 12);
+            Icons.drawFlag(wrongMarker, px, py, 20, COLORS.error);
 
-            // 정답 위치 표시
+            // 정답 위치
             const correctPx = this.gridX + this.currentProblem.x * this.step;
             const correctPy = this.gridY - this.currentProblem.y * this.step;
-
             this.treasureMarker = this.add.graphics();
-            Icons.drawFlag(this.treasureMarker, correctPx, correctPy, 30, COLORS.success);
+            Icons.drawDataPacket(this.treasureMarker, correctPx, correctPy, 26);
+            this.treasureMarker.setAlpha(0.5);
 
-            this.feedbackText.setColor('#ef4444');
-            this.feedbackText.setText(`아쉬워요! 정답은 (${this.currentProblem.x}, ${this.currentProblem.y})예요`);
+            this.feedbackText.setColor('#f43f5e');
+            this.feedbackText.setText(`> ACCESS DENIED_ 타겟은 (${this.currentProblem.x}, ${this.currentProblem.y})`);
 
-            this.time.delayedCall(1000, () => wrongMarker.destroy());
+            this.cameras.main.shake(200, 0.01);
+            this.time.delayedCall(1500, () => wrongMarker.destroy());
         }
 
-        // 다음 문제로
-        this.time.delayedCall(1800, () => {
-            this.nextProblem();
-        });
+        this.time.delayedCall(1800, () => this.nextProblem());
     }
 
     showSuccessParticles(x, y) {
-        for (let i = 0; i < 12; i++) {
-            const particle = this.add.graphics();
-            particle.fillStyle([COLORS.gold, COLORS.success, COLORS.primary][i % 3], 1);
-            particle.fillCircle(0, 0, Phaser.Math.Between(3, 6));
-            particle.setPosition(x, y);
-
+        for (let i = 0; i < 15; i++) {
+            const particle = this.add.rectangle(x, y, Phaser.Math.Between(4, 8), Phaser.Math.Between(4, 8), [COLORS.primary, COLORS.secondary, COLORS.success][i%3], 1);
+            const angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+            const speed = Phaser.Math.FloatBetween(30, 80);
+            
             this.tweens.add({
                 targets: particle,
-                x: x + Phaser.Math.Between(-60, 60),
-                y: y + Phaser.Math.Between(-60, 60),
+                x: x + Math.cos(angle) * speed,
+                y: y + Math.sin(angle) * speed,
                 alpha: 0,
-                duration: 600,
+                rotation: Phaser.Math.FloatBetween(0, 5),
+                duration: 800,
                 onComplete: () => particle.destroy()
             });
         }
@@ -675,103 +695,64 @@ class CoreScene extends Phaser.Scene {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// VisualizeScene - 결과 시각화
+// VisualizeScene - 사분면 설명
 // ═══════════════════════════════════════════════════════════════════════════
-class VisualizeScene extends Phaser.Scene {
+class VisualizeScene extends CyberScene {
     constructor() { super('VisualizeScene'); }
 
     create() {
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
 
-        const score = this.registry.get('score');
-        const found = this.registry.get('treasuresFound');
-        const accuracy = Math.round((found / 8) * 100);
+        this.add.text(300, 30, 'SECTOR ANALYSIS', { fontFamily: 'Orbitron', fontSize: '26px', color: COLORS.textPrimary, fontStyle: 'bold' }).setOrigin(0.5);
+        this.add.text(300, 60, '스캐너는 4개의 구역(사분면)으로 나뉜다.', { fontFamily: 'Noto Sans KR', fontSize: '15px', color: COLORS.textSecondary }).setOrigin(0.5);
 
-        this.add.text(300, 45, '🗺️ 탐험 결과', {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '30px',
-            color: '#ffffff',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
+        // 큰 4분면 맵
+        const cx = 300; const cy = 250; const size = 260;
+        const half = size/2;
+        
+        const map = this.add.graphics();
+        // Sector backgrounds
+        map.fillStyle(COLORS.success, 0.1); map.fillRect(cx - half, cy - half, half, half); // Q2
+        map.fillStyle(COLORS.primary, 0.1); map.fillRect(cx, cy - half, half, half); // Q1
+        map.fillStyle(COLORS.accent, 0.1); map.fillRect(cx - half, cy, half, half); // Q3
+        map.fillStyle(COLORS.warning, 0.1); map.fillRect(cx, cy, half, half); // Q4
+        
+        // Axes
+        map.lineStyle(3, COLORS.textPrimary, 1);
+        map.lineBetween(cx - half - 10, cy, cx + half + 10, cy);
+        map.lineBetween(cx, cy - half - 10, cx, cy + half + 10);
+        map.fillStyle(COLORS.textPrimary, 1);
+        map.fillCircle(cx, cy, 5);
 
-        // 결과 카드
-        const cardBg = this.add.graphics();
-        cardBg.fillStyle(COLORS.bgCard, 1);
-        cardBg.fillRoundedRect(50, 90, 500, 280, 14);
-
-        // 별 등급
-        const stars = accuracy >= 90 ? 3 : accuracy >= 70 ? 2 : accuracy >= 50 ? 1 : 0;
-        for (let i = 0; i < 3; i++) {
-            const starIcon = this.add.graphics();
-            const color = i < stars ? COLORS.gold : 0x475569;
-            Icons.drawStar(starIcon, 230 + i * 70, 145, 26, color);
-        }
-
-        // 통계
-        const stats = [
-            { label: '찾은 보물', value: `${found}/8`, color: '#10b981' },
-            { label: '정확도', value: `${accuracy}%`, color: '#06b6d4' },
-            { label: '총 점수', value: `${score}점`, color: '#fbbf24' }
+        // Labels
+        const lbls = [
+            { x: cx + half/2, y: cy - half/2, t1: '제1사분면', t2: '(+, +)', c: '#0ea5e9' },
+            { x: cx - half/2, y: cy - half/2, t1: '제2사분면', t2: '(-, +)', c: '#10b981' },
+            { x: cx - half/2, y: cy + half/2, t1: '제3사분면', t2: '(-, -)', c: '#d946ef' },
+            { x: cx + half/2, y: cy + half/2, t1: '제4사분면', t2: '(+, -)', c: '#f59e0b' }
         ];
 
-        stats.forEach((stat, idx) => {
-            const y = 200 + idx * 45;
-            this.add.text(120, y, stat.label, {
-                fontFamily: 'Noto Sans KR',
-                fontSize: '20px',
-                color: '#94a3b8'
-            });
-            this.add.text(480, y, stat.value, {
-                fontFamily: 'Noto Sans KR',
-                fontSize: '22px',
-                color: stat.color,
-                fontStyle: 'bold'
-            }).setOrigin(1, 0);
+        lbls.forEach(l => {
+            this.add.text(l.x, l.y - 15, l.t1, { fontFamily: 'Noto Sans KR', fontSize: '18px', color: l.c, fontStyle: 'bold' }).setOrigin(0.5);
+            this.add.text(l.x, l.y + 10, l.t2, { fontFamily: 'Orbitron', fontSize: '16px', color: '#fff' }).setOrigin(0.5);
         });
 
-        // 메시지
-        let message = '';
-        if (accuracy >= 90) message = '완벽해요! 좌표 탐험 마스터! 🏆';
-        else if (accuracy >= 70) message = '잘했어요! 보물을 많이 찾았네요!';
-        else if (accuracy >= 50) message = '좋아요! 조금만 더 연습해요!';
-        else message = '괜찮아요! 좌표를 다시 복습해봐요!';
+        // 경고 박스
+        const tipBox = this.add.graphics();
+        UI.drawCyberBox(tipBox, 60, 420, 480, 60, COLORS.bgCard, 0.8, COLORS.error);
+        this.add.text(300, 450, '[WARNING] 축(선) 위에 있는 점은 어느 사분면에도 포함되지 않는다.', { fontFamily: 'Noto Sans KR', fontSize: '14px', color: '#f43f5e' }).setOrigin(0.5);
 
-        this.add.text(300, 415, message, {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '18px',
-            color: '#e2e8f0'
-        }).setOrigin(0.5);
 
-        this.createButton(300, 500, '퀴즈 풀기', () => {
+        this.createButton(300, 540, '메인 서버 해킹(퀴즈)', 260, 50, () => {
             this.scene.start('QuizScene');
         });
-    }
-
-    createButton(x, y, text, onClick) {
-        const container = this.add.container(x, y);
-        const bg = this.add.graphics();
-        bg.fillStyle(COLORS.primary, 1);
-        bg.fillRoundedRect(-90, -25, 180, 50, 12);
-
-        const label = this.add.text(0, 0, text, {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '22px',
-            color: '#ffffff',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-
-        container.add([bg, label]);
-        container.setSize(180, 50);
-        container.setInteractive({ useHandCursor: true });
-        container.on('pointerdown', onClick);
-        return container;
     }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // QuizScene - 퀴즈
 // ═══════════════════════════════════════════════════════════════════════════
-class QuizScene extends Phaser.Scene {
+class QuizScene extends CyberScene {
     constructor() { super('QuizScene'); }
 
     create() {
@@ -782,7 +763,7 @@ class QuizScene extends Phaser.Scene {
             { q: '좌표 (-2, 5)는 어느 사분면에 있을까요?', a: '제2사분면', options: ['제1사분면', '제2사분면', '제3사분면', '제4사분면'] },
             { q: '점 (0, 3)은 어디에 위치할까요?', a: 'y축 위', options: ['x축 위', 'y축 위', '원점', '제1사분면'] },
             { q: '원점의 좌표는 무엇일까요?', a: '(0, 0)', options: ['(1, 1)', '(0, 1)', '(1, 0)', '(0, 0)'] },
-            { q: '좌표 (4, -3)에서 y값은 무엇을 의미할까요?', a: '아래로 3', options: ['오른쪽으로 3', '왼쪽으로 3', '위로 3', '아래로 3'] }
+            { q: '좌표 (4, -3)에서 y값은 무엇을 의미할까요?', a: '아래 쪽으로 3칸', options: ['오른쪽으로 3칸', '왼쪽으로 3칸', '위 쪽으로 3칸', '아래 쪽으로 3칸'] }
         ];
 
         this.currentQuiz = 0;
@@ -797,94 +778,51 @@ class QuizScene extends Phaser.Scene {
 
         const quiz = this.quizzes[this.currentQuiz];
 
-        this.add.text(300, 35, `퀴즈 ${this.currentQuiz + 1} / ${this.quizzes.length}`, {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '18px',
-            color: '#94a3b8'
+        this.add.text(300, 40, `FIREWALL BYPASS ${this.currentQuiz + 1}/${this.quizzes.length}`, {
+            fontFamily: 'Orbitron', fontSize: '20px', color: COLORS.accent
         }).setOrigin(0.5);
 
-        // 문제 카드
+        // 질문 패널
         const qBg = this.add.graphics();
-        qBg.fillStyle(COLORS.accent, 1);
-        qBg.fillRoundedRect(30, 70, 540, 110, 14);
+        UI.drawCyberBox(qBg, 40, 90, 520, 120, COLORS.bgSecondary, 0.9, COLORS.primaryGlow);
 
-        this.add.text(300, 125, quiz.q, {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '18px',
-            color: '#ffffff',
-            fontStyle: 'bold',
-            align: 'center',
-            lineSpacing: 6
+        this.add.text(300, 150, quiz.q, {
+            fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#ffffff', fontStyle: 'bold', align: 'center', lineSpacing: 8
         }).setOrigin(0.5);
 
         // 선택지
         const shuffled = Phaser.Utils.Array.Shuffle([...quiz.options]);
-
         shuffled.forEach((opt, idx) => {
-            const x = 150 + (idx % 2) * 200 + 50;
-            const y = 260 + Math.floor(idx / 2) * 90;
-
-            this.createOptionButton(x, y, opt, () => {
+            const bx = 160 + (idx % 2) * 280;
+            const by = 280 + Math.floor(idx / 2) * 80;
+            this.createButton(bx, by, opt, 240, 60, () => {
                 this.checkQuizAnswer(opt, quiz.a);
             });
         });
     }
 
-    createOptionButton(x, y, text, onClick) {
-        const container = this.add.container(x, y);
-        const bg = this.add.graphics();
-        bg.fillStyle(COLORS.bgCard, 1);
-        bg.fillRoundedRect(-80, -32, 160, 64, 10);
-        bg.lineStyle(2, COLORS.primary, 0.5);
-        bg.strokeRoundedRect(-80, -32, 160, 64, 10);
-
-        const label = this.add.text(0, 0, text, {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '17px',
-            color: '#ffffff',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-
-        container.add([bg, label]);
-        container.setSize(160, 64);
-        container.setInteractive({ useHandCursor: true });
-
-        container.on('pointerover', () => {
-            bg.clear();
-            bg.fillStyle(COLORS.primary, 0.5);
-            bg.fillRoundedRect(-80, -32, 160, 64, 10);
-            bg.lineStyle(2, COLORS.primary, 1);
-            bg.strokeRoundedRect(-80, -32, 160, 64, 10);
-        });
-
-        container.on('pointerout', () => {
-            bg.clear();
-            bg.fillStyle(COLORS.bgCard, 1);
-            bg.fillRoundedRect(-80, -32, 160, 64, 10);
-            bg.lineStyle(2, COLORS.primary, 0.5);
-            bg.strokeRoundedRect(-80, -32, 160, 64, 10);
-        });
-
-        container.on('pointerdown', onClick);
-        return container;
-    }
-
     checkQuizAnswer(selected, correct) {
         if (selected === correct) {
             this.quizCorrect++;
-            this.showFeedback(true, '정답!');
+            this.showFeedback(true, 'ACCESS GRANTED');
         } else {
-            this.showFeedback(false, `오답! 정답은 ${correct}`);
+            this.showFeedback(false, `ACCESS DENIED (정답: ${correct})`);
         }
     }
 
     showFeedback(isCorrect, message) {
+        const bg = this.add.graphics();
+        bg.fillStyle(COLORS.bgPrimary, 0.9);
+        bg.fillRect(0, 440, 600, 100);
+        
         const feedback = this.add.text(300, 490, message, {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '22px',
-            color: isCorrect ? '#22c55e' : '#ef4444',
+            fontFamily: 'Orbitron',
+            fontSize: '24px',
+            color: isCorrect ? '#10b981' : '#f43f5e',
             fontStyle: 'bold'
         }).setOrigin(0.5);
+
+        if(!isCorrect) this.cameras.main.shake(100, 0.01);
 
         this.time.delayedCall(1500, () => {
             this.currentQuiz++;
@@ -901,94 +839,55 @@ class QuizScene extends Phaser.Scene {
 // ═══════════════════════════════════════════════════════════════════════════
 // WrapScene - 완료/보상
 // ═══════════════════════════════════════════════════════════════════════════
-class WrapScene extends Phaser.Scene {
+class WrapScene extends CyberScene {
     constructor() { super('WrapScene'); }
 
     create() {
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
 
-        // 축하 파티클
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 40; i++) {
             const particle = this.add.graphics();
-            particle.fillStyle([COLORS.gold, COLORS.success, COLORS.primary, COLORS.accent][i % 4], 1);
-            particle.fillCircle(0, 0, Phaser.Math.Between(3, 6));
-            particle.setPosition(Phaser.Math.Between(50, 550), -50);
+            particle.fillStyle([COLORS.primary, COLORS.secondary, COLORS.success, COLORS.textPrimary][i % 4], 0.8);
+            if(i%2===0) particle.fillRect(0, 0, Phaser.Math.Between(4, 10), Math.Between(2, 4));
+            else particle.fillCircle(0, 0, Phaser.Math.Between(2, 4));
+            
+            particle.setPosition(Phaser.Math.Between(0, 600), -50);
 
             this.tweens.add({
                 targets: particle,
                 y: 650,
-                x: particle.x + Phaser.Math.Between(-80, 80),
-                rotation: Phaser.Math.FloatBetween(-3, 3),
-                duration: Phaser.Math.Between(2000, 4000),
-                delay: i * 100
+                x: particle.x + Phaser.Math.Between(-30, 30),
+                duration: Phaser.Math.Between(2000, 5000),
+                delay: Phaser.Math.Between(0, 1000)
             });
         }
 
-        // 트로피
         const trophy = this.add.graphics();
-        Icons.drawTrophy(trophy, 300, 140, 100);
+        Icons.drawTrophy(trophy, 300, 150, 60);
 
-        this.add.text(300, 230, '탐험 완료!', {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '36px',
-            color: '#10b981',
-            fontStyle: 'bold'
+        this.add.text(300, 260, 'SYSTEM OVERRIDE COMPLETE', {
+            fontFamily: 'Orbitron', fontSize: '28px', color: COLORS.success, fontStyle: 'bold'
         }).setOrigin(0.5);
 
         const score = this.registry.get('score');
         const quizScore = this.registry.get('quizScore') || 0;
         const totalScore = score + quizScore * 20;
 
-        this.add.text(300, 290, `총 점수: ${totalScore}점`, {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '24px',
-            color: '#ffffff'
+        this.add.text(300, 310, `TOTAL SCORE : ${totalScore}`, {
+            fontFamily: 'Orbitron', fontSize: '24px', color: COLORS.gold
         }).setOrigin(0.5);
 
-        this.add.text(300, 330, `보물찾기: ${score}점 | 퀴즈: ${quizScore}/5`, {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '16px',
-            color: '#94a3b8'
-        }).setOrigin(0.5);
-
-        // 학습 요약
+        // 요약 패널
         const summary = this.add.graphics();
-        summary.fillStyle(COLORS.bgCard, 0.8);
-        summary.fillRoundedRect(50, 370, 500, 80, 10);
+        UI.drawCyberBox(summary, 60, 360, 480, 100, COLORS.bgCard, 0.8, COLORS.primary);
 
-        this.add.text(300, 410, '🎓 오늘 배운 것\n좌표평면 (x, y), 사분면, 원점, x축과 y축', {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '14px',
-            color: '#e2e8f0',
-            align: 'center',
-            lineSpacing: 6
+        this.add.text(300, 410, '[ 데이터 해제 완료 ]\n> (x, y) 순서로 좌표 해독\n> 원점 (0,0)과 4개의 사분면 통제권 확보', {
+            fontFamily: 'Noto Sans KR', fontSize: '15px', color: '#94a3b8', align: 'center', lineSpacing: 6
         }).setOrigin(0.5);
 
-        this.createButton(300, 510, '다시 탐험하기', () => {
-            this.registry.set('score', 0);
-            this.registry.set('treasuresFound', 0);
-            this.scene.start('HookScene');
+        this.createButton(300, 520, '시스템 재가동', 200, 56, () => {
+            this.scene.start('BootScene');
         });
-    }
-
-    createButton(x, y, text, onClick) {
-        const container = this.add.container(x, y);
-        const bg = this.add.graphics();
-        bg.fillStyle(COLORS.primary, 1);
-        bg.fillRoundedRect(-100, -25, 200, 50, 12);
-
-        const label = this.add.text(0, 0, text, {
-            fontFamily: 'Noto Sans KR',
-            fontSize: '20px',
-            color: '#ffffff',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-
-        container.add([bg, label]);
-        container.setSize(200, 50);
-        container.setInteractive({ useHandCursor: true });
-        container.on('pointerdown', onClick);
-        return container;
     }
 }
 

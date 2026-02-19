@@ -169,7 +169,7 @@ const shapesData = {
     title: "입체도형 탐험대",
     hook: {
         question: "상자, 공, 캔... 우리 주변의 물건들은 어떤 모양으로 이루어져 있을까요?",
-        subText: "평면이 아닌 입체로 된 도형들이에요!",
+        subText: "우리가 살고 있는 우주도 입체 모양이에요!",
         visual: {
             type: "svg",
             content: `
@@ -208,8 +208,10 @@ const shapesData = {
         }
     },
     story: {
-        character: { image: "assets/character.svg" },
-        situation: "안녕! 나는 도형 박물관의 도슨트 '도형이'야!<br><br>오늘 박물관에 특별한 입체도형들이 전시됐어. 정육면체, 구, 원기둥, 삼각뿔!<br>이 도형들을 360도로 돌려보면서 면, 모서리, 꼭짓점이 몇 개인지 함께 알아보자!"
+        character: { 
+            image: `data:image/svg+xml;utf8,<svg width="120" height="120" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="%23fff" stroke="%23333" stroke-width="3"/><path d="M20 30 Q 50 10 80 30" stroke="%23333" stroke-width="4" fill="none"/><path d="M15 35 L 25 5 L 45 20" fill="%23fff" stroke="%23333" stroke-width="3"/><path d="M85 35 L 75 5 L 55 20" fill="%23fff" stroke="%23333" stroke-width="3"/><circle cx="35" cy="45" r="5" fill="%23333"/><circle cx="65" cy="45" r="5" fill="%23333"/><path d="M40 60 Q 50 70 60 60" stroke="%23333" stroke-width="2" fill="none"/></svg>`
+        },
+        situation: "안녕! 나는 우주 탐험가 고양이 <strong>'보라'</strong>야. 🐾<br><br>새로운 행성을 발견했는데, 이곳의 모든 물건이 <strong>특별한 입체도형</strong>으로 되어있어!<br>이 도형들의 비밀(면, 모서리, 꼭짓점)을 알아내면 행성의 보물을 찾을 수 있대.<br>나와 함께 입체도형들을 360도로 돌려보면서 관찰해보자!"
     },
     interaction: {
         title: "입체도형 관찰하기",
