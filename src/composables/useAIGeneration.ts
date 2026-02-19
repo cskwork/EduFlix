@@ -165,6 +165,11 @@ export const SUBJECT_GENERATION_HINTS: Record<Subject, string[]> = {
     '맥락 속에서 문법을 배워요',
     '대화 연습 기회를 제공해요',
   ],
+  'world-history': [
+    '세계 지리와 나라를 게임으로 배워요',
+    '역사적 사건을 시각적으로 탐구해요',
+    '다양한 문화를 비교하며 이해해요',
+  ],
 }
 
 // 생성 예상 시간 (초)

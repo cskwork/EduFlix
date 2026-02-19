@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8비트 수학 원정대: 연산 동굴 레이드</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../common/edu-common.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="top-hud">
+      <p class="kicker">초등 수학 인터랙티브 콘텐츠</p>
+      <h1>8비트 수학 원정대: 연산 동굴 레이드</h1>
+      <div class="hud-status">
+        <span id="scene-counter">1 / 7</span>
+      </div>
+    </header>
+
+    <main>
+      <section id="hook-scene" class="scene active">
+        <div class="content-wrapper glass-panel">
+          <p class="scene-label">흥미 유발</p>
+          <h2>정답을 맞히면 동굴 문이 열린다?</h2>
+          <p>
+            8비트 동굴에서 몬스터를 물리치려면 연산 문제를 정확히 풀어야 해요.
+            30초 안에 연속 정답을 만들 수 있을까요?
+          </p>
+          <div class="hero-banner">
+            <img
+              src="../../8bit-assets/Assets/Packs/warped-Caves/PNG/environment/layers/background.png"
+              alt="8비트 동굴 배경"
+            >
+            <img
+              src="../../8bit-assets/Assets/Packs/warped-Caves/PNG/sprites/player/player-run/player-run-1.png"
+              alt="원정대 캐릭터"
+              class="hero-runner"
+            >
+          </div>
+          <button class="btn-primary" data-next="anchor-scene">출발하기</button>
+        </div>
+      </section>
+
+      <section id="anchor-scene" class="scene">
+        <div class="content-wrapper glass-panel">
+          <p class="scene-label">개념 연결</p>
+          <h2>이미 알고 있는 계산에서 시작</h2>
+          <div class="anchor-grid">
+            <article>
+              <h3>기억할 것</h3>
+              <p>7 + 8은 15, 6 x 4는 24처럼 우리는 규칙을 이용해 빠르게 계산했어요.</p>
+            </article>
+            <article>
+              <h3>새로운 도전</h3>
+              <p>짧은 시간 안에 여러 문제를 풀 때도 같은 규칙이 통할까요?</p>
+            </article>
+          </div>
+          <div class="button-row">
+            <button class="btn-secondary" data-prev="hook-scene">이전</button>
+            <button class="btn-primary" data-next="story-scene">다음</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="story-scene" class="scene">
+        <div class="content-wrapper glass-panel">
+          <p class="scene-label">이야기</p>
+          <h2>지우의 요청</h2>
+          <div class="story-card">
+            <p>
+              "동굴 출구의 봉인이 숫자 룬으로 잠겨 있어."
+              "연산 정답으로 몬스터를 잠재우고, 룬 에너지를 모아 문을 열어 줘!"
+            </p>
+            <p>
+              목표: 10문제 중 7문제 이상 정답 + 콤보 3 이상 달성
+            </p>
+          </div>
+          <div class="button-row">
+            <button class="btn-secondary" data-prev="anchor-scene">이전</button>
+            <button class="btn-primary" data-next="core-scene">레이드 시작</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="core-scene" class="scene">
+        <div class="content-wrapper battle-layout">
+          <p class="scene-label">탐구 활동</p>
+          <h2>실시간 연산 전투</h2>
+
+          <div class="battle-stage" id="battle-stage">
+            <img
+              class="stage-bg"
+              src="../../8bit-assets/Assets/Packs/warped-Caves/PNG/environment/layers/background.png"
+              alt="동굴 배경"
+            >
+            <img
+              class="stage-mid"
+              src="../../8bit-assets/Assets/Packs/warped-Caves/PNG/environment/layers/middleground.png"
+              alt="동굴 중간 지형"
+            >
+            <div class="battle-hud">
+              <div>
+                <span class="hud-key">문제</span>
+                <strong id="wave-progress">0 / 10</strong>
+              </div>
+              <div>
+                <span class="hud-key">점수</span>
+                <strong id="score-value">0</strong>
+              </div>
+              <div>
+                <span class="hud-key">콤보</span>
+                <strong id="combo-value">0</strong>
+              </div>
+              <div>
+                <span class="hud-key">생명</span>
+                <strong id="life-value">3</strong>
+              </div>
+            </div>
+
+            <div class="equation-panel">
+              <p>현재 연산</p>
+              <p id="equation-text">전투 시작 버튼을 눌러 주세요.</p>
+            </div>
+
+            <div class="sprite-layer">
+              <img
+                id="player-sprite"
+                class="player"
+                src="../../8bit-assets/Assets/Packs/warped-Caves/PNG/sprites/player/player-run/player-run-1.png"
+                alt="플레이어"
+              >
+              <img
+                id="shot-sprite"
+                class="shot"
+                src="../../8bit-assets/Assets/Packs/warped-Caves/PNG/sprites/Fx/shot/shot-1.png"
+                alt="발사체"
+              >
+            </div>
+
+            <div id="enemy-grid" class="enemy-grid"></div>
+          </div>
+
+          <div class="control-strip">
+            <button id="start-button" class="btn-primary">전투 시작</button>
+            <button id="hint-button" class="btn-secondary">힌트 사용 (3단계)</button>
+            <p id="hint-text">힌트가 여기에 표시됩니다.</p>
+            <p id="core-feedback" class="feedback-text">정답을 선택해 주세요.</p>
+          </div>
+
+          <div class="button-row">
+            <button class="btn-secondary" data-prev="story-scene">이전</button>
+            <button class="btn-primary" data-next="visualize-scene">원리 보기</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="visualize-scene" class="scene">
+        <div class="content-wrapper glass-panel">
+          <p class="scene-label">시각화</p>
+          <h2>전투 데이터로 보는 연산 원리</h2>
+          <div class="stats-box">
+            <article>
+              <h3>정확도</h3>
+              <p id="accuracy-text">아직 전투 기록이 없습니다.</p>
+            </article>
+            <article>
+              <h3>최대 콤보</h3>
+              <p id="max-combo-text">0</p>
+            </article>
+            <article>
+              <h3>힌트 사용</h3>
+              <p id="hint-used-text">0회</p>
+            </article>
+          </div>
+          <div class="bar-chart">
+            <div class="bar-row">
+              <span>정답</span>
+              <div class="bar-track"><div id="correct-bar" class="bar-fill correct"></div></div>
+            </div>
+            <div class="bar-row">
+              <span>오답</span>
+              <div class="bar-track"><div id="wrong-bar" class="bar-fill wrong"></div></div>
+            </div>
+          </div>
+          <p class="formula-line">
+            연산 실력은 <strong>정확도 x 안정적 콤보</strong>로 강화됩니다.
+          </p>
+          <div class="button-row">
+            <button class="btn-secondary" data-prev="core-scene">이전</button>
+            <button class="btn-primary" data-next="quiz-scene">실전 퀴즈</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="quiz-scene" class="scene">
+        <div class="content-wrapper glass-panel">
+          <p class="scene-label">적용 퀴즈</p>
+          <h2>실생활 적용 퀴즈</h2>
+          <p>보급 상자 1개에는 에너지 결정 12개가 들어 있습니다.</p>
+          <div class="quiz-card">
+            <label for="crate-slider">상자 개수: <strong id="crate-count">5</strong>개</label>
+            <input id="crate-slider" type="range" min="2" max="12" value="5" step="1">
+            <div class="answer-stepper">
+              <button id="answer-down" type="button">-</button>
+              <output id="quiz-answer" for="crate-slider">60</output>
+              <button id="answer-up" type="button">+</button>
+            </div>
+            <button id="quiz-check" class="btn-primary">정답 확인</button>
+            <p id="quiz-feedback" class="feedback-text">정답 수를 조절한 뒤 확인해 주세요.</p>
+          </div>
+          <div class="button-row">
+            <button class="btn-secondary" data-prev="visualize-scene">이전</button>
+            <button class="btn-primary" data-next="wrap-scene">마무리</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="wrap-scene" class="scene">
+        <div class="content-wrapper glass-panel">
+          <p class="scene-label">정리</p>
+          <h2>오늘의 발견 3가지</h2>
+          <ul class="summary-list">
+            <li>빠른 연산은 규칙을 반복해 자동화할수록 정확해집니다.</li>
+            <li>힌트는 식의 구조를 읽는 연습을 도와줍니다.</li>
+            <li>정확도와 콤보를 함께 관리하면 실수율이 크게 줄어듭니다.</li>
+          </ul>
+          <div class="result-board">
+            <p id="final-report">전투 기록: 아직 없음</p>
+          </div>
+          <div class="button-row">
+            <button id="retry-core" class="btn-secondary">코어 전투 다시</button>
+            <button id="restart-all" class="btn-primary">처음부터 다시</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오차 범위(Epsilon)의 마법: 게임 히트박스 만들기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Scene 1: Hook -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-wrapper">
+                <h1 class="main-title">1mm만 빗나갔는데 "적중"?</h1>
+                <div class="visual-container">
+                    <!-- Custom SVG: Arrow hitting near the bullseye -->
+                    <svg width="300" height="300" viewBox="0 0 200 200">
+                        <circle cx="100" cy="100" r="90" fill="#fff" stroke="#333" stroke-width="2"/>
+                        <circle cx="100" cy="100" r="60" fill="#e0e0e0"/>
+                        <circle cx="100" cy="100" r="30" fill="#d0021b"/>
+                        <line x1="0" y1="180" x2="135" y2="45" stroke="#F5A623" stroke-width="4" />
+                        <path d="M135,45 L120,30 M135,45 L150,30" stroke="#F5A623" stroke-width="4" fill="none"/>
+                    </svg>
+                </div>
+                <p class="sub-text">왜 조금 틀려도 맞다고 할까요?</p>
+                <button class="action-btn" onclick="ContentApp.nextScene()">비밀을 밝혀보자</button>
+            </div>
+        </section>
+
+        <!-- Scene 2: Anchor -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="scene-title">우리가 아는 분수</h2>
+                <div class="comparison-box">
+                    <div class="fraction-card">
+                        <span class="numerator">1</span>
+                        <div class="bar"></div>
+                        <span class="denominator">2</span>
+                    </div>
+                    <div class="operator">=</div>
+                    <div class="fraction-card">
+                        <span class="numerator">2</span>
+                        <div class="bar"></div>
+                        <span class="denominator">4</span>
+                    </div>
+                </div>
+                <p class="description">우리는 분수를 통분해서 정확히 같은지 다른지 비교했죠.</p>
+                <div class="bridge">
+                    <h3>그런데...</h3>
+                    <p>게임이나 현실에서는 <strong>"완벽하게 똑같지 않아도 되는"</strong> 순간이 있어요.</p>
+                </div>
+                <button class="action-btn" onclick="ContentApp.nextScene()">이동하기</button>
+            </div>
+        </section>
+
+        <!-- Scene 3: Story -->
+        <section id="story-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="character-profile">
+                    <!-- Custom SVG: Character Minji -->
+                    <svg width="120" height="120" viewBox="0 0 100 100">
+                        <circle cx="50" cy="40" r="25" fill="#FFE0BD"/>
+                        <path d="M25,40 Q50,90 75,40" fill="#4A90D9"/>
+                        <circle cx="40" cy="35" r="3" fill="#333"/>
+                        <circle cx="60" cy="35" r="3" fill="#333"/>
+                        <path d="M45,45 Q50,50 55,45" stroke="#333" stroke-width="2" fill="none"/>
+                        <rect x="30" y="10" width="40" height="20" rx="5" fill="#333"/>
+                        <text x="50" y="95" text-anchor="middle" font-size="10" fill="#333">개발자 민지</text>
+                    </svg>
+                </div>
+                <div class="dialogue-bubble">
+                    <p>"도와줘! 내 게임 유저들이 화가 났어."</p>
+                    <p>"화살이 과녁 중심에 딱 맞지 않으면 무조건 '빗나감'이라고 뜨거든."</p>
+                    <p>"조금만 틀려도 <strong>인정해주는 방법</strong>은 없을까?"</p>
+                </div>
+                <div class="situation-info">
+                    <strong>문제:</strong> 정확히 1/2에 맞추지 않아도 맞다고 하려면?
+                </div>
+                <button class="action-btn" onclick="ContentApp.nextScene()">민지 도와주러 가기</button>
+            </div>
+        </section>
+
+        <!-- Scene 4: Core Interaction -->
+        <section id="core-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="scene-title">엡실론(Epsilon) 조절하기</h2>
+                <p class="instruction">허용 오차(ε)를 조절해서 맞춰보세요!</p>
+                
+                <div class="game-area">
+                    <div class="target-info">
+                        목표: <span class="highlight">1/2</span> (0.5)
+                    </div>
+                    
+                    <div class="ruler-container" id="ruler">
+                        <!-- Dynamic ruler drawn by JS -->
+                    </div>
+
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>허용 오차 (Epsilon, ε): <span id="epsilon-display">0.1</span></label>
+                            <input type="range" id="epsilon-slider" min="0.01" max="0.5" step="0.01" value="0.1">
+                        </div>
+                        <button class="action-btn" id="throw-btn">던지기!</button>
+                    </div>
+
+                    <div class="result-panel" id="result-panel">
+                        결과가 여기에 표시됩니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scene 5: Visualize -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="scene-title">원리 시각화하기</h2>
+                <div class="principle-box">
+                    <p>우리가 조절한 그 마법의 숫자, <strong>엡실론(ε)</strong>은 뭘까요?</p>
+                    <div class="formula">
+                        |목표값 - 결과값| < ε (보다 작으면 성공!)
+                    </div>
+                </div>
+                
+                <div class="visual-explanation">
+                    <svg width="100%" height="150" viewBox="0 0 400 150">
+                        <!-- Line -->
+                        <line x1="20" y1="75" x2="380" y2="75" stroke="#333" stroke-width="2"/>
+                        <!-- Ticks -->
+                        <line x1="20" y1="65" x2="20" y2="85" stroke="#333" stroke-width="2"/>
+                        <line x1="200" y1="65" x2="200" y2="85" stroke="#333" stroke-width="2"/>
+                        <line x1="380" y1="65" x2="380" y2="85" stroke="#333" stroke-width="2"/>
+                        <text x="200" y="110" text-anchor="middle" font-size="14">0.5 (목표)</text>
+                        
+                        <!-- Epsilon Zone -->
+                        <rect x="120" y="40" width="160" height="70" fill="#7ED321" fill-opacity="0.3" rx="5" />
+                        <text x="200" y="30" text-anchor="middle" font-size="12" fill="#7ED321">허용 구간 (Safe Zone)</text>
+                        
+                        <!-- Arrow -->
+                        <line x1="120" y1="75" x2="280" y2="75" stroke="#7ED321" stroke-width="2" marker-end="url(#arrow)"/>
+                        
+                        <!-- Definitions -->
+                        <text x="120" y="130" text-anchor="middle" font-size="10">0.4</text>
+                        <text x="280" y="130" text-anchor="middle" font-size="10">0.6</text>
+                    </svg>
+                    <p>ε를 크게 하면 초록색 구간이 넓어져서 맞추기 쉬워지지만,<br>정확도는 떨어져요.</p>
+                </div>
+                <button class="action-btn" onclick="ContentApp.nextScene">다음</button>
+            </div>
+        </section>
+
+        <!-- Scene 6: Quiz -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="scene-title">실전 퀴즈</h2>
+                <div class="quiz-container">
+                    <p class="quiz-question">
+                        민지의 게임 설정입니다.<br>
+                        <strong>목표: 1/2 (0.5)</strong><br>
+                        <strong>허용 오차(ε): 0.05</strong>
+                    </p>
+                    <p>유저가 던져서 <strong>0.53</strong>이 나왔습니다. <br>"적중"이라고 뜰까요?</p>
+                    
+                    <div class="quiz-options">
+                        <button class="quiz-btn" onclick="ContentApp.checkAnswer(true)">Yes (적중!)</button>
+                        <button class="quiz-btn" onclick="ContentApp.checkAnswer(false)">No (빗나감)</button>
+                    </div>
+                    <div id="quiz-feedback" class="feedback"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scene 7: Wrap -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="scene-title">기억할 것 3가지</h2>
+                <ul class="summary-list">
+                    <li>🎯 세상에는 '정확히 같음' 말고도 '거의 같음'이 필요해요.</li>
+                    <li>⚖️ 그 차이를 허용하는 범위을 <strong>오차 범위(Epsilon, ε)</strong>라고 해요.</li>
+                    <li>🎮 게임, 공학, 우주 탐사 등에서 아주 중요하게 쓰여요!</li>
+                </ul>
+                <div class="next-step">
+                    <p>다음 시간에는 '최댓값과 최솟값'을 알아볼 거예요!</p>
+                </div>
+                <div class="nav-buttons">
+                    <button class="secondary-btn" onclick="ContentApp.showScene(0)">다시 보기</button>
+                    <button class="action-btn" onclick="ContentApp.freeExplore()">자유 탐험 모드</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

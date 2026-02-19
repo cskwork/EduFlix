@@ -1,0 +1,448 @@
+:root {
+    --primary-color: #4A90D9;
+    --secondary-color: #7ED321;
+    --accent-color: #F5A623;
+    --text-color: #333;
+    --bg-color: #FAFAFA;
+    --error-color: #D0021B;
+    --success-color: #7ED321;
+    --water-color: rgba(74, 144, 217, 0.7);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+#app {
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+    background: #fff;
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.scene {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    padding: 30px 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.scene.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Typography & Common */
+h1, h2, h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.cta-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(74, 144, 217, 0.3);
+}
+
+.cta-button:hover {
+    transform: scale(1.05);
+    background: #357ABD;
+}
+
+.cta-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.secondary-btn {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 13px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+/* Hook Scene */
+.pulse-icon {
+    width: 150px;
+    height: 150px;
+    margin: 20px auto;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.question-text {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+/* Anchor Scene */
+.comparison-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0;
+    width: 100%;
+}
+
+.concept-item {
+    background: #f0f0f0;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    flex: 1;
+}
+
+.concept-item.highlight {
+    background: #e3f2fd;
+    border: 2px solid var(--primary-color);
+}
+
+.arrow-divider {
+    font-size: 2rem;
+    margin: 0 20px;
+    color: #999;
+}
+
+.bridge-text {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+/* Story Scene */
+.character-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.character-svg {
+    width: 100px;
+    height: 100px;
+}
+
+.speech-bubble {
+    background: #fff;
+    border: 2px solid var(--primary-color);
+    padding: 20px;
+    border-radius: 20px;
+    position: relative;
+    margin-top: 15px;
+    max-width: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.speech-bubble:after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    border-width: 0 10px 10px;
+    border-style: solid;
+    border-color: var(--primary-color) transparent;
+    display: block;
+    width: 0;
+}
+
+.game-intro {
+    text-align: center;
+}
+
+.fuel-tank-bg {
+    width: 100px;
+    height: 200px;
+    border: 4px solid #333;
+    border-radius: 10px;
+    margin: 10px auto;
+    position: relative;
+    background: #fff;
+    overflow: hidden;
+}
+
+.fuel-target-line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: red;
+    z-index: 2;
+}
+
+#story-fuel {
+    width: 100%;
+    background: var(--primary-color);
+    position: absolute;
+    bottom: 0;
+    transition: height 1s;
+}
+
+/* Core Scene */
+.game-ui {
+    width: 100%;
+    background: #fff;
+    padding: 10px;
+}
+
+.tank-container {
+    width: 100%;
+    height: 200px;
+    border: 4px solid #333;
+    border-radius: 10px;
+    position: relative;
+    background: #fff;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.target-marker {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: red;
+    z-index: 2;
+    box-shadow: 0 0 5px red;
+    transition: bottom 0.5s;
+}
+
+.water-fill {
+    width: 100%;
+    height: 0%;
+    background: var(--water-color);
+    position: absolute;
+    bottom: 0;
+    transition: height 0.2s ease-out;
+}
+
+.controls-area {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.slider-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #555;
+}
+
+input[type=range] {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.fraction-text {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.current-fraction-display {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    margin-top: 10px;
+}
+
+#denom-visual {
+    display: grid;
+    gap: 2px;
+    height: 20px;
+    margin-top: 10px;
+}
+
+.denom-cell {
+    background: #ddd;
+    border-radius: 2px;
+    height: 100%;
+}
+
+.denom-cell.active {
+    background: var(--primary-color);
+}
+
+.feedback-area {
+    text-align: center;
+    min-height: 60px;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.feedback-area.success { background: #e8f5e9; color: var(--success-color); }
+.feedback-area.warning { background: #fff3e0; color: var(--accent-color); }
+.feedback-area.error { background: #ffebee; color: var(--error-color); }
+
+/* Visualize Scene */
+.visualize-container {
+    text-align: center;
+    width: 100%;
+}
+
+.viz-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.fraction-block {
+    display: grid;
+    width: 100px;
+    height: 20px;
+    gap: 2px;
+}
+
+.filled {
+    background: var(--primary-color);
+}
+
+.equal-sign {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #999;
+}
+
+.insight {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.principle {
+    color: #666;
+    background: #f0f0f0;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+/* Quiz Scene */
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.option-btn {
+    background: white;
+    border: 2px solid #ddd;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+}
+
+.option-btn:hover {
+    border-color: var(--primary-color);
+    background: #f5f9ff;
+}
+
+.viz-option {
+    display: grid;
+    gap: 2px;
+    width: 80px;
+    height: 15px;
+}
+
+.feedback-msg {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: bold;
+    min-height: 24px;
+}
+
+/* Wrap Scene */
+.summary-box {
+    background: #f9f9f9;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.summary-box ul {
+    list-style: none;
+    text-align: left;
+}
+
+.summary-box li {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .comparison-box {
+        flex-direction: column;
+    }
+    .arrow-divider {
+        transform: rotate(90deg);
+        margin: 10px 0;
+    }
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+}

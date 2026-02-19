@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>피타고라스 탐험 3D - Phaser 수학 콘텐츠</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <div class="bg-grid"></div>
+
+  <main class="app-shell">
+    <header class="topbar">
+      <h1>피타고라스 탐험 3D</h1>
+      <p>중학교 2학년 | 아이소메트릭 3D로 발견하는 직각삼각형의 비밀</p>
+    </header>
+
+    <section class="stage">
+      <div id="phaser-container" aria-label="Phaser 3D 학습 캔버스"></div>
+
+      <div id="ui-overlay">
+        <!-- Hook Scene -->
+        <section id="hook-scene" class="scene active">
+          <h2 class="scene-title">호기심 점화</h2>
+          <p class="scene-body">3D 세계에서 정사각형 블록을 쌓아보세요. 두 작은 블록의 부피 합이 큰 블록과 정말 같을까요?</p>
+          <ul class="detail-list">
+            <li>왜 직각삼각형에서만 이 규칙이 성립할까?</li>
+            <li>블록을 직접 움직여 확인해 보세요.</li>
+            <li>3D로 보면 패턴이 더 잘 보입니다.</li>
+          </ul>
+          <button class="scene-action" data-next>3D 탐험 시작</button>
+        </section>
+
+        <!-- Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+          <h2 class="scene-title">이미 아는 것</h2>
+          <p class="scene-body">정사각형 넓이 = 한 변 x 한 변</p>
+          <p class="scene-sub">2D 평면의 정사각형을 3D 블록으로 바꿔 보겠습니다.</p>
+          <div class="explain-box">
+            <p>정사각형 넓이를 블록 높이 1의 직육면체로 표현하면?</p>
+            <p>넓이 비교가 부피 비교로 바뀝니다.</p>
+            <p>이제 세 변 위의 블록끼리 규칙을 찾아봅시다.</p>
+          </div>
+          <button class="scene-action" data-next>스토리 보기</button>
+        </section>
+
+        <!-- Story Scene -->
+        <section id="story-scene" class="scene">
+          <h2 class="scene-title">상황 속으로</h2>
+          <p class="scene-body" id="story-text"></p>
+          <p class="scene-sub">건축가 '피타'가 직각 경사로의 안전 길이를 정확히 계산해야 합니다.</p>
+          <div class="tag-row">
+            <span class="tag">건축 설계</span>
+            <span class="tag">안전 계산</span>
+            <span class="tag">3D 시각화</span>
+          </div>
+          <button class="scene-action" data-next>핵심 조작</button>
+        </section>
+
+        <!-- Core Scene -->
+        <section id="core-scene" class="scene">
+          <h2 class="scene-title">핵심 조작</h2>
+          <p class="scene-body">슬라이더로 변의 길이를 바꾸고, 3D 블록의 부피를 실시간 비교하세요.</p>
+          <div class="controls">
+            <label for="side-a">a 길이 <span id="side-a-value" class="val-badge">3</span></label>
+            <input id="side-a" type="range" min="2" max="12" value="3" step="1">
+            <label for="side-b">b 길이 <span id="side-b-value" class="val-badge">4</span></label>
+            <input id="side-b" type="range" min="2" max="12" value="4" step="1">
+          </div>
+          <div class="result-card">
+            <div class="formula-row">
+              <span class="formula-left">a² + b² = <strong id="left-value">25</strong></span>
+              <span class="formula-eq" id="eq-badge">=</span>
+              <span class="formula-right">c² = <strong id="right-value">25</strong></span>
+            </div>
+            <p id="core-insight" class="insight">두 값이 항상 같습니다!</p>
+            <p id="core-detail" class="scene-sub">c = 5.00 | a²=9, b²=16</p>
+          </div>
+        </section>
+
+        <!-- Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+          <h2 class="scene-title">원리 시각화</h2>
+          <p class="scene-body">패턴을 식으로 쓰면: <strong id="formula-view">a² + b² = c²</strong></p>
+          <div class="explain-box" id="visual-steps">
+            <p>좌변: 두 작은 블록의 부피 합</p>
+            <p>우변: 빗변 블록의 부피</p>
+            <p>결론: 직각삼각형에서는 항상 같다</p>
+          </div>
+          <div class="proof-cards" id="proof-cards">
+            <div class="proof-card">
+              <div class="proof-icon sq-a-icon"></div>
+              <span>a² 블록</span>
+            </div>
+            <div class="proof-card">
+              <span class="proof-plus">+</span>
+            </div>
+            <div class="proof-card">
+              <div class="proof-icon sq-b-icon"></div>
+              <span>b² 블록</span>
+            </div>
+            <div class="proof-card">
+              <span class="proof-eq">=</span>
+            </div>
+            <div class="proof-card">
+              <div class="proof-icon sq-c-icon"></div>
+              <span>c² 블록</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+          <h2 class="scene-title">도전 퀴즈</h2>
+          <p class="scene-body" id="quiz-question">a=3, b=4일 때 c의 값은?</p>
+          <div class="quiz-controls">
+            <input id="quiz-input" type="number" min="1" step="1" placeholder="정답 입력">
+            <button id="quiz-check" class="scene-action">확인</button>
+            <button id="quiz-next" class="scene-action subtle">다음 문제</button>
+          </div>
+          <p id="quiz-feedback" class="insight">정답을 입력하세요.</p>
+          <p id="quiz-score" class="scene-sub">점수: 0 / 0</p>
+          <p id="quiz-explain" class="scene-sub"></p>
+        </section>
+
+        <!-- Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+          <h2 class="scene-title">정리</h2>
+          <ul class="summary-list">
+            <li>직각삼각형에서 a² + b² = c²가 항상 성립한다.</li>
+            <li>3D 블록으로 보면 넓이(부피) 관계가 더 직관적이다.</li>
+            <li>다음 개념: 좌표평면 거리 공식과 삼각비</li>
+          </ul>
+          <div class="explain-box">
+            <p>확장 질문: (3,4,5), (5,12,13), (8,15,17)은 왜 모두 피타고라스 수일까?</p>
+          </div>
+          <div class="wrap-actions">
+            <button id="restart-btn" class="scene-action">다시 탐험하기</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <nav class="scene-nav">
+      <button id="prev-btn" class="nav-btn" disabled>이전</button>
+      <div class="progress"><span id="progress-text">1 / 7</span></div>
+      <button id="next-btn" class="nav-btn">다음</button>
+    </nav>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

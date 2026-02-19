@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WORLD QUIZ BATTLE - 세계 상식 대전</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=Teko:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-wrapper">
+    <div id="game-container">
+      <!-- Canvas (전투 애니메이션) -->
+      <canvas id="battle-canvas" width="1024" height="576"></canvas>
+
+      <!-- CRT 스캔라인 오버레이 -->
+      <div class="crt-overlay"></div>
+      <!-- 히트 플래시 -->
+      <div id="hit-flash" class="hit-flash"></div>
+
+      <!-- ===== START 화면 ===== -->
+      <div id="screen-start" class="screen active">
+        <h1 class="title-text">WORLD<br>QUIZ BATTLE</h1>
+        <div class="start-btn skew-ui">
+          <span class="font-dh start-btn-text">TOUCH TO START</span>
+        </div>
+      </div>
+
+      <!-- ===== LOADING 화면 ===== -->
+      <div id="screen-loading" class="screen">
+        <div class="font-teko loading-text">LOADING SYSTEM...</div>
+        <div class="loading-bar-track skew-ui">
+          <div id="loading-bar-fill" class="loading-bar-fill"></div>
+        </div>
+      </div>
+
+      <!-- ===== SELECT 화면 ===== -->
+      <div id="screen-select" class="screen">
+        <div class="vs-badge">
+          <span class="font-hs vs-badge-text glitch-anim">VS</span>
+        </div>
+        <div class="select-panel" id="select-tanjiro">
+          <div class="select-bg" id="select-bg-tanjiro"></div>
+          <div class="select-overlay select-overlay-green"></div>
+          <div class="select-info select-info-left">
+            <h2 class="font-hs select-name" style="color:#00ff88">탄지로</h2>
+            <p class="font-dh select-quote">"세계 상식을 마스터하겠어!"</p>
+          </div>
+        </div>
+        <div class="select-panel" id="select-gojo">
+          <div class="select-bg" id="select-bg-gojo"></div>
+          <div class="select-overlay select-overlay-purple"></div>
+          <div class="select-info select-info-right">
+            <h2 class="font-hs select-name" style="color:#a29bfe">고죠 사토루</h2>
+            <p class="font-dh select-quote">"내가 모르는 나라는 없어."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== VS 트랜지션 ===== -->
+      <div id="screen-vs" class="screen">
+        <span class="font-hs vs-splash glitch-anim">VS</span>
+      </div>
+
+      <!-- ===== BATTLE UI ===== -->
+      <div id="screen-battle" class="screen">
+        <!-- HUD 상단 -->
+        <div class="hud-top">
+          <!-- P1 -->
+          <div class="hud-player hud-p1" id="hud-p1">
+            <div class="hud-name-row">
+              <div class="hud-portrait skew-ui">
+                <img id="p1-portrait" src="" alt="p1">
+              </div>
+              <span id="p1-name" class="font-hs hud-name skew-ui">PLAYER</span>
+            </div>
+            <div class="hp-bar-outer skew-ui">
+              <div class="hp-bar-bg-img skew-ui-rev"><img id="p1-hp-bg" src="" alt=""></div>
+              <div id="p1-hp-damage" class="hp-bar-damage"></div>
+              <div id="p1-hp-fill" class="hp-bar-fill hp-fill-left">
+                <div class="hp-bar-shine"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 타이머 -->
+          <div class="timer-wrap">
+            <div class="timer-diamond">
+              <div id="timer-value" class="font-teko timer-value">10</div>
+            </div>
+          </div>
+
+          <!-- P2 -->
+          <div class="hud-player hud-p2" id="hud-p2">
+            <div class="hud-name-row hud-name-row-rev">
+              <div class="hud-portrait skew-ui-rev">
+                <img id="p2-portrait" src="" alt="p2" class="portrait-flip">
+              </div>
+              <span id="p2-name" class="font-hs hud-name skew-ui-rev">ENEMY</span>
+            </div>
+            <div class="hp-bar-outer skew-ui-rev">
+              <div class="hp-bar-bg-img skew-ui"><img id="p2-hp-bg" src="" alt="" class="portrait-flip"></div>
+              <div id="p2-hp-damage" class="hp-bar-damage hp-bar-damage-right"></div>
+              <div id="p2-hp-fill" class="hp-bar-fill hp-fill-right">
+                <div class="hp-bar-shine"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 콤보 표시 -->
+        <div id="combo-display" class="combo-display hidden">
+          <span id="combo-count" class="font-hs combo-count">0</span>
+          <span class="font-teko combo-label">HITS!</span>
+        </div>
+
+        <!-- 퀴즈 덱 -->
+        <div id="quiz-deck" class="quiz-deck">
+          <div class="quiz-question-box skew-ui">
+            <div id="quiz-round" class="quiz-round font-teko skew-ui-rev">ROUND 1 / 10</div>
+            <h2 id="quiz-question" class="font-dh quiz-question skew-ui-rev"></h2>
+            <div id="quiz-timer-bar" class="quiz-timer-bar"></div>
+          </div>
+          <div id="quiz-options" class="quiz-options"></div>
+        </div>
+      </div>
+
+      <!-- ===== RESULT 화면 ===== -->
+      <div id="screen-result" class="screen">
+        <div class="result-card skew-ui">
+          <div class="skew-ui-rev result-inner">
+            <h1 id="result-title" class="font-hs result-title">YOU WIN</h1>
+            <div class="result-stats">
+              <div class="result-stat">
+                <p class="font-teko result-stat-label">SCORE</p>
+                <p id="result-score" class="font-hs result-stat-value">0</p>
+              </div>
+              <div class="result-stat">
+                <p class="font-teko result-stat-label">MAX COMBO</p>
+                <p id="result-combo" class="font-hs result-stat-value result-combo-val">0</p>
+              </div>
+            </div>
+            <p id="result-msg" class="font-dh result-msg"></p>
+            <button id="btn-restart" class="font-hs result-btn">
+              <svg class="restart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              TRY AGAIN
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

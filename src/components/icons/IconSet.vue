@@ -8,6 +8,7 @@ export type IconName =
   | 'math'
   | 'science'
   | 'english'
+  | 'world-history'
   | 'book'
   // Status icons
   | 'completed'
@@ -98,6 +99,15 @@ const props = withDefaults(defineProps<Props>(), {
         stroke-width="2"
       />
       <line x1="12" y1="3" x2="12" y2="19" stroke="currentColor" stroke-width="2" />
+    </template>
+
+    <!-- World History (Globe) -->
+    <template v-else-if="name === 'world-history'">
+      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+      <ellipse cx="12" cy="12" rx="4" ry="10" stroke="currentColor" stroke-width="1.5" />
+      <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="1.5" />
+      <path d="M4 7H20" stroke="currentColor" stroke-width="1" />
+      <path d="M4 17H20" stroke="currentColor" stroke-width="1" />
     </template>
 
     <!-- Book (Contents count) -->

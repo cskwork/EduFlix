@@ -26,6 +26,7 @@ const subjectIcon = computed<IconName>(() => {
     math: 'math',
     science: 'science',
     english: 'english',
+    'world-history': 'world-history',
   }
   return icons[props.subject]
 })

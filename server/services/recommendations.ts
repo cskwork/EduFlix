@@ -113,6 +113,15 @@ export function getStats(): { totalClicks: number; uniqueContents: number } {
 }
 
 /**
+ * 전체 클릭 데이터 초기화
+ */
+export function clearAllClicks(): number {
+  const stmt = db.prepare('DELETE FROM content_clicks')
+  const result = stmt.run()
+  return Number(result.changes || 0)
+}
+
+/**
  * DB 연결 종료 (서버 종료 시)
  */
 export function closeDb(): void {

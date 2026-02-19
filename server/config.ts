@@ -4,7 +4,7 @@
 export const DEFAULT_SERVER_PORT = 3001
 
 // art-assets 기본 포트도 3000을 사용하지 않음
-export const DEFAULT_ART_ASSETS_PORT = 3100
+export const DEFAULT_ART_ASSETS_PORT = 3200
 export const DEFAULT_ART_ASSETS_URL = `http://localhost:${DEFAULT_ART_ASSETS_PORT}`
 
 // 서버 포트 해석

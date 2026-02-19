@@ -21,7 +21,11 @@
       "Bash(lsof:*)",
       "Bash(xargs kill:*)",
       "Bash(python3:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(curl:*)",
+      "Bash(cloudflared tunnel info:*)",
+      "Bash(cloudflared tunnel route dns:*)",
+      "Bash(cloudflared tunnel list:*)"
     ]
   }
 }

@@ -2,6 +2,7 @@
 import { computed, onMounted, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useContentStore } from '../stores/content'
+import type { RecommendationScope } from '../services/api/recommendations'
 import ContentRow from '../components/home/ContentRow.vue'
 import LoadingSpinner from '../components/common/LoadingSpinner.vue'
 import ErrorMessage from '../components/common/ErrorMessage.vue'
@@ -20,7 +21,7 @@ onMounted(async () => {
   contentStore.loadRecommendations()
 })
 
-const subjectOptions: Subject[] = ['math', 'science', 'english']
+const subjectOptions: Subject[] = ['math', 'science', 'english', 'world-history']
 
 // 해당 과목 섹션으로 스크롤 (콘텐츠 섹션 영역으로 이동)
 function scrollToSubjectSection(_subject: Subject) {
@@ -103,6 +104,23 @@ function scrollToContent() {
 function goToCreateMode() {
   router.push('/create')
 }
+
+async function setRecommendationScope(scope: RecommendationScope) {
+  if (contentStore.recommendationScope === scope) {
+    return
+  }
+
+  await contentStore.setRecommendationScopeMode(scope)
+}
+
+async function clearRecommendations() {
+  const confirmed = window.confirm('인기 콘텐츠 목록을 초기화하시겠습니까?')
+  if (!confirmed) {
+    return
+  }
+
+  await contentStore.clearRecommendations()
+}
 </script>
 
 <template>
@@ -160,6 +178,26 @@ function goToCreateMode() {
       />
 
       <!-- 추천 콘텐츠 (인기순) -->
+      <div class="recommendation-controls">
+        <div class="scope-toggle" role="group" aria-label="인기 콘텐츠 집계 범위">
+          <button
+            class="scope-button"
+            :class="{ active: contentStore.recommendationScope === 'shared' }"
+            @click="setRecommendationScope('shared')"
+          >
+            전체 공용
+          </button>
+          <button
+            class="scope-button"
+            :class="{ active: contentStore.recommendationScope === 'personal' }"
+            @click="setRecommendationScope('personal')"
+          >
+            개인
+          </button>
+        </div>
+        <button class="clear-recommendations" @click="clearRecommendations">초기화</button>
+      </div>
+
       <ContentRow
         v-if="contentStore.recommendedGroup"
         :group="contentStore.recommendedGroup"
@@ -180,6 +218,60 @@ function goToCreateMode() {
 .home-view {
   min-height: 100%;
   padding-bottom: 50px;
+}
+
+.recommendation-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-xl) var(--content-padding) var(--spacing-sm);
+}
+
+.scope-toggle {
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(20, 20, 20, 0.45);
+}
+
+.scope-button {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.85);
+  background: transparent;
+  cursor: pointer;
+}
+
+.scope-button.active {
+  background: rgba(229, 9, 20, 0.9);
+  color: #fff;
+}
+
+.clear-recommendations {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  font-size: var(--font-size-sm);
+  color: #fff;
+  background: rgba(20, 20, 20, 0.5);
+  cursor: pointer;
+}
+
+.clear-recommendations:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(20, 20, 20, 0.7);
+}
+
+@media (max-width: 768px) {
+  .recommendation-controls {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 
 /* 히어로 섹션 */

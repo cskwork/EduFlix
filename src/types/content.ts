@@ -1,7 +1,7 @@
 // 콘텐츠 매니페스트 스키마 정의
 
 // 과목 타입
-export type Subject = 'math' | 'science' | 'english'
+export type Subject = 'math' | 'science' | 'english' | 'world-history'
 
 // 학년 레벨 타입
 export type GradeLevel = 'elementary' | 'middle' | 'high'
@@ -77,6 +77,7 @@ export const SUBJECT_LABELS: Record<Subject, string> = {
   math: '수학',
   science: '과학',
   english: '영어',
+  'world-history': '세계사',
 }
 
 // 학년 레벨 라벨 매핑

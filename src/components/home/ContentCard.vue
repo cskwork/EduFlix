@@ -24,6 +24,7 @@ const subjectColorClass = computed(() => {
     math: 'subject-math',
     science: 'subject-science',
     english: 'subject-english',
+    'world-history': 'subject-world-history',
   }
   return colorMap[props.content.subject]
 })

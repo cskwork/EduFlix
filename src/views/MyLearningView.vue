@@ -22,6 +22,7 @@ const subjectIcons: Record<Subject, IconName> = {
   math: 'math',
   science: 'science',
   english: 'english',
+  'world-history': 'world-history',
 }
 
 function goToMap() {

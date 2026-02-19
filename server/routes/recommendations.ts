@@ -4,6 +4,7 @@ import {
   getPopularContent,
   getClickCount,
   getStats,
+  clearAllClicks,
   type RecommendedContent,
 } from '../services/recommendations'
 
@@ -21,6 +22,7 @@ interface ClickRequestBody {
  * - POST /api/recommendations/click - 클릭 기록
  * - GET /api/recommendations - 인기 콘텐츠 목록
  * - GET /api/recommendations/stats - 통계
+ * - POST /api/recommendations/clear - 전체 클릭 데이터 초기화
  * - GET /api/recommendations/:contentId - 특정 콘텐츠 클릭 수
  */
 export async function handleRecommendationsRoute(
@@ -84,6 +86,21 @@ export async function handleRecommendationsRoute(
     } catch (error) {
       console.error('Recommendations fetch error:', error)
       return errorResponse('Failed to fetch recommendations', 500)
+    }
+  }
+
+  // POST /api/recommendations/clear - 전체 클릭 데이터 초기화
+  if (req.method === 'POST' && pathname === '/api/recommendations/clear') {
+    try {
+      const cleared = clearAllClicks()
+
+      return jsonResponse({
+        success: true,
+        cleared,
+      })
+    } catch (error) {
+      console.error('Recommendations clear error:', error)
+      return errorResponse('Failed to clear recommendations', 500)
     }
   }
 

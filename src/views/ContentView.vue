@@ -352,6 +352,11 @@ onMounted(() => {
   color: #000;
 }
 
+.badge.subject-world-history {
+  background-color: var(--color-subject-world-history);
+  color: #fff;
+}
+
 .badge-outline {
   background-color: transparent;
   border: 1px solid var(--color-text-muted);

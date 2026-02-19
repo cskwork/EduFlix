@@ -8,6 +8,15 @@ import { handlePreviewRoute } from './routes/preview'
 import { getServerPort } from './config'
 import { checkArtAssetsHealth } from './services/health'
 
+// 프로세스 크래시 방지: uncaught exception/rejection 로깅
+process.on('uncaughtException', (error) => {
+  console.error(`[${new Date().toISOString()}] UNCAUGHT EXCEPTION:`, error)
+})
+
+process.on('unhandledRejection', (reason) => {
+  console.error(`[${new Date().toISOString()}] UNHANDLED REJECTION:`, reason)
+})
+
 const PORT = getServerPort()
 
 // 정적 파일 서빙 설정

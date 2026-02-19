@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>분수의 정확도 게임: Beta 버전</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 1. HookScene -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-wrapper">
+                <h1 class="big-question">과연 <span class="highlight">정확히 3/4</span> 지점을 찾을 수 있을까?</h1>
+                <div class="visual-container">
+                    <svg width="200" height="200" viewBox="0 0 200 200">
+                        <circle cx="100" cy="100" r="80" fill="#f0f0f0" stroke="#333" stroke-width="5" />
+                        <path d="M100,100 L100,20 A80,80 0 0,1 180,100 Z" fill="#4A90D9" opacity="0.8">
+                            <animate attributeName="d" dur="2s" repeatCount="indefinite"
+                                values="M100,100 L100,20 A80,80 0 0,1 180,100 Z; M100,100 L180,100 A80,80 0 0,1 100,180 Z; M100,100 L100,20 A80,80 0 0,1 180,100 Z" />
+                        </path>
+                        <text x="100" y="110" text-anchor="middle" font-size="24" font-weight="bold">?</text>
+                    </svg>
+                </div>
+                <p class="subtitle">게이지를 멈춰라!</p>
+                <button class="btn primary-btn" onclick="ContentApp.nextScene()">도전 시작하기</button>
+            </div>
+        </section>
+
+        <!-- 2. AnchorScene -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="anchor-box">
+                    <h2>이미 알고 있는 것</h2>
+                    <p>분수 1/2, 1/4는 전체를 2등분, 4등분 한 것 중 하나를 뜻하죠?</p>
+                    <div class="visual-split">
+                        <div class="split-circle half"></div>
+                        <div class="split-circle quarter"></div>
+                    </div>
+                </div>
+                <div class="bridge-box">
+                    <h2>새로운 상황</h2>
+                    <p>하지만 <strong>눈금이 아주 많은 게이지</strong>에서는 어떻게 정확한 위치를 찾을까요?</p>
+                    <div class="arrow-down">↓</div>
+                </div>
+                <button class="btn primary-btn" onclick="ContentApp.nextScene()">이유 알아보기</button>
+            </div>
+        </section>
+
+        <!-- 3. StoryScene -->
+        <section id="story-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="character-area">
+                    <svg width="120" height="120" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="40" fill="#FFD700" />
+                        <circle cx="35" cy="40" r="5" fill="#333" />
+                        <circle cx="65" cy="40" r="5" fill="#333" />
+                        <path d="M30,65 Q50,85 70,65" stroke="#333" stroke-width="3" fill="none" />
+                        <rect x="40" y="5" width="20" height="15" fill="#FF5A5F" rx="2" />
+                        <text x="50" y="15" font-size="10" text-anchor="middle" fill="white">GAMER</text>
+                    </svg>
+                    <div class="speech-bubble">
+                        "안녕! 나는 게이머 '지수'야.<br>
+                        이 아이템을 강화하려면 에너지를<strong> 정확히 4/5</strong>까지 채워야 해!"
+                    </div>
+                </div>
+                <div class="story-problem">
+                    <p><strong>문제:</strong> 눈금이 100칸인 게이지에서 4/5 지점은 어디일까요?</p>
+                    <p>도와주세요! 아니면 아이템이 사라져요!</p>
+                </div>
+                <button class="btn primary-btn" onclick="ContentApp.nextScene()">게임으로 해결하기</button>
+            </div>
+        </section>
+
+        <!-- 4. CoreScene -->
+        <section id="core-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="scene-title">🎮 미션: 에너지 4/5 채우기</h2>
+                <div class="game-stage">
+                    <!-- Stage 1: Learning -->
+                    <div id="core-stage-1" class="stage">
+                        <p>1단계: 개념 확인하기 (드래그 해보세요)</p>
+                        <div class="gauge-container">
+                            <div class="gauge-track" id="gauge-track-1">
+                                <div class="gauge-fill" id="gauge-fill-1" style="width: 0%;"></div>
+                                <div class="tick-marks">
+                                    <div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick"></div><div class="tick"></div>
+                                </div>
+                                <div class="drag-handle" id="drag-handle-1"></div>
+                            </div>
+                            <div class="fraction-display">
+                                <span id="current-numerator">0</span> / 5
+                            </div>
+                        </div>
+                        <button class="btn action-btn" onclick="ContentApp.startGameMode()">다음 단계 (도전)</button>
+                    </div>
+
+                    <!-- Stage 2: Precision Game -->
+                    <div id="core-stage-2" class="stage hidden">
+                        <p>2단계: 눈금이 100개인 게이지에서 <strong>4/5</strong> 지점을 멈추세요!</p>
+                        <div class="hint-text">(힌트: 4/5는 100개 중 몇 개일까요?)</div>
+                        <div class="gauge-container">
+                            <div class="gauge-track" id="gauge-track-2">
+                                <div class="gauge-fill" id="gauge-fill-2" style="width: 0%;"></div>
+                                <div class="fine-ticks" id="fine-ticks"></div>
+                                <div class="target-line" id="target-line" style="left: 80%;"></div>
+                                <div class="cursor" id="game-cursor"></div>
+                            </div>
+                            <div class="game-status">
+                                현재: <span id="game-value">0</span>/100
+                            </div>
+                        </div>
+                        <div id="game-controls">
+                            <button class="btn action-btn" id="start-btn" onclick="ContentApp.runGame()">게이지 시작!</button>
+                            <button class="btn action-btn hidden" id="stop-btn" onclick="ContentApp.stopGame()">STOP!</button>
+                        </div>
+                        <div id="game-feedback" class="feedback-box"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. VisualizeScene -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="scene-title">💡 원리 발견하기</h2>
+                <div class="principle-box">
+                    <div class="comparison">
+                        <div class="comp-item">
+                            <h3>4/5</h3>
+                            <div class="block-container" id="block-5">
+                                <div class="block filled"></div>
+                                <div class="block filled"></div>
+                                <div class="block filled"></div>
+                                <div class="block filled"></div>
+                                <div class="block"></div>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="comp-item">
+                            <h3>?/100</h3>
+                            <div class="block-container" id="block-100">
+                                <!-- JS will fill this -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formula-card">
+                        <p><strong>핵심 규칙:</strong></p>
+                        <p>분모가 5에서 100으로 20배 커졌으니,</p>
+                        <p>분자도 4에서 <span class="highlight">80</span>으로 20배 커져야 같은 크기입니다!</p>
+                        <p class="math-expression">4/5 = (4 × 20) / (5 × 20) = 80/100</p>
+                    </div>
+                </div>
+                <button class="btn primary-btn" onclick="ContentApp.nextScene()">이해했어요</button>
+            </div>
+        </section>
+
+        <!-- 6. QuizScene -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="scene-title">📝 실전 퀴즈: 요리사 체험</h2>
+                <div class="quiz-context">
+                    <p>"레시피에 따르면, 소스를 전체 용량의 <strong>3/4</strong>만 채워야 해요."</p>
+                    <p>비커의 눈금은 최대 <strong>40ml</strong>입니다.</p>
+                    <p>몇 <strong>ml</strong>까지 채워야 할까요?</p>
+                </div>
+                <div class="quiz-interaction">
+                    <div class="beaker-container">
+                        <div class="beaker">
+                            <div class="liquid" id="quiz-liquid"></div>
+                            <div class="mark-40">40ml</div>
+                            <div class="mark-20">20ml</div>
+                        </div>
+                    </div>
+                    <div class="input-area">
+                        <input type="number" id="quiz-input" placeholder="숫자를 입력하세요" min="0" max="40">
+                        <span>ml</span>
+                    </div>
+                    <button class="btn action-btn" onclick="ContentApp.checkQuiz()">확인하기</button>
+                    <div id="quiz-feedback" class="feedback-box"></div>
+                    <button class="btn retry-btn hidden" onclick="ContentApp.resetQuiz()">다시 풀기</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. WrapScene -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-wrapper">
+                <h2 class="scene-title">🎉 미션 완료!</h2>
+                <div class="summary-card">
+                    <h3>오늘 배운 3가지</h3>
+                    <ul>
+                        <li>👉 분수는 비율을 나타냅니다.</li>
+                        <li>👉 분모와 분자에 같은 수를 곱해도 크기는 변하지 않습니다.</li>
+                        <li>👉 이 원리를 이용하면 100, 1000 같은 숫자로 쉽게 환산할 수 있습니다.</li>
+                    </ul>
+                </div>
+                <div class="next-step">
+                    <p>다음 시간: 분수의 덧셈과 뺄셈</p>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn secondary-btn" onclick="ContentApp.resetContent()">처음부터 다시</button>
+                    <button class="btn primary-btn" onclick="alert('다음 콘텐츠 준비 중입니다!')">다음 학습</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

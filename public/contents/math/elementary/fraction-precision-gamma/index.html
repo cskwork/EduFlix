@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>분수의 정밀도: 감마 프로젝트</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="app-header">
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+            <span class="app-title">감마 프로젝트: 분수 정밀도</span>
+        </header>
+
+        <!-- Scene Containers -->
+        
+        <!-- 1. Hook Scene -->
+        <section id="hook-scene" class="scene active">
+            <div class="content-wrapper">
+                <h1 class="big-question">분모가 크면 값이 더 커질까요?</h1>
+                <div class="visual-impact">
+                    <div class="scale-container">
+                        <div class="fraction-block huge">1/2</div>
+                        <div class="vs-sign">VS</div>
+                        <div class="fraction-block huge">1/8</div>
+                    </div>
+                </div>
+                <p class="sub-text">직관과 다를 수 있는 분수의 비밀</p>
+                <button class="cta-btn" onclick="ContentApp.nextScene()">탐험 시작하기</button>
+            </div>
+        </section>
+
+        <!-- 2. Anchor Scene -->
+        <section id="anchor-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="anchor-box">
+                    <h2>기억나세요?</h2>
+                    <p class="anchor-text">"나누기"는 전체를 <strong>똑같은 크기</strong>로 나누는 것이었죠.</p>
+                    <div class="visual-transition">
+                        <div class="pizza-wrapper"> <!-- SVG via JS injection or CSS shapes -->
+                            <div class="pizza-slice-container" id="anchor-pizza"></div>
+                        </div>
+                    </div>
+                    <p class="bridge-question">그렇다면 사람이 2명일 때랑 8명일 때, 한 조각의 크기는 어떻게 달라질까요?</p>
+                </div>
+                <div class="nav-controls">
+                    <button class="secondary-btn" onclick="ContentApp.prevScene()">이전</button>
+                    <button class="primary-btn" onclick="ContentApp.nextScene()">다음</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Story Scene -->
+        <section id="story-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="character-area">
+                    <div class="character-avatar">
+                        <svg viewBox="0 0 100 100" class="avatar-svg">
+                            <rect x="20" y="20" width="60" height="60" rx="10" fill="#38bdf8" />
+                            <circle cx="35" cy="40" r="5" fill="white" />
+                            <circle cx="65" cy="40" r="5" fill="white" />
+                            <rect x="30" y="60" width="40" height="10" rx="5" fill="white" />
+                            <rect x="45" y="80" width="10" height="15" fill="#38bdf8" />
+                        </svg>
+                    </div>
+                    <div class="speech-bubble">
+                        <p><strong>엔지니어 감마</strong>입니다!</p>
+                        <p>우리 공장의 '초정밀 레이저 커터'는 에너지를 정확한 분수 비율로 공급받아야 작동해요.</p>
+                        <p>하지만 지금 에너지 설정값이 꼬였어요! 정확한 분수 값을 맞춰서 커터를 작동시켜 주세요.</p>
+                    </div>
+                </div>
+                <button class="cta-btn" onclick="ContentApp.nextScene()">작동 시작하기</button>
+            </div>
+        </section>
+
+        <!-- 4. Core Scene -->
+        <section id="core-scene" class="scene">
+            <div class="content-wrapper">
+                <h2>정밀 조작 패널</h2>
+                <p class="instruction">타겟 에너지 레벨과 정확히 일치시키세요.</p>
+                
+                <div class="game-interface">
+                    <!-- Target Display -->
+                    <div class="target-panel">
+                        <span class="label">목표 에너지</span>
+                        <div class="fraction-display" id="target-fraction">
+                            <span class="numerator" id="target-num">1</span>
+                            <div class="divider"></div>
+                            <span class="denominator" id="target-denom">2</span>
+                        </div>
+                        <div class="bar-container target">
+                            <div class="bar-fill" id="target-bar" style="width: 50%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- User Controls -->
+                    <div class="control-panel">
+                        <div class="control-group">
+                            <span class="label">분자 (선택 조각)</span>
+                            <button class="adjust-btn" onclick="ContentApp.adjustNum(-1)">-</button>
+                            <span class="value-display" id="user-num">1</span>
+                            <button class="adjust-btn" onclick="ContentApp.adjustNum(1)">+</button>
+                        </div>
+                        <div class="control-group">
+                            <span class="label">분모 (전체 조각)</span>
+                            <button class="adjust-btn" onclick="ContentApp.adjustDenom(-1)">-</button>
+                            <span class="value-display" id="user-denom">2</span>
+                            <button class="adjust-btn" onclick="ContentApp.adjustDenom(1)">+</button>
+                        </div>
+                    </div>
+
+                    <!-- User Display -->
+                    <div class="user-panel">
+                        <span class="label">현재 에너지</span>
+                        <div class="fraction-display">
+                            <span class="numerator" id="current-num">1</span>
+                            <div class="divider"></div>
+                            <span class="denominator" id="current-denom">2</span>
+                        </div>
+                        <div class="bar-container user">
+                            <div class="bar-fill" id="user-bar" style="width: 50%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feedback-area" id="core-feedback"></div>
+                <button class="cta-btn" id="check-core-btn" onclick="ContentApp.checkCoreAnswer()">에너지 충전</button>
+            </div>
+        </section>
+
+        <!-- 5. Visualize Scene -->
+        <section id="visualize-scene" class="scene">
+            <div class="content-wrapper">
+                <h2>발견된 원리</h2>
+                <div class="principle-visual">
+                    <div class="comparison-row">
+                        <div class="fraction-box">
+                            <div class="blocks" id="vis-blocks-1"></div>
+                            <p>1/2 (조각이 큼)</p>
+                        </div>
+                        <div class="arrow">=</div>
+                        <div class="fraction-box">
+                            <div class="blocks" id="vis-blocks-2"></div>
+                            <p>2/4 (조각이 작음)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="principle-text">
+                    <p class="key-insight"><strong>"분모가 커질수록 한 조각의 크기는 작아집니다."</strong></p>
+                    <p>하지만 그 작은 조각을 더 많이 모으면(분자를 키우면), 원래 크기와 같아질 수 있어요. (등분수)</p>
+                </div>
+                <button class="cta-btn" onclick="ContentApp.nextScene">이해했어요</button>
+            </div>
+        </section>
+
+        <!-- 6. Quiz Scene -->
+        <section id="quiz-scene" class="scene">
+            <div class="content-wrapper">
+                <div class="quiz-header">
+                    <h2>응급 퀴즈 모드</h2>
+                    <p>급히 주문이 들어왔어요! 다음 요청을 처리하세요.</p>
+                </div>
+                
+                <div class="quiz-interface">
+                    <div class="quiz-question">
+                        <p>요청 에너지: <strong id="quiz-target-text">1/4</strong>와 같은 양</p>
+                    </div>
+                    
+                    <div class="quiz-controls">
+                        <div class="quiz-slider-group">
+                            <label>분모 설정 (전체 칸): <span id="quiz-slider-val">4</span></label>
+                            <input type="range" id="quiz-denom-slider" min="2" max="12" value="4" oninput="ContentApp.updateQuizSlider(this.value)">
+                        </div>
+                        <div class="quiz-blocks-container" id="quiz-blocks-area">
+                            <!-- Blocks generated by JS -->
+                        </div>
+                        <p class="hint-text">클릭해서 칸을 활성화하세요.</p>
+                    </div>
+
+                    <div class="quiz-feedback" id="quiz-feedback-msg"></div>
+                    
+                    <div class="quiz-actions">
+                        <button class="secondary-btn" onclick="ContentApp.resetQuiz()">초기화</button>
+                        <button class="primary-btn" onclick="ContentApp.checkQuizAnswer()">전송</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Wrap Scene -->
+        <section id="wrap-scene" class="scene">
+            <div class="content-wrapper">
+                <h2>완료! 시스템 정상화</h2>
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <h3>1. 분모의 의미</h3>
+                        <p>전체를 나누는 조각의 수 (커지면 조각은 작아짐)</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>2. 분자의 의미</h3>
+                        <p>선택한 조각의 수</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>3. 등분수</h3>
+                        <p>모양은 달라도 크기가 같은 분수 (1/2 = 2/4)</p>
+                    </div>
+                </div>
+                <div class="next-step">
+                    <p>다음 단계: 분수의 덧셈과 뺄셈</p>
+                </div>
+                <div class="wrap-actions">
+                    <button class="secondary-btn" onclick="ContentApp.resetExploration()">다시 탐험</button>
+                    <button class="primary-btn" onclick="ContentApp.freeExplore()">자유 모드</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

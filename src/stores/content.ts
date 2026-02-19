@@ -12,6 +12,10 @@ import { SUBJECT_LABELS } from '../types/content'
 import {
   getRecommendations,
   recordContentClick,
+  getRecommendationScope,
+  setRecommendationScope,
+  clearClickData,
+  type RecommendationScope,
   type RecommendedContent,
 } from '../services/api/recommendations'
 import {
@@ -31,6 +35,7 @@ export const useContentStore = defineStore('content', () => {
   // 추천 시스템 상태
   const recommendations = ref<RecommendedContent[]>([])
   const isLoadingRecommendations = ref(false)
+  const recommendationScope = ref<RecommendationScope>(getRecommendationScope())
 
   // 클릭 통계 변경 트리거 (localStorage 변경 시 정렬 재계산용)
   const clickStatsVersion = ref(0)
@@ -73,7 +78,7 @@ export const useContentStore = defineStore('content', () => {
     // clickStatsVersion을 의존성으로 포함하여 클릭 시 재계산 트리거
     void clickStatsVersion.value
 
-    const subjects: Subject[] = ['math', 'english', 'science']
+    const subjects: Subject[] = ['math', 'english', 'science', 'world-history']
     const groups: ContentGroup[] = []
 
     for (const subject of subjects) {
@@ -189,7 +194,7 @@ export const useContentStore = defineStore('content', () => {
   async function loadRecommendations(limit = 10) {
     isLoadingRecommendations.value = true
     try {
-      recommendations.value = await getRecommendations(limit)
+      recommendations.value = await getRecommendations(limit, recommendationScope.value)
     } catch (e) {
       console.error('Failed to load recommendations:', e)
       recommendations.value = []
@@ -207,12 +212,27 @@ export const useContentStore = defineStore('content', () => {
     clickStatsVersion.value++
 
     try {
-      await recordContentClick(contentId)
+      await recordContentClick(contentId, recommendationScope.value)
       // 추천 목록 갱신 (백그라운드)
       loadRecommendations()
     } catch (e) {
       console.error('Failed to track click:', e)
     }
+  }
+
+  async function setRecommendationScopeMode(scope: RecommendationScope) {
+    recommendationScope.value = scope
+    setRecommendationScope(scope)
+    await loadRecommendations()
+  }
+
+  async function clearRecommendations() {
+    const cleared = await clearClickData(recommendationScope.value)
+    if (cleared) {
+      recommendations.value = []
+      await loadRecommendations()
+    }
+    return cleared
   }
 
   return {
@@ -225,6 +245,7 @@ export const useContentStore = defineStore('content', () => {
     searchQuery,
     recommendations,
     isLoadingRecommendations,
+    recommendationScope,
     // 계산된 속성
     filteredContents,
     contentCards,
@@ -240,6 +261,8 @@ export const useContentStore = defineStore('content', () => {
     addContent,
     loadRecommendations,
     trackContentClick,
+    setRecommendationScopeMode,
+    clearRecommendations,
   }
 })
 

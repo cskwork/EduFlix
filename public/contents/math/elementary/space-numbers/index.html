@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우주의 크기와 숫자</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="header-controls">
+                <button id="btn-prev" class="nav-btn" aria-label="이전">&#9664;</button>
+                <span id="scene-indicator">1/7</span>
+                <button id="btn-next" class="nav-btn" aria-label="다음">&#9654;</button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main>
+            <!-- Scene 1: Hook -->
+            <section id="hook-scene" class="scene active">
+                <div class="scene-content center-content">
+                    <h1 class="big-question">우주에는<br>무엇이 있을까요?</h1>
+                    <div class="visual-container space-bg">
+                        <svg class="rocket-icon" viewBox="0 0 100 100">
+                            <path d="M50 0 L60 40 L90 50 L60 60 L70 100 L50 80 L30 100 L40 60 L10 50 L40 40 Z" fill="#F5A623" stroke="#fff" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <p class="hint-text">클릭해서 시작해요!</p>
+                </div>
+            </section>
+
+            <!-- Scene 2: Anchor -->
+            <section id="anchor-scene" class="scene">
+                <div class="scene-content">
+                    <div class="comparison-box">
+                        <div class="item-row">
+                            <div class="item-box">
+                                <div class="circle fruit big"></div>
+                                <span>수박 (크다)</span>
+                            </div>
+                            <div class="vs-badge">VS</div>
+                            <div class="item-box">
+                                <div class="circle fruit small"></div>
+                                <span>포도 (작다)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bridge-text">
+                        <p>우리는 사과와 수박 중 <strong>무엇이 더 큰지</strong> 알아요.</p>
+                        <p class="highlight">그럼, 우주의 별들은 누가 더 클까요?</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scene 3: Story -->
+            <section id="story-scene" class="scene">
+                <div class="scene-content">
+                    <div class="character-stage">
+                        <svg class="character-svg" viewBox="0 0 200 200">
+                            <!-- Space Cat Character -->
+                            <circle cx="100" cy="120" r="40" fill="#7ED321"/>
+                            <polygon points="60,100 70,140 50,140" fill="#7ED321"/>
+                            <polygon points="140,100 130,140 150,140" fill="#7ED321"/>
+                            <circle cx="85" cy="110" r="5" fill="white"/>
+                            <circle cx="115" cy="110" r="5" fill="white"/>
+                            <circle cx="85" cy="110" r="2" fill="black"/>
+                            <circle cx="115" cy="110" r="2" fill="black"/>
+                            <path d="M90 125 Q100 135 110 125" stroke="white" stroke-width="3" fill="none"/>
+                            <rect x="90" y="160" width="20" height="30" fill="#4A90D9"/>
+                        </svg>
+                        <div class="speech-bubble">
+                            안녕! 난 우주 탐험가 <strong>아기별</strong>야.<br>
+                            숨겨진 보물 행성을 찾고 싶은데,<br>
+                            네가 도와줄 수 있어?
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scene 4: Core (Interaction) -->
+            <section id="core-scene" class="scene">
+                <div class="scene-content">
+                    <div class="game-panel">
+                        <div class="mission-text" id="mission-text">
+                            가장 <strong>큰</strong> 행성을 찾아!
+                        </div>
+                        <div class="planets-container" id="planets-container">
+                            <!-- Planets will be injected by JS -->
+                        </div>
+                        <div class="feedback-area" id="core-feedback"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scene 5: Visualize -->
+            <section id="visualize-scene" class="scene">
+                <div class="scene-content">
+                    <h2>비교의 법칙</h2>
+                    <div class="diagram-container">
+                        <div class="diagram-step">
+                            <span class="label-left">작은 것</span>
+                            <div class="size-arrow"></div>
+                            <span class="label-right">큰 것</span>
+                        </div>
+                        <div class="principle-card">
+                            <p><strong>크기 비교:</strong> 눈으로 보고 겹쳐보면 누가 더 큰지 알 수 있어요.</p>
+                            <p><strong>숫자 비교:</strong> 물건이 많으면 셀 때 숫자도 커져요. (1, 2, 3...)</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scene 6: Quiz -->
+            <section id="quiz-scene" class="scene">
+                <div class="scene-content">
+                    <div class="quiz-container">
+                        <div class="quiz-header">문제</div>
+                        <div class="quiz-question" id="quiz-question">
+                            <!-- Question injected by JS -->
+                        </div>
+                        <div class="quiz-options" id="quiz-options">
+                            <!-- Options injected by JS -->
+                        </div>
+                        <div class="quiz-feedback" id="quiz-feedback"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scene 7: Wrap -->
+            <section id="wrap-scene" class="scene">
+                <div class="scene-content center-content">
+                    <h2>탐험 성공!</h2>
+                    <div class="summary-card">
+                        <ul>
+                            <li>&#10003; 크기 비교 (크다, 작다)</li>
+                            <li>&#10003; 숫자 세기 (1, 2, 3)</li>
+                            <li>&#10003; 우주의 모양 살펴보기</li>
+                        </ul>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-action" onclick="ContentApp.restart()">다시 하기</button>
+                        <button class="btn-action primary" onclick="alert('다음 레벨이 준비 중입니다!')">다음 단계</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
