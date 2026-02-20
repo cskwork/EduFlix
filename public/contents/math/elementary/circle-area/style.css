@@ -22,7 +22,7 @@
 body {
     font-family: 'Noto Sans KR', sans-serif;
     background: var(--bg-color);
-    background-image: url('/contents/backgrounds/bg-gradient-blue-20260125.png');
+    background-image: url('/contents/backgrounds/bg-grid-paper-blue-textured-20260124.png');
     background-size: cover;
     background-position: center;
     color: var(--text-color);

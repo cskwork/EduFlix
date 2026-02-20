@@ -91,7 +91,7 @@ body {
 
 /* Hook Scene */
 #hook-scene {
-    background: url('../../backgrounds/bg-edu-travel-gradient-20260126.png') no-repeat center center fixed;
+    background: url('/contents/backgrounds/bg-grid-paper-blue-textured-20260124.png') no-repeat center center fixed;
     background-size: cover;
 }
 

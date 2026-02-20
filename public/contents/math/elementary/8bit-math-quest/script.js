@@ -30,16 +30,16 @@ const ContentApp = {
 
   assets: {
     playerRunFrames: [
-      '../../8bit-assets/Assets/Packs/warped-Caves/PNG/sprites/player/player-run/player-run-1.png',
-      '../../8bit-assets/Assets/Packs/warped-Caves/PNG/sprites/player/player-run/player-run-2.png',
-      '../../8bit-assets/Assets/Packs/warped-Caves/PNG/sprites/player/player-run/player-run-3.png',
-      '../../8bit-assets/Assets/Packs/warped-Caves/PNG/sprites/player/player-run/player-run-4.png'
+      '/contents/icons/icon-home-cute-20260124.svg',
+      '/contents/icons/icon-arithmetic-basic-color-20260124.svg',
+      '/contents/icons/icon-star-reward-cute-20260124.svg',
+      '/contents/icons/icon-lightbulb-idea-bright-20260124.svg'
     ],
     enemyFrames: [
-      '../../8bit-assets/Assets/Packs/warped-Caves/PNG/sprites/enemies/crab-walk/crab-walk-1.png',
-      '../../8bit-assets/Assets/Packs/warped-Caves/PNG/sprites/enemies/crab-walk/crab-walk-2.png',
-      '../../8bit-assets/Assets/Packs/warped-Caves/PNG/sprites/enemies/crab-walk/crab-walk-3.png',
-      '../../8bit-assets/Assets/Packs/warped-Caves/PNG/sprites/enemies/crab-walk/crab-walk-4.png'
+      '/contents/icons/icon-help-question-cute-20260124.svg',
+      '/contents/icons/icon-trophy-achievement-cute-20260124.svg',
+      '/contents/diagrams/diagram-ratio-proportion-blocks-20260125.svg',
+      '/contents/diagrams/diagram-prism-net-unfolded-20260125.svg'
     ]
   },
 

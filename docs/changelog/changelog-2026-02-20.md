@@ -52,3 +52,34 @@
   - **네온 사이버펑크 디자인**: 비커 시각화, +/- 인원수 조절 동적 바 차트, 비례식 공식 step-by-step 도출 애니메이션 구현.
   - **스토리 및 구조 개선**: 해커의 연료 배합 데이터 해독 임무. 외항의 곱 = 내항의 곱 증명과 현실적인 비례식 활용.
   - **유지보수 분리**: `script.js`로 게임 로직 분리.
+
+## public/contents 경로 및 이미지 로드 이슈 수정
+- **대상 파일**:
+  - `public/contents/math/elementary/decimal-multiplication/index.html`
+  - `public/contents/math/elementary/decimal-multiplication/style.css`
+  - `public/contents/math/elementary/fraction-division/index.html`
+  - `public/contents/math/elementary/fraction-factory-3d/index.html`
+  - `public/contents/english/middle/will-vs-going-to-library/style.css`
+  - `public/contents/math/elementary/box-volume/style.css`
+  - `public/contents/math/elementary/circle-area/style.css`
+  - `public/contents/math/elementary/8bit-math-quest/index.html`
+  - `public/contents/math/elementary/8bit-math-quest/script.js`
+
+- **수정 요약**:
+  - 상대 경로(`../../../icons`, `../../../diagrams`, `../../backgrounds`)를 `/contents/...` 절대 경로로 통일.
+  - 존재하지 않는 배경 리소스 경로를 실제 존재하는 배경 파일로 교체.
+  - `decimal-multiplication`에 `/contents/illustrations/...` 경로 사용을 추가하고 아이콘 경로를 절대 경로로 변경.
+  - `8bit-math-quest`의 누락된 8비트 에셋 경로를 공용 `/contents/icons`, `/contents/backgrounds`, `/contents/diagrams` 리소스로 대체.
+
+## 누락 썸네일 에셋 보강
+- **신규 추가 파일**:
+  - `public/contents/english/elementary/comparative-adjectives/assets/thumbnail.svg`
+  - `public/contents/english/elementary/modal-can/assets/thumbnail.svg`
+  - `public/contents/english/elementary/present-tenses/assets/thumbnail.svg`
+  - `public/contents/english/middle/will-vs-going-to-library/assets/thumbnail.svg`
+  - `public/contents/english/middle/will-vs-going-to-zoo/assets/thumbnail.svg`
+  - `public/contents/math/elementary/fraction-addition/assets/thumbnail.svg`
+
+- **수정 요약**:
+  - `manifest.json`에 선언된 썸네일 경로가 실제 파일로 존재하도록 `assets/thumbnail.svg`를 추가.
+  - 썸네일 로드 실패(404)로 인한 이미지 미표시 이슈를 방지.

@@ -35,6 +35,10 @@
 body {
     font-family: var(--font-body);
     background: radial-gradient(circle at center, #1e293b 0%, var(--bg-dark) 100%);
+    background-image: radial-gradient(circle at center, #1e293b 0%, var(--bg-dark) 100%),
+        url('/contents/backgrounds/bg-numbers-pattern-20260125.png');
+    background-size: cover;
+    background-attachment: fixed;
     color: var(--text-main);
     min-height: 100vh;
     overflow-x: hidden;
@@ -220,6 +224,12 @@ p {
     animation: float 4s ease-in-out infinite;
     filter: drop-shadow(var(--shadow-glow-secondary));
     margin-bottom: 20px;
+}
+
+.hook-illustration {
+    width: min(220px, 60vw);
+    height: auto;
+    margin-bottom: 16px;
 }
 
 @keyframes float {

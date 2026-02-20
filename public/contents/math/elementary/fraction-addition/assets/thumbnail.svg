@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-label="EduFlix thumbnail">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <g fill="#ffffff" opacity="0.16">
+    <circle cx="170" cy="160" r="96"/>
+    <circle cx="1020" cy="520" r="130"/>
+    <circle cx="920" cy="170" r="64"/>
+  </g>
+  <rect x="150" y="180" width="900" height="315" rx="24" fill="#ffffff" opacity="0.92"/>
+  <text x="600" y="315" text-anchor="middle" font-size="84" font-family="'Noto Sans KR', 'Arial', sans-serif" fill="#0f172a" font-weight="700">EduFlix</text>
+  <text x="600" y="388" text-anchor="middle" font-size="38" font-family="'Noto Sans KR', 'Arial', sans-serif" fill="#334155">Interactive Learning Content</text>
+</svg>
