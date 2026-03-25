@@ -213,15 +213,15 @@ p {
 .whole.big { font-size: 2rem; }
 
 /* Visual Area (Hook Scene) */
-.visual-area { margin: 20px 0; }
-.model-container {
-    width: 250px;
-    height: 250px;
-    background: linear-gradient(135deg, white, #f1f5f9);
-    border-radius: 50%;
-    box-shadow: inset 0 4px 15px rgba(0,0,0,0.05), var(--shadow-md);
-    overflow: hidden;
-    border: 5px solid white;
+.visual-area { margin: 20px 0; display: flex; flex-direction: column; align-items: center; }
+.hook-pizza-visual {
+    width: 220px;
+    height: 220px;
+    filter: drop-shadow(0 8px 15px rgba(0,0,0,0.12));
+}
+.hook-pizza-svg {
+    width: 100%;
+    height: 100%;
 }
 .hook-hint {
     margin-top: 15px;

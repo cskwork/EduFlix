@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Jua&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../../common/mobile.css">
 </head>
 <body>
     <div id="app">
@@ -24,8 +25,20 @@
                     <p class="sub-text">각자 얼마나 먹을 수 있을까요?</p>
                 </div>
                 <div class="visual-area">
-                    <div id="hook-3d-container" class="model-container">
-                        <!-- Three.js 3D 피자 모델 렌더링 영역 -->
+                    <div class="hook-pizza-visual">
+                        <svg viewBox="0 0 200 200" class="hook-pizza-svg">
+                            <circle cx="100" cy="100" r="85" fill="#FFCC80" stroke="#E65100" stroke-width="3"/>
+                            <circle cx="75" cy="70" r="8" fill="#D32F2F"/>
+                            <circle cx="120" cy="85" r="8" fill="#D32F2F"/>
+                            <circle cx="85" cy="130" r="8" fill="#D32F2F"/>
+                            <circle cx="130" cy="125" r="7" fill="#388E3C"/>
+                            <circle cx="65" cy="110" r="7" fill="#388E3C"/>
+                            <path d="M 100 100 L 100 15 A 85 85 0 0 1 185 100 Z" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="5"/>
+                            <text x="145" y="58" fill="#94a3b8" font-size="11" text-anchor="middle">먹음</text>
+                            <line x1="100" y1="100" x2="100" y2="15" stroke="#333" stroke-width="1.5"/>
+                            <line x1="100" y1="100" x2="185" y2="100" stroke="#333" stroke-width="1.5"/>
+                            <text x="55" y="170" fill="#e65100" font-size="18" font-weight="bold">3/4</text>
+                        </svg>
                     </div>
                     <div class="hook-hint">
                         <img src="/contents/icons/icon-help-question-cute-20260124.svg" alt="힌트" class="hint-icon bounce">
@@ -308,15 +321,13 @@
                 </div>
                 <div class="action-buttons">
                     <button class="btn-secondary" onclick="location.reload()">다시 하기</button>
-                    <button class="btn-primary">다음 주제로</button>
+                    <button class="btn-primary" onclick="window.parent.postMessage('close', '*')">홈으로</button>
                 </div>
             </div>
         </section>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Three.js 제거: 이 콘텐츠에서 사용하지 않음 -->
     <script src="script.js"></script>
 </body>
 </html>

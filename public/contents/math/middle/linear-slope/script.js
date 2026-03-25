@@ -239,7 +239,7 @@ const slopeData = {
             
             container.innerHTML = `
                 <div class="slope-container">
-                    <svg class="slope-svg" id="slope-svg">
+                    <svg class="slope-svg" id="slope-svg" viewBox="0 0 500 400">
                         <g id="grid-group"></g>
                         <!-- Axes -->
                         <line x1="0" y1="${originY}" x2="${w}" y2="${originY}" class="axis" />
@@ -333,32 +333,57 @@ const slopeData = {
                 slopeVal.textContent = slope.toFixed(1);
             };
 
-            // Drag Interaction
-             let isDragging = false;
+            // 드래그 인터랙션 (마우스 + 터치 지원)
+            let isDragging = false;
             
-            controlPoint.onmousedown = (e) => {
+            const getPos = (e) => {
+                const rect = svg.getBoundingClientRect();
+                // viewBox 스케일 보정
+                const scaleX = w / rect.width;
+                const scaleY = h / rect.height;
+                if (e.touches && e.touches.length > 0) {
+                    return {
+                        x: (e.touches[0].clientX - rect.left) * scaleX,
+                        y: (e.touches[0].clientY - rect.top) * scaleY
+                    };
+                }
+                return {
+                    x: (e.clientX - rect.left) * scaleX,
+                    y: (e.clientY - rect.top) * scaleY
+                };
+            };
+
+            const onDragStart = (e) => {
                 isDragging = true;
                 e.preventDefault();
             };
-             svg.onmousemove = (e) => {
-                if(!isDragging) return;
-                const rect = svg.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+
+            const onDragMove = (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const pos = getPos(e);
                 
-                // Convert to units
-                let ux = Math.round((x - originX) / scale);
-                let uy = Math.round((originY - y) / scale);
+                // 좌표 단위로 변환
+                let ux = Math.round((pos.x - originX) / scale);
+                let uy = Math.round((originY - pos.y) / scale);
                 
-                // Avoid (0,0)
-                if(ux === 0 && uy === 0) ux = 1;
+                // (0,0) 방지
+                if (ux === 0 && uy === 0) ux = 1;
                 
                 p2 = { x: ux, y: uy };
                 updateView();
             };
-            window.onmouseup = () => {
+
+            const onDragEnd = () => {
                 isDragging = false;
             };
+
+            controlPoint.addEventListener('mousedown', onDragStart);
+            controlPoint.addEventListener('touchstart', onDragStart, { passive: false });
+            svg.addEventListener('mousemove', onDragMove);
+            svg.addEventListener('touchmove', onDragMove, { passive: false });
+            window.addEventListener('mouseup', onDragEnd);
+            window.addEventListener('touchend', onDragEnd);
 
             updateView();
             

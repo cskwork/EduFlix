@@ -62,7 +62,7 @@ preflight_check() {
   # 1. Tunnel config 포트 정합성 검증
   if [[ -f "${CLOUDFLARED_CONFIG}" ]]; then
     local tunnel_port
-    tunnel_port=$(grep -oP 'localhost:\K[0-9]+' "${CLOUDFLARED_CONFIG}" | head -1)
+    tunnel_port=$(grep -o 'localhost:[0-9]*' "${CLOUDFLARED_CONFIG}" | head -1 | sed 's/localhost://')
     if [[ -n "${tunnel_port}" && "${tunnel_port}" != "${EDUFLIX_PORT}" ]]; then
       log "오류: Tunnel 설정 포트(${tunnel_port})와 서버 포트(${EDUFLIX_PORT})가 불일치합니다."
       log "  수정: ${CLOUDFLARED_CONFIG} 의 포트를 ${EDUFLIX_PORT}로 변경하세요."
@@ -75,7 +75,7 @@ preflight_check() {
   # 2. .env ART_ASSETS_URL 정합성 검증
   if [[ -f "${EDUFLIX_DIR}/.env" ]]; then
     local env_art_url
-    env_art_url=$(grep -oP 'ART_ASSETS_URL=\K.*' "${EDUFLIX_DIR}/.env" 2>/dev/null || true)
+    env_art_url=$(grep 'ART_ASSETS_URL=' "${EDUFLIX_DIR}/.env" 2>/dev/null | sed 's/ART_ASSETS_URL=//' || true)
     if [[ -n "${env_art_url}" && "${env_art_url}" != "${ART_ASSETS_URL}" ]]; then
       log "경고: .env ART_ASSETS_URL(${env_art_url})과 스크립트 설정(${ART_ASSETS_URL})이 다릅니다."
       log "  스크립트 설정이 우선 적용됩니다."
@@ -131,6 +131,15 @@ trap cleanup EXIT INT TERM
 # --- 메인 시작 로직 ---
 
 preflight_check
+
+# 빌드 (public/ → dist/ 동기화)
+log "프로덕션 빌드를 실행합니다..."
+if bun run build; then
+  log "빌드 완료."
+else
+  log "오류: 빌드 실패. 종료합니다."
+  exit 1
+fi
 
 log "EduFlix 개발 서버를 시작합니다..."
 echo "  - API server: http://localhost:${EDUFLIX_PORT}"

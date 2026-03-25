@@ -1,6 +1,8 @@
+// 피타고라스 정리: 제곱의 비밀 - 인터랙티브 콘텐츠
 const ContentApp = {
     currentScene: 0,
     scenes: ['hook', 'anchor', 'story', 'core', 'visualize', 'quiz', 'wrap'],
+    coreRevealed: false,
     
     init() {
         this.updateProgress();
@@ -15,21 +17,13 @@ const ContentApp = {
     },
 
     changeScene(index) {
-        // Hide current
         document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-        
-        // Update index
         this.currentScene = index;
         this.updateProgress();
-
-        // Show new
         const sceneName = this.scenes[index];
         const sceneEl = document.getElementById(`${sceneName}-scene`);
-        
         if (sceneEl) {
             sceneEl.classList.add('active');
-            
-            // Init specific scene logic
             const initFn = this[`init${this.capitalize(sceneName)}Scene`];
             if (initFn) initFn.call(this);
         }
@@ -44,279 +38,360 @@ const ContentApp = {
         return str.charAt(0).toUpperCase() + str.slice(1);
     },
 
-    // --- Scene Logic ---
-
+    // === 1. Hook Scene ===
     initHookScene() {
-        // Simple SVG animation already in CSS/SVG structure, 
-        // but let's animate the character along path
         const char = document.getElementById('character');
-        // Reset
+        const emoji = document.getElementById('char-emoji');
         char.setAttribute('cx', 20);
         char.setAttribute('cy', 280);
+        emoji.setAttribute('x', 20);
+        emoji.setAttribute('y', 285);
         
-        // Wait then animate
         setTimeout(() => {
-            // Animate along diagonal (simplified for pure JS/CSS interaction demo)
-            // Ideally use SMIL or Web Animations API
-            char.style.transition = 'all 2s ease-out';
-            char.style.transform = 'translate(260px, -260px)'; // 20 -> 280 roughly
-        }, 1000);
+            // 대각선으로 이동 애니메이션
+            const duration = 2000;
+            const startTime = performance.now();
+            const animate = (now) => {
+                const elapsed = now - startTime;
+                const t = Math.min(elapsed / duration, 1);
+                // easeOutCubic
+                const ease = 1 - Math.pow(1 - t, 3);
+                const cx = 20 + 260 * ease;
+                const cy = 280 - 260 * ease;
+                char.setAttribute('cx', cx);
+                char.setAttribute('cy', cy);
+                emoji.setAttribute('x', cx);
+                emoji.setAttribute('y', cy + 5);
+                if (t < 1) requestAnimationFrame(animate);
+            };
+            requestAnimationFrame(animate);
+        }, 800);
     },
 
+    // === 2. Anchor Scene: 인터랙티브 정사각형 ===
     initAnchorScene() {
-        // Generate grid cells
-        const container = document.querySelector('.grid-cells');
-        container.innerHTML = '';
-        for(let i=0; i<9; i++) {
-            const div = document.createElement('div');
-            container.appendChild(div);
-            // Staggered animation
-            setTimeout(() => {
-                div.style.background = '#E3F2FD';
-            }, i * 100);
-        }
+        const slider = document.getElementById('side-slider');
+        this.updateSquareGrid(parseInt(slider.value));
+        
+        slider.addEventListener('input', (e) => {
+            this.updateSquareGrid(parseInt(e.target.value));
+        });
     },
 
+    updateSquareGrid(n) {
+        const container = document.getElementById('grid-cells');
+        const visual = document.getElementById('square-visual');
+        const sideValue = document.getElementById('side-value');
+        const labelLeft = document.getElementById('label-left');
+        const labelBottom = document.getElementById('label-bottom');
+        const areaText = document.getElementById('area-text');
+        const areaFormula = document.getElementById('area-formula');
+        
+        sideValue.textContent = n;
+        labelLeft.textContent = n;
+        labelBottom.textContent = n;
+        
+        // 정사각형 크기 조절
+        const maxSize = 180;
+        const cellSize = Math.min(maxSize / n, 40);
+        const totalSize = cellSize * n;
+        visual.style.width = totalSize + 'px';
+        visual.style.height = totalSize + 'px';
+        
+        // 그리드 셀 생성
+        container.innerHTML = '';
+        container.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+        container.style.display = 'grid';
+        container.style.width = '100%';
+        container.style.height = '100%';
+        
+        for (let i = 0; i < n * n; i++) {
+            const div = document.createElement('div');
+            div.style.border = '1px solid rgba(74, 144, 217, 0.3)';
+            div.style.background = 'rgba(227, 242, 253, 0)';
+            div.style.borderRadius = '2px';
+            container.appendChild(div);
+            // 순차 애니메이션
+            setTimeout(() => {
+                div.style.transition = 'background 0.15s ease';
+                div.style.background = 'rgba(227, 242, 253, 0.8)';
+            }, i * 30);
+        }
+        
+        areaText.innerHTML = `${n} &times; ${n} = <strong>${n * n}</strong>`;
+        areaFormula.innerHTML = `= ${n}<sup>2</sup>`;
+    },
+
+    // === 3. Story Scene: 타이핑 효과 ===
     initStoryScene() {
-        const text = "내가 손수레를 끌고 올라가려면 경사로가 필요한데... 벽 높이가 4m고, 바닥 여유 공간이 3m밖에 없어. 경사로 길이는 얼마만큼 준비해야 할까?";
+        const text = "경사로를 만들어야 하는데... 벽 높이가 3m이고, 바닥 공간이 4m야. 경사로 길이는 얼마만큼 준비해야 할까?";
         const el = document.getElementById('typewriter-text');
         el.textContent = '';
         let i = 0;
-        
-        // Typewriter effect
         const type = () => {
             if (i < text.length) {
                 el.textContent += text.charAt(i);
                 i++;
-                setTimeout(type, 30);
+                setTimeout(type, 25);
             }
         };
         type();
     },
 
+    // === 4. Core Scene: 인터랙티브 피타고라스 탐구 ===
     initCoreScene() {
-        // Clear previous connection
-        const container = document.getElementById('puzzle-area');
-        container.innerHTML = '';
-        container.style.position = 'relative';
-
-        // Create Grid Visualization
-        // We use a simplified 3-4-5 triangle setup
-        // Square A (3x3), Square B (4x4), Square C (5x5)
+        const canvas = document.getElementById('squares-canvas');
+        const ctx = canvas.getContext('2d');
+        const sliderA = document.getElementById('slider-a');
+        const sliderB = document.getElementById('slider-b');
         
-        const unit = 30; // pixel size for one grid unit
-        const gap = 2;
-        
-        // Wrapper for centering
-        const wrapper = document.createElement('div');
-        wrapper.style.position = 'relative';
-        wrapper.style.width = '400px';
-        wrapper.style.height = '350px';
-        wrapper.style.margin = '0 auto';
-        container.appendChild(wrapper);
-
-        // Positions (relative to wrapper)
-        // Triangle in center: Right angle at (150, 200). 
-        // Side A (3 units) goes UP from (150, 200) to (150, 110)
-        // Side B (4 units) goes RIGHT from (150, 200) to (270, 200)
-        // Hypotenuse connects (150, 110) to (270, 200)
-
-        const originX = 140;
-        const originY = 220;
-
-        // 1. Draw Triangle Background
-        const svgBg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svgBg.setAttribute('width', '100%');
-        svgBg.setAttribute('height', '100%');
-        svgBg.style.position = 'absolute';
-        svgBg.style.top = '0';
-        svgBg.style.left = '0';
-        // 3*30=90, 4*30=120. (3-4-5 scaled by 30)
-        // A (vertical): 90px. B (horizontal): 120px.
-        const p1 = `${originX},${originY}`; // Corner
-        const p2 = `${originX},${originY - 90}`; // Top
-        const p3 = `${originX + 120},${originY}`; // Right
-        
-        // Triangle
-        const tri = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        tri.setAttribute('d', `M ${p1} L ${p2} L ${p3} Z`);
-        tri.setAttribute('fill', '#eee');
-        tri.setAttribute('stroke', '#ccc');
-        svgBg.appendChild(tri);
-        
-        // Target Grid C (Hypotenuse)
-        // We need 5x5 slots rotated.
-        // Rotation angle: tan(theta) = 3/4. theta = 36.87 deg.
-        // Wait, normally angle is at p3. The angle at p2 is 53.13.
-        // Slope of hypotenuse: dy/dx = -3/4.
-        // The square C sits on the hypotenuse.
-        // Let's just create placeholder slots for Square C.
-        
-        const slots = [];
-        const angleRad = Math.atan(3/4);
-        const cos = Math.cos(angleRad); // 0.8
-        const sin = Math.sin(angleRad); // 0.6
-        
-        // Start point for C grid is p2 (150, 110)
-        // Direction vectors for C grid axes:
-        // u = (cos, sin) -> acts like 'right' along hypotenuse? No, hypotenuse goes down-right.
-        // H vector = (120, 90). Normalized (0.8, 0.6).
-        // Perpendicular vector v = (sin, -cos) ? No, (-0.6, 0.8) goes "Up-Right".
-        // Let's compute exact pixel coords for 25 target slots.
-        
-        for(let r=0; r<5; r++) {
-            for(let c=0; c<5; c++) {
-                // local coords in C square
-                // x' = c * unit, y' = r * unit
-                // Rotate and translate
-                // We want the square to be "above/right" of the hypotenuse.
-                
-                // Let's keep it simple: Just put the slots relative to P2
-                // along the standard geometric construction
-                
-                const lx = c * unit + unit/2; 
-                const ly = -1 * (r * unit + unit/2); // go 'up' away from triangle
-                
-                // Rotation matrix for aligning with hypotenuse
-                // The hypotenuse vector is (0.8, 0.6) direction from P2? Actually P2 to P3 is (120, 90).
-                // Let's imply Angle = -36.87 (standard clockwise from x).
-                // Actually, let's just cheat and place 25 targets in a grid layout to the right side
-                // and animate them "flying" there. Simple is better for reliability.
-                // Or better: Just put them in a 5x5 grid slightly offset.
+        const draw = () => {
+            const a = parseInt(sliderA.value);
+            const b = parseInt(sliderB.value);
+            const c2 = a * a + b * b;
+            const c = Math.sqrt(c2);
+            
+            // 값 업데이트
+            document.getElementById('val-a').textContent = a;
+            document.getElementById('val-b').textContent = b;
+            
+            // 수식 업데이트
+            const eqDisplay = document.getElementById('equation-display');
+            eqDisplay.querySelector('.eq-a').innerHTML = `${a}<sup>2</sup> = ${a*a}`;
+            eqDisplay.querySelector('.eq-b').innerHTML = `${b}<sup>2</sup> = ${b*b}`;
+            eqDisplay.querySelector('.eq-sum').innerHTML = `${a*a} + ${b*b} = ${c2}`;
+            document.getElementById('c-squared').textContent = c2;
+            
+            // c가 정수인지 확인
+            const isInteger = Number.isInteger(c);
+            const eqResult = document.getElementById('eq-result');
+            if (isInteger) {
+                eqResult.innerHTML = `c = ${c} (정수!)  a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> 성립!`;
+                eqResult.classList.add('success');
+            } else {
+                eqResult.innerHTML = `c = &radic;${c2} &approx; ${c.toFixed(2)}  a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> 항상 성립!`;
+                eqResult.classList.remove('success');
             }
-        }
-        
-        // Correction: Let's simpler. Just draw an empty 5x5 grid visual rotated.
-        wrapper.appendChild(svgBg); // Add background first
-
-        // Create Feedback Element Dynamically (since we cleared container)
-        const feedback = document.createElement('div');
-        feedback.id = 'feedback-msg';
-        feedback.className = 'feedback hidden';
-        feedback.textContent = "딱 맞았어요!";
-        wrapper.appendChild(feedback);
-
-        // Square A Blocks (3x3) - Left side
-        const blocksA = [];
-        for(let r=0; r<3; r++) {
-            for(let c=0; c<3; c++) {
-                const b = document.createElement('div');
-                b.className = 'grid-block block-a';
-                b.style.width = (unit - gap) + 'px';
-                b.style.height = (unit - gap) + 'px';
-                b.style.left = (originX - (3-c)*unit) + 'px';
-                b.style.top = (originY - (3-r)*unit) + 'px'; // Up from origin
-                b.dataset.r = r; b.dataset.c = c;
-                wrapper.appendChild(b);
-                blocksA.push(b);
+            
+            // 캔버스 그리기
+            this.drawPythagorasCanvas(ctx, canvas, a, b);
+            
+            // 다음 버튼 표시 (처음 조작 후)
+            if (!this.coreRevealed) {
+                this.coreRevealed = true;
+                setTimeout(() => {
+                    document.getElementById('core-next-btn').classList.remove('hidden');
+                }, 1500);
             }
-        }
-
-        // Square B Blocks (4x4) - Bottom side
-        const blocksB = [];
-        for(let r=0; r<4; r++) {
-            for(let c=0; c<4; c++) {
-                const b = document.createElement('div');
-                b.className = 'grid-block block-b';
-                b.style.width = (unit - gap) + 'px';
-                b.style.height = (unit - gap) + 'px';
-                b.style.left = (originX + c*unit) + 'px'; // Right from origin
-                b.style.top = (originY + r*unit) + 'px'; 
-                wrapper.appendChild(b);
-                blocksB.push(b);
-            }
-        }
-
-        // Square C Target (5x5) - On Hypotenuse
-        // ... (keep existing targetContainer code) ...
-        const targetContainer = document.createElement('div');
-        targetContainer.style.position = 'absolute';
-        targetContainer.style.width = (5*unit) + 'px';
-        targetContainer.style.height = (5*unit) + 'px';
-        targetContainer.style.border = '2px dashed #2196F3'; // Dashed for "Target" feel
-        targetContainer.style.boxSizing = 'content-box';
-        
-        // Use the simplified "Right Side" placement for better visibility
-        targetContainer.style.left = '280px';
-        targetContainer.style.top = '50px';
-        targetContainer.style.border = '2px solid #333';
-        targetContainer.innerHTML = '<div style="position:absolute;top:-25px;width:100%;text-align:center;">C² (5×5)</div>';
-        wrapper.appendChild(targetContainer);
-        
-        // 25 Slots in target
-        const targets = [];
-        for(let i=0; i<25; i++) {
-            const r = Math.floor(i/5);
-            const c = i%5;
-            const t = {
-                x: 280 + c*unit,
-                y: 50 + r*unit
-            };
-            targets.push(t);
-        }
-
-        // Interaction
-        const btn = document.createElement('button');
-        btn.className = 'btn-primary';
-        btn.textContent = '합체!';
-        btn.style.position = 'absolute';
-        btn.style.bottom = '10px';
-        btn.style.right = '10px';
-        btn.onclick = () => {
-             // Animate all blocks to targets
-             const allBlocks = [...blocksA, ...blocksB];
-             let i=0;
-             // Disable button immediately
-             btn.disabled = true;
-             btn.style.opacity = '0.5';
-
-             const interval = setInterval(() => {
-                 if(i >= allBlocks.length) {
-                     clearInterval(interval);
-                     
-                     // Show success message
-                     const fbEl = document.getElementById('feedback-msg');
-                     if(fbEl) {
-                         fbEl.textContent = "와! 9 + 16 = 25! 딱 맞네요!";
-                         fbEl.classList.remove('hidden');
-                     }
-
-                     // Reveal Next Button (outside the puzzle area)
-                     setTimeout(() => {
-                         const nextBtn = document.getElementById('core-next-btn');
-                         if(nextBtn) nextBtn.classList.remove('hidden');
-                     }, 1000);
-                     return;
-                 }
-                 const b = allBlocks[i];
-                 const t = targets[i];
-                 
-                 b.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                 b.style.left = t.x + 'px';
-                 b.style.top = t.y + 'px';
-                 b.style.zIndex = 100 + i;
-                 
-                 i++;
-             }, 50);
         };
-        wrapper.appendChild(btn);
+        
+        sliderA.addEventListener('input', draw);
+        sliderB.addEventListener('input', draw);
+        draw();
     },
 
-    checkAnswer(val) {
-        if (val === 13) {
-            alert("정답입니다! 5² + 12² = 25 + 144 = 169 = 13²");
-            this.nextScene();
-        } else {
-            alert("다시 생각해보세요. √ (5² + 12²) = ?");
+    drawPythagorasCanvas(ctx, canvas, a, b) {
+        const W = canvas.width;
+        const H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+        
+        const unit = Math.min(30, Math.min((W - 80) / (a + b + 2), (H - 60) / (Math.max(a, b) + 2)));
+        const c2 = a * a + b * b;
+        const c = Math.sqrt(c2);
+        
+        // 중심 기준점
+        const cx = W / 2 - (b * unit) / 4;
+        const cy = H / 2 + (a * unit) / 4;
+        
+        // 삼각형 꼭짓점 (직각이 cx, cy)
+        const p1 = { x: cx, y: cy };                     // 직각 꼭짓점
+        const p2 = { x: cx, y: cy - a * unit };          // 위 (변 a)
+        const p3 = { x: cx + b * unit, y: cy };          // 오른쪽 (변 b)
+        
+        // === 정사각형 A (왼쪽, 변 a) ===
+        ctx.fillStyle = 'rgba(255, 112, 67, 0.15)';
+        ctx.strokeStyle = '#FF7043';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.rect(cx - a * unit, cy - a * unit, a * unit, a * unit);
+        ctx.fill();
+        ctx.stroke();
+        
+        // A 그리드
+        ctx.strokeStyle = 'rgba(255, 112, 67, 0.3)';
+        ctx.lineWidth = 0.5;
+        for (let i = 1; i < a; i++) {
+            ctx.beginPath();
+            ctx.moveTo(cx - a * unit, cy - i * unit);
+            ctx.lineTo(cx, cy - i * unit);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(cx - i * unit, cy - a * unit);
+            ctx.lineTo(cx - i * unit, cy);
+            ctx.stroke();
+        }
+        
+        // A 라벨
+        ctx.fillStyle = '#FF7043';
+        ctx.font = 'bold 16px "Jua", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`a² = ${a*a}`, cx - (a * unit) / 2, cy - (a * unit) / 2 + 6);
+        
+        // === 정사각형 B (아래, 변 b) ===
+        ctx.fillStyle = 'rgba(66, 165, 245, 0.15)';
+        ctx.strokeStyle = '#42A5F5';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.rect(cx, cy, b * unit, b * unit);
+        ctx.fill();
+        ctx.stroke();
+        
+        // B 그리드
+        ctx.strokeStyle = 'rgba(66, 165, 245, 0.3)';
+        ctx.lineWidth = 0.5;
+        for (let i = 1; i < b; i++) {
+            ctx.beginPath();
+            ctx.moveTo(cx, cy + i * unit);
+            ctx.lineTo(cx + b * unit, cy + i * unit);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(cx + i * unit, cy);
+            ctx.lineTo(cx + i * unit, cy + b * unit);
+            ctx.stroke();
+        }
+        
+        // B 라벨
+        ctx.fillStyle = '#42A5F5';
+        ctx.font = 'bold 16px "Jua", sans-serif';
+        ctx.fillText(`b² = ${b*b}`, cx + (b * unit) / 2, cy + (b * unit) / 2 + 6);
+        
+        // === 삼각형 ===
+        ctx.fillStyle = 'rgba(200, 200, 200, 0.2)';
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.lineTo(p3.x, p3.y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // 직각 표시
+        const sq = 10;
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(p1.x + sq, p1.y);
+        ctx.lineTo(p1.x + sq, p1.y - sq);
+        ctx.lineTo(p1.x, p1.y - sq);
+        ctx.stroke();
+        
+        // 변 라벨
+        ctx.fillStyle = '#FF7043';
+        ctx.font = 'bold 14px "Noto Sans KR", sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(`a=${a}`, p1.x - 6, (p1.y + p2.y) / 2 + 4);
+        
+        ctx.fillStyle = '#42A5F5';
+        ctx.textAlign = 'center';
+        ctx.fillText(`b=${b}`, (p1.x + p3.x) / 2, p1.y + 18);
+        
+        // 빗변 라벨
+        ctx.fillStyle = '#2196F3';
+        ctx.font = 'bold 14px "Noto Sans KR", sans-serif';
+        const midHypX = (p2.x + p3.x) / 2;
+        const midHypY = (p2.y + p3.y) / 2;
+        ctx.textAlign = 'left';
+        ctx.fillText(`c=√${c2}`, midHypX + 8, midHypY - 4);
+        if (Number.isInteger(c)) {
+            ctx.fillText(`= ${c}`, midHypX + 8, midHypY + 14);
         }
     },
 
-    bindEvents() {
-        // Any global bindings
-    }
+    // === 5. Visualize Scene ===
+    initVisualizeScene() {
+        // 공식 순차 애니메이션
+        const terms = document.querySelectorAll('.animated-formula .term, .animated-formula .operator');
+        terms.forEach((t, i) => {
+            t.style.opacity = '0';
+            t.style.transform = 'scale(0.5)';
+            setTimeout(() => {
+                t.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                t.style.opacity = '1';
+                t.style.transform = 'scale(1)';
+            }, i * 300);
+        });
+    },
+
+    // === 6. Quiz Scene: 인라인 피드백 ===
+    checkAnswer(btnEl, val) {
+        const options = document.querySelectorAll('.opt-btn');
+        const feedback = document.getElementById('quiz-feedback');
+        
+        // 모든 버튼 잠금
+        options.forEach(b => {
+            b.style.pointerEvents = 'none';
+            b.classList.add('disabled');
+        });
+        
+        if (val === 13) {
+            btnEl.classList.add('correct');
+            feedback.innerHTML = '정답! 5<sup>2</sup> + 12<sup>2</sup> = 25 + 144 = 169 = 13<sup>2</sup>';
+            feedback.className = 'quiz-feedback show correct';
+            setTimeout(() => this.nextScene(), 2000);
+        } else {
+            btnEl.classList.add('incorrect');
+            // 정답 하이라이트
+            options.forEach(b => {
+                if (parseInt(b.dataset.value) === 13) b.classList.add('correct');
+            });
+            feedback.innerHTML = '아쉬워요! &radic;(25 + 144) = &radic;169 = 13';
+            feedback.className = 'quiz-feedback show incorrect';
+            setTimeout(() => this.nextScene(), 3000);
+        }
+    },
+
+    // === 7. Wrap Scene ===
+    initWrapScene() {
+        // 요약 항목 순차 표시
+        const items = document.querySelectorAll('.summary-item');
+        items.forEach((item, i) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(-20px)';
+            setTimeout(() => {
+                item.style.transition = 'all 0.5s ease';
+                item.style.opacity = '1';
+                item.style.transform = 'translateX(0)';
+            }, 300 + i * 400);
+        });
+        
+        // 미니 지뢰폭발 효과
+        this.createConfetti();
+    },
+
+    createConfetti() {
+        const container = document.getElementById('confetti-container');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        const colors = ['#FF7043', '#42A5F5', '#FFD54F', '#66BB6A', '#AB47BC'];
+        for (let i = 0; i < 30; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.left = Math.random() * 100 + '%';
+            piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.animationDelay = Math.random() * 1.5 + 's';
+            piece.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+            container.appendChild(piece);
+        }
+    },
+
+    bindEvents() {}
 };
 
-// Start
+window.ContentApp = ContentApp;
+
 document.addEventListener('DOMContentLoaded', () => {
     ContentApp.init();
 });
