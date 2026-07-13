@@ -25,7 +25,9 @@
       "Bash(curl:*)",
       "Bash(cloudflared tunnel info:*)",
       "Bash(cloudflared tunnel route dns:*)",
-      "Bash(cloudflared tunnel list:*)"
+      "Bash(cloudflared tunnel list:*)",
+      "mcp__gitea__get_me",
+      "mcp__gitea__create_repo"
     ]
   }
 }
