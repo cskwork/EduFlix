@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-07-13T07:51:24.679Z",
+  "lastUpdated": "2026-02-09T12:00:00.000Z",
   "contents": [
     {
       "id": "fractions-pizza",
@@ -967,27 +967,6 @@
       "thumbnail": "",
       "path": "/contents/world-history/middle/world-quiz-battle/index.html",
       "createdAt": "2026-02-09T12:00:00.000Z"
-    }
-  ,
-    {
-      "id": "line-point-symmetry",
-      "title": "도리와 대칭 박물관 복원 작전",
-      "subject": "math",
-      "gradeLevel": "elementary",
-      "grade": "elementary-5",
-      "type": "simulation",
-      "language": "ko",
-      "description": "접기와 반 바퀴 돌리기로 선대칭과 점대칭의 대응점을 복원하는 체험형 학습입니다.",
-      "path": "/contents/math/elementary/line-point-symmetry/index.html",
-      "thumbnail": "/contents/math/elementary/line-point-symmetry/thumbnail.png",
-      "createdAt": "2026-07-13T00:00:00Z",
-      "tags": [
-        "선대칭",
-        "점대칭",
-        "대응점",
-        "초등수학",
-        "도형"
-      ]
     }
   ]
 }

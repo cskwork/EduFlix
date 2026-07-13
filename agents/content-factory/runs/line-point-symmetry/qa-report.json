@@ -1,0 +1,98 @@
+{
+  "passed": true,
+  "contentDir": "/Users/chaeseong-gug/Documents/PARA/Resource/EduFlix-runs/ai-content-factory/public/contents/math/elementary/line-point-symmetry",
+  "checkedAt": "2026-07-13T08:03:19.036Z",
+  "checks": [
+    {
+      "id": "required-files",
+      "name": "필수 파일 4종",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "manifest-schema",
+      "name": "manifest 12필드 스키마",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "manifest-path",
+      "name": "manifest 경로 규칙",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "stylesheet-order",
+      "name": "공통 모바일 CSS 링크 순서",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "five-scenes",
+      "name": "필수 장면 5종",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "engine-contract",
+      "name": "인라인 EduFlixEngine 런타임 계약",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "reduced-motion",
+      "name": "동작 줄이기 접근성",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "image-files",
+      "name": "이미지 참조·계획 완결성",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "no-external-script",
+      "name": "외부 CDN 스크립트 금지",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "learning-text",
+      "name": "제목과 학습목표 텍스트",
+      "status": "pass",
+      "errors": []
+    }
+  ],
+  "errors": [],
+  "artifacts": [
+    {
+      "path": "contents/backgrounds/bg-geometric-shapes-pastel-20260125.png",
+      "sha256": "7bfcddc7dae615ac3643ff538abe2535e41793dec99b20debc02727098f4974b"
+    },
+    {
+      "path": "contents/backgrounds/bg-grid-paper-math-subtle-20260125.png",
+      "sha256": "25e864904aec09fdcdcac17c18a6f1974c4d22f8fd04ae157153bdd4c819bccd"
+    },
+    {
+      "path": "contents/math/elementary/line-point-symmetry/index.html",
+      "sha256": "ed4fb0561c2f5d8514386d56586a609b9ed0efd2cf275f76f903ab1240affcc9"
+    },
+    {
+      "path": "contents/math/elementary/line-point-symmetry/manifest.json",
+      "sha256": "42e966b3815be882852729b78d5951df99a0db4b076aed69cf74673264d1e24e"
+    },
+    {
+      "path": "contents/math/elementary/line-point-symmetry/script.js",
+      "sha256": "318b2bd432562373b10d842e1a88a20787840452ffdb6f92ec6f7859ce9d13cb"
+    },
+    {
+      "path": "contents/math/elementary/line-point-symmetry/style.css",
+      "sha256": "e12e4a0cdf7a9aac8ec5bf5b7c61868627b2a5bb3f9854acb0f31b2337c83e26"
+    },
+    {
+      "path": "contents/math/elementary/line-point-symmetry/thumbnail.png",
+      "sha256": "628df320f21149a3da6e9a5ada0bae83b33f37a57dc10a452b1b721eccc62373"
+    }
+  ]
+}

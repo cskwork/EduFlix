@@ -1,0 +1,7 @@
+AS-IS 증빙 (Before, 2026-07-13): PoC 'line-point-symmetry'는 변경 전 카탈로그와 파일시스템에 존재하지 않았다.
+
+1) Before 카탈로그(index.json.before, 79항목)에서 검색 결과 0건:
+0
+   grep exit 1 (0건 일치 — 부재 증명)
+
+2) Before 시점 factory CLI 부재: QA.md '## Before' 기록 — package.json에 factory 스크립트 없음, agents/content-factory/ 없음.

@@ -1,0 +1,29 @@
+{
+  "run": "ai-content-factory",
+  "mode": "LEGACY",
+  "branch": "run/ai-content-factory",
+  "base_branch": "dev",
+  "target_branch": "dev",
+  "worktree": "/Users/chaeseong-gug/Documents/PARA/Resource/EduFlix-runs/ai-content-factory",
+  "phase": "done",
+  "iteration": 5,
+  "max_iterations": 8,
+  "plan_approval": "auto",
+  "plan_approval_reason": "autonomous run (pre-authorized autonomy; user delegated implementation to codex gpt-5.6-sol high in the original request)",
+  "gates": {
+    "d1_poc_topic": "resolved-auto",
+    "d2_engine_codex": "resolved-auto",
+    "d3_preserve_api_generate": "resolved-auto",
+    "d4_autonomous": "resolved-auto",
+    "edge_cli_semantics_4items": "resolved-no-op (d7: 보수적 기본값 유지)",
+    "adversarial_M1_M4": "resolved-fixed (major-fix-report.md, 53 pass)"
+  },
+  "regression_ledger": {
+    "build": "green (before: vite 5.13s)",
+    "tests": "baseline 210 pass / 67 pre-existing fail (content-catalog, content-loader)",
+    "index_json": "79 entries snapshot at qa/index.json.before"
+  },
+  "blockers": [],
+  "next_action": "commit gate → merge run/ai-content-factory into dev",
+  "last_proof_command": "bun run factory (E2E exit 0) + bun run build + bun run test (baseline 동일) + playwright QA1~4 PASS"
+}

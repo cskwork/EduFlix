@@ -1,0 +1,90 @@
+{
+  "type": "object",
+  "properties": {
+    "topic": { "type": "string" },
+    "grade": { "type": "string", "enum": ["elementary-1", "elementary-2", "elementary-3", "elementary-4", "elementary-5", "elementary-6", "middle-1", "middle-2", "middle-3", "high-1", "high-2", "high-3"] },
+    "subject": { "type": "string", "enum": ["math", "science", "english"] },
+    "achievementStandard": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "statement": { "type": "string" },
+        "estimated": { "type": "boolean" },
+        "rationale": { "type": "string" }
+      },
+      "required": ["code", "statement", "estimated", "rationale"],
+      "additionalProperties": false
+    },
+    "learningObjectives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "statement": { "type": "string" },
+          "evidence": { "type": "string" }
+        },
+        "required": ["id", "statement", "evidence"],
+        "additionalProperties": false
+      }
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "knowledge": { "type": "string" },
+          "check": { "type": "string" }
+        },
+        "required": ["knowledge", "check"],
+        "additionalProperties": false
+      }
+    },
+    "misconceptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "misconception": { "type": "string" },
+          "correction": { "type": "string" }
+        },
+        "required": ["misconception", "correction"],
+        "additionalProperties": false
+      }
+    },
+    "lessonFlow": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "scene": { "type": "string", "enum": ["hook", "story", "core", "quiz", "wrap"] },
+          "purpose": { "type": "string" },
+          "objectiveIds": { "type": "array", "items": { "type": "string" } },
+          "minutes": { "type": "number" }
+        },
+        "required": ["scene", "purpose", "objectiveIds", "minutes"],
+        "additionalProperties": false
+      }
+    },
+    "contentType": {
+      "type": "object",
+      "properties": {
+        "selected": { "type": "string", "enum": ["simulation", "game", "quiz", "exploration", "story"] },
+        "rationale": { "type": "string" }
+      },
+      "required": ["selected", "rationale"],
+      "additionalProperties": false
+    },
+    "languageGuidance": {
+      "type": "object",
+      "properties": {
+        "learnerLevel": { "type": "string" },
+        "termsToExplain": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["learnerLevel", "termsToExplain"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["topic", "grade", "subject", "achievementStandard", "learningObjectives", "prerequisites", "misconceptions", "lessonFlow", "contentType", "languageGuidance"],
+  "additionalProperties": false
+}

@@ -1,0 +1,68 @@
+{
+  "type": "object",
+  "properties": {
+    "contentId": { "type": "string" },
+    "generated": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": { "type": "string" },
+          "fileName": { "type": "string", "enum": ["thumbnail.png", "hook-visual.png"] },
+          "scenes": { "type": "array", "items": { "type": "string" } },
+          "purpose": { "type": "string" },
+          "prompt": { "type": "string" },
+          "alt": { "type": "string" },
+          "width": { "type": "number" },
+          "height": { "type": "number" }
+        },
+        "required": ["assetId", "fileName", "scenes", "purpose", "prompt", "alt", "width", "height"],
+        "additionalProperties": false
+      }
+    },
+    "reused": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": { "type": "string" },
+          "sourcePath": { "type": "string" },
+          "scenes": { "type": "array", "items": { "type": "string" } },
+          "purpose": { "type": "string" },
+          "alt": { "type": "string" }
+        },
+        "required": ["assetId", "sourcePath", "scenes", "purpose", "alt"],
+        "additionalProperties": false
+      }
+    },
+    "cssAlternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetId": { "type": "string" },
+          "scenes": { "type": "array", "items": { "type": "string" } },
+          "implementation": { "type": "string" },
+          "altStrategy": { "type": "string" }
+        },
+        "required": ["assetId", "scenes", "implementation", "altStrategy"],
+        "additionalProperties": false
+      }
+    },
+    "coverage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "storyboardAssetId": { "type": "string" },
+          "resolvedBy": { "type": "string", "enum": ["reuse", "generated", "css"] },
+          "resolvedAssetId": { "type": "string" }
+        },
+        "required": ["storyboardAssetId", "resolvedBy", "resolvedAssetId"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["contentId", "generated", "reused", "cssAlternatives", "coverage"],
+  "additionalProperties": false
+}

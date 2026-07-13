@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "name": "시장 조사 4절 원본 22항목 품질 게이트",
+  "passRule": "Q01부터 Q22까지 모두 pass이고 정적 검사가 통과해야 한다.",
+  "criteria": [
+    { "id": "Q01", "category": "도입", "name": "호기심 질문", "required": true, "description": "첫 화면 30초 안에 물음표를 포함한 질문이 있다.", "evidence": "hook 질문과 첫 화면" },
+    { "id": "Q02", "category": "도입", "name": "일상 경험 연결", "required": true, "description": "훅이 대상 학년의 일상·경험 소재와 연결된다.", "evidence": "hook 소재와 학년 맥락" },
+    { "id": "Q03", "category": "도입", "name": "훅 시각 요소", "required": true, "description": "훅에 이미지·SVG·애니메이션이 하나 이상 있다.", "evidence": "hook DOM과 에셋" },
+    { "id": "Q04", "category": "도입", "name": "학생 언어 학습목표", "required": true, "description": "행동 동사를 쓴 학생 언어 학습목표 한 문장이 제시된다.", "evidence": "화면의 학습목표 문장" },
+    { "id": "Q05", "category": "세계관", "name": "일관된 스토리 맥락", "required": true, "description": "도입부터 마무리까지 동일 세계관이 유지된다.", "evidence": "hook부터 wrap까지의 맥락" },
+    { "id": "Q06", "category": "세계관", "name": "이름 있는 캐릭터", "required": true, "description": "이름이 있는 안내자·튜터 캐릭터가 존재한다.", "evidence": "캐릭터 이름과 역할" },
+    { "id": "Q07", "category": "세계관", "name": "서사적 장면 전환", "required": true, "description": "장면 전환에 서사적 연결이 있다.", "evidence": "씬 전환 카피와 흐름" },
+    { "id": "Q08", "category": "상호작용", "name": "입력 요소 3개", "required": true, "description": "학습자 입력 상호작용 요소가 세 개 이상이다.", "evidence": "이벤트 바인딩과 조작 요소 수" },
+    { "id": "Q09", "category": "상호작용", "name": "수동 시청 제한", "required": true, "description": "장면마다 상호작용이 있어 60초 넘는 수동 시청이 없다.", "evidence": "씬별 입력과 예상 체류" },
+    { "id": "Q10", "category": "상호작용", "name": "조작 발견 모델", "required": true, "description": "simulation·game은 파라미터 조작으로 결과가 달라지는 모델을 제공한다.", "evidence": "입력 전후 상태 변화 코드" },
+    { "id": "Q11", "category": "피드백", "name": "즉각 정오 피드백", "required": true, "description": "모든 문항·시도에 1초 안에 정오와 이유가 표시된다.", "evidence": "이벤트 직후 피드백 처리" },
+    { "id": "Q12", "category": "피드백", "name": "힌트와 재시도", "required": true, "description": "오답은 정답 노출보다 힌트와 최소 한 번의 재시도를 제공한다.", "evidence": "오답 분기와 재시도 상태" },
+    { "id": "Q13", "category": "피드백", "name": "진행도 표시", "required": true, "description": "프로그레스 바나 단계 표시가 있다.", "evidence": "진행도 DOM과 갱신 코드" },
+    { "id": "Q14", "category": "피드백", "name": "보상과 성취 요약", "required": true, "description": "보상 요소와 완료 성취 요약 화면이 있다.", "evidence": "보상 조건과 wrap 요약" },
+    { "id": "Q15", "category": "피드백", "name": "점진적 난이도", "required": true, "description": "쉬운 성공 경험에서 도전으로 난이도가 상승한다.", "evidence": "활동·문항 순서" },
+    { "id": "Q16", "category": "학년 적합성", "name": "학년 수준 본문", "required": true, "description": "본문 난이도가 대상 학년 ±1 수준이다.", "evidence": "문장 길이와 어휘 수준" },
+    { "id": "Q17", "category": "학년 적합성", "name": "저학년 텍스트 제한", "required": true, "description": "초등 저학년은 문장당 15어절, 화면당 3문장 이내다.", "evidence": "대상 학년과 화면별 DOM 텍스트" },
+    { "id": "Q18", "category": "학년 적합성", "name": "용어 즉시 풀이", "required": true, "description": "새 전문 용어를 첫 등장 때 풀이한다.", "evidence": "용어 최초 등장과 설명" },
+    { "id": "Q19", "category": "접근성", "name": "모바일 터치·폭", "required": true, "description": "터치 타겟이 44px 이상이고 375px에서 가로 스크롤이 없다.", "evidence": "CSS 크기와 모바일 렌더" },
+    { "id": "Q20", "category": "접근성", "name": "대체 텍스트·비색상 단서", "required": true, "description": "이미지에 대체 텍스트가 있고 상태를 색만으로 구분하지 않는다.", "evidence": "alt와 아이콘·텍스트 상태 단서" },
+    { "id": "Q21", "category": "기술 품질", "name": "입력 접근성 코드", "required": true, "description": "상호작용에 입력 이벤트 핸들러가 있고 조작 요소가 포커스 가능하며 키보드 입력을 처리한다.", "evidence": "정적 코드 검토: 입력 이벤트 핸들러, 포커스 가능한 조작 요소, 키보드 처리 코드" },
+    { "id": "Q22", "category": "분량·구조", "name": "시간과 3부 구조", "required": true, "description": "예상 시간이 적합하고 도입·전개·정리 구조를 갖춘다.", "evidence": "씬 체류·문항 수 추산과 전체 구조" }
+  ]
+}

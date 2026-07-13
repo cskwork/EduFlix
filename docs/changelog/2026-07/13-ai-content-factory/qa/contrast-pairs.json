@@ -1,0 +1,16 @@
+[
+  { "el": "본문 텍스트 (paper 카드)", "fg": "#292b2f", "bg": "#fffdf8", "size": "body" },
+  { "el": "본문 텍스트 (bg 패널)", "fg": "#292b2f", "bg": "#fff8ec", "size": "body" },
+  { "el": "lead/progress 보조 텍스트", "fg": "#5f6569", "bg": "#fffdf8", "size": "normal" },
+  { "el": "eyebrow/figcaption", "fg": "#7f2c20", "bg": "#fffdf8", "size": "normal" },
+  { "el": "btn-primary 텍스트", "fg": "#ffffff", "bg": "#b54732", "size": "normal" },
+  { "el": "btn-secondary 텍스트", "fg": "#0b5f58", "bg": "#fffdf8", "size": "normal" },
+  { "el": "피드백 긍정", "fg": "#154d31", "bg": "#e2f3e8", "size": "normal" },
+  { "el": "피드백 부정", "fg": "#7e2020", "bg": "#fbe7e2", "size": "normal" },
+  { "el": "피드백 중립", "fg": "#3f4548", "bg": "#f5efe7", "size": "normal" },
+  { "el": "연결 라벨(grid-cell)", "fg": "#0b5f58", "bg": "#ffffff", "size": "normal" },
+  { "el": "오류 표식 !", "fg": "#a82e2e", "bg": "#fffdf8", "size": "normal" },
+  { "el": "distance-readout 본문", "fg": "#292b2f", "bg": "#eaf6f1", "size": "body" },
+  { "el": "quiz-lock current 본문", "fg": "#292b2f", "bg": "#fff0dc", "size": "body" },
+  { "el": "선택 상태(aria-pressed) 본문", "fg": "#292b2f", "bg": "#d9f2eb", "size": "body" }
+]

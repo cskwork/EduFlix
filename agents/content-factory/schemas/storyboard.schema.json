@@ -1,0 +1,115 @@
+{
+  "type": "object",
+  "properties": {
+    "title": { "type": "string" },
+    "learnerRole": { "type": "string" },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "enum": ["hook", "story", "core", "quiz", "wrap"] },
+          "purpose": { "type": "string" },
+          "objectiveIds": { "type": "array", "items": { "type": "string" } },
+          "narration": { "type": "array", "items": { "type": "string" } },
+          "prompt": { "type": "string" },
+          "visualSpec": { "type": "string" },
+          "interaction": {
+            "type": "object",
+            "properties": {
+              "controls": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "action": { "type": "string" },
+                    "accessibleName": { "type": "string" }
+                  },
+                  "required": ["id", "action", "accessibleName"],
+                  "additionalProperties": false
+                }
+              },
+              "initialState": { "type": "string" },
+              "rules": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "trigger": { "type": "string" },
+                    "stateChange": { "type": "string" },
+                    "visualResult": { "type": "string" },
+                    "feedback": { "type": "string" },
+                    "correction": { "type": "string" }
+                  },
+                  "required": ["trigger", "stateChange", "visualResult", "feedback", "correction"],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": ["controls", "initialState", "rules"],
+            "additionalProperties": false
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "purpose": { "type": "string" },
+                "visual": { "type": "string" },
+                "alt": { "type": "string" },
+                "required": { "type": "boolean" }
+              },
+              "required": ["id", "purpose", "visual", "alt", "required"],
+              "additionalProperties": false
+            }
+          },
+          "completionCondition": { "type": "string" }
+        },
+        "required": ["id", "purpose", "objectiveIds", "narration", "prompt", "visualSpec", "interaction", "assets", "completionCondition"],
+        "additionalProperties": false
+      }
+    },
+    "quiz": {
+      "type": "object",
+      "properties": {
+        "sceneId": { "type": "string", "enum": ["quiz"] },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "objectiveId": { "type": "string" },
+              "prompt": { "type": "string" },
+              "choices": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "text": { "type": "string" }
+                  },
+                  "required": ["id", "text"],
+                  "additionalProperties": false
+                }
+              },
+              "correctChoiceId": { "type": "string" },
+              "correctFeedback": { "type": "string" },
+              "incorrectFeedback": { "type": "string" },
+              "hint": { "type": "string" }
+            },
+            "required": ["id", "objectiveId", "prompt", "choices", "correctChoiceId", "correctFeedback", "incorrectFeedback", "hint"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["sceneId", "questions"],
+      "additionalProperties": false
+    },
+    "accessibilityNotes": { "type": "array", "items": { "type": "string" } }
+  },
+  "required": ["title", "learnerRole", "scenes", "quiz", "accessibilityNotes"],
+  "additionalProperties": false
+}
