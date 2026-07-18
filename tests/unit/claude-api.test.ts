@@ -112,4 +112,32 @@ describe('ClaudeApiClient 방어 로직', () => {
     expect(healthUrl).toContain('/api/health')
     expect(healthUrl).not.toContain('/create/api')
   })
+
+  it('POST 응답 직후 폴링 전에 jobId를 알린다', async () => {
+    const { ClaudeApiClient } = await import('../../src/services/api/claude')
+    const events: string[] = []
+    mockFetch
+      .mockResolvedValueOnce(createJsonResponse({ status: 'ok' }))
+      .mockResolvedValueOnce(createJsonResponse({ success: true, jobId: 'job-live' }, 202))
+      .mockImplementationOnce(() => {
+        events.push('poll')
+        return Promise.resolve(createJsonResponse({
+          jobId: 'job-live', status: 'completed', progress: 100, message: '완료',
+        }))
+      })
+
+    await new ClaudeApiClient('').generateContent(baseOptions, undefined, (jobId) => events.push(jobId))
+
+    expect(events).toEqual(['job-live', 'poll'])
+  })
+
+  it('생성·리뷰 폴링 제한이 장시간 LLM 호출보다 길다', async () => {
+    const { GENERATION_MAX_POLL_DURATION_MS, REVIEW_MAX_POLL_DURATION_MS } =
+      await import('../../src/services/api/claude')
+
+    // Z.ai 2회 재시도 + optional Codex 재빌드를 모두 포함한 최악 시간.
+    expect(GENERATION_MAX_POLL_DURATION_MS).toBeGreaterThan(7 * 60 * 60 * 1000)
+    // static QA 후 review judge의 Z.ai/Codex 재시도 최악 시간.
+    expect(REVIEW_MAX_POLL_DURATION_MS).toBeGreaterThan(30 * 60 * 1000)
+  })
 })

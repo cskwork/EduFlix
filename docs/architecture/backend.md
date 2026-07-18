@@ -6,7 +6,7 @@
 |------|------|
 | Bun | 런타임 + HTTP 서버 |
 | SQLite | 추천/클릭 데이터 저장 |
-| art-assets | 외부 AI 콘텐츠 생성 서버 |
+| Z.ai GLM | 인앱 콘텐츠 생성과 리뷰 |
 
 ---
 
@@ -21,9 +21,8 @@ server/
 │   └── recommendations.ts  # /api/recommendations - 추천
 │
 ├── services/
-│   ├── art-assets.ts       # art-assets API 클라이언트
-│   ├── content-sync.ts     # 콘텐츠 파일 동기화
-│   └── health.ts           # 헬스 체크
+│   ├── factory-runner.ts   # 인앱 콘텐츠 팩토리 실행기
+│   └── health.ts           # LLM 설정 상태 확인
 │
 └── db/
     └── recommendations.db  # SQLite 데이터베이스
@@ -121,18 +120,11 @@ POST /api/generate
 }
 ```
 
-### 2. art-assets 연동
+### 2. 로컬 팩토리 실행
 
 ```typescript
-// 작업 생성
-const jobResult = await createJob(eduflixRequest)
-
-// 컨텍스트 저장 (완료 시 동기화에 필요)
-jobContextMap.set(jobResult.jobId, {
-  jobId: jobResult.jobId,
-  request: eduflixRequest,
-  createdAt: new Date().toISOString()
-})
+const job = factoryRunner.startGeneration(eduflixRequest)
+return jsonResponse({ success: true, jobId: job.jobId }, 202)
 ```
 
 ### 3. 상태 폴링
@@ -149,12 +141,12 @@ GET /api/generate/status/{jobId}
 - failed: 실패
 ```
 
-### 4. 콘텐츠 동기화
+### 4. 콘텐츠 게시
 
 완료 시 자동으로:
-1. art-assets에서 파일 다운로드
-2. public/contents/{subject}/{gradeLevel}/{id}/ 에 저장
-3. index.json 카탈로그 업데이트
+1. `agents/content-factory` 파이프라인이 임시 실행 디렉터리에서 생성·검증
+2. `public/contents/{subject}/{gradeLevel}/{id}/`에 4개 계약 파일 승격
+3. publish 단계에서 `index.json` 카탈로그 갱신
 
 ---
 
@@ -197,45 +189,22 @@ CREATE INDEX idx_content_id ON clicks(content_id);
 
 ---
 
-## art-assets 서비스
+## 인앱 팩토리 서비스
 
-### 클라이언트 (art-assets.ts)
+### 실행기 (factory-runner.ts)
 
 ```typescript
-interface EduFlixGenerationRequest {
-  interests: string[]
-  subject: 'math' | 'english'
-  grade: string
-  language: 'ko' | 'en'
-  additionalContext?: string
-}
-
-// 작업 생성
-async function createJob(request: EduFlixGenerationRequest) {
-  return await fetch(`${ART_ASSETS_URL}/api/jobs`, {
-    method: 'POST',
-    body: JSON.stringify(request)
-  })
-}
-
-// 상태 조회
-async function getJobStatus(jobId: string) {
-  return await fetch(`${ART_ASSETS_URL}/api/jobs/${jobId}`)
-}
+const job = factoryRunner.startGeneration(request)
+const status = factoryRunner.getJob(job.jobId)
+const preview = factoryRunner.getPreview(job.jobId)
 ```
 
 ### 헬스 체크 (health.ts)
 
 ```typescript
-async function checkArtAssetsHealth() {
-  try {
-    const response = await fetch(`${ART_ASSETS_URL}/health`, {
-      signal: AbortSignal.timeout(5000)
-    })
-    return { reachable: response.ok }
-  } catch {
-    return { reachable: false, error: '연결 실패' }
-  }
+function getLlmHealth() {
+  const llm = getFactoryLlmConfig()
+  return { provider: llm.provider, model: llm.model, keyConfigured: llm.keyConfigured }
 }
 ```
 
@@ -278,9 +247,10 @@ if (pathname.startsWith('/contents/')) {
 ```bash
 # .env
 PORT=3001                    # API 서버 포트
-ANTHROPIC_API_KEY=sk-...     # Claude API 키
-GEMINI_API_KEY=...           # Gemini API 키
-ART_ASSETS_URL=http://...    # art-assets 서버 URL
+FACTORY_LLM_PROVIDER=zai     # zai(기본) 또는 codex
+ZAI_API_KEY=...              # Z.ai API 키
+ZAI_MODEL=glm-5.2            # 선택 모델
+ZAI_API_URL=https://api.z.ai/api/coding/paas/v4/chat/completions
 ```
 
 ---

@@ -1,25 +1,21 @@
-import { describe, it, expect } from 'vitest'
-import {
-  DEFAULT_ART_ASSETS_PORT,
-  DEFAULT_SERVER_PORT,
-  getArtAssetsUrl,
-  getServerPort,
-} from '../../server/config'
+import { describe, expect, it } from 'vitest'
+import { DEFAULT_SERVER_PORT, getServerPort, getZaiConfig } from '../../server/config'
 
-describe('서버 설정 기본값', () => {
-  it('기본 서버 포트는 3000이 아니다', () => {
-    const port = getServerPort({})
-
-    expect(port).toBe(DEFAULT_SERVER_PORT)
-    expect(port).not.toBe(3000)
+describe('서버 설정', () => {
+  it('PORT가 없거나 올바르지 않으면 3001을 사용한다', () => {
+    expect(getServerPort({})).toBe(DEFAULT_SERVER_PORT)
+    expect(getServerPort({ PORT: 'invalid' })).toBe(DEFAULT_SERVER_PORT)
   })
 
-  it('기본 art-assets 포트는 3000이 아니다', () => {
-    const url = getArtAssetsUrl({})
-    const parsed = new URL(url)
+  it('양의 PORT를 사용한다', () => {
+    expect(getServerPort({ PORT: '9888' })).toBe(9888)
+  })
 
-    expect(Number(parsed.port)).toBe(DEFAULT_ART_ASSETS_PORT)
-    expect(parsed.port).not.toBe('3000')
+  it('Z.ai 기본 URL과 모델을 제공한다', () => {
+    expect(getZaiConfig({ ZAI_API_KEY: 'test' })).toMatchObject({
+      apiKey: 'test',
+      apiUrl: 'https://api.z.ai/api/coding/paas/v4/chat/completions',
+      model: 'glm-5.2',
+    })
   })
 })
-

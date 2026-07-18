@@ -1,7 +1,7 @@
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
-import { runCodexText } from "../lib/codex";
+import { runFactoryText } from "../lib/engine";
 import { listSharedAssets } from "../lib/assets";
 import {
   assertAssetPlan, assertAssetPlanContext, assertPlan, assertStoryboard, validateManifest, validateStageOutput,
@@ -41,9 +41,14 @@ export interface StaticQaOptions {
 const REQUIRED_FILES = ["index.html", "style.css", "script.js", "manifest.json"];
 const SCENES = ["hook", "story", "core", "quiz", "wrap"];
 const IMAGE_EXTENSIONS = /\.(?:avif|gif|jpe?g|png|svg|webp)(?:[?#].*)?$/i;
+const ALLOWED_EXTERNAL_SCRIPT_URLS = new Set([
+  "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js",
+  "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js",
+]);
 const STATIC_CHECK_IDS = new Set([
   "required-files", "manifest-schema", "manifest-path", "stylesheet-order", "five-scenes",
   "engine-contract", "reduced-motion", "image-files", "no-external-script", "learning-text",
+  "no-emoji",
 ]);
 
 async function exists(path: string): Promise<boolean> {
@@ -64,6 +69,24 @@ function extractAttributeSources(text: string): string[] {
   for (const match of text.matchAll(/\b(?:src|href)\s*=\s*["']([^"']+)["']/gi)) sources.push(match[1]);
   for (const match of text.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)/gi)) sources.push(match[1]);
   return sources;
+}
+
+// script.js는 객체 속성·템플릿 문자열 등 다양한 형태로 이미지를 참조하므로
+// 이미지 확장자로 끝나는 모든 문자열 리터럴을 참조 후보로 수집한다
+function extractScriptImageStrings(script: string): string[] {
+  const sources: string[] = [];
+  for (const match of script.matchAll(/["'`]([^"'`\n]+\.(?:png|jpe?g|gif|svg|webp))(?:\?[^"'`\n]*)?["'`]/gi)) {
+    sources.push(match[1]);
+  }
+  return sources;
+}
+
+function externalScriptErrors(html: string): string[] {
+  const sources = [...html.matchAll(
+    /<script\b[^>]*\bsrc\s*=\s*["']((?:https?:\/\/|\/\/)[^"']+)["'][^>]*>/gi,
+  )].map((match) => match[1]);
+  return sources.filter((source) => !ALLOWED_EXTERNAL_SCRIPT_URLS.has(source))
+    .map((source) => `허용되지 않은 외부 CDN 스크립트입니다: ${source}`);
 }
 
 function isLocalImage(source: string): boolean {
@@ -112,7 +135,7 @@ async function readRequiredFiles(contentDir: string): Promise<{
     if (!(await exists(resolve(contentDir, file)))) missing.push(`필수 파일이 없습니다: ${file}`);
   }
   const checks = [check("required-files", "필수 파일 4종", missing)];
-  const read = async (name: string) => exists(resolve(contentDir, name))
+  const read = async (name: string) => await exists(resolve(contentDir, name))
     ? readFile(resolve(contentDir, name), "utf8") : "";
   const [html, css, script, manifestText] = await Promise.all([
     read("index.html"), read("style.css"), read("script.js"), read("manifest.json"),
@@ -141,6 +164,7 @@ async function imageErrors(
     ...extractAttributeSources(html).filter(isLocalImage).map((source) => [htmlPath, source] as const),
     ...extractAttributeSources(css).filter(isLocalImage).map((source) => [cssPath, source] as const),
     ...extractAttributeSources(script).filter(isLocalImage).map((source) => [scriptPath, source] as const),
+    ...extractScriptImageStrings(script).filter(isLocalImage).map((source) => [scriptPath, source] as const),
   ];
   const sources = [...contentSources];
   if (manifest?.thumbnail && isLocalImage(manifest.thumbnail)) {
@@ -301,9 +325,7 @@ async function appendStaticChecks(
   checks.push(check("image-files", "이미지 참조·계획 완결성",
     await imageErrors(contentDir, html, css, script, manifest, assetPlan)));
 
-  const externalScripts = [...html.matchAll(/<script\b[^>]*\bsrc\s*=\s*["'](https?:\/\/|\/\/)[^"']+["'][^>]*>/gi)];
-  checks.push(check("no-external-script", "외부 CDN 스크립트 금지",
-    externalScripts.length === 0 ? [] : ["외부 CDN 스크립트 의존성이 있습니다."]));
+  checks.push(check("no-external-script", "외부 CDN 스크립트 허용 목록", externalScriptErrors(html)));
 
   const titleText = html.match(/<title\b[^>]*>([^<]+)<\/title>/i)?.[1]?.trim();
   const objectiveExists = /학습\s*목표|배울\s*내용|오늘의\s*목표/.test(`${html}\n${script}`);
@@ -311,6 +333,16 @@ async function appendStaticChecks(
   if (!titleText) textErrors.push("비어 있지 않은 <title> 텍스트가 필요합니다.");
   if (!objectiveExists) textErrors.push("학습목표 텍스트가 필요합니다.");
   checks.push(check("learning-text", "제목과 학습목표 텍스트", textErrors));
+
+  // 디자인 규칙: 아이콘은 인라인 SVG만 허용, 이모지 문자 금지
+  const emojiErrors: string[] = [];
+  for (const [file, text] of [["index.html", html], ["style.css", css], ["script.js", script]] as const) {
+    const found = [...text.matchAll(/\p{Extended_Pictographic}/gu)].map((match) => match[0]);
+    if (found.length > 0) {
+      emojiErrors.push(`${file}에 이모지 문자 ${found.length}개가 있습니다(${[...new Set(found)].slice(0, 5).join(" ")}). 인라인 SVG로 대체하세요.`);
+    }
+  }
+  checks.push(check("no-emoji", "이모지 금지(인라인 SVG 사용)", emojiErrors));
 }
 
 export async function runStaticQa(options: StaticQaOptions): Promise<QaReport> {
@@ -335,6 +367,46 @@ export async function runStaticQa(options: StaticQaOptions): Promise<QaReport> {
   return report;
 }
 
+export async function runReviewJudge(options: {
+  rootDir: string;
+  factoryDir: string;
+  contentDir: string;
+  contentId: string;
+  staticReport: QaReport;
+}): Promise<JudgeOutput> {
+  const [methodology, judgePrompt, checklist, html, css, script, manifest] = await Promise.all([
+    readFile(join(options.factoryDir, "prompts/methodology.md"), "utf8"),
+    readFile(join(options.factoryDir, "prompts/05-judge.md"), "utf8"),
+    readFile(join(options.factoryDir, "checklists/quality-gate.json"), "utf8"),
+    readFile(join(options.contentDir, "index.html"), "utf8"),
+    readFile(join(options.contentDir, "style.css"), "utf8"),
+    readFile(join(options.contentDir, "script.js"), "utf8"),
+    readFile(join(options.contentDir, "manifest.json"), "utf8"),
+  ]);
+  const reviewDir = join(options.factoryDir, "runs", ".reviews");
+  await mkdir(reviewDir, { recursive: true });
+  const outFile = join(reviewDir, `${options.contentId}-${crypto.randomUUID()}.json`);
+  let interestContext: unknown = [];
+  try { interestContext = (JSON.parse(manifest) as { tags?: unknown }).tags ?? []; }
+  catch { interestContext = []; }
+  await runFactoryText({
+    outFile,
+    schemaFile: join(options.factoryDir, "schemas/judge.schema.json"),
+    prompt: [methodology, judgePrompt, `체크리스트: ${checklist}`,
+      `정적 검사: ${JSON.stringify(options.staticReport)}`, `index.html: ${html}`,
+      `관심사 맥락: ${JSON.stringify(interestContext)}`,
+      `style.css: ${css}`, `script.js: ${script}`, `manifest.json: ${manifest}`,
+      "파일을 수정하지 말고 JSON 심사 결과만 반환하세요."].join("\n\n"),
+    validateOutput: (text) => stageOutputValidationError("judge", text),
+  });
+  const value = await readJson<unknown>(outFile);
+  const validated = validateStageOutput<JudgeOutput>("judge", value);
+  if (!validated.valid || !validated.value) {
+    throw new Error(`LLM 심사 결과 검증 실패:\n- ${validated.errors.join("\n- ")}`);
+  }
+  return validated.value;
+}
+
 function judgeFailureInstructions(judge: JudgeOutput): string[] {
   return judge.criteria.flatMap((item) => {
     if (item.status === "pass") return [];
@@ -344,19 +416,33 @@ function judgeFailureInstructions(judge: JudgeOutput): string[] {
 
 async function runJudge(context: FactoryContext, attempt: number, staticReport: QaReport): Promise<JudgeOutput> {
   const judgePath = join(context.runDir, `qa-judge-${attempt}.json`);
+  const [plan, storyboard, assets, checklist, html, css, script, manifest] = await Promise.all([
+    readFile(join(context.runDir, "plan.json"), "utf8"),
+    readFile(join(context.runDir, "storyboard.json"), "utf8"),
+    readFile(join(context.runDir, "assets.json"), "utf8"),
+    readFile(join(context.factoryDir, "checklists/quality-gate.json"), "utf8"),
+    readFile(join(context.contentDir, "index.html"), "utf8"),
+    readFile(join(context.contentDir, "style.css"), "utf8"),
+    readFile(join(context.contentDir, "script.js"), "utf8"),
+    readFile(join(context.contentDir, "manifest.json"), "utf8"),
+  ]);
   const prompt = [
     await readPrompt(context, "05-judge.md"),
     "",
-    "다음 생성물을 직접 읽고 품질 체크리스트 22항목을 심사하세요.",
-    `콘텐츠 디렉터리: ${context.contentDir}`,
-    `기획 JSON: ${join(context.runDir, "plan.json")}`,
-    `스토리보드 JSON: ${join(context.runDir, "storyboard.json")}`,
-    `에셋 계획 JSON: ${join(context.runDir, "assets.json")}`,
-    `체크리스트 JSON: ${join(context.factoryDir, "checklists/quality-gate.json")}`,
+    "다음 생성물 본문으로 품질 체크리스트 22항목을 심사하세요.",
+    `기획 JSON: ${plan}`,
+    `스토리보드 JSON: ${storyboard}`,
+    `에셋 계획 JSON: ${assets}`,
+    `생성 요청 맥락: ${JSON.stringify({ interests: context.interests ?? [], additionalContext: context.additionalContext ?? null })}`,
+    `체크리스트 JSON: ${checklist}`,
+    `index.html: ${html}`,
+    `style.css: ${css}`,
+    `script.js: ${script}`,
+    `manifest.json: ${manifest}`,
     `정적 검사 결과: ${JSON.stringify(staticReport)}`,
     "05-judge.md에 정의한 passed, summary, criteria, failedIds, revisionBrief 형식의 JSON만 반환하세요.",
   ].join("\n");
-  await runCodexText({
+  await runFactoryText({
     prompt, outFile: judgePath,
     schemaFile: join(context.factoryDir, "schemas/judge.schema.json"),
     validateOutput: (text) => stageOutputValidationError("judge", text),

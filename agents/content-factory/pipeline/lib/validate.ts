@@ -7,6 +7,9 @@ export interface ValidationResult<T> {
 }
 
 export interface PlanOutput {
+  slug: string;
+  title: string;
+  description: string;
   topic: string;
   grade: string;
   subject: string;
@@ -130,6 +133,10 @@ function validatePlan(value: unknown, errors: string[]): value is PlanOutput {
   }
 
   validateAchievement(value.achievementStandard, errors);
+  if (!isNonEmptyString(value.slug) || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.slug) ||
+      !isNonEmptyString(value.title) || !isNonEmptyString(value.description)) {
+    errors.push("기획 산출물에는 안전한 slug, title, description이 필요합니다.");
+  }
   if (!isNonEmptyString(value.topic) || !isNonEmptyString(value.grade) ||
       !/^(elementary-[1-6]|middle-[1-3]|high-[1-3])$/.test(String(value.grade)) ||
       !["math", "science", "english"].includes(String(value.subject))) {
@@ -192,10 +199,11 @@ function validateStoryboard(value: unknown, errors: string[]): value is Storyboa
   if (!Array.isArray(value.scenes)) {
     errors.push("'scenes'는 배열이어야 합니다.");
   } else {
+    const scenes = value.scenes;
     SCENE_NAMES.forEach((name, index) => {
-      if (!validScene(value.scenes[index], name)) errors.push(`'scenes[${index}]'는 ${name} 장면 계약을 충족해야 합니다.`);
+      if (!validScene(scenes[index], name)) errors.push(`'scenes[${index}]'는 ${name} 장면 계약을 충족해야 합니다.`);
     });
-    if (value.scenes.length !== 5) errors.push("'scenes'는 정확히 다섯 장면이어야 합니다.");
+    if (scenes.length !== 5) errors.push("'scenes'는 정확히 다섯 장면이어야 합니다.");
   }
   if (!isRecord(value.quiz) || !Array.isArray(value.quiz.questions) ||
       value.quiz.questions.length < 3 || value.quiz.questions.length > 5) {

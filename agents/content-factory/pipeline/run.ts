@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import { existsSync } from "node:fs";
 import { mkdir, readdir } from "node:fs/promises";
-import { basename, dirname, join, relative, resolve } from "node:path";
+import { basename, join, relative, resolve } from "node:path";
 import { runAssetsStage } from "./stages/assets";
 import { runBuildStage } from "./stages/build";
 import { assertSafeContentId, type FactoryContext } from "./stages/common";
@@ -9,6 +9,7 @@ import { runPlanStage } from "./stages/plan";
 import { runPublishStage } from "./stages/publish";
 import { runQaStage, runStaticQa } from "./stages/qa";
 import { runStoryboardStage } from "./stages/storyboard";
+import { getFactoryLlmConfig } from "./lib/engine";
 
 const HELP = `AI 콘텐츠 팩토리
 
@@ -80,7 +81,8 @@ export function slugify(topic: string): string {
   const ascii = normalized
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   if (!ascii) return `content-${hash(normalized)}`;
-  return /[^\x00-\x7f]/.test(normalized) ? `${ascii}-${hash(normalized)}` : ascii;
+  const hasNonAscii = Array.from(normalized).some((char) => (char.codePointAt(0) ?? 0) > 127);
+  return hasNonAscii ? `${ascii}-${hash(normalized)}` : ascii;
 }
 
 function gradeLevel(grade: string): FactoryContext["gradeLevel"] {
@@ -144,11 +146,12 @@ async function createContext(options: CliOptions): Promise<FactoryContext> {
   }
   if (options.stage) assertStagePrerequisites(options.stage, runDir, isExistingQa);
   await mkdir(runDir, { recursive: true });
+  const llmProvider = getFactoryLlmConfig().provider;
   return {
     rootDir, factoryDir, runDir, contentDir, id,
     topic: topic ?? basename(contentDir),
     grade, gradeLevel: level, subject, type: options.type,
-    force: options.force, skipImages: options.skipImages,
+    force: options.force, skipImages: options.skipImages || llmProvider === "zai", llmProvider,
     existingContentQa: isExistingQa,
   };
 }

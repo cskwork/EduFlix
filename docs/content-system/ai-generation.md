@@ -2,7 +2,7 @@
 
 ## 개요
 
-EduFlix는 Claude AI와 art-assets 서버를 활용하여 학생의 관심사에 맞춘 맞춤형 교육 콘텐츠를 자동 생성합니다.
+EduFlix는 Bun 서버 안에서 콘텐츠 팩토리를 실행하고 Z.ai GLM을 호출하여 학생의 관심사에 맞춘 교육 콘텐츠를 생성합니다.
 
 ---
 
@@ -10,14 +10,14 @@ EduFlix는 Claude AI와 art-assets 서버를 활용하여 학생의 관심사에
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   CreatorView   │────>│   API Server    │────>│   art-assets    │
-│   (프론트엔드)   │     │   (Bun HTTP)    │     │   (외부 서버)    │
+│   CreatorView   │────>│   API Server    │────>│ Factory Runner  │
+│   (프론트엔드)   │     │   (Bun HTTP)    │     │  (로컬 파이프라인)│
 └─────────────────┘     └─────────────────┘     └────────┬────────┘
                                                          │
                                                          ▼
                                                 ┌─────────────────┐
-                                                │   Claude API    │
-                                                │   (콘텐츠 생성)   │
+                                                │   Z.ai GLM API  │
+                                                │   (생성/리뷰)     │
                                                 └─────────────────┘
 ```
 
@@ -32,7 +32,7 @@ CreatorView에서 수집하는 정보:
 ```typescript
 interface GenerationRequest {
   interests: string[]    // 관심사 (축구, 게임, 요리 등)
-  subject: 'math' | 'english'
+  subject: 'math' | 'science' | 'english'
   grade: Grade           // 학년
   language: 'ko' | 'en'
   additionalContext?: string // 추가 정보
@@ -71,12 +71,12 @@ pending (0%) → queued (5%) → processing (40%)
                             completed (100%)
 ```
 
-### 4. 콘텐츠 동기화
+### 4. 콘텐츠 게시
 
 완료 시 자동으로:
-1. art-assets에서 생성된 파일 수신
-2. `public/contents/{subject}/{gradeLevel}/{id}/`에 저장
-3. `index.json` 카탈로그 업데이트
+1. 로컬 파이프라인에서 plan → storyboard → assets → build → QA 실행
+2. `public/contents/{subject}/{gradeLevel}/{id}/`에 검증된 파일 승격
+3. publish 단계에서 `index.json` 카탈로그 갱신
 
 ---
 
@@ -151,7 +151,7 @@ agents/content-generator/
 
 ## 검증 과정
 
-### Claude 응답 검증
+### GLM 응답 검증
 
 ```typescript
 // 1. JSON 파싱
@@ -200,13 +200,12 @@ if (!isSubjectSupported(body.subject)) {
 }
 ```
 
-### art-assets 연결 실패
+### Z.ai 키 누락
 
 ```typescript
-const artAssetsHealth = await checkArtAssetsHealth()
-if (!artAssetsHealth.reachable) {
-  const message = buildArtAssetsUnavailableMessage(artAssetsHealth)
-  return errorResponse(message, 503)
+const llm = getFactoryLlmConfig()
+if (llm.provider === 'zai' && !llm.keyConfigured) {
+  return errorResponse('ZAI_API_KEY가 설정되지 않았습니다.', 503)
 }
 ```
 

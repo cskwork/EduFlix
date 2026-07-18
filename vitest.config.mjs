@@ -6,6 +6,9 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     globals: true,
-    include: ['tests/**/*.{test,spec}.ts'],
+    include: [
+      'tests/**/*.{test,spec}.ts',
+      'agents/content-factory/pipeline/**/*.vitest.test.ts',
+    ],
   },
 })

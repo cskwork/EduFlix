@@ -37,9 +37,9 @@
                         └──────────────────────┼──────────────────────┘
                                                │
                         ┌──────────────────────▼──────────────────────┐
-                        │             art-assets 서버                   │
+                        │          로컬 Factory Runner                  │
                         │  ┌─────────────────────────────────────────┐ │
-                        │  │           Claude API                     │ │
+                        │  │           Z.ai GLM API                   │ │
                         │  │       (콘텐츠 생성/리뷰)                   │ │
                         │  └─────────────────────────────────────────┘ │
                         └─────────────────────────────────────────────┘
@@ -76,11 +76,11 @@
                    POST /api/generate (작업 생성)
                                 │
                                 ▼
-                         art-assets 서버
+                       로컬 Factory Runner
                                 │
                      ┌──────────┴──────────┐
                      ▼                     ▼
-               Claude API           콘텐츠 리뷰/개선
+               Z.ai GLM API         콘텐츠 리뷰/개선
                (콘텐츠 생성)               │
                      │                     │
                      └──────────┬──────────┘
@@ -160,9 +160,8 @@ server/
 │   └── recommendations.ts # /api/recommendations - 추천
 │
 └── services/
-    ├── art-assets.ts      # art-assets 연동
-    ├── content-sync.ts    # 콘텐츠 동기화
-    └── health.ts          # 헬스 체크
+    ├── factory-runner.ts  # 로컬 콘텐츠 팩토리 실행
+    └── health.ts          # LLM 설정 상태 확인
 ```
 
 ---
@@ -203,7 +202,7 @@ server/
 | 상태 관리 | Pinia | 전역 상태 관리 |
 | 번들러 | Vite | 빠른 개발/빌드 |
 | 런타임 | Bun | 서버 + 패키지 관리 |
-| AI | Claude + Gemini | 콘텐츠 생성 |
+| AI | Z.ai GLM | 콘텐츠 생성과 리뷰 |
 | 3D | Three.js | 3D 콘텐츠 렌더링 |
 | DB | SQLite | 추천/클릭 데이터 |
 

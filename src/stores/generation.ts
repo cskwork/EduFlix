@@ -110,7 +110,8 @@ export const useGenerationStore = defineStore('generation', () => {
           language: options.language || 'ko',
           additionalContext: options.additionalContext,
         },
-        handleProgress
+        handleProgress,
+        (jobId) => { currentJobId.value = jobId },
       )
 
       // 성공 시 콘텐츠 스토어에 추가

@@ -1,0 +1,22 @@
+{
+  "refs_verified": true,
+  "phase": "Delivery",
+  "iteration": 4,
+  "max_iterations": 4,
+  "unresolved_gates": [],
+  "blockers": [],
+  "regression_ledger": [
+    "bun run test before: 67 pre-existing failures",
+    "review loop 1: long polling, true SSE streaming, review enum, docs and executable mode blockers fixed",
+    "bun run test after review loop 2: 25 files and 308 tests passed",
+    "factory pipeline after review loop 2: 80 tests passed",
+    "review loop 2: full retry windows, rebuild manifest gates, exact IDs, immutable waits, image skip logging, provider labels, exact CDN allowlist, SVG subject icons, and live Bun HTTP wiring fixed",
+    "live Bun HTTP integration: 2 tests passed",
+    "lint and build passed after review loop 2",
+    "review loop 3: global content ID collision detection fixed across all subject and level directories",
+    "bun run test after review loop 3: 25 files and 309 tests passed; pipeline 80, live HTTP 2, lint, and build passed"
+  ],
+  "next_action": "Complete",
+  "forced_reflection": "Passing handler tests was insufficient evidence for live HTTP wiring, and target-directory collision checks were insufficient for catalog-global IDs. The final revision binds actual Bun HTTP/JSON behavior, full provider budgets, every manifest promotion boundary, collision-safe exact temporary IDs, and a single global content-ID scan to regression tests.",
+  "updated_at": "2026-07-18T13:01:00+09:00"
+}

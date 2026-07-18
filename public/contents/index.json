@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-07-13T07:51:24.679Z",
+  "lastUpdated": "2026-07-18T05:18:54.490Z",
   "contents": [
     {
       "id": "fractions-pizza",
@@ -967,8 +967,7 @@
       "thumbnail": "",
       "path": "/contents/world-history/middle/world-quiz-battle/index.html",
       "createdAt": "2026-02-09T12:00:00.000Z"
-    }
-  ,
+    },
     {
       "id": "line-point-symmetry",
       "title": "도리와 대칭 박물관 복원 작전",
@@ -987,6 +986,27 @@
         "대응점",
         "초등수학",
         "도형"
+      ]
+    },
+    {
+      "id": "animal-adaptation-game",
+      "title": "동물 마을의 비밀: 환경 적응 대작전",
+      "subject": "science",
+      "gradeLevel": "elementary",
+      "grade": "elementary-4",
+      "type": "game",
+      "language": "ko",
+      "description": "게임 세계에서 동물 친구들을 만나, 그들이 살아가는 환경에 맞게 신체 특징과 행동이 어떻게 적응했는지 카드 매칭과 퀴즈를 통해 배우는 과학 탐험 콘텐츠입니다.",
+      "path": "/contents/science/elementary/animal-adaptation-game/index.html",
+      "thumbnail": "/contents/backgrounds/bg-geometric-shapes-pastel-20260125.png",
+      "createdAt": "2026-07-18T05:21:54.000Z",
+      "tags": [
+        "과학",
+        "동물",
+        "환경적응",
+        "초등학교 4학년",
+        "생명",
+        "게임"
       ]
     }
   ]

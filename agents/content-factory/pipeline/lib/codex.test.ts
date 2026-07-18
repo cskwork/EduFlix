@@ -13,6 +13,19 @@ afterEach(async () => {
 });
 
 describe("Codex 출력 복구", () => {
+  test("호출자가 지정한 label을 최종 오류에 보존한다", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "factory-codex-label-"));
+    tempDirs.push(dir);
+    const executable = join(dir, "codex");
+    await writeFile(executable, "#!/bin/sh\nexit 1\n", "utf8");
+    await chmod(executable, 0o755);
+    process.env.PATH = `${dir}:${originalPath ?? ""}`;
+
+    await expect(runCodexText({
+      prompt: "test", outFile: join(dir, "result.txt"), timeoutMs: 1_000, label: "기획 생성",
+    })).rejects.toThrow("기획 생성 실패");
+  });
+
   test("새 출력을 쓰지 않은 성공 프로세스가 이전 파일을 재사용하지 못한다", async () => {
     const dir = await mkdtemp(join(tmpdir(), "factory-codex-"));
     tempDirs.push(dir);

@@ -163,7 +163,7 @@
 ### AI 생성이 작동하지 않음
 - Vercel 배포판은 정적 모드 (AI 비활성화)
 - API 서버가 실행 중인지 확인
-- art-assets 서버 연결 상태 확인
+- `/api/health`의 `llm.keyConfigured`와 `ZAI_API_KEY` 설정 확인
 
 ### 인기 콘텐츠가 표시되지 않음
 - 백엔드 서버가 필요 (SQLite DB)

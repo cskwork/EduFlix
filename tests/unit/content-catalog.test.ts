@@ -1,4 +1,4 @@
-// 10개 콘텐츠 카탈로그 검증 테스트
+// 현재 카탈로그의 대표 콘텐츠 10개 검증 테스트
 import { describe, it, expect } from 'vitest'
 import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
@@ -36,22 +36,22 @@ const REQUIRED_CONTENTS = [
     path: 'math/middle/equation-puzzle',
   },
   {
-    id: 'solar-system',
-    title: '태양계 여행',
+    id: 'moon-phases',
+    title: '달의 위상 변화: 변하는 달의 비밀',
     subject: 'science',
     gradeLevel: 'elementary',
     type: 'simulation',
     language: 'ko',
-    path: 'science/elementary/solar-system',
+    path: 'science/elementary/moon-phases',
   },
   {
-    id: 'circuit-lab',
-    title: '전기회로 실험실',
+    id: 'states-of-matter',
+    title: '물질의 상태 변화: 분자의 비밀',
     subject: 'science',
     gradeLevel: 'elementary',
     type: 'simulation',
     language: 'ko',
-    path: 'science/elementary/circuit-lab',
+    path: 'science/elementary/states-of-matter',
   },
   {
     id: 'cell-explorer',
@@ -72,31 +72,31 @@ const REQUIRED_CONTENTS = [
     path: 'science/high/chemical-reactor',
   },
   {
-    id: 'word-safari',
-    title: 'Word Safari',
+    id: 'comparative-adjectives',
+    title: 'Who is Taller? Comparing with Adjectives',
     subject: 'english',
     gradeLevel: 'elementary',
-    type: 'game',
+    type: 'quiz',
     language: 'en',
-    path: 'english/elementary/word-safari',
+    path: 'english/elementary/comparative-adjectives',
   },
   {
-    id: 'grammar-quest',
-    title: 'Grammar Quest',
+    id: 'present-tenses',
+    title: "I play vs I'm playing: What's the Difference?",
+    subject: 'english',
+    gradeLevel: 'elementary',
+    type: 'quiz',
+    language: 'en',
+    path: 'english/elementary/present-tenses',
+  },
+  {
+    id: 'present-perfect',
+    title: '현재완료시제 - Have You Ever...?',
     subject: 'english',
     gradeLevel: 'middle',
     type: 'quiz',
     language: 'en',
-    path: 'english/middle/grammar-quest',
-  },
-  {
-    id: 'debate-arena',
-    title: 'Debate Arena',
-    subject: 'english',
-    gradeLevel: 'high',
-    type: 'story',
-    language: 'en',
-    path: 'english/high/debate-arena',
+    path: 'english/middle/present-perfect',
   },
 ]
 
@@ -121,8 +121,8 @@ describe('콘텐츠 카탈로그 검증', () => {
     expect(catalog.version).toMatch(/^\d+\.\d+\.\d+$/)
   })
 
-  it('카탈로그에 10개 콘텐츠가 등록되어 있다', () => {
-    expect(catalog.contents).toHaveLength(10)
+  it('카탈로그에 현재 81개 콘텐츠가 등록되어 있다', () => {
+    expect(catalog.contents).toHaveLength(81)
   })
 
   describe('콘텐츠 파일 존재 확인', () => {
@@ -228,9 +228,9 @@ describe('과목별 콘텐츠 분포', () => {
 })
 
 describe('학년 레벨별 콘텐츠 분포', () => {
-  it('초등 콘텐츠가 5개 있다', () => {
+  it('대표 목록에 초등 콘텐츠가 6개 있다', () => {
     const elemContents = REQUIRED_CONTENTS.filter((c) => c.gradeLevel === 'elementary')
-    expect(elemContents).toHaveLength(5)
+    expect(elemContents).toHaveLength(6)
   })
 
   it('중등 콘텐츠가 3개 있다', () => {
@@ -238,16 +238,16 @@ describe('학년 레벨별 콘텐츠 분포', () => {
     expect(middleContents).toHaveLength(3)
   })
 
-  it('고등 콘텐츠가 2개 있다', () => {
+  it('대표 목록에 고등 콘텐츠가 1개 있다', () => {
     const highContents = REQUIRED_CONTENTS.filter((c) => c.gradeLevel === 'high')
-    expect(highContents).toHaveLength(2)
+    expect(highContents).toHaveLength(1)
   })
 })
 
 describe('콘텐츠 타입 분포', () => {
-  it('game 타입 콘텐츠가 2개 있다', () => {
+  it('대표 목록에 game 타입 콘텐츠가 1개 있다', () => {
     const gameContents = REQUIRED_CONTENTS.filter((c) => c.type === 'game')
-    expect(gameContents).toHaveLength(2)
+    expect(gameContents).toHaveLength(1)
   })
 
   it('simulation 타입 콘텐츠가 3개 있다', () => {
@@ -255,9 +255,9 @@ describe('콘텐츠 타입 분포', () => {
     expect(simContents).toHaveLength(3)
   })
 
-  it('quiz 타입 콘텐츠가 2개 있다', () => {
+  it('대표 목록에 quiz 타입 콘텐츠가 4개 있다', () => {
     const quizContents = REQUIRED_CONTENTS.filter((c) => c.type === 'quiz')
-    expect(quizContents).toHaveLength(2)
+    expect(quizContents).toHaveLength(4)
   })
 
   it('exploration 타입 콘텐츠가 2개 있다', () => {
@@ -265,8 +265,8 @@ describe('콘텐츠 타입 분포', () => {
     expect(explorationContents).toHaveLength(2)
   })
 
-  it('story 타입 콘텐츠가 1개 있다', () => {
+  it('대표 목록에 story 타입 콘텐츠가 없다', () => {
     const storyContents = REQUIRED_CONTENTS.filter((c) => c.type === 'story')
-    expect(storyContents).toHaveLength(1)
+    expect(storyContents).toHaveLength(0)
   })
 })

@@ -7,6 +7,7 @@ import { validPlan } from "../test-fixtures";
 describe("단계 산출물 타입가드", () => {
   test("프롬프트의 기획 JSON 계약을 허용한다", () => {
     expect(() => assertPlan({
+      slug: "symmetry", title: "대칭", description: "대칭 설명",
       topic: "대칭", grade: "elementary-5", subject: "math",
       achievementStandard: { code: "추정", statement: "대칭을 이해한다", estimated: true, rationale: "주제 근거" },
       learningObjectives: ["1", "2"].map((id) => ({ id: `LO${id}`, statement: `목표 ${id}`, evidence: "조작 결과" })),
@@ -29,6 +30,7 @@ describe("단계 산출물 타입가드", () => {
 
   test("비어 있는 기획 내부 객체와 배열 항목을 거부한다", () => {
     expect(() => assertPlan({
+      slug: "symmetry", title: "대칭", description: "대칭 설명",
       achievementStandard: {},
       learningObjectives: [{ statement: "목표 1" }, { statement: "목표 2" }],
       prerequisites: [{}], misconceptions: [{}],

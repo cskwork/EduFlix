@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useGenerationStore } from '../../src/stores/generation'
 import { useContentStore } from '../../src/stores/content'
+import { generateContent } from '../../src/services/api/claude'
 import {
   GENERATION_STATUS_MESSAGES,
   SUBJECT_GENERATION_HINTS,
@@ -87,6 +88,22 @@ describe('generation store', () => {
       expect(store.currentProgress.progress).toBe(50)
       expect(store.currentProgress.message).toBe('콘텐츠 생성 중...')
     })
+  })
+
+  it('POST 직후 전달된 jobId를 생성 완료 전 저장한다', async () => {
+    const store = useGenerationStore()
+    let release!: () => void
+    const gate = new Promise<void>((resolve) => { release = resolve })
+    vi.mocked(generateContent).mockImplementation(async (_options, _progress, onJobCreated) => {
+      onJobCreated?.('job-live')
+      await gate
+      return { success: false, jobId: 'job-live', error: '테스트 종료' }
+    })
+
+    const pending = store.startGeneration({ interests: ['별'], subject: 'science', grade: 'elementary-3' })
+    expect(store.currentJobId).toBe('job-live')
+    release()
+    await pending
   })
 
   describe('isGenerating computed', () => {

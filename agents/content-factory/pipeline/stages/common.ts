@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
+import type { FactoryLlmProvider } from "../lib/engine";
 
 export interface FactoryContext {
   rootDir: string;
@@ -17,6 +18,9 @@ export interface FactoryContext {
   force: boolean;
   skipImages: boolean;
   existingContentQa?: boolean;
+  interests?: string[];
+  additionalContext?: string;
+  llmProvider?: FactoryLlmProvider;
 }
 
 export function assertSafeContentId(id: string): void {

@@ -18,6 +18,36 @@ const passingJudge = {
 };
 
 describe("정적 QA 경로 일관성", () => {
+  test("정확한 Three.js r128 CDN 두 파일만 외부 script 예외로 허용한다", async () => {
+    const root = await mkdtemp(join(tmpdir(), "factory-qa-cdn-"));
+    const contentDir = join(root, "public/contents/math/elementary/cdn-id");
+    await mkdir(contentDir, { recursive: true });
+    const manifest = { id: "cdn-id", title: "입체", subject: "math", gradeLevel: "elementary",
+      grade: "elementary-5", type: "simulation", language: "ko", description: "설명",
+      path: "/contents/math/elementary/cdn-id/index.html", thumbnail: "thumbnail.png",
+      createdAt: "2026-07-18T00:00:00.000Z", tags: ["입체"] };
+    const three = "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js";
+    const controls = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js";
+    const html = (scripts: string[]) => `<title>입체</title>${scripts.map((src) =>
+      `<script src="${src}"></script>`).join("")}<main>학습 목표</main>`;
+    await Promise.all([
+      writeFile(join(contentDir, "index.html"), html([three, controls])),
+      writeFile(join(contentDir, "style.css"), ""),
+      writeFile(join(contentDir, "script.js"), "학습 목표"),
+      writeFile(join(contentDir, "manifest.json"), JSON.stringify(manifest)),
+    ]);
+    try {
+      let report = await runStaticQa({ contentDir });
+      expect(report.checks.find((item) => item.id === "no-external-script")?.status).toBe("pass");
+
+      await writeFile(join(contentDir, "index.html"), html([
+        "https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.min.js",
+      ]));
+      report = await runStaticQa({ contentDir });
+      expect(report.checks.find((item) => item.id === "no-external-script")?.status).toBe("fail");
+    } finally { await rm(root, { recursive: true, force: true }); }
+  });
+
   test("인라인 EduFlixEngine 핵심 런타임 계약이 없으면 실패한다", async () => {
     const root = await mkdtemp(join(tmpdir(), "factory-qa-runtime-"));
     const contentDir = join(root, "public/contents/math/elementary/runtime-id");
@@ -118,6 +148,30 @@ describe("정적 QA 경로 일관성", () => {
       expect(imageCheck?.status).toBe("fail");
       expect(imageCheck?.errors.join(" ")).toContain("비어");
       expect(imageCheck?.errors.join(" ")).toContain("사용되지");
+    } finally { await rm(root, { recursive: true, force: true }); }
+  });
+
+  test("script.js의 객체 속성 문자열로 참조한 계획 이미지도 사용으로 인정한다", async () => {
+    const root = await mkdtemp(join(tmpdir(), "factory-qa-js-string-image-"));
+    const contentDir = join(root, "public/contents/science/elementary/js-string-id");
+    const iconDir = join(root, "public/contents/icons");
+    await mkdir(contentDir, { recursive: true });
+    await mkdir(iconDir, { recursive: true });
+    await Promise.all([
+      writeFile(join(contentDir, "index.html"), "<title>한살이</title>"),
+      writeFile(join(contentDir, "style.css"), ""),
+      writeFile(join(contentDir, "script.js"),
+        'const ui = { badge: "/contents/icons/icon-trophy.svg" }; 학습 목표'),
+      writeFile(join(iconDir, "icon-trophy.svg"), "<svg></svg>"),
+    ]);
+    const assetPlan = {
+      generated: [], coverage: [],
+      reused: [{ assetId: "trophy", sourcePath: "/contents/icons/icon-trophy.svg" }],
+    };
+    try {
+      const report = await runStaticQa({ contentDir, assetPlan });
+      const imageCheck = report.checks.find((item) => item.id === "image-files");
+      expect(imageCheck?.status).toBe("pass");
     } finally { await rm(root, { recursive: true, force: true }); }
   });
 
