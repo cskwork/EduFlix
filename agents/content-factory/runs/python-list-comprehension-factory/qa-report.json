@@ -1,0 +1,263 @@
+{
+  "passed": true,
+  "contentDir": "/Users/danny/Documents/PARA/Resource/EduFlix/public/contents/coding/middle/python-list-comprehension-factory",
+  "checkedAt": "2026-07-18T11:33:33.036Z",
+  "checks": [
+    {
+      "id": "required-files",
+      "name": "필수 파일 4종",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "manifest-schema",
+      "name": "manifest 12필드 스키마",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "manifest-path",
+      "name": "manifest 경로 규칙",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "stylesheet-order",
+      "name": "공통 모바일 CSS 링크 순서",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "five-scenes",
+      "name": "필수 장면 5종",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "engine-contract",
+      "name": "인라인 EduFlixEngine 런타임 계약",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "reduced-motion",
+      "name": "동작 줄이기 접근성",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "image-files",
+      "name": "이미지 참조·계획 완결성",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "no-external-script",
+      "name": "외부 CDN 스크립트 허용 목록",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "learning-text",
+      "name": "제목과 학습목표 텍스트",
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "id": "no-emoji",
+      "name": "이모지 금지(인라인 SVG 사용)",
+      "status": "pass",
+      "errors": []
+    }
+  ],
+  "errors": [],
+  "artifacts": [
+    {
+      "path": "contents/backgrounds/bg-numbers-pattern-20260125.png",
+      "sha256": "52bc8ad309bddcb7c54b17e011225bd646696df73a9a239c717af614eb927af3"
+    },
+    {
+      "path": "contents/coding/middle/python-list-comprehension-factory/index.html",
+      "sha256": "865f83420ab1506fc580e463db83e609222b7ef963def89638aa2d4afaf7908e"
+    },
+    {
+      "path": "contents/coding/middle/python-list-comprehension-factory/manifest.json",
+      "sha256": "1098b964baa7523efdf220f63643b1c35aa38afb1dad6e36d5d6da60ee03a647"
+    },
+    {
+      "path": "contents/coding/middle/python-list-comprehension-factory/script.js",
+      "sha256": "9360c8bac5489496f71ae946b975b679a800ab8c3629b6db638bb31cc8958102"
+    },
+    {
+      "path": "contents/coding/middle/python-list-comprehension-factory/style.css",
+      "sha256": "d4060ef9a9f3dc271e9b687083d981a484f713a0c5f81dfe253ebae22c3094ac"
+    }
+  ],
+  "judge": {
+    "passed": true,
+    "summary": "모든 22개 항목과 정적 검사를 통과했습니다. 학습 목표가 명확하게 제시되어 있으며, 훅부터 마무리까지 스토리텔링과 시각적 요소가 일관되게 유지됩니다. 리스트 컴프리헨션 기계 시뮬레이션은 상호작용과 오개념 교정 피드백을 효과적으로 제공합니다.",
+    "criteria": [
+      {
+        "id": "Q01",
+        "status": "pass",
+        "evidence": [
+          "script.js의 hook 씬에서 '미스터리 상자를 여는 암호는 무엇을 의미할까요?'라는 호기심 질문을 첫 화면에 제시합니다."
+        ]
+      },
+      {
+        "id": "Q02",
+        "status": "pass",
+        "evidence": [
+          "보물 상자, 자물쇠, 자동화 공장 기계 등 중학생들이 일상적인 게임이나 미디어에서 흔히 접하는 친숙한 소재로 호기심을 유발합니다."
+        ]
+      },
+      {
+        "id": "Q03",
+        "status": "pass",
+        "evidence": [
+          "hook 씬에 잠긴 상자를 나타내는 SVG 요소(`lock-icon`)와 코드 설계도를 시각화한 DOM 요소(`code-display`)가 포함되어 있습니다."
+        ]
+      },
+      {
+        "id": "Q04",
+        "status": "pass",
+        "evidence": [
+          "hook 씬 HTML 상단에 '리스트 컴프리헨션의 작동 원리와 range() 함수의 특징을 이해하고, 코드의 결과값을 예측할 수 있습니다.'라는 구체적인 학습목표가 제시되어 있습니다."
+        ]
+      },
+      {
+        "id": "Q05",
+        "status": "pass",
+        "evidence": [
+          "미스터리 상자 암호 해석(hook) -> 로봇의 기계 설명(story) -> 기계 직접 조작(core) -> 개념 점검(quiz) -> 상자 열기와 요약(wrap)으로 스토리 맥락이 일관되게 이어집니다."
+        ]
+      },
+      {
+        "id": "Q06",
+        "status": "pass",
+        "evidence": [
+          "script.js의 story 씬과 전체 흐름에 '안내자 로봇 코더'라는 이름이 명시된 캐릭터가 등장하여 학습을 안내합니다."
+        ]
+      },
+      {
+        "id": "Q07",
+        "status": "pass",
+        "evidence": [
+          "각 씬의 종료 및 전환 버튼('기계 조작법 배우기', '공장 가동 시작하기', '결과 확인하러 가기' 등)을 통해 이전 활동의 결과가 다음 스토리로 자연스럽게 연결됩니다."
+        ]
+      },
+      {
+        "id": "Q08",
+        "status": "pass",
+        "evidence": [
+          "core 씬의 카드 드래그 앤 드롭, 레버 당기기 버튼 클릭, quiz 씬의 객관식 선택지 클릭 등 세 개 이상의 학습자 입력 상호작용 요소가 존재합니다."
+        ]
+      },
+      {
+        "id": "Q09",
+        "status": "pass",
+        "evidence": [
+          "모든 씬은 사용자의 클릭이나 드래그 같은 상호작용을 통해서만 다음 단계로 진행되도록 설계되어 수동 시청 구간이 제한됩니다."
+        ]
+      },
+      {
+        "id": "Q10",
+        "status": "pass",
+        "evidence": [
+          "core 씬의 `handleCardInput` 및 레버 클릭 이벤트 로직을 통해 입력값(0, 1, 2 또는 오답인 3)에 따라 기계 작동 결과와 피드백이 다르게 나타나는 발견 모델을 제공합니다."
+        ]
+      },
+      {
+        "id": "Q11",
+        "status": "pass",
+        "evidence": [
+          "script.js의 `engine.showFeedback`과 `checkQuiz` 함수에서 입력 이벤트 발생 즉시 정오 여부와 그 이유를 텍스트와 시각적 효과로 피드백합니다."
+        ]
+      },
+      {
+        "id": "Q12",
+        "status": "pass",
+        "evidence": [
+          "quiz 씬의 오답 처리 로직에서 정답을 바로 알려주지 않고, `incorrectFeedback`과 `hint`를 제공하며 다른 선택지를 클릭할 수 있도록 재시도 기회를 제공합니다."
+        ]
+      },
+      {
+        "id": "Q13",
+        "status": "pass",
+        "evidence": [
+          "index.html에 `progress-container`가 있고, script.js의 `switchScene` 함수에서 진행도 막대의 너비(`progressPercent`)를 갱신합니다."
+        ]
+      },
+      {
+        "id": "Q14",
+        "status": "pass",
+        "evidence": [
+          "wrap 씬에 학습 성취를 나타내는 완료 메시지와 3단계 요약 아이콘(`recap-grid`)이 보상 요소로 제공됩니다."
+        ]
+      },
+      {
+        "id": "Q15",
+        "status": "pass",
+        "evidence": [
+          "core 씬에서 기본 원리를 조작해 보고, quiz 씬에서 range의 값을 바꾸거나 연산자(x+3)를 바꾸는 변형 문제들을 해결하며 난이도가 점진 상승합니다."
+        ]
+      },
+      {
+        "id": "Q16",
+        "status": "pass",
+        "evidence": [
+          "중학교 2학년 수준에 적합하도록 '원재료', '변환 슬롯' 등의 비유를 사용하고 이해하기 쉬운 짧은 문장으로 설명하여 난이도가 적절합니다."
+        ]
+      },
+      {
+        "id": "Q17",
+        "status": "pass",
+        "evidence": [
+          "대상 학년이 중학교 2학년(middle-2)이므로 초등 저학년 텍스트 제한 조건의 직접적인 적용 대상은 아니지만, 문장은 간결하게 유지되었습니다."
+        ]
+      },
+      {
+        "id": "Q18",
+        "status": "pass",
+        "evidence": [
+          "story 씬에서 '리스트 컴프리헨션(List Comprehension)'이라는 전문 용어가 처음 등장할 때 이것이 리스트를 자동 생성하는 한 줄 기계 조종법임을 즉시 풀이하여 설명합니다."
+        ]
+      },
+      {
+        "id": "Q19",
+        "status": "pass",
+        "evidence": [
+          "style.css에서 버튼과 인터랙티브 요소의 크기(`min-height: 44px`)를 보장하고 반응형 미디어 쿼리를 사용하여 375px 모바일 화면에서 가로 스크롤을 방지합니다."
+        ]
+      },
+      {
+        "id": "Q20",
+        "status": "pass",
+        "evidence": [
+          "모든 SVG 시각 요소에 `aria-label`이나 `<title>` 태그를 통한 대체 텍스트가 제공되며, 퀴즈나 기계 오작동 시 색상뿐만 아니라 아이콘과 텍스트 피드백을 함께 사용합니다."
+        ]
+      },
+      {
+        "id": "Q21",
+        "status": "pass",
+        "evidence": [
+          "script.js에서 클릭 이벤트 핸들러(`onclick`)와 드래그 이벤트 핸들러를 사용하고, 조작 요소에 `tabIndex=0`을 부여하며, `onkeydown`을 통한 키보드 엔터/스페이스 처리 로직이 모두 구현되어 있습니다."
+        ]
+      },
+      {
+        "id": "Q22",
+        "status": "pass",
+        "evidence": [
+          "전체 예상 학습 시간이 20분 내외로 적절하며, 도입(hook, story), 전개(core), 정리(quiz, wrap)의 명확한 3부 구조를 갖추고 있습니다."
+        ]
+      }
+    ],
+    "failedIds": [],
+    "revisionBrief": {
+      "required": false,
+      "instructions": []
+    }
+  },
+  "attempt": 2,
+  "qaInputDigest": "a6c773d017d01c9c1f34929da5a179614f6b2c869de27791c14dea125e3c0f44"
+}

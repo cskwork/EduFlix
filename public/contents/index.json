@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-07-18T09:14:37.981Z",
+  "lastUpdated": "2026-07-18T11:34:58.523Z",
   "contents": [
     {
       "id": "fractions-pizza",
@@ -1052,6 +1052,28 @@
         "경제교육",
         "자산관리",
         "중학교수학"
+      ]
+    }
+  ,
+    {
+      "id": "python-list-comprehension-factory",
+      "title": "파이썬 복제 기계: 리스트 컴프리헨션 공장",
+      "description": "파이썬 리스트 컴프리헨션 코드를 공장의 자동화 기계로 시각화하여 직접 조작하고 결과를 발견하는 인터랙티브 학습 콘텐츠입니다.",
+      "subject": "coding",
+      "gradeLevel": "middle",
+      "grade": "middle-2",
+      "type": "simulation",
+      "language": "ko",
+      "path": "/contents/coding/middle/python-list-comprehension-factory/index.html",
+      "thumbnail": "/contents/backgrounds/bg-numbers-pattern-20260125.png",
+      "createdAt": "2026-07-18T11:33:33.030Z",
+      "tags": [
+        "python",
+        "리스트컴프리헨션",
+        "코딩",
+        "중학교",
+        "알고리즘",
+        "리스트"
       ]
     }
   ]

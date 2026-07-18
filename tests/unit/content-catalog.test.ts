@@ -121,8 +121,8 @@ describe('콘텐츠 카탈로그 검증', () => {
     expect(catalog.version).toMatch(/^\d+\.\d+\.\d+$/)
   })
 
-  it('카탈로그에 현재 81개 콘텐츠가 등록되어 있다', () => {
-    expect(catalog.contents).toHaveLength(81)
+  it('카탈로그에 현재 84개 콘텐츠가 등록되어 있다', () => {
+    expect(catalog.contents).toHaveLength(84)
   })
 
   describe('콘텐츠 파일 존재 확인', () => {
