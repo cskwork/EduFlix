@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import type { Subject, Grade } from '../../types/content'
-import type { RenderMode } from '../../types/generation'
+import type { Subject, Difficulty } from '../../types/content'
+import type { RenderMode, CreatorMode } from '../../types/generation'
+import { gradeForDifficulty, gradeLevelForGrade } from '../../types/content'
+import ModeSelect from './ModeSelect.vue'
 import InterestInput from './InterestInput.vue'
 import SubjectSelect from './SubjectSelect.vue'
-import GradeSelect from './GradeSelect.vue'
+import DifficultySelect from './DifficultySelect.vue'
 import RenderModeSelect from './RenderModeSelect.vue'
+import ProblemInput, { type ProblemInputValue } from './ProblemInput.vue'
 import GenerationProgressVue from './GenerationProgress.vue'
 import { useGenerationStore } from '../../stores/generation'
 
@@ -17,16 +20,34 @@ const router = useRouter()
 const generationStore = useGenerationStore()
 
 // 마법사 단계
-type WizardStep = 'interests' | 'subject' | 'grade' | 'mode' | 'generating'
+// - mode-select: Option 1(interest) vs Option 2(problem) 선택
+// - Option 1: interests → subject → difficulty → mode → generating
+// - Option 2: problem → mode → generating
+type WizardStep =
+  | 'mode-select'
+  | 'interests'
+  | 'subject'
+  | 'difficulty'
+  | 'mode'
+  | 'problem'
+  | 'generating'
 
 // 현재 단계
-const currentStep = ref<WizardStep>('interests')
+const currentStep = ref<WizardStep>('mode-select')
 
-// 폼 데이터 (제작 방식은 3D 시뮬레이션이 기본값)
+// 폼 데이터
+const creatorMode = ref<CreatorMode | null>(null)
 const interests = ref<string[]>([])
 const subject = ref<Subject | null>(null)
-const grade = ref<Grade | null>(null)
+const difficulty = ref<Difficulty | null>(null)
 const renderMode = ref<RenderMode>('3d')
+
+// Option 2 (problem mode) 통합 상태
+const problemState = ref<ProblemInputValue>({
+  problem: '',
+  subject: null,
+  difficulty: 'medium',
+})
 
 // 생성된 콘텐츠 ID
 const generatedContentId = ref<string | null>(null)
@@ -40,29 +61,47 @@ const generationProgress = computed(() => generationStore.currentProgress)
 // 현재 작업 ID (실시간 프리뷰용)
 const currentJobId = computed(() => generationStore.currentJobId)
 
-// 단계 정보
-const steps: { key: WizardStep; label: string; number: number }[] = [
-  { key: 'interests', label: '관심사', number: 1 },
-  { key: 'subject', label: '과목', number: 2 },
-  { key: 'grade', label: '학년', number: 3 },
-  { key: 'mode', label: '만드는 방식', number: 4 },
+// 모드별 단계 시퀀스
+const interestSteps: { key: WizardStep; label: string; number: number }[] = [
+  { key: 'interests', label: '관심사', number: 2 },
+  { key: 'subject', label: '과목', number: 3 },
+  { key: 'difficulty', label: '난이도', number: 4 },
+  { key: 'mode', label: '만드는 방식', number: 5 },
 ]
+
+const problemSteps: { key: WizardStep; label: string; number: number }[] = [
+  { key: 'problem', label: '문제 입력', number: 2 },
+  { key: 'mode', label: '만드는 방식', number: 3 },
+]
+
+// 표시할 단계 (모드 선택 + 모드별 시퀀스)
+const steps = computed(() => {
+  const baseStep = [{ key: 'mode-select' as WizardStep, label: '방식', number: 1 }]
+  if (creatorMode.value === 'problem') return [...baseStep, ...problemSteps]
+  if (creatorMode.value === 'interest') return [...baseStep, ...interestSteps]
+  return baseStep
+})
 
 // 현재 단계 인덱스
 const currentStepIndex = computed(() => {
-  const idx = steps.findIndex((s) => s.key === currentStep.value)
+  const idx = steps.value.findIndex((s) => s.key === currentStep.value)
   return idx >= 0 ? idx : 0
 })
 
 // 다음 단계로 이동 가능 여부
 const canProceed = computed(() => {
   switch (currentStep.value) {
+    case 'mode-select':
+      return creatorMode.value !== null
     case 'interests':
       return interests.value.length > 0
     case 'subject':
       return subject.value !== null
-    case 'grade':
-      return grade.value !== null
+    case 'difficulty':
+      return difficulty.value !== null
+    case 'problem':
+      return problemState.value.problem.trim().length >= 5 &&
+        problemState.value.difficulty !== null
     case 'mode':
       return renderMode.value !== null
     default:
@@ -70,69 +109,108 @@ const canProceed = computed(() => {
   }
 })
 
+// 모드 선택 처리
+function selectCreatorMode(mode: CreatorMode) {
+  creatorMode.value = mode
+}
+
 // 다음 단계로 이동
 function nextStep() {
   if (!canProceed.value) return
 
-  switch (currentStep.value) {
-    case 'interests':
-      currentStep.value = 'subject'
-      break
-    case 'subject':
-      currentStep.value = 'grade'
-      break
-    case 'grade':
-      currentStep.value = 'mode'
-      break
-    case 'mode':
-      startGeneration()
-      break
+  // mode-select에서 다음 단계로 분기
+  if (currentStep.value === 'mode-select') {
+    currentStep.value = creatorMode.value === 'problem' ? 'problem' : 'interests'
+    return
+  }
+
+  // Option 1 (interest)
+  if (creatorMode.value === 'interest') {
+    switch (currentStep.value) {
+      case 'interests':
+        currentStep.value = 'subject'
+        break
+      case 'subject':
+        currentStep.value = 'difficulty'
+        break
+      case 'difficulty':
+        currentStep.value = 'mode'
+        break
+      case 'mode':
+        startGeneration()
+        break
+    }
+    return
+  }
+
+  // Option 2 (problem)
+  if (creatorMode.value === 'problem') {
+    switch (currentStep.value) {
+      case 'problem':
+        currentStep.value = 'mode'
+        break
+      case 'mode':
+        startGeneration()
+        break
+    }
   }
 }
 
 // 이전 단계로 이동
 function prevStep() {
-  switch (currentStep.value) {
-    case 'subject':
-      currentStep.value = 'interests'
-      break
-    case 'grade':
-      currentStep.value = 'subject'
-      break
-    case 'mode':
-      currentStep.value = 'grade'
-      break
-    case 'generating':
-      currentStep.value = 'mode'
-      break
+  if (currentStep.value === 'generating') {
+    currentStep.value = 'mode'
+    return
   }
+  const idx = currentStepIndex.value
+  if (idx <= 0) return
+  const prev = steps.value[idx - 1]
+  if (prev) currentStep.value = prev.key
 }
 
 // 생성 시작
 async function startGeneration() {
-  if (!subject.value || !grade.value) return
-
   currentStep.value = 'generating'
   generatedContentId.value = null
 
   try {
-    const result = await generationStore.startGeneration({
-      interests: interests.value,
-      subject: subject.value,
-      grade: grade.value,
-      language: subject.value === 'english' ? 'en' : 'ko',
-      renderMode: renderMode.value,
-    })
-
-    if (result.success && result.contentId) {
-      generatedContentId.value = result.contentId
-      // 모듈 경로 저장 (리뷰에 필요)
-      const gradeLevel = grade.value?.startsWith('elementary')
-        ? 'elementary'
-        : grade.value?.startsWith('middle')
-          ? 'middle'
-          : 'high'
-      generatedModulePath.value = `public/contents/${subject.value}/${gradeLevel}/${result.contentId}`
+    let result
+    if (creatorMode.value === 'problem') {
+      // Option 2: problem mode
+      result = await generationStore.startGeneration({
+        mode: 'problem',
+        language: 'ko',
+        renderMode: renderMode.value,
+        problem: problemState.value.problem,
+        subject: problemState.value.subject ?? undefined,
+        difficulty: problemState.value.difficulty,
+      })
+      if (result.success && result.contentId) {
+        generatedContentId.value = result.contentId
+        const diff = problemState.value.difficulty
+        const grade = gradeForDifficulty(diff)
+        const level = gradeLevelForGrade(grade)
+        // subject는 사용자가 선택했을 수도, AI가 추론했을 수도 있음. 매니페스트 기준 경로.
+        const subj = problemState.value.subject ?? 'general'
+        generatedModulePath.value = `public/contents/${subj}/${level}/${result.contentId}`
+      }
+    } else {
+      // Option 1: interest mode
+      if (!subject.value || !difficulty.value) return
+      const grade = gradeForDifficulty(difficulty.value)
+      result = await generationStore.startGeneration({
+        mode: 'interest',
+        interests: interests.value,
+        subject: subject.value,
+        grade,
+        language: subject.value === 'english' ? 'en' : 'ko',
+        renderMode: renderMode.value,
+      })
+      if (result.success && result.contentId) {
+        generatedContentId.value = result.contentId
+        const level = gradeLevelForGrade(grade)
+        generatedModulePath.value = `public/contents/${subject.value}/${level}/${result.contentId}`
+      }
     }
   } catch (error) {
     console.error('콘텐츠 생성 실패:', error)
@@ -152,7 +230,6 @@ function retryGeneration() {
 
 // 콘텐츠 보기
 function viewContent(_contentId: string) {
-  // 실제 생성된 콘텐츠 ID로 이동
   if (generatedContentId.value) {
     router.push(`/content/${generatedContentId.value}`)
   }
@@ -161,12 +238,8 @@ function viewContent(_contentId: string) {
 // 콘텐츠 개선
 async function improveContent(_contentId: string) {
   if (!generatedContentId.value || !generatedModulePath.value) return
-
   try {
-    await generationStore.startReview(
-      generatedContentId.value,
-      generatedModulePath.value
-    )
+    await generationStore.startReview(generatedContentId.value, generatedModulePath.value)
   } catch (error) {
     console.error('콘텐츠 개선 실패:', error)
   }
@@ -174,15 +247,17 @@ async function improveContent(_contentId: string) {
 
 // 처음부터 다시 시작
 function resetWizard() {
+  creatorMode.value = null
   interests.value = []
   subject.value = null
-  grade.value = null
+  difficulty.value = null
   renderMode.value = '3d'
+  problemState.value = { problem: '', subject: null, difficulty: 'medium' }
   generatedContentId.value = null
   generatedModulePath.value = null
   generationStore.resetState()
   generationStore.resetReviewState()
-  currentStep.value = 'interests'
+  currentStep.value = 'mode-select'
 }
 </script>
 
@@ -207,7 +282,11 @@ function resetWizard() {
 
     <div class="wizard-content">
       <transition name="slide" mode="out-in">
-        <div v-if="currentStep === 'interests'" key="interests" class="step-content">
+        <div v-if="currentStep === 'mode-select'" key="mode-select" class="step-content">
+          <ModeSelect :model-value="creatorMode" @update:model-value="selectCreatorMode" />
+        </div>
+
+        <div v-else-if="currentStep === 'interests'" key="interests" class="step-content">
           <InterestInput v-model="interests" />
         </div>
 
@@ -215,8 +294,12 @@ function resetWizard() {
           <SubjectSelect v-model="subject" />
         </div>
 
-        <div v-else-if="currentStep === 'grade'" key="grade" class="step-content">
-          <GradeSelect v-model="grade" />
+        <div v-else-if="currentStep === 'difficulty'" key="difficulty" class="step-content">
+          <DifficultySelect v-model="difficulty" />
+        </div>
+
+        <div v-else-if="currentStep === 'problem'" key="problem" class="step-content">
+          <ProblemInput v-model="problemState" />
         </div>
 
         <div v-else-if="currentStep === 'mode'" key="mode" class="step-content">
@@ -289,6 +372,7 @@ function resetWizard() {
   display: flex;
   justify-content: center;
   gap: var(--spacing-md);
+  flex-wrap: wrap;
 }
 
 .step-item {

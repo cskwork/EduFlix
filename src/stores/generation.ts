@@ -8,9 +8,10 @@ import type {
   GenerationStatus,
   GenerationHistoryItem,
   RenderMode,
+  CreatorMode,
   ReviewProgress,
 } from '../types/generation'
-import type { Subject, Grade, Language, ContentManifest } from '../types/content'
+import type { Subject, Grade, Language, Difficulty, ContentManifest } from '../types/content'
 import { generateContent, reviewContent, type ProgressCallback, type ReviewProgressCallback } from '../services/api/claude'
 import { useContentStore } from './content'
 
@@ -73,24 +74,33 @@ export const useGenerationStore = defineStore('generation', () => {
 
   // 생성 시작
   async function startGeneration(options: {
-    interests: string[]
-    subject: Subject
-    grade: Grade
+    mode?: CreatorMode
+    // Option 1
+    interests?: string[]
+    subject?: Subject
+    grade?: Grade
+    // 공통
     language?: Language
     renderMode?: RenderMode
     additionalContext?: string
+    // Option 2
+    problem?: string
+    difficulty?: Difficulty
   }): Promise<GenerationResponse> {
     const contentStore = useContentStore()
     const startTime = Date.now()
 
     // 요청 저장
     const request: GenerationRequest = {
-      interests: options.interests,
+      mode: options.mode ?? 'interest',
+      interests: options.interests ?? [],
       subject: options.subject,
       grade: options.grade,
       language: options.language || 'ko',
       renderMode: options.renderMode,
       additionalContext: options.additionalContext,
+      problem: options.problem,
+      difficulty: options.difficulty,
     }
     currentRequest.value = request
 
@@ -107,12 +117,15 @@ export const useGenerationStore = defineStore('generation', () => {
       // API 호출 (jobId 추적 콜백 포함)
       const result = await generateContent(
         {
+          mode: options.mode,
           interests: options.interests,
           subject: options.subject,
           grade: options.grade,
           language: options.language || 'ko',
           renderMode: options.renderMode,
           additionalContext: options.additionalContext,
+          problem: options.problem,
+          difficulty: options.difficulty,
         },
         handleProgress,
         (jobId) => { currentJobId.value = jobId },
@@ -125,31 +138,38 @@ export const useGenerationStore = defineStore('generation', () => {
         const contentId = result.contentId || result.manifest.id
         if (!contentId) {
           console.warn('콘텐츠 ID가 누락되어 카탈로그에 추가되지 않았습니다')
-          // 소프트 워닝: 히스토리는 기록하되 카탈로그에는 추가하지 않음
           finalResult = {
             ...result,
             warning: '콘텐츠가 생성되었으나 카탈로그에 추가되지 않았습니다 (ID 누락)',
           }
         } else {
-          const gradeLevel = options.grade.startsWith('elementary')
+          // Option 1은 subject/grade가 확정. Option 2는 서버가 AI 추론 subject를 반영한
+          // 매니페스트로 응답하지만, 현재 GenerationResponse에는 subject가 없으므로
+          // 카탈로그 추가 시 클라이언트가 아는 값을 기본값으로 쓴다.
+          // (정확한 subject는 서버가 public/contents/index.json에 기록함)
+          const grade = options.grade ?? (options.difficulty === 'easy' ? 'elementary-5'
+            : options.difficulty === 'hard' ? 'high-2' : 'middle-2')
+          const gradeLevel = grade.startsWith('elementary')
             ? 'elementary'
-            : options.grade.startsWith('middle')
+            : grade.startsWith('middle')
               ? 'middle'
               : 'high'
+          const subjectForCatalog = options.subject ?? 'general'
 
           const newContent: ContentManifest = {
             id: contentId,
             title: result.manifest.title,
-            subject: options.subject,
+            subject: subjectForCatalog,
             gradeLevel,
-            grade: options.grade,
+            grade,
             type: result.manifest.type,
             language: options.language || 'ko',
             description: result.manifest.description,
             thumbnail: '',
-            path: `/contents/${options.subject}/${gradeLevel}/${contentId}/index.html`,
+            path: `/contents/${subjectForCatalog}/${gradeLevel}/${contentId}/index.html`,
             createdAt: new Date().toISOString(),
-            tags: options.interests,
+            tags: options.interests ?? [],
+            difficulty: options.difficulty,
           }
 
           contentStore.addContent(newContent)

@@ -24,7 +24,8 @@ describe("단계 산출물 타입가드", () => {
     const plan = validPlan();
     delete (plan as { topic?: string }).topic;
     expect(() => assertPlan(plan)).toThrow("topic");
-    const invalidSubject = { ...validPlan(), subject: "history" };
+    // subject는 kebab-case slug만 허용 (공백·특수문자 불가)
+    const invalidSubject = { ...validPlan(), subject: "Korean History!" };
     expect(() => assertPlan(invalidSubject)).toThrow("subject");
   });
 

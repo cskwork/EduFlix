@@ -9,6 +9,28 @@ export const RENDER_MODES = ["3d", "3d-game", "canvas-game", "svg", "dom"] as co
 export type RenderMode = (typeof RENDER_MODES)[number];
 export const DEFAULT_RENDER_MODE: RenderMode = "3d";
 
+// 생성 모드: 'interest'(관심사 기반) | 'problem'(문제를 재미있게 변환)
+export type CreatorMode = "interest" | "problem";
+export const DEFAULT_CREATOR_MODE: CreatorMode = "interest";
+
+// 과목 슬러그 패턴 (kebab-case). public/contents/{subject}/ 경로에 직접 사용.
+export const SUBJECT_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+// 기본 제공 과목 (UI 카드용)
+export const BUILTIN_SUBJECTS = ["math", "science", "english"] as const;
+
+// 난이도 → 학년 매핑 (저장 경로와 기존 검증을 그대로 활용)
+export const DIFFICULTY_TO_GRADE = {
+  easy: "elementary-5",
+  medium: "middle-2",
+  hard: "high-2",
+} as const;
+export type Difficulty = keyof typeof DIFFICULTY_TO_GRADE;
+
+export function isSubjectSlug(value: string): boolean {
+  return SUBJECT_SLUG_PATTERN.test(value);
+}
+
 export interface FactoryContext {
   rootDir: string;
   factoryDir: string;
@@ -18,7 +40,7 @@ export interface FactoryContext {
   topic: string;
   grade: string;
   gradeLevel: "elementary" | "middle" | "high";
-  subject: "math" | "science" | "english";
+  subject: string; // kebab-case slug (math, science, english, coding, toeic, ...)
   type?: "simulation" | "game" | "quiz" | "exploration" | "story";
   renderMode?: RenderMode;
   force: boolean;
@@ -27,6 +49,10 @@ export interface FactoryContext {
   interests?: string[];
   additionalContext?: string;
   llmProvider?: FactoryLlmProvider;
+  // Option 2 (problem mode) 추가 필드
+  mode?: CreatorMode;
+  problem?: string;       // 사용자가 입력한 원본 문제
+  difficulty?: Difficulty; // UI에서 선택한 난이도
 }
 
 export function assertSafeContentId(id: string): void {

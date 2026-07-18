@@ -94,7 +94,7 @@ export const useContentStore = defineStore('content', () => {
 
         groups.push({
           subject,
-          subjectLabel: SUBJECT_LABELS[subject],
+          subjectLabel: SUBJECT_LABELS[subject] ?? subject,
           contents: sortedContents.map((c) => ({
             id: c.id,
             title: c.title,
@@ -147,12 +147,17 @@ export const useContentStore = defineStore('content', () => {
   })
 
   // 액션: 콘텐츠 카탈로그 로드
-  async function loadContents() {
+  async function loadContents(force = false) {
     isLoading.value = true
     error.value = null
 
     try {
-      const response = await fetch('/contents/index.json')
+      // 캐시된 index.json이 새로 생성된 콘텐츠를 놓칠 수 있어 no-cache로 항상 검증.
+      // 생성 직후에 addContent()로 메모리에 넣더라도, 새로고침 시 캐시된 옛날 카탈로그가
+      // 돌아와 "콘텐츠를 찾을 수 없습니다" 404를 만드는 원천을 차단한다.
+      const response = await fetch(`/contents/index.json${force ? `?_=${Date.now()}` : ''}`, {
+        cache: 'no-cache',
+      })
       if (!response.ok) {
         throw new Error('콘텐츠 카탈로그를 불러올 수 없습니다')
       }
