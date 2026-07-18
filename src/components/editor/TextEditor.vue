@@ -122,7 +122,8 @@ function handleChange(text: EditableText, newValue: string) {
 
 .text-group {
   background-color: var(--color-bg-card);
-  border-radius: 8px;
+  border: var(--border-sticker);
+  border-radius: var(--radius-sm);
   padding: var(--spacing-md);
 }
 
@@ -134,7 +135,7 @@ function handleChange(text: EditableText, newValue: string) {
   letter-spacing: 0.05em;
   margin-bottom: var(--spacing-md);
   padding-bottom: var(--spacing-sm);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(59, 53, 98, 0.08);
 }
 
 .text-items {
@@ -163,7 +164,7 @@ function handleChange(text: EditableText, newValue: string) {
 .label-type {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(59, 53, 98, 0.06);
   padding: 2px 6px;
   border-radius: 4px;
 }
@@ -171,18 +172,21 @@ function handleChange(text: EditableText, newValue: string) {
 .text-input {
   width: 100%;
   padding: var(--spacing-sm);
-  background-color: var(--color-bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  background-color: #fff;
+  border: var(--border-sticker);
+  border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
   font-family: inherit;
-  transition: border-color var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .text-input:focus {
   outline: none;
   border-color: var(--color-brand-primary);
+  box-shadow: 0 0 0 3px rgba(255, 92, 57, 0.2);
 }
 
 .text-area {

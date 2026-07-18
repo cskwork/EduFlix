@@ -52,7 +52,10 @@ src/
 ├── services/api/       # claude.ts, gemini.ts
 ├── composables/        # useAIGeneration.ts, useDragScroll.ts
 ├── types/              # content.ts, generation.ts, knowledge-map.ts
-└── assets/styles/      # theme.css (Netflix dark theme), responsive.css (mobile-first UI styles)
+└── assets/styles/      # theme.css (캔디 팝 키즈 라이트 테마), responsive.css (mobile-first UI styles)
+
+public/mascot/          # 오리지널 키즈 마스코트 (wave/cheer/think/book/rocket, webp 사용 + png 보조)
+                        # 원본 고해상도는 art/mascot-originals/, 재생성 스크립트는 scripts/generate-mascot.sh
 
 server/
 ├── index.ts            # Bun HTTP 서버 (CORS, 라우팅)

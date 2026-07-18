@@ -116,8 +116,9 @@ function handleNodeClick(node: KnowledgeNode) {
 
 .map-title {
   font-size: clamp(1.5rem, 4vw, 2rem);
-  font-weight: 700;
-  color: #fff;
+  font-family: var(--font-family-display);
+  font-weight: normal;
+  color: var(--color-ink);
   margin: 0 0 0.5rem 0;
   display: flex;
   align-items: center;
@@ -126,12 +127,12 @@ function handleNodeClick(node: KnowledgeNode) {
 }
 
 .title-icon {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-brand-primary);
 }
 
 .map-subtitle {
   font-size: var(--font-size-base);
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-secondary);
   margin: 0;
 }
 
@@ -148,8 +149,10 @@ function handleNodeClick(node: KnowledgeNode) {
   flex-wrap: wrap;
   margin-bottom: var(--spacing-xl);
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  border: var(--border-sticker);
+  box-shadow: var(--card-shadow);
 }
 
 .legend-item {
@@ -164,7 +167,7 @@ function handleNodeClick(node: KnowledgeNode) {
 
 .legend-label {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-secondary);
 }
 
 .subject-trees {

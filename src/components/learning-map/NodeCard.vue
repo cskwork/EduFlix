@@ -86,9 +86,10 @@ function handleClick() {
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  border: var(--border-sticker);
+  box-shadow: var(--card-shadow);
   transition: all 0.2s ease;
 }
 
@@ -97,26 +98,27 @@ function handleClick() {
 }
 
 .node-card.clickable:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--color-bg-card-hover);
+  box-shadow: var(--card-shadow-hover);
   transform: translateX(4px);
 }
 
 /* 상태별 스타일 */
 .node-card.status-completed {
-  border-left: 3px solid #4ade80;
+  border-left: 3px solid var(--color-success);
 }
 
 .node-card.status-progress {
-  border-left: 3px solid #facc15;
+  border-left: 3px solid var(--color-warning);
 }
 
 .node-card.status-available {
-  border-left: 3px solid #60a5fa;
+  border-left: 3px solid var(--color-subject-science);
 }
 
 .node-card.status-locked {
-  opacity: 0.5;
-  border-left: 3px solid #6b7280;
+  opacity: 0.6;
+  border-left: 3px solid var(--color-text-muted);
 }
 
 .node-status {
@@ -137,13 +139,13 @@ function handleClick() {
 .node-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-ink);
   margin: 0 0 0.25rem 0;
 }
 
 .node-description {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-secondary);
   margin: 0 0 0.5rem 0;
   line-height: 1.4;
 }
@@ -152,11 +154,11 @@ function handleClick() {
   display: flex;
   gap: 1rem;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-muted);
 }
 
 .node-difficulty {
-  color: #facc15;
+  color: var(--color-brand-accent);
   letter-spacing: -1px;
 }
 
@@ -168,12 +170,12 @@ function handleClick() {
 }
 
 .content-icon {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-muted);
 }
 
 .content-count {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-muted);
 }
 
 .locked-overlay {
@@ -182,8 +184,8 @@ function handleClick() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-md);
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -194,10 +196,10 @@ function handleClick() {
 
 .locked-message {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  background: var(--color-ink);
   padding: 0.5rem 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-pill);
 }
 
 /* 모바일 */

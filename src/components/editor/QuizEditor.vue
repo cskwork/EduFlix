@@ -206,7 +206,8 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
 
 .quiz-item {
   background-color: var(--color-bg-card);
-  border-radius: 8px;
+  border: var(--border-sticker);
+  border-radius: var(--radius-sm);
   overflow: hidden;
 }
 
@@ -223,7 +224,7 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
 }
 
 .quiz-header:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(59, 53, 98, 0.04);
 }
 
 .quiz-icon {
@@ -233,6 +234,7 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
   align-items: center;
   justify-content: center;
   background-color: var(--color-brand-primary);
+  color: #fff;
   border-radius: 6px;
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-sm);
@@ -261,7 +263,7 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(59, 53, 98, 0.08);
 }
 
 .form-group {
@@ -279,18 +281,21 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
 .text-input {
   width: 100%;
   padding: var(--spacing-sm);
-  background-color: var(--color-bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  background-color: #fff;
+  border: var(--border-sticker);
+  border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
   font-family: inherit;
-  transition: border-color var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .text-input:focus {
   outline: none;
   border-color: var(--color-brand-primary);
+  box-shadow: 0 0 0 3px rgba(255, 92, 57, 0.2);
 }
 
 /* 보기 */
@@ -305,8 +310,8 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm);
-  background-color: rgba(255, 255, 255, 0.02);
-  border-radius: 6px;
+  background-color: rgba(59, 53, 98, 0.03);
+  border-radius: var(--radius-sm);
 }
 
 .option-correct {
@@ -365,12 +370,12 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
 }
 
 .feedback-type.correct {
-  background-color: rgba(76, 175, 80, 0.2);
+  background-color: rgba(47, 191, 113, 0.15);
   color: var(--color-success);
 }
 
 .feedback-type.incorrect {
-  background-color: rgba(244, 67, 54, 0.2);
+  background-color: rgba(244, 63, 94, 0.15);
   color: var(--color-error);
 }
 

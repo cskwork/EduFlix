@@ -169,13 +169,14 @@ onUnmounted(() => {
   background: var(--color-bg-card);
   border-radius: var(--card-border-radius);
   overflow: hidden;
-  border: 1px solid var(--color-bg-card-hover);
+  border: var(--border-sticker);
+  box-shadow: var(--card-shadow);
 }
 
 .preview-header {
   padding: var(--spacing-md);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-accent) 100%);
+  color: #fff;
 }
 
 .preview-phase {
@@ -202,15 +203,15 @@ onUnmounted(() => {
 
 .progress-bar {
   height: 4px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: var(--radius-pill);
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: white;
-  border-radius: 2px;
+  background: #fff;
+  border-radius: var(--radius-pill);
   transition: width 0.5s ease;
 }
 

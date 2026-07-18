@@ -6,6 +6,7 @@ import ModeToggle from './ModeToggle.vue'
 const route = useRoute()
 const router = useRouter()
 const isScrolled = ref(false)
+const logoImgFailed = ref(false)
 type FocusableElement = { focus: () => void }
 
 const isSearchOpen = ref(false)
@@ -123,6 +124,13 @@ watch(
     <div class="header-content">
       <!-- 로고 -->
       <router-link to="/" class="logo">
+        <img
+          v-if="!logoImgFailed"
+          src="/mascot/mascot-wave.webp"
+          alt=""
+          class="logo-mascot"
+          @error="logoImgFailed = true"
+        />
         <span class="logo-text">EduFlix</span>
       </router-link>
 
@@ -192,13 +200,16 @@ watch(
   left: 0;
   right: 0;
   height: var(--header-height);
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 10%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(180deg, rgba(255, 246, 235, 0.95) 30%, rgba(255, 246, 235, 0) 100%);
   z-index: var(--z-fixed);
-  transition: background-color var(--transition-normal);
+  transition: background-color var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .app-header.scrolled {
-  background: var(--color-bg-primary);
+  background: rgba(255, 246, 235, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 0 rgba(59, 53, 98, 0.06), 0 10px 24px rgba(59, 53, 98, 0.08);
 }
 
 .header-content {
@@ -213,14 +224,32 @@ watch(
 .logo {
   display: flex;
   align-items: center;
+  gap: var(--spacing-sm);
   flex-shrink: 0;
 }
 
+.logo-mascot {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  background: #fff;
+  border: var(--border-sticker);
+  box-shadow: 0 2px 0 rgba(59, 53, 98, 0.08);
+  transition: transform var(--transition-normal) var(--ease-bounce, ease);
+}
+
+.logo:hover .logo-mascot {
+  transform: rotate(-8deg) scale(1.08);
+}
+
 .logo-text {
+  font-family: var(--font-family-display);
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-brand-primary);
   letter-spacing: -0.5px;
+  text-shadow: 0 2px 0 rgba(59, 53, 98, 0.08);
 }
 
 /* 네비게이션 */
@@ -230,23 +259,28 @@ watch(
 
 .nav-list {
   display: flex;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-sm);
 }
 
 .nav-link {
+  display: inline-block;
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-normal);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-secondary);
-  transition: color var(--transition-fast);
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  transition: all var(--transition-fast);
 }
 
 .nav-link:hover {
-  color: var(--color-text-primary);
+  color: var(--color-ink);
+  background: rgba(255, 176, 31, 0.2);
 }
 
 .nav-link.active {
-  color: var(--color-text-primary);
-  font-weight: var(--font-weight-medium);
+  color: #fff;
+  background: var(--color-brand-primary);
+  box-shadow: 0 3px 0 rgba(59, 53, 98, 0.15);
 }
 
 /* 페이지 타이틀 */
@@ -272,11 +306,15 @@ watch(
   height: 40px;
   border-radius: 50%;
   color: var(--color-text-primary);
-  transition: background-color var(--transition-fast);
+  background: #fff;
+  border: var(--border-sticker);
+  box-shadow: 0 2px 0 rgba(59, 53, 98, 0.08);
+  transition: all var(--transition-fast);
 }
 
 .icon-button:hover {
-  background: var(--color-bg-card);
+  background: var(--color-subject-english-soft);
+  transform: translateY(-1px);
 }
 
 .search-wrapper {
@@ -305,17 +343,22 @@ watch(
 .search-input {
   width: 100%;
   padding: 0.55rem 2rem 0.55rem 0.9rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(20, 20, 20, 0.8);
+  border-radius: var(--radius-pill);
+  border: var(--border-sticker);
+  background: #fff;
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
+  box-shadow: 0 2px 0 rgba(59, 53, 98, 0.06);
+}
+
+.search-input::placeholder {
+  color: var(--color-text-muted);
 }
 
 .search-input:focus {
   outline: none;
   border-color: var(--color-brand-primary);
-  box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.25);
+  box-shadow: 0 0 0 3px rgba(255, 92, 57, 0.2);
 }
 
 .search-clear {
@@ -325,7 +368,7 @@ watch(
   height: 24px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(59, 53, 98, 0.1);
   color: var(--color-text-primary);
   font-size: 16px;
   line-height: 1;
@@ -335,7 +378,7 @@ watch(
 }
 
 .search-clear:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(59, 53, 98, 0.2);
 }
 
 /* 반응형 - 태블릿 이하 */
@@ -356,6 +399,11 @@ watch(
   
   .logo-text {
     font-size: var(--font-size-xl);
+  }
+
+  .logo-mascot {
+    width: 34px;
+    height: 34px;
   }
 
   .search-wrapper.open .search-form {

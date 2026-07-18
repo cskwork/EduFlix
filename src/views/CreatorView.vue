@@ -28,8 +28,9 @@ import CreatorWizard from '../components/creator/CreatorWizard.vue'
 }
 
 .hero-title {
+  font-family: var(--font-family-display);
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-md);
 }

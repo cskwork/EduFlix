@@ -71,16 +71,26 @@ function scroll(direction: 'left' | 'right') {
 }
 
 .row-title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: #e5e5e5;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-ink);
   margin-bottom: var(--spacing-sm);
   padding: 0 var(--content-padding);
-  transition: color var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
-.content-row:hover .row-title {
-  color: white;
+/* 타이틀 앞 캔디 도트 */
+.row-title::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-brand-accent);
+  box-shadow: 0 2px 0 rgba(59, 53, 98, 0.15);
+  flex-shrink: 0;
 }
 
 .row-container {
@@ -90,19 +100,21 @@ function scroll(direction: 'left' | 'right') {
 /* Scroll Buttons */
 .scroll-btn {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 4%;
-  min-width: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
   z-index: 20;
-  background: rgba(20, 20, 20, 0.5);
-  border: none;
-  color: white;
+  background: #fff;
+  border: var(--border-sticker);
+  border-radius: 50%;
+  color: var(--color-ink);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: all var(--transition-normal);
+  box-shadow: 0 4px 0 rgba(59, 53, 98, 0.1);
+  transition: opacity var(--transition-normal), background var(--transition-fast);
   cursor: pointer;
 }
 
@@ -111,8 +123,7 @@ function scroll(direction: 'left' | 'right') {
 }
 
 .scroll-btn:hover {
-  background: rgba(20, 20, 20, 0.7);
-  transform: scale(1.0); /* Override default transform */
+  background: var(--color-subject-english-soft);
 }
 
 .scroll-btn:hover .arrow {
@@ -120,27 +131,25 @@ function scroll(direction: 'left' | 'right') {
 }
 
 .scroll-left {
-  left: 0;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
+  left: calc(var(--content-padding) / 3);
 }
 
 .scroll-right {
-  right: 0;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
+  right: calc(var(--content-padding) / 3);
 }
 
 .arrow {
-  font-size: 2rem;
+  font-size: 1.4rem;
+  line-height: 1;
   transition: transform var(--transition-fast);
 }
 
 /* Row Content */
 .row-content {
   display: flex;
-  gap: var(--spacing-xs);
-  padding: 0 var(--content-padding);
+  gap: var(--spacing-md);
+  /* 카드 호버 리프트/그림자가 잘리지 않도록 상하 여백 확보 */
+  padding: 10px var(--content-padding) 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -154,7 +163,6 @@ function scroll(direction: 'left' | 'right') {
 
 .row-content > :deep(.content-card) {
   scroll-snap-align: start;
-  margin-right: 4px; /* Tiny gap */
 }
 
 /* 드래그 스크롤 */

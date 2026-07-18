@@ -247,7 +247,7 @@ defineExpose({
 .loading-spinner {
   width: 48px;
   height: 48px;
-  border: 4px solid var(--color-bg-card);
+  border: 4px solid rgba(59, 53, 98, 0.1);
   border-top-color: var(--color-brand-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -285,7 +285,7 @@ defineExpose({
   height: 64px;
   border-radius: 50%;
   background-color: var(--color-error);
-  color: var(--color-text-primary);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -306,9 +306,11 @@ defineExpose({
   right: var(--spacing-md);
   width: 44px;
   height: 44px;
-  background-color: rgba(0, 0, 0, 0.7);
-  border-radius: 8px;
-  color: var(--color-text-primary);
+  background-color: var(--color-bg-card);
+  border: var(--border-sticker);
+  border-radius: 50%;
+  color: var(--color-ink);
+  box-shadow: var(--card-shadow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -319,7 +321,7 @@ defineExpose({
 }
 
 .fullscreen-btn:hover {
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: var(--color-bg-card-hover);
   transform: scale(1.05);
 }
 

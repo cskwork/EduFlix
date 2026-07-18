@@ -131,16 +131,19 @@ watch(
 }
 
 .tags-container {
-  background: var(--color-bg-card);
-  border-radius: var(--card-border-radius);
+  background: #fff;
+  border-radius: var(--radius-md);
   padding: var(--spacing-md);
   min-height: 80px;
-  border: 2px solid transparent;
-  transition: border-color var(--transition-fast);
+  border: var(--border-sticker);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .tags-container:focus-within {
   border-color: var(--color-brand-primary);
+  box-shadow: 0 0 0 3px rgba(255, 92, 57, 0.2);
 }
 
 .tags-list {
@@ -156,8 +159,8 @@ watch(
   gap: var(--spacing-xs);
   padding: var(--spacing-xs) var(--spacing-sm);
   background: var(--color-brand-primary);
-  color: var(--color-text-primary);
-  border-radius: 20px;
+  color: #fff;
+  border-radius: var(--radius-pill);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   animation: tagAppear 0.2s ease-out;
@@ -181,8 +184,8 @@ watch(
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
   font-size: var(--font-size-xs);
   cursor: pointer;
   transition: background var(--transition-fast);
@@ -225,8 +228,8 @@ watch(
 .suggestion-tag {
   padding: var(--spacing-xs) var(--spacing-sm);
   background: var(--color-bg-card);
-  border: 1px solid var(--color-text-muted);
-  border-radius: 20px;
+  border: var(--border-sticker);
+  border-radius: var(--radius-pill);
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
   cursor: pointer;
@@ -239,6 +242,6 @@ watch(
 .suggestion-tag:hover {
   background: var(--color-bg-card-hover);
   color: var(--color-text-primary);
-  border-color: var(--color-text-primary);
+  border-color: var(--color-brand-primary);
 }
 </style>

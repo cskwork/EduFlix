@@ -89,23 +89,26 @@ function isSelected(subject: Subject) {
   padding: var(--spacing-xl);
   background: var(--color-bg-card);
   border-radius: var(--card-border-radius);
-  border: 2px solid transparent;
+  border: var(--border-sticker);
+  box-shadow: var(--card-shadow);
   cursor: pointer;
   transition:
     transform var(--transition-fast),
     border-color var(--transition-fast),
-    background var(--transition-fast);
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
   position: relative;
 }
 
 .subject-card:hover {
   background: var(--color-bg-card-hover);
   transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
 }
 
 .subject-card.selected {
   border-color: var(--subject-color);
-  background: rgba(255, 255, 255, 0.05);
+  background: color-mix(in srgb, var(--subject-color) 14%, #ffffff);
 }
 
 .subject-icon {
@@ -128,7 +131,7 @@ function isSelected(subject: Subject) {
   align-items: center;
   justify-content: center;
   background: var(--subject-color);
-  color: var(--color-bg-primary);
+  color: #fff;
   border-radius: 50%;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);

@@ -55,9 +55,9 @@ function selectTab(tab: Tab) {
   left: 0;
   right: 0;
   z-index: 100;
-  background: linear-gradient(to top, rgba(20, 20, 20, 0.98) 0%, rgba(20, 20, 20, 0.95) 100%);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(59, 53, 98, 0.08);
   padding: env(safe-area-inset-bottom, 0);
 }
 
@@ -85,34 +85,34 @@ function selectTab(tab: Tab) {
 }
 
 .tab-item:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(59, 53, 98, 0.05);
 }
 
 .tab-item.active {
-  background: rgba(229, 9, 20, 0.15);
+  background: rgba(255, 92, 57, 0.12);
 }
 
 .tab-icon {
   opacity: 0.6;
   transition: all 0.2s ease;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-text-secondary);
 }
 
 .tab-item.active .tab-icon {
   opacity: 1;
   transform: scale(1.1);
-  color: #e50914;
+  color: var(--color-brand-primary);
 }
 
 .tab-label {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-secondary);
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
 .tab-item.active .tab-label {
-  color: #e50914;
+  color: var(--color-brand-primary);
   font-weight: 600;
 }
 
@@ -124,7 +124,7 @@ function selectTab(tab: Tab) {
     background: transparent;
     backdrop-filter: none;
     border-top: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(59, 53, 98, 0.1);
     padding: 0;
     margin-bottom: 1rem;
   }

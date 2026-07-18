@@ -164,7 +164,8 @@ const colorPresets = [
 
 .style-group {
   background-color: var(--color-bg-card);
-  border-radius: 8px;
+  border: var(--border-sticker);
+  border-radius: var(--radius-sm);
   padding: var(--spacing-md);
 }
 
@@ -176,7 +177,7 @@ const colorPresets = [
   letter-spacing: 0.05em;
   margin-bottom: var(--spacing-md);
   padding-bottom: var(--spacing-sm);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(59, 53, 98, 0.08);
 }
 
 .style-items {
@@ -222,24 +223,28 @@ const colorPresets = [
   width: 100%;
   height: 100%;
   border-radius: 8px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(59, 53, 98, 0.15);
   pointer-events: none;
 }
 
 .hex-input {
   flex: 1;
   padding: var(--spacing-sm);
-  background-color: var(--color-bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  background-color: #fff;
+  border: var(--border-sticker);
+  border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
   font-family: monospace;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .hex-input:focus {
   outline: none;
   border-color: var(--color-brand-primary);
+  box-shadow: 0 0 0 3px rgba(255, 92, 57, 0.2);
 }
 
 /* 프리셋 색상 */

@@ -41,7 +41,8 @@ const showTabs = computed(() => route.meta.showTabs === true)
 <style scoped>
 #app-container {
   min-height: 100vh;
-  background-color: var(--color-bg-primary);
+  /* body의 도트 패턴 배경이 비치도록 투명 유지 */
+  background-color: transparent;
   color: var(--color-text-primary);
 }
 

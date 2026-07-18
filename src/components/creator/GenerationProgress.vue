@@ -205,7 +205,7 @@ function handleImprove(contentId: string) {
 .spinner {
   width: 60px;
   height: 60px;
-  border: 4px solid var(--color-bg-card);
+  border: 4px solid rgba(59, 53, 98, 0.1);
   border-top-color: var(--color-brand-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -224,7 +224,7 @@ function handleImprove(contentId: string) {
   align-items: center;
   justify-content: center;
   background: var(--color-success);
-  color: var(--color-bg-primary);
+  color: #fff;
   border-radius: 50%;
   font-size: 2rem;
   font-weight: var(--font-weight-bold);
@@ -238,7 +238,7 @@ function handleImprove(contentId: string) {
   align-items: center;
   justify-content: center;
   background: var(--color-error);
-  color: var(--color-text-primary);
+  color: #fff;
   border-radius: 50%;
   font-size: 2rem;
   font-weight: var(--font-weight-bold);
@@ -254,8 +254,9 @@ function handleImprove(contentId: string) {
 }
 
 .progress-title {
+  font-family: var(--font-family-display);
   font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
 }
 
@@ -270,8 +271,8 @@ function handleImprove(contentId: string) {
 .progress-bar {
   flex: 1;
   height: 8px;
-  background: var(--color-bg-card);
-  border-radius: 4px;
+  background: rgba(59, 53, 98, 0.08);
+  border-radius: var(--radius-pill);
   overflow: hidden;
 }
 
@@ -282,7 +283,7 @@ function handleImprove(contentId: string) {
     var(--color-brand-primary),
     var(--color-brand-accent)
   );
-  border-radius: 4px;
+  border-radius: var(--radius-pill);
   transition: width 0.3s ease;
 }
 
@@ -307,32 +308,42 @@ function handleImprove(contentId: string) {
 
 .btn {
   padding: var(--spacing-sm) var(--spacing-xl);
-  border-radius: var(--card-border-radius);
+  border-radius: var(--radius-pill);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition:
     background var(--transition-fast),
-    transform var(--transition-fast);
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .btn:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(2px);
 }
 
 .btn-primary {
   background: var(--color-brand-primary);
-  color: var(--color-text-primary);
+  color: #fff;
+  box-shadow: 0 4px 0 rgba(59, 53, 98, 0.2);
 }
 
 .btn-primary:hover {
   background: var(--color-brand-secondary);
 }
 
+.btn-primary:active {
+  box-shadow: 0 2px 0 rgba(59, 53, 98, 0.2);
+}
+
 .btn-secondary {
   background: var(--color-bg-card);
   color: var(--color-text-secondary);
-  border: 1px solid var(--color-text-muted);
+  border: var(--border-sticker);
 }
 
 .btn-secondary:hover {
@@ -341,21 +352,28 @@ function handleImprove(contentId: string) {
 }
 
 .btn-improve {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--color-brand-accent);
+  color: var(--color-ink);
   border: none;
+  box-shadow: 0 4px 0 rgba(59, 53, 98, 0.2);
 }
 
 .btn-improve:hover {
-  background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
-  color: white;
+  background: #f5a413;
+  color: var(--color-ink);
+}
+
+.btn-improve:active {
+  box-shadow: 0 2px 0 rgba(59, 53, 98, 0.2);
 }
 
 .progress-tips {
   text-align: center;
   padding: var(--spacing-lg);
   background: var(--color-bg-card);
+  border: var(--border-sticker);
   border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
   max-width: 400px;
 }
 

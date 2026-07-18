@@ -274,25 +274,6 @@
   .badge-outline {
     border-width: 0.5px;
   }
-
-  /* 더 선명한 그림자 */
-  .content-card {
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-  }
-
-  .content-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  }
-}
-
-/* 다크 모드 지원 (시스템 설정 따름) */
-@media (prefers-color-scheme: dark) {
-  /* 이미 다크 테마이므로 추가 조정 불필요 */
-}
-
-/* 라이트 모드 요청 시 (선택적) */
-@media (prefers-color-scheme: light) {
-  /* 현재는 다크 테마만 지원 */
 }
 
 /* 모션 감소 선호 사용자 */
@@ -319,10 +300,9 @@
 /* 고대비 모드 */
 @media (prefers-contrast: high) {
   :root {
-    --color-text-primary: #ffffff;
-    --color-text-secondary: #e0e0e0;
-    --color-bg-card: #2a2a2a;
-    --card-border-radius: 2px;
+    --color-text-primary: #1f1a3d;
+    --color-text-secondary: #3b3562;
+    --color-text-muted: #55506f;
   }
 
   .content-card {
