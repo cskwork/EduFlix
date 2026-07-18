@@ -7,7 +7,7 @@ setlocal enabledelayedexpansion
 cd /d "%~dp0"
 set "EDUFLIX_DIR=%CD%"
 set "ART_ASSETS_DIR=%EDUFLIX_DIR%\..\art-assets"
-set "ART_ASSETS_PORT=3100"
+set "ART_ASSETS_PORT=3200"
 set "ART_ASSETS_URL=http://localhost:%ART_ASSETS_PORT%"
 set "ART_ASSETS_LOG=%TEMP%\art-assets-%ART_ASSETS_PORT%.log"
 

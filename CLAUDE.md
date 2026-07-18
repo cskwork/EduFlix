@@ -13,14 +13,20 @@
 bun install              # 의존성 설치
 bun run dev              # Vite dev (localhost:5173, Cloudflare Tunnel 지원)
 bun run dev:server       # Bun API 서버 (localhost:3001)
-bun run dev:all          # 둘 다 실행
+bun run dev:all          # Vite + API 서버 (art-assets 제외)
 bun run build            # 프로덕션 빌드 (dist/)
 bun run start            # 프로덕션 서버 (정적 파일 + API 통합)
 bun run test             # Vitest 실행
 bun run lint:fix         # ESLint + 자동 수정
-./start.sh               # Unix/Linux 개발 서버 시작 (bun run dev:all)
-start.bat                # Windows 개발 서버 시작 (bun run dev:all)
+./start.sh               # 전체 dev 환경 (Vite + API + art-assets), 권장 시작 명령
+start.bat                # Windows 동일 (Vite + API + art-assets)
 ```
+
+**주의**: `./start.sh` / `start.bat` 만이 art-assets 서버까지 기동하여
+콘텐츠 생성 기능이 정상 동작합니다. `bun run dev:all` 만으로는 생성 UI에서
+"art-assets 서버에 연결할 수 없습니다" 에러가 발생합니다.
+art-assets 서버는 sibling 디렉터리(`../art-assets/server.js`)에 존재해야 하며,
+기본 포트는 `server/config.ts`의 `DEFAULT_ART_ASSETS_PORT = 3200` 입니다.
 
 **Vite Configuration** (vite.config.ts):
 - `server.allowedHosts: ['eduflix.agentic-worker.store']` - Cloudflare Tunnel 도메인에서 dev 서버 접근 허용
@@ -253,7 +259,7 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
 **백엔드 서버는 항상 실행되어야 함!**
 
 추천 시스템("🔥 인기 콘텐츠" 섹션)은 SQLite DB 기반이며 API 서버가 필요:
-- 개발: `./start.sh` 또는 `bun run dev:all` (Vite + API 서버 동시 실행)
+- 개발: `./start.sh` (Vite + API + art-assets 모두 기동, 권장). `bun run dev:all` 은 API 서버만 추가 기동하며 art-assets는 빠지므로 콘텐츠 생성이 동작하지 않습니다.
 - 프로덕션: `PORT=9888 bun run start` (정적 파일 + API 통합)
 
 **서버 미실행 시:**
