@@ -1,7 +1,7 @@
 // AI 콘텐츠 생성·리뷰 API 엔드포인트
 import type { GenerationRequest } from '../../src/types/generation'
 import { getFactoryLlmConfig } from '../../agents/content-factory/pipeline/lib/engine'
-import { assertSafeContentId } from '../../agents/content-factory/pipeline/stages/common'
+import { assertSafeContentId, RENDER_MODES } from '../../agents/content-factory/pipeline/stages/common'
 import { FactoryBusyError, factoryRunner, type FactoryRunner } from '../services/factory-runner'
 
 type JsonResponse = (data: unknown, status?: number) => Response
@@ -21,6 +21,7 @@ const VALID_GRADES = new Set([
   'middle-1', 'middle-2', 'middle-3', 'high-1', 'high-2', 'high-3',
 ])
 const VALID_SUBJECTS = new Set(['math', 'science', 'english'])
+const VALID_RENDER_MODES = new Set<string>(RENDER_MODES)
 
 function validateGeneration(body: GenerationRequest): string | undefined {
   if (!body.interests || !body.subject || !body.grade || !body.language) {
@@ -32,6 +33,9 @@ function validateGeneration(body: GenerationRequest): string | undefined {
   }
   if (!VALID_SUBJECTS.has(body.subject)) return 'subject는 math, science, english 중 하나여야 합니다'
   if (!VALID_GRADES.has(body.grade)) return '유효하지 않은 학년입니다'
+  if (body.renderMode !== undefined && !VALID_RENDER_MODES.has(body.renderMode)) {
+    return `renderMode는 ${RENDER_MODES.join(', ')} 중 하나여야 합니다`
+  }
   return undefined
 }
 

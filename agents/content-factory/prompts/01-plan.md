@@ -12,6 +12,12 @@
 - `grade`: `elementary-1`부터 `high-3`까지의 학년
 - `subject`: `math | science | english`
 - `requestedType`: 선택 입력, `simulation | game | quiz | exploration | story`
+- `renderMode`: 콘텐츠 제작 방식, `3d | 3d-game | canvas-game | svg | dom` (기본값 `3d`)
+  - `3d`: Three.js 기반 3D 시뮬레이션. 회전·확대·조작 가능한 입체 모형으로 개념을 탐구한다.
+  - `3d-game`: Three.js 기반 3D 미니게임. 3D 공간에서 목표·점수가 있는 게임 루프로 학습한다.
+  - `canvas-game`: Canvas 2D 게임. 게임 루프와 스프라이트 조작으로 학습한다.
+  - `svg`: 인라인 SVG 인터랙티브 다이어그램. 드래그·슬라이더로 그림을 조작한다.
+  - `dom`: DOM 카드·버튼 중심의 클래식 상호작용.
 - `interests`: 학습자가 선택한 관심사 배열
 - `additionalContext`: 선택 입력, 생성 방향에 반영할 추가 설명
 
@@ -24,6 +30,7 @@
 5. `hook`, `story`, `core`, `quiz`, `wrap`의 차시 구조와 각 단계의 목표 연결을 작성한다.
 6. `interests`는 포장이 아니라 문제 상황의 무대로 훅·스토리·예시에 통합한다. 개념과 연결이 부자연스러우면 가장 자연스러운 관심사 하나만 사용한다.
 7. 콘텐츠 유형을 선택한다. 요청 유형을 따르기 어렵다면 더 적합한 유형과 이유를 명시한다.
+8. `core` 단계의 발견 활동을 `renderMode`에 맞게 설계한다. `3d`·`3d-game`이면 입체를 돌려 보거나 3D 공간에서 파라미터를 조작해야만 발견이 일어나는 활동으로, `canvas-game`이면 게임 루프 안의 조작으로, `svg`·`dom`이면 해당 매체의 직접 조작으로 설계한다. 매체와 무관하게 성립하는 밋밋한 활동을 만들지 않는다.
 
 ## 출력
 

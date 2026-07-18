@@ -7,6 +7,7 @@ import type {
   GenerationProgress,
   GenerationStatus,
   JobStatusResponse,
+  RenderMode,
   ReviewProgress,
   ReviewStatusResponse,
 } from '../../types/generation'
@@ -34,6 +35,7 @@ export interface ContentGenerationOptions {
   subject: Subject
   grade: Grade
   language: Language
+  renderMode?: RenderMode
   additionalContext?: string
 }
 
@@ -173,6 +175,7 @@ export class ClaudeApiClient {
         subject: options.subject,
         grade: options.grade,
         language: options.language,
+        renderMode: options.renderMode,
         additionalContext: options.additionalContext,
       }
 

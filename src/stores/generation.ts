@@ -7,6 +7,7 @@ import type {
   GenerationProgress,
   GenerationStatus,
   GenerationHistoryItem,
+  RenderMode,
   ReviewProgress,
 } from '../types/generation'
 import type { Subject, Grade, Language, ContentManifest } from '../types/content'
@@ -76,6 +77,7 @@ export const useGenerationStore = defineStore('generation', () => {
     subject: Subject
     grade: Grade
     language?: Language
+    renderMode?: RenderMode
     additionalContext?: string
   }): Promise<GenerationResponse> {
     const contentStore = useContentStore()
@@ -87,6 +89,7 @@ export const useGenerationStore = defineStore('generation', () => {
       subject: options.subject,
       grade: options.grade,
       language: options.language || 'ko',
+      renderMode: options.renderMode,
       additionalContext: options.additionalContext,
     }
     currentRequest.value = request
@@ -108,6 +111,7 @@ export const useGenerationStore = defineStore('generation', () => {
           subject: options.subject,
           grade: options.grade,
           language: options.language || 'ko',
+          renderMode: options.renderMode,
           additionalContext: options.additionalContext,
         },
         handleProgress,

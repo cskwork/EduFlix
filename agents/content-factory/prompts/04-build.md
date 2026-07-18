@@ -8,7 +8,26 @@ EduFlix의 기존 런타임 계약을 보존하는 시니어 프런트엔드 개
 
 ## 구현 전 확인
 
-모범 사례는 `public/contents/math/middle/probability-coin/` 또는 `public/contents/math/elementary/volume-explorer/` 중 `script.js`에 `class EduFlixEngine`과 `Scene`이 인라인된 디렉터리 하나를 통째로 읽어 채택한다. 둘 다 계약을 충족하지 않으면 추측해 구현하지 말고 실패한다. 아래에 명시된 Three.js 예외 외에는 저장소 밖 네트워크·CDN·패키지를 사용하지 않는다.
+모범 사례는 파이프라인이 제작 방식(`renderMode`)에 맞게 선택해 파일 본문으로 제공한다. 3D 방식이면 Three.js 인라인 엔진 콘텐츠(예: `space-diagonal`), 그 외에는 DOM 콘텐츠(예: `probability-coin`)다. `script.js`에 `class EduFlixEngine`과 `Scene`이 인라인된 구조를 그대로 채택하고, 제공된 모범 사례가 계약을 충족하지 않으면 추측해 구현하지 말고 실패한다. 아래에 명시된 Three.js 예외 외에는 저장소 밖 네트워크·CDN·패키지를 사용하지 않는다.
+
+## 제작 방식(renderMode)
+
+입력 `renderMode`가 core 씬의 구현 기술을 결정한다. 어떤 방식이든 다섯 씬 구조와 EduFlixEngine 계약은 동일하다.
+
+- `3d` (기본값): Three.js 3D 시뮬레이션. core 씬에 `.three-container`를 두고 Scene·PerspectiveCamera·WebGLRenderer·OrbitControls를 초기화한다. 복잡한 모델 없이 기본 지오메트리(Box, Sphere, Cylinder, Cone, Plane, 선분·점)와 밝은 단색 재질만으로 학습 개념을 표현한다. 슬라이더·버튼 조작이 3D 장면에 200ms 이내 반영되게 한다.
+- `3d-game`: `3d`와 같은 Three.js 초기화에 게임 루프를 더한다. 목표·이동·득점(또는 수집) 규칙 하나를 구현하고, 방향키와 화면 버튼 양쪽으로 조작할 수 있게 한다.
+- `canvas-game`: `<canvas>` 2D 컨텍스트와 requestAnimationFrame 게임 루프로 구현한다. 외부 스크립트 없이 직접 그린다.
+- `svg`: 인라인 SVG를 자바스크립트로 조작하는 다이어그램. 외부 스크립트를 사용하지 않는다.
+- `dom`: 모범 사례와 같은 DOM 카드·버튼 구현. 외부 스크립트를 사용하지 않는다.
+
+3D 공통 규칙(`3d`·`3d-game`):
+
+- `index.html` `<head>`에 아래 산출 계약의 허용 URL 두 개를 three.min.js → OrbitControls.js 순서로 링크한다.
+- 렌더러 크기는 컨테이너에 맞추고 `resize` 이벤트에 대응한다. `renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))`를 사용한다.
+- 애니메이션 루프는 core 씬이 활성일 때만 실행하고 씬을 떠나면 `cancelAnimationFrame`으로 정리한다.
+- OrbitControls는 회전·줌 중심의 기본 설정을 쓰고 터치 한 손가락 회전이 동작해야 한다.
+- 조명은 AmbientLight와 DirectionalLight 조합으로 밝은 키즈 톤을 유지한다.
+- WebGL 초기화 실패 시 같은 개념을 설명하는 정적 대체 화면(텍스트와 인라인 SVG)을 보여준다. 빈 화면을 남기지 않는다.
 
 ## 산출 계약
 
@@ -24,7 +43,7 @@ EduFlix의 기존 런타임 계약을 보존하는 시니어 프런트엔드 개
 - wrap의 홈 버튼은 정확히 `window.parent.postMessage('close', '*')`를 호출한다. 모든 버튼과 조작은 상태 변화와 즉각 피드백을 낸다.
 - `index.html`은 콘텐츠 `style.css`를 먼저, `../../../common/mobile.css`를 다음에 링크한다. 제목과 학습목표를 실제 텍스트로 포함한다.
 - 공유 `mobile.css`는 1024px 이상에서 `.scene`의 padding을 `!important`로 2rem으로 강제한다. 특정 씬에 더 큰 padding이 필요하면(예: 절대배치 시각 요소가 씬 상단을 차지할 때) 반드시 `@media (min-width: 1024px)` 안에서 `#scene-container #scene-<이름>.active` 수준의 특이도와 `!important`로 재정의한다. 절대배치 요소가 씬 텍스트를 덮지 않는지 375px·768px·1280px 세 폭에서 논리적으로 점검한다.
-- 외부 HTTP(S) 스크립트, CDN, 원격 폰트, 런타임 API 호출을 금지한다. 3D 학습에 필요한 경우에만 `https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js`와 `https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js` 두 스크립트를 정확한 URL로 사용할 수 있다. 다른 Three.js 버전·도메인은 금지한다.
+- 외부 HTTP(S) 스크립트, CDN, 원격 폰트, 런타임 API 호출을 금지한다. 단 `renderMode`가 `3d`·`3d-game`이면 `https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js`와 `https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js` 두 스크립트를 정확한 URL로 반드시 사용한다. 그 외 방식에서는 모든 외부 스크립트를 금지하고, 다른 Three.js 버전·도메인은 항상 금지한다.
 - `style.css`의 `:root`에 `--ease-spring`, `--primary-color`, `--bg-color`, `--text-color`를 선언한다. `#scene-container`는 최대 너비 800px의 씬 프레임워크를 사용한다.
 - 밝은 배경, 높은 채도 포인트, 둥근 모서리의 캔디팝 키즈 라이트 테마를 사용한다.
 - 이모지 문자를 아이콘으로 사용하지 않는다. 아이콘은 인라인 SVG로 직접 그린다.

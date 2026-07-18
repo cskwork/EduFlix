@@ -2,9 +2,11 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Subject, Grade } from '../../types/content'
+import type { RenderMode } from '../../types/generation'
 import InterestInput from './InterestInput.vue'
 import SubjectSelect from './SubjectSelect.vue'
 import GradeSelect from './GradeSelect.vue'
+import RenderModeSelect from './RenderModeSelect.vue'
 import GenerationProgressVue from './GenerationProgress.vue'
 import { useGenerationStore } from '../../stores/generation'
 
@@ -15,15 +17,16 @@ const router = useRouter()
 const generationStore = useGenerationStore()
 
 // 마법사 단계
-type WizardStep = 'interests' | 'subject' | 'grade' | 'generating'
+type WizardStep = 'interests' | 'subject' | 'grade' | 'mode' | 'generating'
 
 // 현재 단계
 const currentStep = ref<WizardStep>('interests')
 
-// 폼 데이터
+// 폼 데이터 (제작 방식은 3D 시뮬레이션이 기본값)
 const interests = ref<string[]>([])
 const subject = ref<Subject | null>(null)
 const grade = ref<Grade | null>(null)
+const renderMode = ref<RenderMode>('3d')
 
 // 생성된 콘텐츠 ID
 const generatedContentId = ref<string | null>(null)
@@ -42,6 +45,7 @@ const steps: { key: WizardStep; label: string; number: number }[] = [
   { key: 'interests', label: '관심사', number: 1 },
   { key: 'subject', label: '과목', number: 2 },
   { key: 'grade', label: '학년', number: 3 },
+  { key: 'mode', label: '만드는 방식', number: 4 },
 ]
 
 // 현재 단계 인덱스
@@ -59,6 +63,8 @@ const canProceed = computed(() => {
       return subject.value !== null
     case 'grade':
       return grade.value !== null
+    case 'mode':
+      return renderMode.value !== null
     default:
       return false
   }
@@ -76,6 +82,9 @@ function nextStep() {
       currentStep.value = 'grade'
       break
     case 'grade':
+      currentStep.value = 'mode'
+      break
+    case 'mode':
       startGeneration()
       break
   }
@@ -90,8 +99,11 @@ function prevStep() {
     case 'grade':
       currentStep.value = 'subject'
       break
-    case 'generating':
+    case 'mode':
       currentStep.value = 'grade'
+      break
+    case 'generating':
+      currentStep.value = 'mode'
       break
   }
 }
@@ -109,6 +121,7 @@ async function startGeneration() {
       subject: subject.value,
       grade: grade.value,
       language: subject.value === 'english' ? 'en' : 'ko',
+      renderMode: renderMode.value,
     })
 
     if (result.success && result.contentId) {
@@ -129,7 +142,7 @@ async function startGeneration() {
 // 생성 취소
 function cancelGeneration() {
   generationStore.cancelGeneration()
-  currentStep.value = 'grade'
+  currentStep.value = 'mode'
 }
 
 // 재시도
@@ -164,6 +177,7 @@ function resetWizard() {
   interests.value = []
   subject.value = null
   grade.value = null
+  renderMode.value = '3d'
   generatedContentId.value = null
   generatedModulePath.value = null
   generationStore.resetState()
@@ -205,6 +219,10 @@ function resetWizard() {
           <GradeSelect v-model="grade" />
         </div>
 
+        <div v-else-if="currentStep === 'mode'" key="mode" class="step-content">
+          <RenderModeSelect v-model="renderMode" />
+        </div>
+
         <div v-else-if="currentStep === 'generating'" key="generating" class="step-content">
           <GenerationProgressVue
             :progress="generationProgress"
@@ -236,7 +254,7 @@ function resetWizard() {
         :disabled="!canProceed"
         @click="nextStep"
       >
-        {{ currentStep === 'grade' ? '만들기 시작!' : '다음' }}
+        {{ currentStep === 'mode' ? '만들기 시작!' : '다음' }}
       </button>
     </div>
 

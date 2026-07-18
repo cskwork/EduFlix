@@ -63,4 +63,27 @@ describe('Bun HTTP server wiring', () => {
     expect(response.headers.get('content-type')).toContain('application/json')
     expect(await response.json()).toMatchObject({ success: false })
   })
+
+  test('유효하지 않은 renderMode는 400을 반환한다', async () => {
+    const handler = createRequestHandler({
+      generate: {
+        runner: {
+          startGeneration: () => { throw new Error('호출 금지') },
+          startReview: () => { throw new Error('호출 금지') },
+          getJob: () => undefined,
+        },
+        getConfig: () => ({ provider: 'zai' as const, model: 'test', keyConfigured: true }),
+      },
+    })
+    const baseUrl = startHttp(handler)
+    const response = await fetch(`${baseUrl}/api/generate`, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        interests: ['별'], subject: 'science', grade: 'elementary-3', language: 'ko', renderMode: 'vr',
+      }),
+    })
+
+    expect(response.status).toBe(400)
+    expect(await response.json()).toMatchObject({ success: false })
+  })
 })
