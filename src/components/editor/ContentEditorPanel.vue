@@ -334,7 +334,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-md) var(--spacing-lg);
-  border-bottom: 1px solid var(--color-bg-card);
+  border-bottom: 1px solid rgba(59, 53, 98, 0.08);
 }
 
 .editor-header h2 {
@@ -356,7 +356,7 @@ onUnmounted(() => {
 }
 
 .close-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(59, 53, 98, 0.08);
   color: var(--color-text-primary);
 }
 
@@ -365,7 +365,7 @@ onUnmounted(() => {
   display: flex;
   gap: var(--spacing-xs);
   padding: var(--spacing-sm) var(--spacing-lg);
-  border-bottom: 1px solid var(--color-bg-card);
+  border-bottom: 1px solid rgba(59, 53, 98, 0.08);
 }
 
 .tab-btn {
@@ -383,13 +383,13 @@ onUnmounted(() => {
 }
 
 .tab-btn:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(59, 53, 98, 0.06);
   color: var(--color-text-primary);
 }
 
 .tab-btn.active {
   background-color: var(--color-brand-primary);
-  color: var(--color-text-primary);
+  color: #fff;
 }
 
 .tab-icon {
@@ -421,7 +421,7 @@ onUnmounted(() => {
 .loading-spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid var(--color-bg-card);
+  border: 3px solid rgba(59, 53, 98, 0.1);
   border-top-color: var(--color-brand-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -455,15 +455,15 @@ onUnmounted(() => {
 .retry-btn {
   padding: var(--spacing-sm) var(--spacing-md);
   background-color: var(--color-brand-primary);
-  color: var(--color-text-primary);
-  border-radius: 6px;
+  color: #fff;
+  border-radius: var(--radius-pill);
   font-size: var(--font-size-sm);
 }
 
 /* 푸터 */
 .editor-footer {
   padding: var(--spacing-md) var(--spacing-lg);
-  border-top: 1px solid var(--color-bg-card);
+  border-top: 1px solid rgba(59, 53, 98, 0.08);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
@@ -478,7 +478,7 @@ onUnmounted(() => {
 .btn-save {
   flex: 1;
   padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   transition: all var(--transition-fast);
@@ -486,17 +486,19 @@ onUnmounted(() => {
 
 .btn-cancel {
   background-color: var(--color-bg-card);
+  border: var(--border-sticker);
   color: var(--color-text-secondary);
 }
 
 .btn-cancel:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--color-bg-card-hover);
   color: var(--color-text-primary);
 }
 
 .btn-save {
   background-color: var(--color-brand-primary);
-  color: var(--color-text-primary);
+  color: #fff;
+  box-shadow: 0 3px 0 rgba(59, 53, 98, 0.2);
 }
 
 .btn-save:hover:not(:disabled) {

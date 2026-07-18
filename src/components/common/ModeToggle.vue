@@ -37,8 +37,10 @@ const toggleMode = () => {
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   background: var(--color-bg-card);
+  border: var(--border-sticker);
+  box-shadow: var(--card-shadow);
   transition: background-color var(--transition-normal);
   cursor: pointer;
 }
@@ -66,8 +68,9 @@ const toggleMode = () => {
   left: 2px;
   width: 20px;
   height: 20px;
-  background: var(--color-text-primary);
+  background: #fff;
   border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(59, 53, 98, 0.3);
   transition: transform var(--transition-normal);
 }
 

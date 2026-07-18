@@ -74,22 +74,24 @@ const previewUrl = computed(() => getContentHtmlPath(props.content))
   width: 280px;
   border-radius: var(--card-border-radius);
   background: var(--color-bg-card);
+  border: var(--border-sticker);
+  box-shadow: var(--card-shadow);
   overflow: hidden;
   transition:
-    transform var(--transition-normal),
+    transform var(--transition-normal) var(--ease-bounce),
     box-shadow var(--transition-normal);
   cursor: pointer;
   position: relative;
 }
 
 .content-card:hover {
-  transform: scale(1.05);
+  transform: translateY(-6px) rotate(-1deg) scale(1.02);
   box-shadow: var(--card-shadow-hover);
   z-index: 10;
 }
 
 .content-card:focus-visible {
-  outline: 2px solid var(--color-brand-primary);
+  outline: 3px solid var(--color-brand-primary);
   outline-offset: 2px;
 }
 
@@ -98,7 +100,7 @@ const previewUrl = computed(() => getContentHtmlPath(props.content))
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  background: #000;
+  background: var(--color-bg-secondary);
 }
 
 .iframe-container {
@@ -134,7 +136,7 @@ const previewUrl = computed(() => getContentHtmlPath(props.content))
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(59, 53, 98, 0.28);
   opacity: 0;
   transition: opacity var(--transition-normal);
 }
@@ -144,25 +146,25 @@ const previewUrl = computed(() => getContentHtmlPath(props.content))
 }
 
 .play-icon {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.8);
+  background: var(--color-brand-primary);
+  border: 3px solid #fff;
   border-radius: 50%;
   font-size: 1.25rem;
   color: #fff;
+  box-shadow: 0 4px 0 rgba(59, 53, 98, 0.25);
   transition:
-    transform var(--transition-fast),
+    transform var(--transition-fast) var(--ease-bounce),
     background var(--transition-fast);
-  backdrop-filter: blur(4px);
 }
 
 .content-card:hover .play-icon {
-  transform: scale(1.1);
-  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.12);
+  background: var(--color-brand-secondary);
 }
 
 .card-badges {
@@ -175,25 +177,54 @@ const previewUrl = computed(() => getContentHtmlPath(props.content))
 }
 
 .badge {
-  padding: 2px 6px;
+  padding: 3px 8px;
   font-size: 10px;
   font-weight: var(--font-weight-bold);
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.6);
-  color: var(--color-text-primary);
-  backdrop-filter: blur(4px);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--color-ink);
+  border: 1px solid rgba(59, 53, 98, 0.12);
+  letter-spacing: 0.3px;
 }
 
 .badge-type {
   background: var(--color-brand-primary);
+  color: #fff;
+  border-color: transparent;
 }
 
-/* Remove subject colored borders for cleaner look */
+/* 과목별 카드 포인트 컬러 (썸네일 하단 라인) */
+.subject-math .card-thumbnail::after,
+.subject-science .card-thumbnail::after,
+.subject-english .card-thumbnail::after,
+.subject-world-history .card-thumbnail::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+}
+
+.subject-math .card-thumbnail::after {
+  background: var(--color-subject-math);
+}
+
+.subject-science .card-thumbnail::after {
+  background: var(--color-subject-science);
+}
+
+.subject-english .card-thumbnail::after {
+  background: var(--color-subject-english);
+}
+
+.subject-world-history .card-thumbnail::after {
+  background: var(--color-subject-world-history);
+}
+
 .card-info {
-  padding: var(--spacing-sm);
-  background: #181818;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-bg-card);
 }
 
 .card-title {

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 // 빈 상태 컴포넌트
+import { ref } from 'vue'
+
 defineProps<{
   title?: string
   message: string
@@ -9,11 +11,21 @@ defineProps<{
 const emit = defineEmits<{
   (e: 'action'): void
 }>()
+
+const mascotFailed = ref(false)
 </script>
 
 <template>
   <div class="empty-container">
-    <div class="empty-icon">
+    <div v-if="!mascotFailed" class="mascot-sticker">
+      <img
+        src="/mascot/mascot-book.webp"
+        alt=""
+        class="mascot-img"
+        @error="mascotFailed = true"
+      />
+    </div>
+    <div v-else class="empty-icon">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="48"
@@ -42,7 +54,6 @@ const emit = defineEmits<{
     >
       {{ actionLabel }}
     </button>
-    <slot name="actions"></slot>
   </div>
 </template>
 
@@ -55,21 +66,40 @@ const emit = defineEmits<{
   text-align: center;
 }
 
+.mascot-sticker {
+  width: clamp(140px, 24vw, 200px);
+  aspect-ratio: 1;
+  background: #fff;
+  border: 3px solid rgba(59, 53, 98, 0.1);
+  border-radius: 48% 52% 45% 55% / 52% 48% 52% 48%;
+  box-shadow: 0 5px 0 rgba(59, 53, 98, 0.1), 0 16px 32px rgba(59, 53, 98, 0.12);
+  overflow: hidden;
+  margin-bottom: var(--spacing-lg);
+  animation: float-bob 3.5s ease-in-out infinite;
+}
+
+.mascot-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .empty-icon {
-  width: 80px;
-  height: 80px;
+  width: 96px;
+  height: 96px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-bg-card);
+  background: var(--color-subject-english-soft);
   border-radius: 50%;
-  color: var(--color-text-muted);
+  color: var(--color-brand-accent);
   margin-bottom: var(--spacing-lg);
 }
 
 .empty-title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-sm);
 }
@@ -77,27 +107,31 @@ const emit = defineEmits<{
 .empty-message {
   font-size: var(--font-size-base);
   color: var(--color-text-secondary);
-  max-width: 350px;
+  max-width: 400px;
   line-height: 1.6;
   margin-bottom: var(--spacing-lg);
+  word-break: keep-all;
 }
 
 .action-btn {
-  padding: var(--spacing-sm) var(--spacing-xl);
+  padding: 0.8rem 1.8rem;
   background: var(--color-brand-primary);
-  color: var(--color-text-primary);
-  border-radius: var(--card-border-radius);
-  font-weight: var(--font-weight-medium);
-  transition: background var(--transition-fast), transform var(--transition-fast);
+  color: #fff;
+  border-radius: var(--radius-pill);
+  font-weight: var(--font-weight-bold);
+  box-shadow: 0 5px 0 rgba(59, 53, 98, 0.2);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+    background var(--transition-fast);
 }
 
 .action-btn:hover {
   background: var(--color-brand-secondary);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 rgba(59, 53, 98, 0.2);
 }
 
-.action-btn:focus-visible {
-  outline: 2px solid var(--color-brand-primary);
-  outline-offset: 2px;
+.action-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(59, 53, 98, 0.2);
 }
 </style>

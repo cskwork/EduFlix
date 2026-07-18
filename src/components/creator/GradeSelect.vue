@@ -147,21 +147,25 @@ watch(
   padding: var(--spacing-md) var(--spacing-lg);
   background: var(--color-bg-card);
   border-radius: var(--card-border-radius);
-  border: 2px solid transparent;
+  border: var(--border-sticker);
+  box-shadow: var(--card-shadow);
   cursor: pointer;
   transition:
     transform var(--transition-fast),
     border-color var(--transition-fast),
-    background var(--transition-fast);
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .level-btn:hover {
   background: var(--color-bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
 }
 
 .level-btn.selected {
   border-color: var(--color-brand-primary);
-  background: rgba(229, 9, 20, 0.1);
+  background: rgba(255, 92, 57, 0.08);
 }
 
 .level-icon {
@@ -180,13 +184,15 @@ watch(
   gap: var(--spacing-sm);
   padding: var(--spacing-md);
   background: var(--color-bg-card);
+  border: var(--border-sticker);
   border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
 }
 
 .grade-btn {
   padding: var(--spacing-sm) var(--spacing-lg);
   background: var(--color-bg-secondary);
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   border: 2px solid transparent;
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
@@ -205,7 +211,7 @@ watch(
 
 .grade-btn.selected {
   background: var(--color-brand-primary);
-  color: var(--color-text-primary);
+  color: #fff;
   border-color: var(--color-brand-primary);
 }
 

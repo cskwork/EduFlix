@@ -119,10 +119,11 @@ function handleNodeClick(node: KnowledgeNode) {
 <style scoped>
 .subject-tree {
   margin-bottom: 1rem;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--color-bg-card);
+  border: var(--border-sticker);
+  box-shadow: var(--card-shadow);
 }
 
 .subject-header {
@@ -131,24 +132,24 @@ function handleNodeClick(node: KnowledgeNode) {
   gap: 0.75rem;
   width: 100%;
   padding: 1rem 1.25rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-bg-card);
   border: none;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
 .subject-header:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--color-bg-card-hover);
 }
 
 .subject-icon {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-text-secondary);
 }
 
 .subject-label {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-ink);
 }
 
 .subject-progress {
@@ -161,27 +162,27 @@ function handleNodeClick(node: KnowledgeNode) {
 .progress-bar {
   width: 80px;
   height: 6px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(59, 53, 98, 0.08);
   border-radius: 3px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #e50914, #ff6b6b);
+  background: linear-gradient(90deg, var(--color-brand-primary), var(--color-brand-accent));
   border-radius: 3px;
   transition: width 0.3s ease;
 }
 
 .progress-text {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-muted);
   min-width: 40px;
 }
 
 .expand-icon {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-muted);
   transition: transform 0.2s ease;
 }
 
@@ -207,18 +208,18 @@ function handleNodeClick(node: KnowledgeNode) {
   gap: 0.5rem;
   margin: 0 0 0.75rem 0;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(59, 53, 98, 0.1);
 }
 
 .grade-label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-text-secondary);
 }
 
 .grade-count {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-muted);
   font-weight: 400;
 }
 

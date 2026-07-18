@@ -175,8 +175,9 @@ function resetProgress() {
 
 .learning-title {
   font-size: clamp(1.5rem, 4vw, 2rem);
-  font-weight: 700;
-  color: #fff;
+  font-family: var(--font-family-display);
+  font-weight: normal;
+  color: var(--color-ink);
   margin: 0 0 0.5rem 0;
   display: flex;
   align-items: center;
@@ -185,12 +186,12 @@ function resetProgress() {
 }
 
 .title-icon {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-brand-primary);
 }
 
 .learning-subtitle {
   font-size: var(--font-size-base);
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-secondary);
   margin: 0;
 }
 
@@ -205,9 +206,10 @@ function resetProgress() {
   align-items: center;
   gap: 1rem;
   padding: 1.25rem;
-  background: linear-gradient(135deg, rgba(229, 9, 20, 0.2), rgba(255, 107, 107, 0.1));
-  border-radius: 16px;
-  border: 1px solid rgba(229, 9, 20, 0.3);
+  background: linear-gradient(135deg, #fff1d6, #ffe4ef);
+  border-radius: var(--radius-lg);
+  border: var(--border-sticker);
+  box-shadow: var(--card-shadow);
   margin-bottom: var(--spacing-xl);
 }
 
@@ -229,12 +231,12 @@ function resetProgress() {
 .streak-days {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-ink);
 }
 
 .streak-label {
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-text-secondary);
 }
 
 /* 통계 그리드 */
@@ -250,34 +252,35 @@ function resetProgress() {
   flex-direction: column;
   align-items: center;
   padding: 1.25rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  border: var(--border-sticker);
+  box-shadow: var(--card-shadow);
 }
 
 .stat-value {
   font-size: 2rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-ink);
   line-height: 1;
 }
 
 .stat-label {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-secondary);
   margin-top: 0.5rem;
 }
 
 .stat-total {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-muted);
 }
 
 /* 섹션 */
 .section-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-ink);
   margin: 0 0 1rem 0;
 }
 
@@ -297,8 +300,10 @@ function resetProgress() {
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  border: var(--border-sticker);
+  box-shadow: var(--card-shadow);
 }
 
 .subject-info {
@@ -309,14 +314,14 @@ function resetProgress() {
 }
 
 .subject-icon {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-text-secondary);
   flex-shrink: 0;
 }
 
 .subject-name {
   font-size: 0.9rem;
   font-weight: 500;
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .progress-container {
@@ -329,7 +334,7 @@ function resetProgress() {
 .progress-bar {
   flex: 1;
   height: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(59, 53, 98, 0.08);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -341,27 +346,31 @@ function resetProgress() {
 }
 
 .progress-fill.math {
-  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  background: linear-gradient(90deg, var(--color-subject-math), #5fd9cd);
 }
 
 .progress-fill.science {
-  background: linear-gradient(90deg, #22c55e, #4ade80);
+  background: linear-gradient(90deg, var(--color-subject-science), #8fb0f6);
 }
 
 .progress-fill.english {
-  background: linear-gradient(90deg, #a855f7, #c084fc);
+  background: linear-gradient(90deg, var(--color-subject-english), #ffcf6b);
+}
+
+.progress-fill.world-history {
+  background: linear-gradient(90deg, var(--color-subject-world-history), #ff9cc0);
 }
 
 .progress-percent {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-secondary);
   min-width: 36px;
   text-align: right;
 }
 
 .progress-detail {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-muted);
   min-width: 40px;
   text-align: right;
 }
@@ -382,19 +391,22 @@ function resetProgress() {
   align-items: center;
   gap: 0.75rem;
   padding: 0.875rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 10px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-sm);
+  border: var(--border-sticker);
+  box-shadow: var(--card-shadow);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .next-node-card:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--color-bg-card-hover);
+  box-shadow: var(--card-shadow-hover);
   transform: translateX(4px);
 }
 
 .next-icon {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-text-secondary);
   flex-shrink: 0;
 }
 
@@ -407,16 +419,16 @@ function resetProgress() {
 .next-name {
   font-size: 0.9rem;
   font-weight: 500;
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .next-subject {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-muted);
 }
 
 .next-arrow {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-muted);
   flex-shrink: 0;
 }
 
@@ -433,10 +445,11 @@ function resetProgress() {
   justify-content: center;
   gap: 0.5rem;
   padding: 1rem;
-  background: #e50914;
+  background: var(--color-brand-primary);
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 4px 0 rgba(59, 53, 98, 0.2);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -444,23 +457,29 @@ function resetProgress() {
 }
 
 .btn-primary:hover {
-  background: #b81d24;
+  background: var(--color-brand-secondary);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(59, 53, 98, 0.2);
 }
 
 .btn-secondary {
   padding: 1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
-  border: none;
-  border-radius: 8px;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  border: var(--border-sticker);
+  border-radius: var(--radius-pill);
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
+  background: var(--color-bg-card-hover);
+  color: var(--color-text-primary);
 }
 
 /* 모바일 */

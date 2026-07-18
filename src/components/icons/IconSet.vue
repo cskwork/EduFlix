@@ -128,7 +128,7 @@ const props = withDefaults(defineProps<Props>(), {
 
     <!-- Completed (Check Circle) -->
     <template v-else-if="name === 'completed'">
-      <circle cx="12" cy="12" r="10" fill="#4ade80" />
+      <circle cx="12" cy="12" r="10" fill="#2fbf71" />
       <path
         d="M8 12L11 15L16 9"
         stroke="white"
@@ -140,25 +140,25 @@ const props = withDefaults(defineProps<Props>(), {
 
     <!-- In Progress (Half Circle) -->
     <template v-else-if="name === 'in-progress'">
-      <circle cx="12" cy="12" r="10" stroke="#facc15" stroke-width="2" fill="none" />
+      <circle cx="12" cy="12" r="10" stroke="#ffb01f" stroke-width="2" fill="none" />
       <path
         d="M12 2A10 10 0 0 1 12 22"
-        fill="#facc15"
+        fill="#ffb01f"
       />
     </template>
 
     <!-- Available (Empty Circle) -->
     <template v-else-if="name === 'available'">
-      <circle cx="12" cy="12" r="10" stroke="#60a5fa" stroke-width="2" fill="none" />
-      <circle cx="12" cy="12" r="3" fill="#60a5fa" />
+      <circle cx="12" cy="12" r="10" stroke="#5b8def" stroke-width="2" fill="none" />
+      <circle cx="12" cy="12" r="3" fill="#5b8def" />
     </template>
 
     <!-- Locked -->
     <template v-else-if="name === 'locked'">
-      <rect x="5" y="11" width="14" height="10" rx="2" stroke="#6b7280" stroke-width="2" />
+      <rect x="5" y="11" width="14" height="10" rx="2" stroke="#9b95bc" stroke-width="2" />
       <path
         d="M8 11V7C8 4.8 9.8 3 12 3C14.2 3 16 4.8 16 7V11"
-        stroke="#6b7280"
+        stroke="#9b95bc"
         stroke-width="2"
         stroke-linecap="round"
       />

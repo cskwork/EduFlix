@@ -159,8 +159,8 @@ async function handleImport(event: Event) {
   gap: var(--spacing-xs);
   padding: var(--spacing-xs) var(--spacing-sm);
   background-color: var(--color-bg-card);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  border: var(--border-sticker);
+  border-radius: var(--radius-sm);
   color: var(--color-text-secondary);
   font-size: var(--font-size-xs);
   transition: all var(--transition-fast);
@@ -168,9 +168,9 @@ async function handleImport(event: Event) {
 
 .export-btn:hover:not(:disabled),
 .import-btn:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--color-bg-card-hover);
   color: var(--color-text-primary);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(59, 53, 98, 0.16);
 }
 
 .export-btn:disabled,

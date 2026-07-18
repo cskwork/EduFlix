@@ -285,8 +285,9 @@ onMounted(() => {
   left: 0;
   right: 0;
   height: var(--header-height);
-  background: linear-gradient(180deg, rgba(20, 20, 20, 0.95) 0%, rgba(20, 20, 20, 0.8) 100%);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 246, 235, 0.95);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 0 rgba(59, 53, 98, 0.06);
   display: flex;
   align-items: center;
   padding: 0 var(--spacing-lg);
@@ -298,16 +299,20 @@ onMounted(() => {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: var(--color-text-primary);
+  background-color: var(--color-bg-card);
+  border: var(--border-sticker);
+  color: var(--color-ink);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .back-btn:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--color-bg-card-hover);
+  transform: translateY(-1px);
 }
 
 .content-info {
@@ -330,26 +335,27 @@ onMounted(() => {
 }
 
 .badge {
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   background-color: var(--color-bg-card);
+  color: var(--color-ink);
 }
 
 .badge.subject-math {
   background-color: var(--color-subject-math);
-  color: #000;
+  color: #fff;
 }
 
 .badge.subject-science {
   background-color: var(--color-subject-science);
-  color: #000;
+  color: #fff;
 }
 
 .badge.subject-english {
   background-color: var(--color-subject-english);
-  color: #000;
+  color: var(--color-ink);
 }
 
 .badge.subject-world-history {
@@ -359,7 +365,7 @@ onMounted(() => {
 
 .badge-outline {
   background-color: transparent;
-  border: 1px solid var(--color-text-muted);
+  border: 1px solid rgba(59, 53, 98, 0.2);
   color: var(--color-text-secondary);
 }
 
@@ -371,22 +377,27 @@ onMounted(() => {
 .action-btn {
   width: 40px;
   height: 40px;
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: var(--color-text-primary);
+  border-radius: 50%;
+  background-color: var(--color-bg-card);
+  border: var(--border-sticker);
+  color: var(--color-ink);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .action-btn:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--color-bg-card-hover);
+  transform: translateY(-1px);
 }
 
 .edit-btn.active {
   background-color: var(--color-brand-primary);
-  color: var(--color-text-primary);
+  border-color: var(--color-brand-primary);
+  color: #fff;
 }
 
 /* 로딩 상태 */
@@ -402,7 +413,7 @@ onMounted(() => {
 .loading-spinner {
   width: 48px;
   height: 48px;
-  border: 4px solid var(--color-bg-card);
+  border: 4px solid rgba(59, 53, 98, 0.1);
   border-top-color: var(--color-brand-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -435,7 +446,7 @@ onMounted(() => {
   height: 80px;
   border-radius: 50%;
   background-color: var(--color-error);
-  color: var(--color-text-primary);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -457,14 +468,24 @@ onMounted(() => {
 .retry-btn {
   padding: var(--spacing-sm) var(--spacing-xl);
   background-color: var(--color-brand-primary);
-  color: var(--color-text-primary);
-  border-radius: 4px;
+  color: #fff;
+  border-radius: var(--radius-pill);
   font-weight: var(--font-weight-medium);
-  transition: background-color var(--transition-fast);
+  box-shadow: 0 4px 0 rgba(59, 53, 98, 0.2);
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .retry-btn:hover {
   background-color: var(--color-brand-secondary);
+  transform: translateY(-2px);
+}
+
+.retry-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(59, 53, 98, 0.2);
 }
 
 /* 뷰어 컨테이너 */
@@ -533,7 +554,7 @@ onMounted(() => {
     padding: var(--spacing-lg);
     padding-top: calc(var(--header-height) + var(--spacing-lg));
     background-color: var(--color-bg-secondary);
-    border-left: 1px solid var(--color-bg-card);
+    border-left: 1px solid rgba(59, 53, 98, 0.08);
     height: 100vh;
     position: fixed;
     right: 0;
@@ -550,7 +571,7 @@ onMounted(() => {
     top: 0;
     padding-top: var(--header-height);
     background-color: var(--color-bg-secondary);
-    border-left: 1px solid var(--color-bg-card);
+    border-left: 1px solid rgba(59, 53, 98, 0.08);
     z-index: var(--z-fixed);
   }
 }
@@ -581,7 +602,8 @@ onMounted(() => {
 .tag {
   padding: 4px 12px;
   background-color: var(--color-bg-card);
-  border-radius: 16px;
+  border: var(--border-sticker);
+  border-radius: var(--radius-pill);
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
