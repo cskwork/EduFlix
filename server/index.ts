@@ -1,23 +1,12 @@
 // Bun HTTP 서버 진입점
 import { serve, file } from 'bun'
 import { join } from 'path'
-import { handleGenerateRoute } from './routes/generate'
+import { handleGenerateRoute, type GenerateRouteDependencies } from './routes/generate'
 import { handleContentRoute } from './routes/content'
 import { handleRecommendationsRoute } from './routes/recommendations'
 import { handlePreviewRoute } from './routes/preview'
 import { getServerPort } from './config'
-import { checkArtAssetsHealth } from './services/health'
-
-// 프로세스 크래시 방지: uncaught exception/rejection 로깅
-process.on('uncaughtException', (error) => {
-  console.error(`[${new Date().toISOString()}] UNCAUGHT EXCEPTION:`, error)
-})
-
-process.on('unhandledRejection', (reason) => {
-  console.error(`[${new Date().toISOString()}] UNHANDLED REJECTION:`, reason)
-})
-
-const PORT = getServerPort()
+import { getLlmHealth } from './services/health'
 
 // 정적 파일 서빙 설정
 const STATIC_DIR = join(import.meta.dir, '..', 'dist')
@@ -96,8 +85,12 @@ function errorResponse(message: string, status = 500): Response {
   return jsonResponse({ error: message, success: false }, status)
 }
 
+export interface RequestHandlerDependencies {
+  generate?: GenerateRouteDependencies
+}
+
 // 요청 핸들러
-async function handleRequest(req: Request): Promise<Response> {
+async function handleRequest(req: Request, dependencies: RequestHandlerDependencies): Promise<Response> {
   const url = new URL(req.url)
   const pathname = url.pathname
 
@@ -114,7 +107,7 @@ async function handleRequest(req: Request): Promise<Response> {
   try {
     // API 라우팅
     if (pathname.startsWith('/api/generate')) {
-      return await handleGenerateRoute(req, jsonResponse, errorResponse)
+      return await handleGenerateRoute(req, jsonResponse, errorResponse, dependencies.generate)
     }
 
     if (pathname.startsWith('/api/content')) {
@@ -131,11 +124,9 @@ async function handleRequest(req: Request): Promise<Response> {
 
     // 헬스 체크
     if (pathname === '/api/health') {
-      const artAssets = await checkArtAssetsHealth()
       return jsonResponse({
         status: 'ok',
-        timestamp: new Date().toISOString(),
-        artAssets,
+        llm: getLlmHealth(),
       })
     }
 
@@ -164,10 +155,26 @@ async function handleRequest(req: Request): Promise<Response> {
   }
 }
 
-// 서버 시작
-const server = serve({
-  port: PORT,
-  fetch: handleRequest,
-})
+export function createRequestHandler(dependencies: RequestHandlerDependencies = {}) {
+  return (req: Request) => handleRequest(req, dependencies)
+}
 
-console.log(`EduFlix API 서버 실행 중: http://localhost:${server.port}`)
+function startServer(): void {
+  // 프로세스 크래시 방지: uncaught exception/rejection 로깅
+  process.on('uncaughtException', (error) => {
+    console.error(`[${new Date().toISOString()}] UNCAUGHT EXCEPTION:`, error)
+  })
+
+  process.on('unhandledRejection', (reason) => {
+    console.error(`[${new Date().toISOString()}] UNHANDLED REJECTION:`, reason)
+  })
+
+  const server = serve({
+    port: getServerPort(),
+    fetch: createRequestHandler(),
+  })
+
+  console.log(`EduFlix API 서버 실행 중: http://localhost:${server.port}`)
+}
+
+if (import.meta.main) startServer()

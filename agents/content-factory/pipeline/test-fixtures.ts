@@ -1,5 +1,6 @@
 export function validPlan() {
   return {
+    slug: "symmetry", title: "대칭 탐험", description: "대칭을 조작하며 이해하는 학습 콘텐츠",
     topic: "대칭", grade: "elementary-5", subject: "math",
     achievementStandard: { code: "estimated", statement: "대칭을 이해한다", estimated: true, rationale: "주제 근거" },
     learningObjectives: ["1", "2"].map((id) => ({ id: `LO${id}`, statement: `목표 ${id}`, evidence: "조작 결과" })),

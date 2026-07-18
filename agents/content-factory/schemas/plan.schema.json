@@ -1,6 +1,9 @@
 {
   "type": "object",
   "properties": {
+    "slug": { "type": "string" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
     "topic": { "type": "string" },
     "grade": { "type": "string", "enum": ["elementary-1", "elementary-2", "elementary-3", "elementary-4", "elementary-5", "elementary-6", "middle-1", "middle-2", "middle-3", "high-1", "high-2", "high-3"] },
     "subject": { "type": "string", "enum": ["math", "science", "english"] },
@@ -85,6 +88,6 @@
       "additionalProperties": false
     }
   },
-  "required": ["topic", "grade", "subject", "achievementStandard", "learningObjectives", "prerequisites", "misconceptions", "lessonFlow", "contentType", "languageGuidance"],
+  "required": ["slug", "title", "description", "topic", "grade", "subject", "achievementStandard", "learningObjectives", "prerequisites", "misconceptions", "lessonFlow", "contentType", "languageGuidance"],
   "additionalProperties": false
 }

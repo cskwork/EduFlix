@@ -15,10 +15,10 @@ export interface GenerationRequest {
 export type GenerationStatus =
   | 'idle'
   | 'preparing'
-  | 'queued'      // 대기열에 추가됨 (art-assets pending)
+  | 'queued'      // 로컬 단일 실행 대기
   | 'generating'
   | 'generating-images'
-  | 'reviewing'   // 품질 검토 중 (art-assets review)
+  | 'reviewing'   // 정적 QA와 LLM judge 실행 중
   | 'finalizing'
   | 'completed'
   | 'error'
@@ -48,7 +48,7 @@ export interface GenerationResponse {
   warning?: string // 소프트 워닝 (성공했으나 일부 문제 발생 시)
 }
 
-// 작업 상태 응답 타입 (art-assets 폴링용)
+// 로컬 팩토리 작업 상태 응답 타입
 export interface JobStatusResponse {
   jobId: string
   status: 'pending' | 'queued' | 'processing' | 'reviewing' | 'completed' | 'failed'

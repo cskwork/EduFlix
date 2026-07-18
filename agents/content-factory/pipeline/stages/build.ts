@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
-import { copyFile, mkdir, mkdtemp, readFile, readdir, rename, rm, stat } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, readdir, rename, rm, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { runCodexText } from "../lib/codex";
+import { runFactoryFiles } from "../lib/engine";
 import { listSharedAssets, resolveAssetPaths } from "../lib/assets";
 import {
   assertAssetPlan, assertAssetPlanContext, assertPlan, assertStoryboard, type AssetPlan,
@@ -20,6 +20,21 @@ async function findExample(context: FactoryContext): Promise<string> {
     if (source.includes("class EduFlixEngine") && source.includes("Scene")) return dir;
   }
   throw new Error("인라인 EduFlixEngine 모범 사례를 찾지 못했습니다.");
+}
+
+// 작성 시각은 모델 출력을 신뢰하지 않고 서버 시각으로 확정한다 (QA digest 이전 단계라 안전).
+// manifest가 JSON이 아니면 그대로 두어 QA manifest-schema 검사가 명확한 오류로 잡게 한다.
+async function normalizeManifestCreatedAt(manifestPath: string): Promise<void> {
+  let manifest: Record<string, unknown>;
+  try {
+    const parsed = JSON.parse(await readFile(manifestPath, "utf8"));
+    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return;
+    manifest = parsed as Record<string, unknown>;
+  } catch {
+    return;
+  }
+  manifest.createdAt = new Date().toISOString();
+  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 }
 
 async function promoteFiles(
@@ -86,13 +101,23 @@ export async function runBuildStage(context: FactoryContext, revision = ""): Pro
   await mkdir(context.contentDir, { recursive: true });
   const stagingDir = await mkdtemp(join(context.runDir, "build-staging-"));
   try {
-    await runCodexText({
-      outFile: responseFile,
-      workspaceWrite: true,
-      cwd: stagingDir,
-      // 4파일 전체 생성은 기본 15분으로 부족(2026-07-13 E2E에서 2회 초과) — 코드 생성 단계만 상향
+    const availableExamples = required.filter((file) => existsSync(join(exampleDir, file)));
+    const exampleFiles = Object.fromEntries(await Promise.all(availableExamples.map(async (file) =>
+      [file, await readFile(join(exampleDir, file), "utf8")])));
+    // 재빌드는 처음부터 다시 만들지 않고 기존 산출물에 수정 지시만 반영해야 수렴한다
+    const currentFiles = revision ? Object.fromEntries(await Promise.all(
+      required.filter((file) => existsSync(join(context.contentDir, file))).map(async (file) =>
+        [file, await readFile(join(context.contentDir, file), "utf8")]))) : {};
+    const revisionHeader = revision
+      ? `[최우선 수정 지시] 아래 기존 산출물을 기반으로 다음 QA 미달 항목만 반영해 4개 파일 전체를 다시 작성하세요. 다른 부분은 유지합니다.\n${revision}\n\n기존 산출물: ${JSON.stringify(currentFiles)}\n\n`
+      : "";
+    await runFactoryFiles({
+      responseFile,
+      stagingDir,
+      requiredFiles: required,
+      // 4파일 전체 생성은 기본 10분보다 오래 걸릴 수 있어 코드 생성 단계만 상향
       timeoutMs: 40 * 60 * 1000,
-      prompt: `${prompt}\n\n출력 디렉터리: ${stagingDir}\n최종 콘텐츠 디렉터리: ${context.contentDir}\n모범 사례 디렉터리: ${exampleDir}\n기획: ${JSON.stringify(plan)}\n스토리보드: ${JSON.stringify(storyboard)}\n에셋 계획: ${JSON.stringify(assets)}\n검증된 에셋 참조 경로: ${JSON.stringify(assetReferences)}\n${revision ? `QA 수정 지시: ${revision}` : ""}\n반드시 출력 디렉터리에 4개 계약 파일을 직접 작성하세요.`,
+      prompt: `${revisionHeader}${prompt}\n\n출력 디렉터리: ${stagingDir}\n최종 콘텐츠 디렉터리: ${context.contentDir}\n모범 사례 파일 본문: ${JSON.stringify(exampleFiles)}\n기획: ${JSON.stringify(plan)}\nmanifest 메타데이터: ${JSON.stringify({ id: context.id, title: plan.title, description: plan.description })}\n스토리보드: ${JSON.stringify(storyboard)}\n에셋 계획: ${JSON.stringify(assets)}\n검증된 에셋 참조 경로: ${JSON.stringify(assetReferences)}\n반드시 출력 디렉터리에 4개 계약 파일을 직접 작성하세요.`,
     });
     const missing: string[] = [];
     for (const file of required) {
@@ -108,6 +133,7 @@ export async function runBuildStage(context: FactoryContext, revision = ""): Pro
       throw new Error(`허용되지 않은 빌드 산출물: ${unexpected.map((entry) => entry.name).join(", ")}`);
     }
     await promoteFiles(stagingDir, context.contentDir, context.runDir, required);
+    await normalizeManifestCreatedAt(join(context.contentDir, "manifest.json"));
     await writeStageMetadata(responseFile, inputs);
   } finally {
     await rm(stagingDir, { recursive: true, force: true });

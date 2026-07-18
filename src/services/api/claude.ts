@@ -1,5 +1,5 @@
 // Claude API 래퍼
-// 프론트엔드에서 백엔드 프록시를 통해 art-assets 기반 콘텐츠 생성
+// 프론트엔드에서 Bun API의 로컬 콘텐츠 팩토리를 호출
 
 import type {
   GenerationRequest,
@@ -21,7 +21,8 @@ const isStaticMode = import.meta.env.VITE_STATIC_MODE === 'true'
 
 // 폴링 설정
 const POLL_INTERVAL_MS = 2000 // 2초마다 폴링
-const MAX_POLL_DURATION_MS = 5 * 60 * 1000 // 최대 5분
+export const GENERATION_MAX_POLL_DURATION_MS = 8 * 60 * 60 * 1000
+export const REVIEW_MAX_POLL_DURATION_MS = 35 * 60 * 1000
 
 // 공통 에러 메시지: 백엔드 연결/환경변수 안내
 const API_UNAVAILABLE_MESSAGE =
@@ -38,6 +39,7 @@ export interface ContentGenerationOptions {
 
 // 생성 상태 콜백 타입
 export type ProgressCallback = (progress: GenerationProgress) => void
+export type JobCreatedCallback = (jobId: string) => void
 
 // JSON 응답 여부 확인
 function isJsonResponse(response: Response): boolean {
@@ -132,7 +134,8 @@ export class ClaudeApiClient {
   // 콘텐츠 생성 요청 (비동기 작업 생성 + 폴링)
   async generateContent(
     options: ContentGenerationOptions,
-    onProgress?: ProgressCallback
+    onProgress?: ProgressCallback,
+    onJobCreated?: JobCreatedCallback,
   ): Promise<GenerationResponse> {
     // 정적 배포 모드에서는 AI 생성 기능 비활성화
     if (isStaticMode) {
@@ -206,6 +209,7 @@ export class ClaudeApiClient {
       }
 
       const jobId = createResult.jobId
+      onJobCreated?.(jobId)
 
       // 폴링 시작
       if (onProgress) {
@@ -256,7 +260,7 @@ export class ClaudeApiClient {
   ): Promise<GenerationResponse> {
     const startTime = Date.now()
 
-    while (Date.now() - startTime < MAX_POLL_DURATION_MS) {
+    while (Date.now() - startTime < GENERATION_MAX_POLL_DURATION_MS) {
       // 상태 조회
       const statusUrl = buildApiUrl(`/api/generate/status/${jobId}`, this.baseUrl)
       const statusResponse = await fetch(statusUrl)
@@ -361,9 +365,10 @@ export const claudeApi = new ClaudeApiClient()
 // 편의 함수: 콘텐츠 생성
 export async function generateContent(
   options: ContentGenerationOptions,
-  onProgress?: ProgressCallback
+  onProgress?: ProgressCallback,
+  onJobCreated?: JobCreatedCallback,
 ): Promise<GenerationResponse> {
-  return claudeApi.generateContent(options, onProgress)
+  return claudeApi.generateContent(options, onProgress, onJobCreated)
 }
 
 // 편의 함수: 건강 상태 확인
@@ -426,7 +431,7 @@ export async function reviewContent(
 
     // 폴링으로 리뷰 완료 대기
     const startTime = Date.now()
-    const maxDuration = 3 * 60 * 1000 // 3분
+    const maxDuration = REVIEW_MAX_POLL_DURATION_MS
 
     while (Date.now() - startTime < maxDuration) {
       const statusUrl = buildApiUrl(`/api/generate/review/status/${jobId}`, API_BASE_URL)

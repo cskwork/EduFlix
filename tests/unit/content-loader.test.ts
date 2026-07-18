@@ -87,10 +87,8 @@ describe('content-loader', () => {
       expect(IFRAME_SANDBOX_ATTRS).toContain('allow-forms')
     })
 
-    it('IFRAME_SANDBOX_ATTRS가 allow-same-origin을 포함하지 않는다 (보안)', () => {
-      // allow-scripts + allow-same-origin 조합은 sandbox 보안을 무력화하므로
-      // allow-same-origin은 항상 제외해야 함
-      expect(IFRAME_SANDBOX_ATTRS).not.toContain('allow-same-origin')
+    it('신뢰된 정적 콘텐츠의 외부 리소스 로드를 위해 allow-same-origin을 포함한다', () => {
+      expect(IFRAME_SANDBOX_ATTRS).toContain('allow-same-origin')
     })
 
     it('IFRAME_ALLOW_ATTRS가 필요한 권한을 포함한다', () => {

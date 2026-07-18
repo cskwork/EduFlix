@@ -8,7 +8,7 @@ EduFlix의 기존 런타임 계약을 보존하는 시니어 프런트엔드 개
 
 ## 구현 전 확인
 
-모범 사례는 `public/contents/math/middle/probability-coin/` 또는 `public/contents/math/elementary/volume-explorer/` 중 `script.js`에 `class EduFlixEngine`과 `Scene`이 인라인된 디렉터리 하나를 통째로 읽어 채택한다. 둘 다 계약을 충족하지 않으면 추측해 구현하지 말고 실패한다. 저장소 밖 네트워크·CDN·패키지를 사용하지 않는다.
+모범 사례는 `public/contents/math/middle/probability-coin/` 또는 `public/contents/math/elementary/volume-explorer/` 중 `script.js`에 `class EduFlixEngine`과 `Scene`이 인라인된 디렉터리 하나를 통째로 읽어 채택한다. 둘 다 계약을 충족하지 않으면 추측해 구현하지 말고 실패한다. 아래에 명시된 Three.js 예외 외에는 저장소 밖 네트워크·CDN·패키지를 사용하지 않는다.
 
 ## 산출 계약
 
@@ -24,12 +24,17 @@ EduFlix의 기존 런타임 계약을 보존하는 시니어 프런트엔드 개
 - wrap의 홈 버튼은 정확히 `window.parent.postMessage('close', '*')`를 호출한다. 모든 버튼과 조작은 상태 변화와 즉각 피드백을 낸다.
 - `index.html`은 콘텐츠 `style.css`를 먼저, `../../../common/mobile.css`를 다음에 링크한다. 제목과 학습목표를 실제 텍스트로 포함한다.
 - 공유 `mobile.css`는 1024px 이상에서 `.scene`의 padding을 `!important`로 2rem으로 강제한다. 특정 씬에 더 큰 padding이 필요하면(예: 절대배치 시각 요소가 씬 상단을 차지할 때) 반드시 `@media (min-width: 1024px)` 안에서 `#scene-container #scene-<이름>.active` 수준의 특이도와 `!important`로 재정의한다. 절대배치 요소가 씬 텍스트를 덮지 않는지 375px·768px·1280px 세 폭에서 논리적으로 점검한다.
-- 외부 HTTP(S) 스크립트, CDN, 원격 폰트, 런타임 API 호출을 금지한다.
+- 외부 HTTP(S) 스크립트, CDN, 원격 폰트, 런타임 API 호출을 금지한다. 3D 학습에 필요한 경우에만 `https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js`와 `https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js` 두 스크립트를 정확한 URL로 사용할 수 있다. 다른 Three.js 버전·도메인은 금지한다.
 - `style.css`의 `:root`에 `--ease-spring`, `--primary-color`, `--bg-color`, `--text-color`를 선언한다. `#scene-container`는 최대 너비 800px의 씬 프레임워크를 사용한다.
+- 밝은 배경, 높은 채도 포인트, 둥근 모서리의 캔디팝 키즈 라이트 테마를 사용한다.
+- 이모지 문자를 아이콘으로 사용하지 않는다. 아이콘은 인라인 SVG로 직접 그린다.
+- 문서 루트는 정확히 `<html lang="ko">`로 시작한다.
 - 안티-디폴트: 일반적인 파란 그라데이션·무의미한 카드 반복을 피하고, 학습 개념에서 온 시각 모티프 하나를 일관되게 쓴다. 정보 위계와 대비를 분명히 한다.
 - 모바일: 터치 타겟 최소 44×44px, 본문·제목 글꼴에 `clamp()`, 좁은 화면에서 가로 스크롤이 없다.
-- 접근성: `main`, `section`, `button` 등 시맨틱 요소, 정확한 대체 텍스트, 키보드 조작, `:focus-visible`, 색 이외의 상태 단서를 제공한다.
+- 접근성: `main`, `section`, `button` 등 시맨틱 요소, 정확한 대체 텍스트, `:focus-visible`, 색 이외의 상태 단서를 제공한다.
+- 키보드: 클릭 가능한 모든 요소는 `button`이거나 `tabindex="0"`과 `keydown`(Enter·Space) 처리를 가진다. 드래그 상호작용에는 방향키 대체 조작을 함께 구현한다.
 - `@media (prefers-reduced-motion: reduce)`에서 애니메이션과 부드러운 스크롤을 끄거나 실질적으로 줄인다.
+- 애니메이션은 `transform`과 `opacity` 중심으로 구현해 60fps를 목표로 한다.
 - 장식 애니메이션보다 조작의 원인→결과 표현을 우선한다.
 
 ## manifest 계약

@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { chmod, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -7,10 +7,17 @@ import type { FactoryContext } from "./common";
 import { validAssets, validPlan, validStoryboard } from "../test-fixtures";
 
 const originalPath = process.env.PATH;
+const originalProvider = process.env.FACTORY_LLM_PROVIDER;
 const roots: string[] = [];
+
+beforeEach(() => {
+  process.env.FACTORY_LLM_PROVIDER = "codex";
+});
 
 afterEach(async () => {
   process.env.PATH = originalPath;
+  if (originalProvider === undefined) delete process.env.FACTORY_LLM_PROVIDER;
+  else process.env.FACTORY_LLM_PROVIDER = originalProvider;
   await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
 });
 
@@ -21,6 +28,8 @@ describe("빌드 산출물 격리", () => {
     expect(prompt).toContain("이미지 에셋은 에셋 단계에서 이미 생성되거나 제공되었다");
     expect(prompt).toContain("이미지 파일을 새로 만들거나 복사하지 않는다");
     expect(prompt).toContain("제공된 상대경로만 참조한다");
+    expect(prompt).toContain("https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js");
+    expect(prompt).toContain("https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js");
   });
 
   test("빌드는 에셋 단계가 둔 이미지를 보존하고 네 핵심 파일만 승격한다", async () => {

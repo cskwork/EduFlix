@@ -20,7 +20,7 @@ const catalog = `{
 
 const staticChecks = [
   "required-files", "manifest-schema", "manifest-path", "stylesheet-order", "five-scenes",
-  "engine-contract", "reduced-motion", "image-files", "no-external-script", "learning-text",
+  "engine-contract", "reduced-motion", "image-files", "no-external-script", "learning-text", "no-emoji",
 ].map((id) => ({ id, status: "pass" }));
 
 const passingJudge = {

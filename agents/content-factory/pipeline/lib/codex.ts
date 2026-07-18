@@ -6,6 +6,7 @@ const DEFAULT_TIMEOUT_MS = 15 * 60 * 1000;
 
 export interface CodexTextOptions {
   prompt: string;
+  label?: string;
   outFile: string;
   schemaFile?: string;
   workspaceWrite?: boolean;
@@ -81,7 +82,7 @@ export async function runCodexText(options: CodexTextOptions): Promise<void> {
   try {
     await runWithRetry(
       args,
-      "Codex 생성",
+      options.label ?? "Codex 생성",
       options.timeoutMs ?? DEFAULT_TIMEOUT_MS,
       () => rm(temporaryOutFile, { force: true }),
       async () => {

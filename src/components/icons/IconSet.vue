@@ -26,7 +26,7 @@ interface Props {
   color?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   size: 24,
   color: 'currentColor',
 })

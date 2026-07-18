@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { runCodexText } from "../lib/codex";
+import { runFactoryText } from "../lib/engine";
 import { assertPlan, assertStoryboard, stageOutputValidationError } from "../lib/validate";
 import { type FactoryContext, readJson, readPrompt, shouldRunStage, writeStageMetadata } from "./common";
 
@@ -10,7 +10,7 @@ export async function runStoryboardStage(context: FactoryContext): Promise<void>
   const generated = await shouldRunStage(outFile, context.force, { plan });
   if (generated) {
     const prompt = await readPrompt(context, "02-storyboard.md");
-    await runCodexText({
+    await runFactoryText({
       outFile,
       schemaFile: join(context.factoryDir, "schemas/storyboard.schema.json"),
       prompt: `${prompt}\n\n기획 JSON:\n${JSON.stringify(plan)}\nJSON만 출력하세요.`,

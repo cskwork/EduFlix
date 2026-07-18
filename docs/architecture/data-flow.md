@@ -76,7 +76,7 @@ function calculateSortScore(contentId: string): number {
 
 ```
 ┌────────┐  ┌─────────────┐  ┌───────────────┐  ┌──────────┐  ┌───────────┐
-│  User  │  │ CreatorView │  │GenerationStore│  │API Server│  │art-assets │
+│  User  │  │ CreatorView │  │GenerationStore│  │API Server│  │  Factory  │
 └───┬────┘  └──────┬──────┘  └───────┬───────┘  └────┬─────┘  └─────┬─────┘
     │              │                 │               │              │
     │ 관심사/과목 입력│                 │               │              │
@@ -88,7 +88,7 @@ function calculateSortScore(contentId: string): number {
     │              │                 │ POST /generate │              │
     │              │                 │──────────────>│              │
     │              │                 │               │              │
-    │              │                 │               │ createJob()  │
+    │              │                 │               │ startGeneration()
     │              │                 │               │─────────────>│
     │              │                 │               │              │
     │              │                 │               │   jobId      │
@@ -102,7 +102,7 @@ function calculateSortScore(contentId: string): number {
     │              │                 │               │              │
     │              │                 │ GET /status/id │              │
     │              │                 │──────────────>│              │
-    │              │                 │               │ getStatus()  │
+    │              │                 │               │ getJob()     │
     │              │                 │               │─────────────>│
     │              │                 │               │              │
     │              │                 │               │   status     │
@@ -119,7 +119,7 @@ function calculateSortScore(contentId: string): number {
     │              │                 │ status=completed              │
     │              │                 │<──────────────│              │
     │              │                 │               │              │
-    │              │                 │  [콘텐츠 동기화] │              │
+    │              │                 │   [게시 완료]    │              │
     │              │                 │               │              │
     │              │  완료 알림       │               │              │
     │              │<────────────────│               │              │
