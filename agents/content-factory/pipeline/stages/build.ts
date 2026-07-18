@@ -6,13 +6,28 @@ import { listSharedAssets, resolveAssetPaths } from "../lib/assets";
 import {
   assertAssetPlan, assertAssetPlanContext, assertPlan, assertStoryboard, type AssetPlan,
 } from "../lib/validate";
-import { type FactoryContext, readJson, readPrompt, shouldRunStage, writeStageMetadata } from "./common";
+import {
+  DEFAULT_RENDER_MODE, type FactoryContext, type RenderMode,
+  readJson, readPrompt, shouldRunStage, writeStageMetadata,
+} from "./common";
 
-async function findExample(context: FactoryContext): Promise<string> {
-  const candidates = [
-    join(context.rootDir, "public/contents/math/middle/probability-coin"),
-    join(context.rootDir, "public/contents/math/elementary/volume-explorer"),
-  ];
+// 3D 방식은 Three.js 인라인 엔진 콘텐츠를, 나머지는 DOM 기반 콘텐츠를 모범 사례로 채택한다.
+const EXAMPLE_CANDIDATES: Record<"3d" | "2d", string[]> = {
+  "3d": [
+    "public/contents/math/middle/space-diagonal",
+    "public/contents/math/middle/3d-coordinate-system",
+    "public/contents/math/elementary/3d-shapes-discovery",
+  ],
+  "2d": [
+    "public/contents/math/middle/probability-coin",
+    "public/contents/math/elementary/volume-explorer",
+  ],
+};
+
+async function findExample(context: FactoryContext, renderMode: RenderMode): Promise<string> {
+  const is3d = renderMode === "3d" || renderMode === "3d-game";
+  const candidates = [...EXAMPLE_CANDIDATES[is3d ? "3d" : "2d"], ...EXAMPLE_CANDIDATES[is3d ? "2d" : "3d"]]
+    .map((path) => join(context.rootDir, path));
   for (const dir of candidates) {
     const script = join(dir, "script.js");
     if (!existsSync(script)) continue;
@@ -76,12 +91,13 @@ async function promoteFiles(
 
 export async function runBuildStage(context: FactoryContext, revision = ""): Promise<void> {
   const required = ["index.html", "style.css", "script.js", "manifest.json"];
+  const renderMode = context.renderMode ?? DEFAULT_RENDER_MODE;
   const [plan, storyboard, assets, prompt, exampleDir, sharedAssets] = await Promise.all([
     readJson(join(context.runDir, "plan.json")),
     readJson(join(context.runDir, "storyboard.json")),
     readJson(join(context.runDir, "assets.json")),
     readPrompt(context, "04-build.md"),
-    findExample(context),
+    findExample(context, renderMode),
     listSharedAssets(context.rootDir),
   ]);
   assertPlan(plan);
@@ -94,7 +110,7 @@ export async function runBuildStage(context: FactoryContext, revision = ""): Pro
     ({ assetId, kind, sourcePath }));
   const responseFile = join(context.runDir, "build-response.txt");
   const inputs = { plan, storyboard, assets, resolvedAssets, id: context.id, grade: context.grade,
-    subject: context.subject, type: context.type ?? null };
+    subject: context.subject, type: context.type ?? null, renderMode };
   const incomplete = !required.every((file) => existsSync(join(context.contentDir, file)));
   if (!revision && !await shouldRunStage(responseFile, context.force || incomplete, inputs)) return;
 
@@ -117,7 +133,7 @@ export async function runBuildStage(context: FactoryContext, revision = ""): Pro
       requiredFiles: required,
       // 4파일 전체 생성은 기본 10분보다 오래 걸릴 수 있어 코드 생성 단계만 상향
       timeoutMs: 40 * 60 * 1000,
-      prompt: `${revisionHeader}${prompt}\n\n출력 디렉터리: ${stagingDir}\n최종 콘텐츠 디렉터리: ${context.contentDir}\n모범 사례 파일 본문: ${JSON.stringify(exampleFiles)}\n기획: ${JSON.stringify(plan)}\nmanifest 메타데이터: ${JSON.stringify({ id: context.id, title: plan.title, description: plan.description })}\n스토리보드: ${JSON.stringify(storyboard)}\n에셋 계획: ${JSON.stringify(assets)}\n검증된 에셋 참조 경로: ${JSON.stringify(assetReferences)}\n반드시 출력 디렉터리에 4개 계약 파일을 직접 작성하세요.`,
+      prompt: `${revisionHeader}${prompt}\n\n출력 디렉터리: ${stagingDir}\n최종 콘텐츠 디렉터리: ${context.contentDir}\n제작 방식(renderMode): ${renderMode}\n모범 사례 파일 본문: ${JSON.stringify(exampleFiles)}\n기획: ${JSON.stringify(plan)}\nmanifest 메타데이터: ${JSON.stringify({ id: context.id, title: plan.title, description: plan.description })}\n스토리보드: ${JSON.stringify(storyboard)}\n에셋 계획: ${JSON.stringify(assets)}\n검증된 에셋 참조 경로: ${JSON.stringify(assetReferences)}\n반드시 출력 디렉터리에 4개 계약 파일을 직접 작성하세요.`,
     });
     const missing: string[] = [];
     for (const file of required) {

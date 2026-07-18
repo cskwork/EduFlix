@@ -1,12 +1,16 @@
 // AI 생성 관련 타입 정의
 import type { Subject, Grade, ContentType, Language } from './content'
 
+// 콘텐츠 제작(렌더링) 방식 - 3d(Three.js 시뮬레이션)가 기본값
+export type RenderMode = '3d' | '3d-game' | 'canvas-game' | 'svg' | 'dom'
+
 // 생성 요청 입력 타입
 export interface GenerationRequest {
   interests: string[] // 사용자 관심사 태그
   subject: Subject
   grade: Grade
   contentType?: ContentType // 선택 사항, AI가 결정 가능
+  renderMode?: RenderMode // 선택 사항, 미지정 시 3d
   language: Language
   additionalContext?: string // 추가 컨텍스트
 }

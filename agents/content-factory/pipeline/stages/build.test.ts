@@ -88,6 +88,64 @@ exit 0
     expect(buildPrompt).not.toContain(join(contentDir, "thumbnail.png"));
   });
 
+  test("renderMode 기본값 3d는 3D 모범 사례를, dom은 DOM 모범 사례를 채택한다", async () => {
+    async function runWithMode(renderMode?: FactoryContext["renderMode"]): Promise<string> {
+      const rootDir = await mkdtemp(join(tmpdir(), "factory-build-mode-"));
+      roots.push(rootDir);
+      const runDir = join(rootDir, "agents/content-factory/runs/new-id");
+      const contentDir = join(rootDir, "public/contents/math/elementary/new-id");
+      const domExampleDir = join(rootDir, "public/contents/math/middle/probability-coin");
+      const threeExampleDir = join(rootDir, "public/contents/math/middle/space-diagonal");
+      const binDir = join(rootDir, "bin");
+      const promptDir = join(rootDir, "agents/content-factory/prompts");
+      await Promise.all([mkdir(runDir, { recursive: true }), mkdir(contentDir, { recursive: true }),
+        mkdir(domExampleDir, { recursive: true }), mkdir(threeExampleDir, { recursive: true }),
+        mkdir(binDir, { recursive: true }), mkdir(promptDir, { recursive: true })]);
+      await Promise.all([
+        writeFile(join(runDir, "plan.json"), JSON.stringify(validPlan())),
+        writeFile(join(runDir, "storyboard.json"), JSON.stringify(validStoryboard())),
+        writeFile(join(runDir, "assets.json"), JSON.stringify(validAssets("new-id"))),
+        writeFile(join(domExampleDir, "script.js"), "class EduFlixEngine {} class Scene {} /* DOM-EXAMPLE */"),
+        writeFile(join(threeExampleDir, "script.js"), "class EduFlixEngine {} class Scene {} /* THREE-EXAMPLE */"),
+        writeFile(join(promptDir, "methodology.md"), "방법론"),
+        writeFile(join(promptDir, "04-build.md"), "빌드"),
+      ]);
+      const executable = join(binDir, "codex");
+      const capturedPrompt = join(rootDir, "captured-build-prompt.txt");
+      await writeFile(executable, `#!/bin/sh
+out=""
+cwd=""
+while [ "$#" -gt 0 ]; do
+  last="$1"
+  [ "$1" = "-o" ] && { shift; out="$1"; }
+  [ "$1" = "-C" ] && { shift; cwd="$1"; }
+  shift
+done
+for file in index.html style.css script.js manifest.json; do printf '%s' "new-$file" > "$cwd/$file"; done
+printf '%s' "$last" > "${capturedPrompt}"
+printf '%s' done > "$out"
+exit 0
+`);
+      await chmod(executable, 0o755);
+      process.env.PATH = `${binDir}:${originalPath ?? ""}`;
+      const context = { rootDir, factoryDir: join(rootDir, "agents/content-factory"), runDir,
+        contentDir, id: "new-id", topic: "신규", grade: "elementary-5", gradeLevel: "elementary",
+        subject: "math", renderMode, force: true, skipImages: false } satisfies FactoryContext;
+      await runBuildStage(context);
+      return readFile(capturedPrompt, "utf8");
+    }
+
+    const defaultPrompt = await runWithMode(undefined);
+    expect(defaultPrompt).toContain("THREE-EXAMPLE");
+    expect(defaultPrompt).not.toContain("DOM-EXAMPLE");
+    expect(defaultPrompt).toContain("제작 방식(renderMode): 3d");
+
+    const domPrompt = await runWithMode("dom");
+    expect(domPrompt).toContain("DOM-EXAMPLE");
+    expect(domPrompt).not.toContain("THREE-EXAMPLE");
+    expect(domPrompt).toContain("제작 방식(renderMode): dom");
+  });
+
   test("force 빌드가 새 핵심 파일을 쓰지 않으면 기존 파일을 보존하고 실패한다", async () => {
     const rootDir = await mkdtemp(join(tmpdir(), "factory-build-"));
     roots.push(rootDir);

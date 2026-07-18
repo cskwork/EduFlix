@@ -66,3 +66,24 @@
 - manifest `createdAt`을 모델이 지어낸 날짜(2023-11-01) 그대로 두는 결함을 발견했다. build 단계 파일 승격 직후 서버 시각으로 덮어쓴다. QA digest 계산 전이라 publish 무결성 검사와 충돌하지 않는다. manifest가 JSON이 아니면 정규화를 건너뛰어 QA manifest-schema 검사가 명확한 오류로 잡게 했다.
 - 이모지 금지 규칙이 프롬프트에만 있고 검사에 없어 산출물에 이모지 1개가 통과했다. 정적 QA에 `no-emoji` 검사(Extended_Pictographic)를 추가했다.
 - 발행된 콘텐츠의 이모지·createdAt은 수동 교정했고, 카탈로그 개수 테스트를 81로 갱신했다.
+
+## 콘텐츠 제작 방식(renderMode) 도입 — 3D(Three.js) 기본값
+
+### 배경
+- 요구사항: 콘텐츠를 Three.js 3D 또는 게임 엔진 방식으로 생성하되(단순한 3D), 3D를 기본값으로 하고 사용자가 3~5가지 제작 방식 중 선택할 수 있게 한다.
+
+### 설계 결정
+- 새 축 `renderMode`(구현 기술)를 기존 `contentType`(교육 형식: simulation/game/quiz…)과 분리했다. 하나의 축에 합치면 "3D 시뮬레이션"과 "DOM 시뮬레이션"을 구분할 수 없기 때문이다.
+- 5가지 방식: `3d`(Three.js 시뮬레이션, 기본값) | `3d-game`(Three.js+게임 루프) | `canvas-game`(Canvas 2D 게임) | `svg`(인터랙티브 SVG) | `dom`(클래식 카드·버튼). 요청 범위 3~5개 중 5개를 채택 — "Three.js 기반"과 "게임 엔진 방식" 요구를 모두 독립 옵션으로 노출하기 위해서다.
+- 정본 목록은 `pipeline/stages/common.ts`의 `RENDER_MODES`에 두고 서버 라우트가 재사용한다. 프런트 타입은 기존 `ContentType` 관례를 따라 `src/types/generation.ts`에 리터럴 유니언으로 둔다(파이프라인→src 역방향 의존 회피).
+- plan 산출 스키마는 변경하지 않았다. renderMode는 사용자 선택값이므로 모델이 재결정할 필드가 아니라 컨텍스트로만 전달한다. 대신 01/02/04 프롬프트에 방식별 설계·구현 지침을 명문화했다.
+- 04-build.md의 Three.js 예외("3D 학습에 필요한 경우에만")를 renderMode 조건("3d·3d-game이면 반드시 사용")으로 바꿨다. 허용 URL 2개(jsDelivr three@0.128.0 + OrbitControls)는 기존 정적 QA 허용 목록과 동일해 QA 변경이 불필요했다.
+- build 모범 사례 선택(findExample)을 방식 기반으로 바꿨다: 3D 방식이면 space-diagonal → 3d-coordinate-system → 3d-shapes-discovery 우선, 그 외 DOM 사례(probability-coin 등) 우선. 후보가 없으면 반대 그룹으로 폴백해 기존 배포 호환을 유지한다.
+- 3D 공통 규칙(리사이즈 대응, core 씬 활성 시에만 rAF 루프, 기본 지오메트리만 사용, WebGL 실패 시 정적 대체 화면)을 04-build.md에 계약으로 추가했다. "복잡하지 않은 3D" 요구를 기본 지오메트리 제한으로 구현했다.
+- renderMode를 각 스테이지 입력 다이제스트에 포함해 방식 변경 시 캐시 재사용을 차단했다.
+- UI는 Creator 마법사 4단계 "만드는 방식"으로 추가(RenderModeSelect.vue, 3D 사전 선택 + 추천 배지). 기본값이 있으므로 건너뛰어도 3D로 생성된다.
+
+### 검증
+- bun test: 라우트 renderMode 400 검증, build 모범 사례 선택(기본 3d→THREE 사례, dom→DOM 사례) 테스트 추가, 신규 실패 0건(기존 실패 9건은 vitest 전용 파일이 bun test에 걸리는 사전 존재 이슈).
+- vitest 310건 전체 통과, eslint 통과, vue-tsc+vite build 통과.
+- 실생성 검증: `cylinder-volume`(초6 수학 "원기둥의 부피", renderMode 기본값 3d)을 CLI로 실행 — plan이 "renderMode가 3D로 지정되었으므로"를 근거로 3D 뷰포트 중심 core를 설계함을 확인.

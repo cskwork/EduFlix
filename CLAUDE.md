@@ -202,9 +202,17 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
 - 콘텐츠는 신뢰할 수 있는 정적 파일이므로 보안상 허용
 - `allow-same-origin` 제외 시 sandbox 우회 방지 (allow-scripts와 조합 시 보안 이슈)
 
+**Content Render Modes** (`renderMode`, 2026-07-18 도입):
+- 콘텐츠 제작(렌더링) 방식 축. 교육 형식 축인 `contentType`(simulation/game/quiz/exploration/story)과 독립.
+- 5종: `3d`(Three.js 시뮬레이션, **기본값**) | `3d-game`(Three.js+게임 루프) | `canvas-game`(Canvas 2D 게임) | `svg`(인터랙티브 SVG) | `dom`(클래식 카드·버튼)
+- 정본 목록: `agents/content-factory/pipeline/stages/common.ts`의 `RENDER_MODES` (+`DEFAULT_RENDER_MODE='3d'`). 프런트 타입: `src/types/generation.ts`의 `RenderMode`
+- 전달 경로: CreatorWizard 4단계(RenderModeSelect) → `POST /api/generate` `renderMode` → FactoryContext → 01/02/04 프롬프트. CLI: `bun run factory -- ... --render-mode <방식>`
+- `3d`·`3d-game`만 Three.js CDN 2종(v0.128.0 three.min.js + OrbitControls.js) 사용 가능(정적 QA 허용 목록과 동일), 그 외 방식은 외부 스크립트 전면 금지
+- build 모범 사례: 3D 방식이면 space-diagonal 등 Three.js 인라인 엔진 콘텐츠, 그 외에는 probability-coin 등 DOM 콘텐츠를 자동 채택
+
 **API Endpoints**:
 - `GET/POST /api/content` - 콘텐츠 CRUD (카탈로그 경로: `public/contents/index.json`)
-- `POST /api/generate` - AI 콘텐츠 생성
+- `POST /api/generate` - AI 콘텐츠 생성 (`renderMode` 선택 입력, 미지정 시 `3d`)
 - `GET /api/recommendations` - 인기 콘텐츠 목록 (SQLite 기반, 서버 필수)
 - `POST /api/recommendations/click` - 콘텐츠 클릭 기록
   - **Claude 응답 검증** (server/routes/generate.ts):

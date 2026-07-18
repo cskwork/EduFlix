@@ -4,7 +4,9 @@ import { mkdir, readdir } from "node:fs/promises";
 import { basename, join, relative, resolve } from "node:path";
 import { runAssetsStage } from "./stages/assets";
 import { runBuildStage } from "./stages/build";
-import { assertSafeContentId, type FactoryContext } from "./stages/common";
+import {
+  assertSafeContentId, DEFAULT_RENDER_MODE, RENDER_MODES, type FactoryContext, type RenderMode,
+} from "./stages/common";
 import { runPlanStage } from "./stages/plan";
 import { runPublishStage } from "./stages/publish";
 import { runQaStage, runStaticQa } from "./stages/qa";
@@ -23,6 +25,7 @@ const HELP = `AI 콘텐츠 팩토리
 
 옵션:
   --type <유형>          simulation | game | quiz | exploration | story
+  --render-mode <방식>   3d | 3d-game | canvas-game | svg | dom (기본값 3d)
   --id <슬러그>          콘텐츠 고유 id
   --skip-images          신규 이미지 생성을 건너뜀
   --stage <단계>         plan | storyboard | assets | build | qa | publish만 실행
@@ -40,6 +43,7 @@ interface CliOptions {
   grade?: string;
   subject?: FactoryContext["subject"];
   type?: ContentType;
+  renderMode?: RenderMode;
   id?: string;
   stage?: Stage;
   skipImages: boolean;
@@ -49,7 +53,7 @@ interface CliOptions {
 
 function parseArgs(args: string[]): CliOptions {
   const options: CliOptions = { skipImages: false, force: false, help: false };
-  const valueFlags = new Set(["--topic", "--grade", "--subject", "--type", "--id", "--stage"]);
+  const valueFlags = new Set(["--topic", "--grade", "--subject", "--type", "--render-mode", "--id", "--stage"]);
   for (let index = 0; index < args.length; index += 1) {
     const flag = args[index];
     if (flag === "--skip-images") options.skipImages = true;
@@ -63,6 +67,7 @@ function parseArgs(args: string[]): CliOptions {
       else if (flag === "--grade") options.grade = value;
       else if (flag === "--subject") options.subject = value as CliOptions["subject"];
       else if (flag === "--type") options.type = value as ContentType;
+      else if (flag === "--render-mode") options.renderMode = value as RenderMode;
       else if (flag === "--id") options.id = value;
       else options.stage = value as Stage;
     } else throw new Error(`알 수 없는 인자입니다: ${flag}`);
@@ -109,6 +114,9 @@ function validateOptions(options: CliOptions): void {
   if (options.type && !["simulation", "game", "quiz", "exploration", "story"].includes(options.type)) {
     throw new Error(`지원하지 않는 콘텐츠 유형입니다: ${options.type}`);
   }
+  if (options.renderMode && !RENDER_MODES.includes(options.renderMode)) {
+    throw new Error(`지원하지 않는 제작 방식입니다: ${options.renderMode}`);
+  }
   if (options.grade && !/^(elementary-[1-6]|middle-[1-3]|high-[1-3])$/.test(options.grade)) {
     throw new Error(`학년 형식이 올바르지 않습니다: ${options.grade}`);
   }
@@ -151,6 +159,7 @@ async function createContext(options: CliOptions): Promise<FactoryContext> {
     rootDir, factoryDir, runDir, contentDir, id,
     topic: topic ?? basename(contentDir),
     grade, gradeLevel: level, subject, type: options.type,
+    renderMode: options.renderMode ?? DEFAULT_RENDER_MODE,
     force: options.force, skipImages: options.skipImages || llmProvider === "zai", llmProvider,
     existingContentQa: isExistingQa,
   };

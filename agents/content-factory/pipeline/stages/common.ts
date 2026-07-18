@@ -4,6 +4,11 @@ import { createHash } from "node:crypto";
 import { join } from "node:path";
 import type { FactoryLlmProvider } from "../lib/engine";
 
+// 콘텐츠 제작(렌더링) 방식. 3d(Three.js 시뮬레이션)가 기본값이다.
+export const RENDER_MODES = ["3d", "3d-game", "canvas-game", "svg", "dom"] as const;
+export type RenderMode = (typeof RENDER_MODES)[number];
+export const DEFAULT_RENDER_MODE: RenderMode = "3d";
+
 export interface FactoryContext {
   rootDir: string;
   factoryDir: string;
@@ -15,6 +20,7 @@ export interface FactoryContext {
   gradeLevel: "elementary" | "middle" | "high";
   subject: "math" | "science" | "english";
   type?: "simulation" | "game" | "quiz" | "exploration" | "story";
+  renderMode?: RenderMode;
   force: boolean;
   skipImages: boolean;
   existingContentQa?: boolean;

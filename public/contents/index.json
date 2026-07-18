@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-07-18T05:18:54.490Z",
+  "lastUpdated": "2026-07-18T06:33:25.708Z",
   "contents": [
     {
       "id": "fractions-pizza",
@@ -1007,6 +1007,28 @@
         "초등학교 4학년",
         "생명",
         "게임"
+      ]
+    }
+  ,
+    {
+      "id": "cylinder-volume",
+      "title": "원기둥의 부피: 공간의 들이를 계산하자",
+      "subject": "math",
+      "gradeLevel": "elementary",
+      "grade": "elementary-6",
+      "type": "simulation",
+      "language": "ko",
+      "description": "3D 입체 도형을 회전하고 조작하며 원기둥의 부피가 '밑면적 × 높이'임을 발견하고 계산하는 인터랙티브 시뮬레이션입니다.",
+      "path": "/contents/math/elementary/cylinder-volume/index.html",
+      "thumbnail": "/contents/backgrounds/bg-grid-paper-math-subtle-20260125.png",
+      "createdAt": "2026-07-18T06:32:08.202Z",
+      "tags": [
+        "원기둥",
+        "부피",
+        "3D",
+        "시뮬레이션",
+        "초등수학",
+        "공간의들이"
       ]
     }
   ]

@@ -7,7 +7,7 @@ import { getFactoryLlmConfig } from '../../agents/content-factory/pipeline/lib/e
 import { assertPlan, type ContentManifest, type PlanOutput } from '../../agents/content-factory/pipeline/lib/validate'
 import { runAssetsStage } from '../../agents/content-factory/pipeline/stages/assets'
 import { runBuildStage } from '../../agents/content-factory/pipeline/stages/build'
-import { assertSafeContentId, readJson, type FactoryContext } from '../../agents/content-factory/pipeline/stages/common'
+import { assertSafeContentId, DEFAULT_RENDER_MODE, readJson, type FactoryContext } from '../../agents/content-factory/pipeline/stages/common'
 import { runPlanStage } from '../../agents/content-factory/pipeline/stages/plan'
 import { runPublishStage } from '../../agents/content-factory/pipeline/stages/publish'
 import { runQaStage, runReviewJudge, runStaticQa } from '../../agents/content-factory/pipeline/stages/qa'
@@ -198,7 +198,8 @@ export class FactoryRunner {
       rootDir: this.rootDir, factoryDir: this.factoryDir, runDir,
       contentDir: join(this.rootDir, 'public/contents', subject, level, temporaryId),
       id: temporaryId, topic: request.interests.join(', '), grade: request.grade, gradeLevel: level,
-      subject, type: request.contentType, force: false, skipImages: provider === 'zai',
+      subject, type: request.contentType, renderMode: request.renderMode ?? DEFAULT_RENDER_MODE,
+      force: false, skipImages: provider === 'zai',
       interests: request.interests, additionalContext: request.additionalContext, llmProvider: provider,
     }
     try {
