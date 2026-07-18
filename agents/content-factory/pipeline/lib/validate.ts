@@ -137,10 +137,11 @@ function validatePlan(value: unknown, errors: string[]): value is PlanOutput {
       !isNonEmptyString(value.title) || !isNonEmptyString(value.description)) {
     errors.push("기획 산출물에는 안전한 slug, title, description이 필요합니다.");
   }
+  // subject는 kebab-case slug면 허용 (math, science, english, coding, toeic 등)
   if (!isNonEmptyString(value.topic) || !isNonEmptyString(value.grade) ||
       !/^(elementary-[1-6]|middle-[1-3]|high-[1-3])$/.test(String(value.grade)) ||
-      !["math", "science", "english"].includes(String(value.subject))) {
-    errors.push("기획 산출물에는 topic, grade, subject가 필요합니다.");
+      !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(String(value.subject))) {
+    errors.push("기획 산출물에는 topic, grade, subject(slug)가 필요합니다.");
   }
   validateNamedObjects(value.prerequisites, ["knowledge", "check"], "prerequisites", errors);
   validateNamedObjects(value.misconceptions, ["misconception", "correction"], "misconceptions", errors);
@@ -423,8 +424,8 @@ export function validateManifest(value: unknown): ValidationResult<ContentManife
       !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value.createdAt)) {
     errors.push("manifest의 'createdAt'은 UTC ISO 8601 문자열이어야 합니다.");
   }
-  if (isNonEmptyString(value.subject) && !["math", "science", "english"].includes(value.subject)) {
-    errors.push("manifest의 'subject' 값이 허용된 교과가 아닙니다.");
+  if (isNonEmptyString(value.subject) && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.subject)) {
+    errors.push("manifest의 'subject' 값이 안전한 slug가 아닙니다.");
   }
   if (isNonEmptyString(value.gradeLevel) && !["elementary", "middle", "high"].includes(value.gradeLevel)) {
     errors.push("manifest의 'gradeLevel' 값이 허용된 학교급이 아닙니다.");

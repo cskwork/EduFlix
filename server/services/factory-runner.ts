@@ -7,7 +7,10 @@ import { getFactoryLlmConfig } from '../../agents/content-factory/pipeline/lib/e
 import { assertPlan, type ContentManifest, type PlanOutput } from '../../agents/content-factory/pipeline/lib/validate'
 import { runAssetsStage } from '../../agents/content-factory/pipeline/stages/assets'
 import { runBuildStage } from '../../agents/content-factory/pipeline/stages/build'
-import { assertSafeContentId, DEFAULT_RENDER_MODE, readJson, type FactoryContext } from '../../agents/content-factory/pipeline/stages/common'
+import {
+  assertSafeContentId, DEFAULT_CREATOR_MODE, DEFAULT_RENDER_MODE, DIFFICULTY_TO_GRADE,
+  isSubjectSlug, readJson, type Difficulty, type FactoryContext,
+} from '../../agents/content-factory/pipeline/stages/common'
 import { runPlanStage } from '../../agents/content-factory/pipeline/stages/plan'
 import { runPublishStage } from '../../agents/content-factory/pipeline/stages/publish'
 import { runQaStage, runReviewJudge, runStaticQa } from '../../agents/content-factory/pipeline/stages/qa'
@@ -55,10 +58,21 @@ function gradeLevel(grade: string): FactoryContext['gradeLevel'] {
   throw new Error(`지원하지 않는 학년입니다: ${grade}`)
 }
 
-function supportedSubject(subject: string): FactoryContext['subject'] {
-  if (subject === 'math' || subject === 'science' || subject === 'english') return subject
-  throw new Error(`지원하지 않는 과목입니다: ${subject}`)
+function supportedSubject(subject: string): string {
+  if (!isSubjectSlug(subject)) {
+    throw new Error(`지원하지 않는 과목 형태입니다 (kebab-case slug 필요): ${subject}`)
+  }
+  return subject
 }
+
+function gradeForDifficulty(difficulty: Difficulty): string {
+  return DIFFICULTY_TO_GRADE[difficulty]
+}
+
+// Option 2(problem) 모드에서 문제 텍스트로부터 subject를 추론할 수 없을 때의 기본값.
+// 실제 subject는 plan 단계 LLM이 problem에서 추론해 결정하지만, 저장 경로는 미리 잡아야 하므로
+// 임시 폴더는 'general' 슬러그로 진행하고 plan 결과로 최종 이동한다.
+const TEMP_SUBJECT_FOR_PROBLEM = 'general'
 
 function formatTemporaryRunId(date = new Date()): string {
   const pad = (value: number) => String(value).padStart(2, '0')
@@ -191,28 +205,55 @@ export class FactoryRunner {
   private async runGeneration(job: FactoryJob, request: GenerationRequest): Promise<FactoryJob> {
     const temporaryId = this.temporaryRunId()
     let runDir = join(this.factoryDir, 'runs', temporaryId)
-    const level = gradeLevel(request.grade)
-    const subject = supportedSubject(request.subject)
     const provider = getFactoryLlmConfig().provider
+    const mode = request.mode ?? DEFAULT_CREATOR_MODE
+
+    // 모드별 초기 subject/grade/topic 도출
+    let subject: string
+    let grade: string
+    let topic: string
+    if (mode === 'problem') {
+      // Option 2: problem 텍스트가 토픽. difficulty → grade 매핑.
+      // subject가 사용자에게서 오지 않았으면 plan LLM이 problem에서 추론할 것임.
+      subject = request.subject ?? TEMP_SUBJECT_FOR_PROBLEM
+      grade = gradeForDifficulty(request.difficulty!)
+      topic = request.problem!
+    } else {
+      // Option 1 (interest): 관심사가 토픽. subject/grade는 사용자 선택.
+      subject = supportedSubject(request.subject!)
+      grade = request.grade!
+      topic = request.interests!.join(', ')
+    }
+    const level = gradeLevel(grade)
+
     const context: FactoryContext = {
       rootDir: this.rootDir, factoryDir: this.factoryDir, runDir,
       contentDir: join(this.rootDir, 'public/contents', subject, level, temporaryId),
-      id: temporaryId, topic: request.interests.join(', '), grade: request.grade, gradeLevel: level,
-      subject, type: request.contentType, renderMode: request.renderMode ?? DEFAULT_RENDER_MODE,
+      id: temporaryId, topic, grade, gradeLevel: level, subject,
+      type: request.contentType, renderMode: request.renderMode ?? DEFAULT_RENDER_MODE,
       force: false, skipImages: provider === 'zai',
       interests: request.interests, additionalContext: request.additionalContext, llmProvider: provider,
+      mode, problem: request.problem, difficulty: request.difficulty,
     }
     try {
       await mkdir(runDir, { recursive: true })
-      this.update(job, { status: 'processing', progress: 10, message: '학습 주제를 기획하고 있습니다...' })
+      this.update(job, { status: 'processing', progress: 10,
+        message: mode === 'problem' ? '문제를 재미있는 콘텐츠로 기획하고 있습니다...' : '학습 주제를 기획하고 있습니다...' })
       await this.stages.plan(context)
       const plan = await readJson<PlanOutput>(join(runDir, 'plan.json'))
       assertPlan(plan)
       const id = await this.finalId(plan)
+
+      // problem 모드에서 사용자가 subject를 주지 않았다면 plan이 결정한 subject로 경로 보정
+      if (mode === 'problem' && !request.subject && isSubjectSlug(plan.subject)) {
+        subject = supportedSubject(plan.subject)
+      }
+
       const finalRunDir = join(this.factoryDir, 'runs', id)
       await rename(runDir, finalRunDir)
       runDir = finalRunDir
-      Object.assign(context, { id, runDir, contentDir: join(this.rootDir, 'public/contents', subject, level, id) })
+      Object.assign(context, { id, runDir, subject,
+        contentDir: join(this.rootDir, 'public/contents', subject, level, id) })
 
       this.update(job, { progress: 30, contentId: id, message: '스토리보드를 설계하고 있습니다...' })
       await this.stages.storyboard(context)

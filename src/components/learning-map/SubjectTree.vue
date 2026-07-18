@@ -19,16 +19,16 @@ const emit = defineEmits<{
 
 const isExpanded = ref(false)
 
-const subjectLabel = computed(() => SUBJECT_LABELS[props.subject])
+const subjectLabel = computed(() => SUBJECT_LABELS[props.subject] ?? props.subject)
 
 const subjectIcon = computed<IconName>(() => {
-  const icons: Record<Subject, IconName> = {
+  const icons: Record<string, IconName> = {
     math: 'math',
     science: 'science',
     english: 'english',
     'world-history': 'world-history',
   }
-  return icons[props.subject]
+  return icons[props.subject] ?? 'book'
 })
 
 // 학년별로 노드 그룹화

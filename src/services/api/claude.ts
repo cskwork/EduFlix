@@ -8,10 +8,11 @@ import type {
   GenerationStatus,
   JobStatusResponse,
   RenderMode,
+  CreatorMode,
   ReviewProgress,
   ReviewStatusResponse,
 } from '../../types/generation'
-import type { Subject, Grade, Language } from '../../types/content'
+import type { Subject, Grade, Language, Difficulty } from '../../types/content'
 import { buildApiUrl } from './url'
 
 // API 엔드포인트 설정
@@ -31,12 +32,18 @@ const API_UNAVAILABLE_MESSAGE =
 
 // 생성 요청 타입
 export interface ContentGenerationOptions {
-  interests: string[]
-  subject: Subject
-  grade: Grade
+  mode?: CreatorMode
+  // Option 1 (interest)
+  interests?: string[]
+  subject?: Subject
+  grade?: Grade
+  // 공통
   language: Language
   renderMode?: RenderMode
   additionalContext?: string
+  // Option 2 (problem)
+  problem?: string
+  difficulty?: Difficulty
 }
 
 // 생성 상태 콜백 타입
@@ -169,14 +176,17 @@ export class ClaudeApiClient {
       // 정적 배포/프록시 오동작 시 HTML 응답을 조기에 감지한다
       await this.ensureApiAvailable()
 
-      // API 요청 구성
+      // API 요청 구성 - undefined 필드는 JSON.stringify에서 자동 제외됨
       const request: GenerationRequest = {
+        mode: options.mode,
         interests: options.interests,
         subject: options.subject,
         grade: options.grade,
         language: options.language,
         renderMode: options.renderMode,
         additionalContext: options.additionalContext,
+        problem: options.problem,
+        difficulty: options.difficulty,
       }
 
       // 작업 생성 요청

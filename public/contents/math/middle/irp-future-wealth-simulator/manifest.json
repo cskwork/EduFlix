@@ -1,0 +1,22 @@
+{
+  "id": "irp-future-wealth-simulator",
+  "title": "시간 여행 자산 시뮬레이터: 30년 뒤 나의 지갑은?",
+  "subject": "math",
+  "gradeLevel": "middle",
+  "grade": "middle-2",
+  "type": "simulation",
+  "language": "ko",
+  "description": "IRP의 세 가지 마법(의무 이전, 세액공제, 과세이연)을 3D 시간 여행 시뮬레이션으로 직접 조작하며 체험하는 발견 학습 콘텐츠입니다.",
+  "path": "/contents/math/middle/irp-future-wealth-simulator/index.html",
+  "thumbnail": "/contents/backgrounds/bg-geometric-shapes-pastel-20260125.png",
+  "createdAt": "2026-07-18T09:12:47.410Z",
+  "tags": [
+    "IRP",
+    "개인형퇴직연금",
+    "세액공제",
+    "과세이연",
+    "경제교육",
+    "자산관리",
+    "중학교수학"
+  ]
+}

@@ -5,7 +5,6 @@ import { useLearningStore } from '../stores/learning'
 import LoadingSpinner from '../components/common/LoadingSpinner.vue'
 import IconSet, { type IconName } from '../components/icons/IconSet.vue'
 import { SUBJECT_LABELS } from '../types/content'
-import type { Subject } from '../types/content'
 
 const learningStore = useLearningStore()
 const router = useRouter()
@@ -18,11 +17,19 @@ const stats = computed(() => learningStore.stats)
 const subjectProgress = computed(() => learningStore.subjectProgress)
 const nextNodes = computed(() => learningStore.nextRecommendedNodes)
 
-const subjectIcons: Record<Subject, IconName> = {
+const subjectIcons: Record<string, IconName> = {
   math: 'math',
   science: 'science',
   english: 'english',
   'world-history': 'world-history',
+}
+
+function iconForSubject(subject: string): IconName {
+  return subjectIcons[subject] ?? 'book'
+}
+
+function labelForSubject(subject: string): string {
+  return SUBJECT_LABELS[subject] ?? subject
 }
 
 function goToMap() {
@@ -104,8 +111,8 @@ function resetProgress() {
             class="subject-progress-item"
           >
             <div class="subject-info">
-              <IconSet :name="subjectIcons[progress.subject]" :size="24" class="subject-icon" />
-              <span class="subject-name">{{ SUBJECT_LABELS[progress.subject] }}</span>
+              <IconSet :name="iconForSubject(progress.subject)" :size="24" class="subject-icon" />
+              <span class="subject-name">{{ labelForSubject(progress.subject) }}</span>
             </div>
 
             <div class="progress-container">
@@ -137,10 +144,10 @@ function resetProgress() {
             class="next-node-card"
             @click="node.contentIds[0] && goToContent(node.contentIds[0])"
           >
-            <IconSet :name="subjectIcons[node.subject]" :size="24" class="next-icon" />
+            <IconSet :name="iconForSubject(node.subject)" :size="24" class="next-icon" />
             <div class="next-info">
               <span class="next-name">{{ node.name }}</span>
-              <span class="next-subject">{{ SUBJECT_LABELS[node.subject] }}</span>
+              <span class="next-subject">{{ labelForSubject(node.subject) }}</span>
             </div>
             <IconSet v-if="node.contentIds.length > 0" name="arrow-right" :size="18" class="next-arrow" />
           </div>

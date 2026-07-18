@@ -52,6 +52,27 @@ async function normalizeManifestCreatedAt(manifestPath: string): Promise<void> {
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 }
 
+// subject/grade/gradeLevel/id/path는 저장 경로와 검증 계약에 묶인 구조적 값이라
+// LLM이 창의적으로 바꾸면 안 된다. 컨텍스트 기준으로 확정해 덮어쓴다.
+async function normalizeManifestStructuralFields(
+  manifestPath: string, context: FactoryContext,
+): Promise<void> {
+  let manifest: Record<string, unknown>;
+  try {
+    const parsed = JSON.parse(await readFile(manifestPath, "utf8"));
+    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return;
+    manifest = parsed as Record<string, unknown>;
+  } catch {
+    return;
+  }
+  manifest.id = context.id;
+  manifest.subject = context.subject;
+  manifest.grade = context.grade;
+  manifest.gradeLevel = context.gradeLevel;
+  manifest.path = `/contents/${context.subject}/${context.gradeLevel}/${context.id}/index.html`;
+  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+}
+
 async function promoteFiles(
   stagingDir: string, contentDir: string, runDir: string, required: string[],
 ): Promise<void> {
@@ -133,7 +154,7 @@ export async function runBuildStage(context: FactoryContext, revision = ""): Pro
       requiredFiles: required,
       // 4파일 전체 생성은 기본 10분보다 오래 걸릴 수 있어 코드 생성 단계만 상향
       timeoutMs: 40 * 60 * 1000,
-      prompt: `${revisionHeader}${prompt}\n\n출력 디렉터리: ${stagingDir}\n최종 콘텐츠 디렉터리: ${context.contentDir}\n제작 방식(renderMode): ${renderMode}\n모범 사례 파일 본문: ${JSON.stringify(exampleFiles)}\n기획: ${JSON.stringify(plan)}\nmanifest 메타데이터: ${JSON.stringify({ id: context.id, title: plan.title, description: plan.description })}\n스토리보드: ${JSON.stringify(storyboard)}\n에셋 계획: ${JSON.stringify(assets)}\n검증된 에셋 참조 경로: ${JSON.stringify(assetReferences)}\n반드시 출력 디렉터리에 4개 계약 파일을 직접 작성하세요.`,
+      prompt: `${revisionHeader}${prompt}\n\n출력 디렉터리: ${stagingDir}\n최종 콘텐츠 디렉터리: ${context.contentDir}\n제작 방식(renderMode): ${renderMode}\n모범 사례 파일 본문: ${JSON.stringify(exampleFiles)}\n기획: ${JSON.stringify(plan)}\nmanifest 메타데이터(반드시 그대로 사용, 임의 변경 금지): ${JSON.stringify({ id: context.id, title: plan.title, description: plan.description, subject: context.subject, grade: context.grade, gradeLevel: context.gradeLevel, path: `/contents/${context.subject}/${context.gradeLevel}/${context.id}/index.html` })}\n스토리보드: ${JSON.stringify(storyboard)}\n에셋 계획: ${JSON.stringify(assets)}\n검증된 에셋 참조 경로: ${JSON.stringify(assetReferences)}\n반드시 출력 디렉터리에 4개 계약 파일을 직접 작성하세요.`,
     });
     const missing: string[] = [];
     for (const file of required) {
@@ -150,6 +171,7 @@ export async function runBuildStage(context: FactoryContext, revision = ""): Pro
     }
     await promoteFiles(stagingDir, context.contentDir, context.runDir, required);
     await normalizeManifestCreatedAt(join(context.contentDir, "manifest.json"));
+    await normalizeManifestStructuralFields(join(context.contentDir, "manifest.json"), context);
     await writeStageMetadata(responseFile, inputs);
   } finally {
     await rm(stagingDir, { recursive: true, force: true });

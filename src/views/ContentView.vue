@@ -68,7 +68,14 @@ async function loadContent() {
   }
 
   // ID로 콘텐츠 찾기
-  const found = contentStore.getContentById(props.id)
+  let found = contentStore.getContentById(props.id)
+
+  // 찾지 못했으면 캐시된 카탈로그일 수 있으니 강제 새로고침 후 재시도.
+  // 생성 직후 브라우저가 옛날 index.json을 캐시해둔 경우가 흔하다.
+  if (!found) {
+    await contentStore.loadContents(true)
+    found = contentStore.getContentById(props.id)
+  }
 
   if (!found) {
     error.value = '콘텐츠를 찾을 수 없습니다'

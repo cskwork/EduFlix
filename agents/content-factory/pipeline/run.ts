@@ -1,11 +1,12 @@
 #!/usr/bin/env bun
 import { existsSync } from "node:fs";
 import { mkdir, readdir } from "node:fs/promises";
-import { basename, join, relative, resolve } from "node:path";
+import { join, relative, resolve } from "node:path";
 import { runAssetsStage } from "./stages/assets";
 import { runBuildStage } from "./stages/build";
 import {
-  assertSafeContentId, DEFAULT_RENDER_MODE, RENDER_MODES, type FactoryContext, type RenderMode,
+  assertSafeContentId, DEFAULT_RENDER_MODE, DIFFICULTY_TO_GRADE, RENDER_MODES,
+  type Difficulty, type FactoryContext, type RenderMode,
 } from "./stages/common";
 import { runPlanStage } from "./stages/plan";
 import { runPublishStage } from "./stages/publish";
@@ -15,15 +16,24 @@ import { getFactoryLlmConfig } from "./lib/engine";
 
 const HELP = `AI 콘텐츠 팩토리
 
-사용법:
+사법 1 (interest 모드, 기본):
   bun run factory -- --topic <주제> --grade <학년> --subject <교과> [옵션]
 
-필수 인자:
+사법 2 (problem 모드, 문제 → 재미있게 변환):
+  bun run factory -- --mode problem --problem "<문제 텍스트>" --difficulty <쉬움|보통|어려움> [옵션]
+
+필수 인자 (interest 모드):
   --topic <문자열>       학습 주제
   --grade <학년>         elementary-1..6, middle-1..3, high-1..3
-  --subject <교과>       math | science | english
+  --subject <교과>       kebab-case slug (math, science, english, coding, toeic, ...)
 
-옵션:
+필수 인자 (problem 모드):
+  --problem <문자열>     변환할 원본 문제 텍스트
+  --difficulty <난이도>  easy | medium | hard
+  --subject <교과>       선택 (생략 시 AI가 problem에서 추론)
+
+옵션 (공통):
+  --mode <모드>          interest | problem (기본값 interest)
   --type <유형>          simulation | game | quiz | exploration | story
   --render-mode <방식>   3d | 3d-game | canvas-game | svg | dom (기본값 3d)
   --id <슬러그>          콘텐츠 고유 id
@@ -37,23 +47,31 @@ const HELP = `AI 콘텐츠 팩토리
 const STAGES = ["plan", "storyboard", "assets", "build", "qa", "publish"] as const;
 type Stage = (typeof STAGES)[number];
 type ContentType = "simulation" | "game" | "quiz" | "exploration" | "story";
+type CliMode = "interest" | "problem";
 
 interface CliOptions {
+  mode: CliMode;
   topic?: string;
   grade?: string;
-  subject?: FactoryContext["subject"];
+  subject?: string;
   type?: ContentType;
   renderMode?: RenderMode;
   id?: string;
   stage?: Stage;
+  // problem mode
+  problem?: string;
+  difficulty?: Difficulty;
   skipImages: boolean;
   force: boolean;
   help: boolean;
 }
 
 function parseArgs(args: string[]): CliOptions {
-  const options: CliOptions = { skipImages: false, force: false, help: false };
-  const valueFlags = new Set(["--topic", "--grade", "--subject", "--type", "--render-mode", "--id", "--stage"]);
+  const options: CliOptions = { mode: "interest", skipImages: false, force: false, help: false };
+  const valueFlags = new Set([
+    "--mode", "--topic", "--grade", "--subject", "--type", "--render-mode",
+    "--id", "--stage", "--problem", "--difficulty",
+  ]);
   for (let index = 0; index < args.length; index += 1) {
     const flag = args[index];
     if (flag === "--skip-images") options.skipImages = true;
@@ -63,12 +81,23 @@ function parseArgs(args: string[]): CliOptions {
       const value = args[index + 1];
       if (!value || value.startsWith("--")) throw new Error(`${flag} 값이 필요합니다.`);
       index += 1;
-      if (flag === "--topic") options.topic = value;
+      if (flag === "--mode") {
+        if (value !== "interest" && value !== "problem") throw new Error(`--mode는 interest 또는 problem이어야 합니다.`);
+        options.mode = value;
+      }
+      else if (flag === "--topic") options.topic = value;
       else if (flag === "--grade") options.grade = value;
-      else if (flag === "--subject") options.subject = value as CliOptions["subject"];
+      else if (flag === "--subject") options.subject = value;
       else if (flag === "--type") options.type = value as ContentType;
       else if (flag === "--render-mode") options.renderMode = value as RenderMode;
       else if (flag === "--id") options.id = value;
+      else if (flag === "--problem") options.problem = value;
+      else if (flag === "--difficulty") {
+        if (!["easy", "medium", "hard"].includes(value)) {
+          throw new Error(`--difficulty는 easy | medium | hard 중 하나여야 합니다.`);
+        }
+        options.difficulty = value as Difficulty;
+      }
       else options.stage = value as Stage;
     } else throw new Error(`알 수 없는 인자입니다: ${flag}`);
   }
@@ -108,8 +137,9 @@ async function findDirectoryById(base: string, id: string): Promise<string | und
 
 function validateOptions(options: CliOptions): void {
   if (options.stage && !STAGES.includes(options.stage)) throw new Error(`지원하지 않는 단계입니다: ${options.stage}`);
-  if (options.subject && !["math", "science", "english"].includes(options.subject)) {
-    throw new Error(`지원하지 않는 교과입니다: ${options.subject}`);
+  // CLI도 임의의 kebab-case subject 슬러그를 허용 (math, science, english, coding, toeic, ...)
+  if (options.subject && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(options.subject)) {
+    throw new Error(`지원하지 않는 교과 형태입니다(kebab-case slug 필요): ${options.subject}`);
   }
   if (options.type && !["simulation", "game", "quiz", "exploration", "story"].includes(options.type)) {
     throw new Error(`지원하지 않는 콘텐츠 유형입니다: ${options.type}`);
@@ -124,44 +154,92 @@ function validateOptions(options: CliOptions): void {
     throw new Error("--topic은 비어 있지 않은 문자열이어야 합니다.");
   }
   if (options.id !== undefined) assertSafeContentId(options.id);
+
+  // 모드별 필수 필드 검증
+  if (options.mode === "problem") {
+    if (!options.problem || options.problem.trim().length < 5) {
+      throw new Error("--mode problem에는 --problem(5자 이상)이 필요합니다.");
+    }
+    if (!options.difficulty) {
+      throw new Error("--mode problem에는 --difficulty(easy|medium|hard)가 필요합니다.");
+    }
+    if (options.topic) {
+      throw new Error("--mode problem에서는 --topic 대신 --problem을 사용하세요.");
+    }
+    if (options.grade) {
+      throw new Error("--mode problem에서는 --grade 대신 --difficulty를 사용하세요.");
+    }
+  } else {
+    // interest 모드 (기본)
+    if (!options.topic) {
+      throw new Error("interest 모드에는 --topic이 필요합니다. problem 모드는 --mode problem을 추가하세요.");
+    }
+  }
 }
 
 async function createContext(options: CliOptions): Promise<FactoryContext> {
   const rootDir = resolve(import.meta.dir, "../../..");
   const factoryDir = join(rootDir, "agents/content-factory");
-  const topic = options.topic?.trim();
-  const id = options.id ?? slugify(topic!);
-  let subject = options.subject;
-  let grade = options.grade;
-  let level = grade ? gradeLevel(grade) : undefined;
+  const llmProvider = getFactoryLlmConfig().provider;
+
+  // 모드별 topic/grade/subject 도출
+  let topic: string;
+  let grade: string;
+  let subject: string | undefined;
+  let difficulty: Difficulty | undefined;
+  let problem: string | undefined;
+
+  if (options.mode === "problem") {
+    problem = options.problem!.trim();
+    topic = problem;
+    grade = DIFFICULTY_TO_GRADE[options.difficulty!];
+    difficulty = options.difficulty;
+    subject = options.subject; // 선택 (없으면 'general'로 시작, plan LLM이 추론)
+  } else {
+    topic = options.topic!.trim();
+    if (!options.grade) throw new Error("interest 모드에는 --grade가 필요합니다.");
+    grade = options.grade;
+    if (!options.subject) throw new Error("interest 모드에는 --subject가 필요합니다.");
+    subject = options.subject;
+  }
+
+  const id = options.id ?? slugify(topic);
+  let level = gradeLevel(grade);
   let contentDir: string | undefined;
 
   if (options.stage === "qa" && options.id && (!subject || !level)) {
     contentDir = await findDirectoryById(join(rootDir, "public/contents"), options.id);
     if (!contentDir) throw new Error(`기존 콘텐츠를 찾지 못했습니다: ${options.id}`);
     const parts = relative(join(rootDir, "public/contents"), contentDir).split(/[\\/]/);
-    subject = parts[0] as FactoryContext["subject"];
+    subject = parts[0];
     level = parts[1] as FactoryContext["gradeLevel"];
-    grade = grade ?? `${level}-1`;
+    grade = grade === DIFFICULTY_TO_GRADE[options.difficulty ?? "medium"]
+      ? `${level}-1`
+      : grade;
   }
-  if (!subject || !grade || !level) throw new Error("--topic, --grade, --subject가 필요합니다.");
-  contentDir ??= join(rootDir, "public/contents", subject, level, id);
+
+  // problem 모드에서 subject가 없으면 임시 'general'로 시작 (plan 이후 보정)
+  const effectiveSubject = subject ?? "general";
+  contentDir ??= join(rootDir, "public/contents", effectiveSubject, level, id);
   const runDir = join(factoryDir, "runs", id);
-  const isExistingQa = options.stage === "qa" && options.id && !options.topic;
+  const isExistingQa = options.stage === "qa" && options.id && !topic;
   if (!isExistingQa && existsSync(contentDir) && !options.force &&
       !existsSync(join(runDir, "plan.json"))) {
     throw new Error(`기존 콘텐츠를 보호하기 위해 중단했습니다: ${contentDir} (--force 필요)`);
   }
   if (options.stage) assertStagePrerequisites(options.stage, runDir, isExistingQa);
   await mkdir(runDir, { recursive: true });
-  const llmProvider = getFactoryLlmConfig().provider;
   return {
     rootDir, factoryDir, runDir, contentDir, id,
-    topic: topic ?? basename(contentDir),
-    grade, gradeLevel: level, subject, type: options.type,
+    topic,
+    grade, gradeLevel: level, subject: effectiveSubject, type: options.type,
     renderMode: options.renderMode ?? DEFAULT_RENDER_MODE,
     force: options.force, skipImages: options.skipImages || llmProvider === "zai", llmProvider,
     existingContentQa: isExistingQa,
+    // problem 모드 메타데이터 (plan.ts가 분기에 사용)
+    mode: options.mode,
+    problem,
+    difficulty,
   };
 }
 
@@ -199,8 +277,10 @@ async function main(): Promise<void> {
   const options = parseArgs(Bun.argv.slice(2));
   if (options.help) { console.log(HELP); return; }
   validateOptions(options);
-  if (!options.topic && !(options.stage === "qa" && options.id)) {
-    throw new Error("--topic이 필요합니다. 사용법은 --help로 확인하세요.");
+  // 기존 콘텐츠 QA 단독 실행은 topic/problem 없이 --stage qa --id <id>로 진입 허용
+  if (!options.topic && !options.problem &&
+      !(options.stage === "qa" && options.id)) {
+    throw new Error("interest 모드는 --topic이, problem 모드는 --problem이 필요합니다. --help로 확인하세요.");
   }
   const context = await createContext(options);
   const stages = options.stage ? [options.stage] : [...STAGES];
