@@ -15,6 +15,7 @@ import type {
 import type { Subject, Grade, Language, Difficulty, ContentType } from '../../types/content'
 import { gradeForDifficulty, gradeLevelForGrade } from '../../types/content'
 import { buildApiUrl } from './url'
+import { isStaticMode } from './capabilities'
 import { withAdminToken } from './adminToken'
 import {
   LOCAL_CONTENT_PREFIX,
@@ -42,7 +43,7 @@ interface ServerlessGenerationResult {
 const API_BASE_URL = import.meta.env.VITE_API_URL || ''
 
 // 정적 배포 모드 확인
-const isStaticMode = import.meta.env.VITE_STATIC_MODE === 'true'
+
 
 // 폴링 설정
 const POLL_INTERVAL_MS = 2000 // 2초마다 폴링

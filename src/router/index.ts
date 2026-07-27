@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import { canGenerate } from '../services/api/capabilities'
 
 // 라우트 정의
 const routes: RouteRecordRaw[] = [
@@ -56,13 +57,11 @@ const router = createRouter({
   },
 })
 
-// 정적 모드 확인
-const isStaticMode = import.meta.env.VITE_STATIC_MODE === 'true'
-
-// 페이지 타이틀 업데이트 및 정적 모드 리다이렉트
+// 페이지 타이틀 업데이트 및 생성 불가 배포에서의 리다이렉트
 router.beforeEach((to, _from, next) => {
-  // 정적 모드에서 /create 경로 접근 시 홈으로 리다이렉트
-  if (isStaticMode && to.path === '/create') {
+  // 생성 경로가 아예 없는 배포에서만 홈으로 리다이렉트한다
+  // (Vercel 서버리스 생성이 켜져 있으면 /create를 그대로 연다)
+  if (!canGenerate && to.path === '/create') {
     next({ path: '/' })
     return
   }

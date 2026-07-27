@@ -2,13 +2,14 @@
 // 서버 API 없이 브라우저 localStorage에서 클릭 데이터 관리
 
 import { buildApiUrl } from './url'
+import { isStaticMode } from './capabilities'
 import { withAdminToken } from './adminToken'
 
 const STORAGE_KEY = 'eduflix_content_clicks'
 const STORAGE_VERSION = 'v1'
 const SCOPE_STORAGE_KEY = 'eduflix_recommendation_scope_v1'
 const API_BASE_URL = import.meta.env.VITE_API_URL || ''
-const isStaticMode = import.meta.env.VITE_STATIC_MODE === 'true'
+
 
 export type RecommendationScope = 'shared' | 'personal'
 

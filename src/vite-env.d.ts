@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_STATIC_MODE: string
+  readonly VITE_SERVERLESS_GENERATION: string
   readonly VITE_API_URL: string
 }
 
