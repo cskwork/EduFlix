@@ -412,9 +412,6 @@ export async function POST(req: Request): Promise<Response> {
   const denial = checkWriteAccess(req)
   if (denial) return fail(denial.message, denial.status)
 
-  const throttled = checkRateLimit(req)
-  if (throttled) return fail(throttled.message, throttled.status)
-
   let body: GenerateBody
   try {
     body = (await req.json()) as GenerateBody
@@ -428,6 +425,11 @@ export async function POST(req: Request): Promise<Response> {
   if (!process.env.ZAI_API_KEY?.trim()) {
     return fail('ZAI_API_KEY가 설정되지 않아 콘텐츠를 생성할 수 없습니다', 503)
   }
+
+  // LLM을 실제로 호출하기 직전에만 쿼터를 소모한다.
+  // 검증 실패한 요청까지 카운트하면 폼을 잘못 낸 사용자가 쿼터를 잃는다.
+  const throttled = checkRateLimit(req)
+  if (throttled) return fail(throttled.message, throttled.status)
 
   try {
     const files = await generateFiles(buildPrompt(body))
