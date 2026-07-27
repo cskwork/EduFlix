@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { KnowledgeNode, LearningStatus } from '../../types/knowledge-map'
-import { GRADE_LEVEL_LABELS } from '../../types/content'
+import { gradeLabel as formatGrade, gradeLevelLabel, learningStatusLabel } from '../../i18n/labels'
+import { useI18n } from '../../i18n'
 import IconSet, { type IconName } from '../icons/IconSet.vue'
 
 interface Props {
@@ -9,19 +10,30 @@ interface Props {
   status: LearningStatus
 }
 
+const { t } = useI18n()
 const props = defineProps<Props>()
 const emit = defineEmits<{
   (e: 'click', node: KnowledgeNode): void
 }>()
 
 const statusConfig = computed(() => {
-  const configs: Record<LearningStatus, { icon: IconName; label: string; class: string }> = {
-    completed: { icon: 'completed', label: '완료', class: 'status-completed' },
-    in_progress: { icon: 'in-progress', label: '진행 중', class: 'status-progress' },
-    available: { icon: 'available', label: '학습 가능', class: 'status-available' },
-    locked: { icon: 'locked', label: '잠금', class: 'status-locked' },
+  const icons: Record<LearningStatus, IconName> = {
+    completed: 'completed',
+    in_progress: 'in-progress',
+    available: 'available',
+    locked: 'locked',
   }
-  return configs[props.status]
+  const classes: Record<LearningStatus, string> = {
+    completed: 'status-completed',
+    in_progress: 'status-progress',
+    available: 'status-available',
+    locked: 'status-locked',
+  }
+  return {
+    icon: icons[props.status],
+    label: learningStatusLabel(props.status),
+    class: classes[props.status],
+  }
 })
 
 const difficultyStars = computed(() => {
@@ -31,11 +43,8 @@ const difficultyStars = computed(() => {
 
 const gradeLabel = computed(() => {
   const grade = props.node.grade
-  if (!grade) return GRADE_LEVEL_LABELS[props.node.gradeLevel]
-
-  const [level, num] = grade.split('-')
-  const levelLabel = GRADE_LEVEL_LABELS[level as keyof typeof GRADE_LEVEL_LABELS] || level
-  return `${levelLabel} ${num}학년`
+  if (!grade) return gradeLevelLabel(props.node.gradeLevel)
+  return formatGrade(grade)
 })
 
 const contentCount = computed(() => props.node.contentIds.length)
@@ -63,19 +72,24 @@ function handleClick() {
 
       <div class="node-meta">
         <span class="node-grade">{{ gradeLabel }}</span>
-        <span class="node-difficulty" :title="`난이도 ${node.difficulty || 1}/5`">
+        <span
+          class="node-difficulty"
+          :title="t('learningMap.difficultyTitle', { level: node.difficulty || 1 })"
+        >
           {{ difficultyStars }}
         </span>
       </div>
 
       <div v-if="contentCount > 0" class="node-contents">
         <IconSet name="book" :size="14" class="content-icon" />
-        <span class="content-count">콘텐츠 {{ contentCount }}개</span>
+        <span class="content-count">{{
+          t('learningMap.contentCount', { count: contentCount })
+        }}</span>
       </div>
     </div>
 
     <div v-if="status === 'locked'" class="locked-overlay">
-      <span class="locked-message">선수 지식을 먼저 학습하세요</span>
+      <span class="locked-message">{{ t('learningMap.lockedHint') }}</span>
     </div>
   </div>
 </template>

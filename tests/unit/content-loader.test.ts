@@ -7,6 +7,7 @@ import {
   IFRAME_ALLOW_ATTRS,
 } from '../../src/services/content/loader'
 import type { ContentManifest } from '../../src/types/content'
+import { t } from '../../src/i18n'
 
 describe('content-loader', () => {
   // createInitialState 테스트
@@ -146,7 +147,7 @@ describe('content-loader fetch functions', () => {
       })
 
       await expect(loadContentManifest('/invalid/path')).rejects.toThrow(
-        '콘텐츠 매니페스트를 불러올 수 없습니다'
+        t('errors.manifestLoadFailed', { path: '/invalid/path/manifest.json' })
       )
     })
   })
@@ -265,7 +266,7 @@ describe('content-loader fetch functions', () => {
           }),
       })
 
-      await expect(loadContentById('nonexistent')).rejects.toThrow('콘텐츠를 찾을 수 없습니다')
+      await expect(loadContentById('nonexistent')).rejects.toThrow(t('errors.contentNotFound'))
     })
   })
 })

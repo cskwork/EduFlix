@@ -17,5 +17,11 @@
     "중학교",
     "알고리즘",
     "리스트"
-  ]
+  ],
+  "translations": {
+    "en": {
+      "title": "The Python Cloning Machine: A List Comprehension Factory",
+      "description": "Python list comprehensions visualised as factory machines you can operate to discover what the code produces."
+    }
+  }
 }

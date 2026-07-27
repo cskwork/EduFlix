@@ -3,6 +3,9 @@ import { ref, type Ref } from 'vue'
 import type { ContentGroup } from '../../types/content'
 import ContentCard from './ContentCard.vue'
 import { useDragScroll } from '../../composables/useDragScroll'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 // Props 정의
 defineProps<{
@@ -36,7 +39,7 @@ function scroll(direction: 'left' | 'right') {
     
     <div class="row-container group">
       <button
-        aria-label="왼쪽으로 스크롤"
+        :aria-label="t('contentRow.scrollLeft')"
         class="scroll-btn scroll-left"
         @click="scroll('left')"
       >
@@ -54,7 +57,7 @@ function scroll(direction: 'left' | 'right') {
       </div>
 
       <button
-        aria-label="오른쪽으로 스크롤"
+        :aria-label="t('contentRow.scrollRight')"
         class="scroll-btn scroll-right"
         @click="scroll('right')"
       >

@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "다양한 평면도형과 입체도형을 탐험하며 도형의 성질을 배워보세요!",
   "thumbnail": "/contents/math/elementary/shapes-explorer/assets/thumbnail.svg",
-  "path": "/contents/math/elementary/shapes-explorer/index.html"
+  "path": "/contents/math/elementary/shapes-explorer/index.html",
+  "translations": {
+    "en": {
+      "title": "Shape Explorer",
+      "description": "Explore flat and solid shapes and discover the properties that make each one special!"
+    }
+  }
 }

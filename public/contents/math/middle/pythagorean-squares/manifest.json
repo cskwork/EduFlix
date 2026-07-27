@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "정사각형의 넓이를 활용하여 피타고라스의 정리 a² + b² = c²를 시각적으로 발견하고 실생활 문제에 적용해보세요!",
   "thumbnail": "/contents/math/middle/pythagorean-squares/assets/thumbnail.svg",
-  "path": "/contents/math/middle/pythagorean-squares/index.html"
+  "path": "/contents/math/middle/pythagorean-squares/index.html",
+  "translations": {
+    "en": {
+      "title": "Pythagorean Theorem: The Secret of Squares",
+      "description": "Use the areas of squares to see a² + b² = c² for yourself, then apply it to real-life problems!"
+    }
+  }
 }

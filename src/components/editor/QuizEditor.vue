@@ -2,6 +2,9 @@
 // 퀴즈 편집 컴포넌트
 import { ref } from 'vue'
 import type { EditableQuiz } from '../../types/editor'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   quizzes: EditableQuiz[]
@@ -65,8 +68,8 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
 <template>
   <div class="quiz-editor">
     <div v-if="quizzes.length === 0" class="empty-state">
-      <p>편집 가능한 퀴즈가 없습니다</p>
-      <p class="empty-hint">이 콘텐츠에는 퀴즈 씬이 포함되어 있지 않습니다</p>
+      <p>{{ t('editor.quiz.empty') }}</p>
+      <p class="empty-hint">{{ t('editor.quiz.emptyHint') }}</p>
     </div>
 
     <div v-else class="quiz-list">
@@ -101,7 +104,7 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
         <div v-show="expandedQuizId === quiz.id" class="quiz-content">
           <!-- 문제 -->
           <div class="form-group">
-            <label :for="`${quiz.id}-question`">문제</label>
+            <label :for="`${quiz.id}-question`">{{ t('editor.quiz.question') }}</label>
             <textarea
               :id="`${quiz.id}-question`"
               :value="quiz.question"
@@ -113,7 +116,7 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
 
           <!-- 보기 -->
           <div class="form-group">
-            <label>보기</label>
+            <label>{{ t('editor.quiz.choices') }}</label>
             <div class="options-list">
               <div
                 v-for="(option, index) in quiz.options"
@@ -127,21 +130,21 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
                     :checked="option.isCorrect"
                     @change="handleCorrectChange(quiz, index)"
                   />
-                  <span class="correct-label">정답</span>
+                  <span class="correct-label">{{ t('editor.quiz.correct') }}</span>
                 </div>
 
                 <div class="option-inputs">
                   <input
                     type="text"
                     :value="option.label"
-                    placeholder="보기 텍스트"
+                    :placeholder="t('editor.quiz.choicePlaceholder')"
                     class="text-input option-label"
                     @input="handleOptionLabelChange(quiz, index, ($event.target as HTMLInputElement).value)"
                   />
                   <input
                     type="text"
                     :value="option.value"
-                    placeholder="값"
+                    :placeholder="t('editor.quiz.valuePlaceholder')"
                     class="text-input option-value"
                     @input="handleOptionValueChange(quiz, index, ($event.target as HTMLInputElement).value)"
                   />
@@ -152,10 +155,10 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
 
           <!-- 피드백 -->
           <div class="form-group">
-            <label>피드백 메시지</label>
+            <label>{{ t('editor.quiz.feedback') }}</label>
             <div class="feedback-inputs">
               <div class="feedback-item">
-                <span class="feedback-type correct">정답 시</span>
+                <span class="feedback-type correct">{{ t('editor.quiz.feedbackCorrect') }}</span>
                 <input
                   type="text"
                   :value="quiz.feedback.correct"
@@ -164,7 +167,7 @@ function handleFeedbackChange(quiz: EditableQuiz, type: 'correct' | 'incorrect',
                 />
               </div>
               <div class="feedback-item">
-                <span class="feedback-type incorrect">오답 시</span>
+                <span class="feedback-type incorrect">{{ t('editor.quiz.feedbackIncorrect') }}</span>
                 <input
                   type="text"
                   :value="quiz.feedback.incorrect"

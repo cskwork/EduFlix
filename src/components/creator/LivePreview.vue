@@ -6,6 +6,9 @@ import {
   buildPreviewDocument,
   type PreviewStreamConnection,
 } from '../../services/preview/stream'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 // Props
 const props = defineProps<{
@@ -25,15 +28,15 @@ let connection: PreviewStreamConnection | null = null
 const phaseLabel = computed(() => {
   switch (previewContent.value.phase) {
     case 'html':
-      return 'HTML 생성 중'
+      return t('livePreview.phaseShort.html')
     case 'css':
-      return 'CSS 적용 중'
+      return t('livePreview.phaseShort.css')
     case 'js':
-      return 'JS 추가 중'
+      return t('livePreview.phaseShort.js')
     case 'complete':
-      return '완료'
+      return t('livePreview.phaseShort.complete')
     default:
-      return '준비 중'
+      return t('livePreview.phaseShort.idle')
   }
 })
 
@@ -155,7 +158,7 @@ onUnmounted(() => {
         class="preview-frame"
         :srcdoc="iframeSrcDoc"
         sandbox="allow-scripts"
-        title="실시간 프리뷰"
+        :title="t('livePreview.title')"
       ></iframe>
     </div>
   </div>

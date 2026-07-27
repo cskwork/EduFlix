@@ -1,5 +1,6 @@
 // 콘텐츠 로딩 서비스
 import type { ContentManifest, Subject, GradeLevel } from '../../types/content'
+import { t } from '../../i18n'
 
 // 콘텐츠 HTML 경로 생성에 필요한 최소 타입
 interface ContentPathInfo {
@@ -33,7 +34,7 @@ export async function loadContentManifest(contentPath: string): Promise<ContentM
   const response = await fetch(manifestPath)
 
   if (!response.ok) {
-    throw new Error(`콘텐츠 매니페스트를 불러올 수 없습니다: ${manifestPath}`)
+    throw new Error(t('errors.manifestLoadFailed', { path: manifestPath }))
   }
 
   return response.json()
@@ -86,7 +87,7 @@ export async function loadContentById(id: string): Promise<{
   const content = await findContentById(id)
 
   if (!content) {
-    throw new Error(`콘텐츠를 찾을 수 없습니다: ${id}`)
+    throw new Error(`${t('errors.contentNotFound')}: ${id}`)
   }
 
   const htmlPath = getContentHtmlPath(content)

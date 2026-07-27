@@ -8,6 +8,9 @@ import LoadingSpinner from '../components/common/LoadingSpinner.vue'
 import ErrorMessage from '../components/common/ErrorMessage.vue'
 import EmptyState from '../components/common/EmptyState.vue'
 import type { Subject } from '../types/content'
+import { useI18n } from '../i18n'
+
+const { t } = useI18n()
 
 // 콘텐츠 스토어 사용
 const contentStore = useContentStore()
@@ -114,7 +117,7 @@ async function setRecommendationScope(scope: RecommendationScope) {
 }
 
 async function clearRecommendations() {
-  const confirmed = window.confirm('인기 콘텐츠 목록을 초기화하시겠습니까?')
+  const confirmed = window.confirm(t('home.confirmClearRecommendations'))
   if (!confirmed) {
     return
   }
@@ -136,20 +139,22 @@ async function clearRecommendations() {
       </div>
 
       <div class="hero-content">
-        <p class="hero-eyebrow">놀면서 배우는 인터랙티브 학습</p>
+        <p class="hero-eyebrow">{{ t('home.heroEyebrow') }}</p>
         <h1 id="hero-title" class="hero-title">
-          배움이 <span class="hero-highlight">놀이</span>가 되는 곳
+          {{ t('home.heroTitleLead')
+          }}<span class="hero-highlight">{{ t('home.heroTitleHighlight') }}</span
+          >{{ t('home.heroTitleTail') }}
         </h1>
         <p class="hero-subtitle">
-          게임, 시뮬레이션, 탐험으로 즐기는 교육 콘텐츠.<br>
-          EduFlix와 함께 새로운 세상으로 떠나보세요.</p>
+          {{ t('home.heroSubtitleLine1') }}<br>
+          {{ t('home.heroSubtitleLine2') }}</p>
 
         <div class="hero-actions">
           <button class="btn-hero btn-play" :disabled="!hasContents" @click="playFirstContent">
-            <span class="icon">▶</span> 지금 시작하기
+            <span class="icon">▶</span> {{ t('home.playFirst') }}
           </button>
           <button class="btn-hero btn-info" @click="scrollToContent">
-            콘텐츠 구경하기
+            {{ t('home.browse') }}
           </button>
         </div>
       </div>
@@ -165,15 +170,15 @@ async function clearRecommendations() {
     <LoadingSpinner
       v-if="contentStore.isLoading"
       size="lg"
-      message="콘텐츠를 불러오는 중..."
+      :message="t('home.loadingContents')"
     />
 
     <!-- 에러 상태 -->
     <ErrorMessage
       v-else-if="contentStore.error"
-      title="콘텐츠를 불러올 수 없습니다"
+      :title="t('home.errorTitle')"
       :message="contentStore.error"
-      retry-label="다시 시도"
+      :retry-label="t('common.retry')"
       @retry="contentStore.loadContents()"
     />
 
@@ -182,31 +187,33 @@ async function clearRecommendations() {
       <!-- 콘텐츠가 없는 경우 -->
       <EmptyState
         v-if="contentStore.contentGroups.length === 0"
-        title="표시할 콘텐츠가 없습니다"
-        message="창조 모드에서 AI와 함께 새로운 학습 콘텐츠를 만들어보세요!"
-        action-label="콘텐츠 만들기"
+        :title="t('home.emptyTitle')"
+        :message="t('home.emptyMessage')"
+        :action-label="t('home.emptyAction')"
         @action="goToCreateMode"
       />
 
       <!-- 추천 콘텐츠 (인기순) -->
       <div class="recommendation-controls">
-        <div class="scope-toggle" role="group" aria-label="인기 콘텐츠 집계 범위">
+        <div class="scope-toggle" role="group" :aria-label="t('home.recommendationScopeLabel')">
           <button
             class="scope-button"
             :class="{ active: contentStore.recommendationScope === 'shared' }"
             @click="setRecommendationScope('shared')"
           >
-            전체 공용
+            {{ t('home.scopeShared') }}
           </button>
           <button
             class="scope-button"
             :class="{ active: contentStore.recommendationScope === 'personal' }"
             @click="setRecommendationScope('personal')"
           >
-            개인
+            {{ t('home.scopePersonal') }}
           </button>
         </div>
-        <button class="clear-recommendations" @click="clearRecommendations">초기화</button>
+        <button class="clear-recommendations" @click="clearRecommendations">
+          {{ t('home.clearRecommendations') }}
+        </button>
       </div>
 
       <ContentRow

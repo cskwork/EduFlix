@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { Subject, Difficulty } from '../../types/content'
-import {
-  BUILTIN_SUBJECTS, SUBJECT_LABELS, DIFFICULTY_LABELS, DIFFICULTY_EMOJI,
-  isSubjectSlug,
-} from '../../types/content'
+import { BUILTIN_SUBJECTS, isSubjectSlug } from '../../types/content'
+import { DIFFICULTY_EMOJI, difficultyLabel, subjectLabel } from '../../i18n/labels'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 // ProblemInput이 부모에게 내보내는 통합 상태
 export interface ProblemInputValue {
@@ -29,21 +30,50 @@ const customSubjectInput = ref<string>(
 )
 
 // 추천 과목 (자격증·확장 과목)
-const suggestedSubjects: { slug: Subject; label: string }[] = [
-  { slug: 'coding', label: '코딩' },
-  { slug: 'toeic', label: '토익' },
-  { slug: 'korean-history', label: '한국사' },
-  { slug: 'computer-science', label: '컴퓨터과학' },
-  { slug: 'social-studies', label: '사회' },
-  { slug: 'korean', label: '국어' },
-]
+const suggestedSubjects = computed<{ slug: Subject; label: string }[]>(() =>
+  (
+    [
+      'coding',
+      'toeic',
+      'korean-history',
+      'computer-science',
+      'social-studies',
+      'korean',
+    ] as Subject[]
+  ).map((slug) => ({ slug, label: subjectLabel(slug) }))
+)
+
+// 기본 과목 칩
+const builtinSubjectChips = computed<{ slug: Subject; label: string }[]>(() =>
+  (['math', 'science', 'english'] as Subject[]).map((slug) => ({
+    slug,
+    label: subjectLabel(slug),
+  }))
+)
 
 // 난이도 옵션
-const difficulties: { value: Difficulty; label: string; emoji: string; desc: string }[] = [
-  { value: 'easy', label: DIFFICULTY_LABELS.easy, emoji: DIFFICULTY_EMOJI.easy, desc: '처음 배우는 수준' },
-  { value: 'medium', label: DIFFICULTY_LABELS.medium, emoji: DIFFICULTY_EMOJI.medium, desc: '기본기를 다지는 수준' },
-  { value: 'hard', label: DIFFICULTY_LABELS.hard, emoji: DIFFICULTY_EMOJI.hard, desc: '응용까지 도전' },
-]
+const difficulties = computed<
+  { value: Difficulty; label: string; emoji: string; desc: string }[]
+>(() => [
+  {
+    value: 'easy',
+    label: difficultyLabel('easy'),
+    emoji: DIFFICULTY_EMOJI.easy,
+    desc: t('creator.difficulty.easyDesc'),
+  },
+  {
+    value: 'medium',
+    label: difficultyLabel('medium'),
+    emoji: DIFFICULTY_EMOJI.medium,
+    desc: t('creator.difficulty.mediumDesc'),
+  },
+  {
+    value: 'hard',
+    label: difficultyLabel('hard'),
+    emoji: DIFFICULTY_EMOJI.hard,
+    desc: t('creator.difficulty.hardDesc'),
+  },
+])
 
 const problemValue = computed(() => props.modelValue.problem)
 const problemCharCount = computed(() => props.modelValue.problem.length)
@@ -118,7 +148,11 @@ function isSubjectSelected(slug: Subject): boolean {
 
 const isCustomMode = computed(() => {
   const s = props.modelValue.subject
-  return !!s && !BUILTIN_SUBJECTS.includes(s as never) && !suggestedSubjects.some((item) => item.slug === s)
+  return (
+    !!s &&
+    !BUILTIN_SUBJECTS.includes(s as never) &&
+    !suggestedSubjects.value.some((item) => item.slug === s)
+  )
 })
 </script>
 
@@ -126,14 +160,14 @@ const isCustomMode = computed(() => {
   <div class="problem-input">
     <!-- 1. 문제 입력 -->
     <div class="section">
-      <label class="input-label">문제를 알려주세요</label>
+      <label class="input-label">{{ t('creator.problem.label') }}</label>
       <p class="input-description">
-        텍스트로 붙여넣거나 직접 적어주세요. AI가 이 문제를 재미있는 학습 콘텐츠로 바꿔줘요.
+        {{ t('creator.problem.description') }}
       </p>
       <textarea
         class="problem-textarea"
         :value="problemValue"
-        placeholder="예시:&#10;사과 5개가 있고 3개를 더 샀습니다. 전체 사과는 몇 개인가요?&#10;&#10;또는:&#10;다음 Python 코드의 출력을 쓰세요.&#10;print([x*2 for x in range(3)])&#10;&#10;또는:&#10;토익 Part 5 빈칸 문제..."
+        :placeholder="t('creator.problem.placeholder')"
         maxlength="5000"
         @input="updateProblem(($event.target as HTMLTextAreaElement).value)"
       />
@@ -144,21 +178,24 @@ const isCustomMode = computed(() => {
 
     <!-- 2. 과목 선택 (선택) -->
     <div class="section">
-      <label class="input-label">어떤 과목인가요? <span class="optional">선택</span></label>
+      <label class="input-label">
+        {{ t('creator.problem.subjectLabel') }}
+        <span class="optional">{{ t('common.optional') }}</span>
+      </label>
       <p class="input-description">
-        안 고르면 AI가 문제에서 추천해요. 직접 입력도 가능해요.
+        {{ t('creator.problem.subjectDescription') }}
       </p>
 
       <div class="subjects-row">
         <button
-          v-for="slug in (['math', 'science', 'english'] as Subject[])"
-          :key="slug"
+          v-for="item in builtinSubjectChips"
+          :key="item.slug"
           type="button"
           class="subject-pill"
-          :class="{ selected: isSubjectSelected(slug) }"
-          @click="selectBuiltinSubject(slug)"
+          :class="{ selected: isSubjectSelected(item.slug) }"
+          @click="selectBuiltinSubject(item.slug)"
         >
-          {{ SUBJECT_LABELS[slug] ?? slug }}
+          {{ item.label }}
         </button>
         <button
           v-for="item in suggestedSubjects"
@@ -177,17 +214,19 @@ const isCustomMode = computed(() => {
           :value="customSubjectInput"
           type="text"
           class="custom-subject-input"
-          placeholder="또는 직접 입력 (예: 정보처리기사, 한국사, 일본어...)"
+          :placeholder="t('creator.problem.subjectPlaceholder')"
           @input="onCustomSubjectInput"
         />
-        <span v-if="isCustomMode" class="custom-badge">선택됨: {{ modelValue.subject }}</span>
+        <span v-if="isCustomMode" class="custom-badge">{{
+          t('creator.problem.selectedSubject', { subject: modelValue.subject ?? '' })
+        }}</span>
       </div>
     </div>
 
     <!-- 3. 난이도 -->
     <div class="section">
-      <label class="input-label">난이도를 골라주세요</label>
-      <p class="input-description">학습자 수준에 맞춰 언어와 사례를 조절해요.</p>
+      <label class="input-label">{{ t('creator.difficulty.label') }}</label>
+      <p class="input-description">{{ t('creator.difficulty.shortDescription') }}</p>
 
       <div class="difficulty-grid">
         <button

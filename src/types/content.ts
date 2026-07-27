@@ -59,10 +59,22 @@ export type ContentType = 'game' | 'quiz' | 'exploration' | 'simulation' | 'stor
 // 언어 타입
 export type Language = 'ko' | 'en'
 
+// 카탈로그 메타데이터의 언어별 번역
+// key = i18n locale code ('en' | 'ko' | ...), 없으면 원문(title/description)으로 폴백
+export type ContentTranslations = Record<
+  string,
+  {
+    title?: string
+    description?: string
+  }
+>
+
 // 콘텐츠 매니페스트 인터페이스
 export interface ContentManifest {
   id: string
   title: string
+  /** 언어별 제목·설명 (선택). 없으면 원문을 그대로 보여준다 */
+  translations?: ContentTranslations
   subject: Subject
   gradeLevel: GradeLevel
   grade: Grade
@@ -104,53 +116,5 @@ export interface ContentGroup {
   contents: ContentCardData[]
 }
 
-// 과목 라벨 매핑 (기본 과목 + 알려진 확장 과목)
-export const SUBJECT_LABELS: Record<string, string> = {
-  math: '수학',
-  science: '과학',
-  english: '영어',
-  'world-history': '세계사',
-  coding: '코딩',
-  'korean-history': '한국사',
-  society: '사회',
-  korean: '국어',
-  'social-studies': '사회',
-  toeic: '토익',
-  toefl: '토플',
-  'computer-science': '컴퓨터과학',
-}
-
-// 슬러그 → 표시 라벨 (매핑에 없으면 슬러그 그대로 반환)
-export function subjectLabel(subject: Subject): string {
-  return SUBJECT_LABELS[subject] ?? subject
-}
-
-// 학년 레벨 라벨 매핑
-export const GRADE_LEVEL_LABELS: Record<GradeLevel, string> = {
-  elementary: '초등',
-  middle: '중등',
-  high: '고등',
-}
-
-// 난이도 라벨 매핑
-export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
-  easy: '쉬움',
-  medium: '보통',
-  hard: '어려움',
-}
-
-// 난이도 이모지
-export const DIFFICULTY_EMOJI: Record<Difficulty, string> = {
-  easy: '🌱',
-  medium: '🌿',
-  hard: '🌳',
-}
-
-// 콘텐츠 타입 라벨 매핑
-export const CONTENT_TYPE_LABELS: Record<ContentType, string> = {
-  game: '게임',
-  quiz: '퀴즈',
-  exploration: '탐험',
-  simulation: '시뮬레이션',
-  story: '스토리',
-}
+// 표시 라벨(과목·학년·콘텐츠 타입·난이도)은 언어별로 달라지므로 src/i18n/labels.ts가 담당한다.
+// 여기서는 언어와 무관한 스키마·매핑만 유지한다.

@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "정육면체, 구, 원기둥, 삼각뿔을 360도로 돌려보며 면, 모서리, 꼭짓점을 알아보세요!",
   "thumbnail": "/contents/math/elementary/3d-shapes-discovery/assets/thumbnail.svg",
-  "path": "/contents/math/elementary/3d-shapes-discovery/index.html"
+  "path": "/contents/math/elementary/3d-shapes-discovery/index.html",
+  "translations": {
+    "en": {
+      "title": "3D Shape Expedition",
+      "description": "Spin a cube, sphere, cylinder and pyramid a full 360° to explore faces, edges and vertices!"
+    }
+  }
 }

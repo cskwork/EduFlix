@@ -2,6 +2,9 @@
 // 텍스트 편집 컴포넌트
 import { computed } from 'vue'
 import type { EditableText } from '../../types/editor'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   texts: EditableText[]
@@ -27,25 +30,25 @@ const groupedTexts = computed(() => {
 })
 
 // 씬 라벨
-const sceneLabels: Record<string, string> = {
-  global: '전체',
-  hook: '훅 (시작)',
-  anchor: '앵커 (복습)',
-  story: '스토리',
-  core: '핵심 (인터랙션)',
-  visualize: '시각화',
-  quiz: '퀴즈',
-  wrap: '마무리'
-}
+const sceneLabels = computed<Record<string, string>>(() => ({
+  global: t('editor.text.scene.global'),
+  hook: t('editor.text.scene.hook'),
+  anchor: t('editor.text.scene.anchor'),
+  story: t('editor.text.scene.story'),
+  core: t('editor.text.scene.core'),
+  visualize: t('editor.text.scene.visualize'),
+  quiz: t('editor.text.scene.quiz'),
+  wrap: t('editor.text.scene.wrap')
+}))
 
 // 타입 라벨
-const typeLabels: Record<string, string> = {
-  title: '제목',
-  description: '설명',
-  instruction: '안내',
-  dialogue: '대화',
-  label: '라벨'
-}
+const typeLabels = computed<Record<string, string>>(() => ({
+  title: t('editor.text.type.title'),
+  description: t('editor.text.type.description'),
+  instruction: t('editor.text.type.instruction'),
+  dialogue: t('editor.text.type.dialogue'),
+  label: t('editor.text.type.label')
+}))
 
 // 텍스트 변경 핸들러
 function handleChange(text: EditableText, newValue: string) {
@@ -56,7 +59,7 @@ function handleChange(text: EditableText, newValue: string) {
 <template>
   <div class="text-editor">
     <div v-if="texts.length === 0" class="empty-state">
-      <p>편집 가능한 텍스트가 없습니다</p>
+      <p>{{ t('editor.text.empty') }}</p>
     </div>
 
     <div v-else class="text-groups">

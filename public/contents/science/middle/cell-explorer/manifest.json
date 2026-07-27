@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "현미경으로 세포를 관찰하고 각 세포소기관의 역할을 탐험해보세요!",
   "thumbnail": "/contents/science/middle/cell-explorer/assets/thumbnail.svg",
-  "path": "/contents/science/middle/cell-explorer/index.html"
+  "path": "/contents/science/middle/cell-explorer/index.html",
+  "translations": {
+    "en": {
+      "title": "Cell Explorer",
+      "description": "Look through the microscope and explore what each organelle inside a cell does!"
+    }
+  }
 }

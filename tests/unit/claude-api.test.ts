@@ -47,7 +47,8 @@ describe('ClaudeApiClient 방어 로직', () => {
     const result = await client.generateContent(baseOptions)
 
     expect(result.success).toBe(false)
-    expect(result.error).toContain('백엔드')
+    // 안내 문구는 언어에 따라 달라지므로 언어 무관 토큰으로 검증한다
+    expect(result.error).toContain('VITE_STATIC_MODE')
     expect(mockFetch).toHaveBeenCalledTimes(1)
     expect(String(mockFetch.mock.calls[0][0])).toContain('/api/health')
   })

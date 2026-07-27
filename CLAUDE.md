@@ -67,7 +67,7 @@ ADMIN_TOKEN=...          # 쓰기 API 인증 토큰 (openssl rand -hex 32)
 ```
 src/
 ├── components/          # Vue 컴포넌트
-│   ├── common/         # AppHeader, ModeToggle
+│   ├── common/         # AppHeader, ModeToggle, LanguageSwitcher
 │   ├── home/           # ContentCard, ContentRow
 │   ├── viewer/         # ContentViewer
 │   └── creator/        # CreatorWizard, InterestInput, SubjectSelect...
@@ -75,6 +75,7 @@ src/
 ├── stores/             # content.ts, generation.ts (Pinia)
 ├── services/api/       # claude.ts, gemini.ts
 ├── composables/        # useAIGeneration.ts, useDragScroll.ts
+├── i18n/               # index.ts(런타임), locales.ts(언어 레지스트리), labels.ts, content.ts, messages/{en,ko}.ts
 ├── types/              # content.ts, generation.ts, knowledge-map.ts
 └── assets/styles/      # theme.css (캔디 팝 키즈 라이트 테마), responsive.css (mobile-first UI styles)
 
@@ -105,6 +106,33 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
 ├── math/               # fractions-pizza, shapes-explorer, equation-puzzle
 └── science/            # circuit-lab, solar-system, cell-explorer, chemical-reactor
 ```
+
+## Internationalization (i18n)
+
+외부 의존성 없는 경량 i18n 런타임. **기본 언어는 영어**, 헤더 우측 상단 `LanguageSwitcher`로 전환한다.
+
+- **런타임**: `src/i18n/index.ts` — `t('a.b.c', { name })`, `useI18n()`, `setLocale()`, `$t`(전역)
+  - 키 경로는 `messages/en.ts` 구조에서 파생된 타입이라 **오타가 컴파일 타임에 잡힌다**
+  - `{placeholder}` 치환 + `'item | items'` 형태의 단순 복수형(`params.count`) 지원
+  - 선택 언어는 localStorage `eduflix_locale`에 저장, `<html lang>`과 `document.title` 자동 동기화
+  - 브라우저 언어는 감지하지 않는다(기본은 항상 영어)
+- **메시지**: `src/i18n/messages/en.ts`(정본) / `ko.ts`. `ko`는 `MessageSchema` 타입이라 키 누락 시 빌드 실패
+- **도메인 라벨**: `src/i18n/labels.ts` — `subjectLabel()`, `gradeLevelLabel()`, `contentTypeLabel()`, `difficultyLabel()`, `learningStatusLabel()`
+  - 과거 `types/content.ts`의 `SUBJECT_LABELS` 등 한국어 라벨 맵을 대체 (해당 상수는 삭제됨)
+  - 번역이 없는 커스텀 과목 슬러그는 슬러그 그대로 표시
+- **콘텐츠 메타데이터**: `src/i18n/content.ts` — `localizedTitle()`, `localizedDescription()`
+  - manifest/index.json의 `title`·`description`은 콘텐츠 원문 언어를 유지하고, 선택적 `translations: { en: { title, description } }`로 번역 제공
+  - 검색은 원문과 번역을 모두 매칭
+- **생성 언어**: 콘텐츠 생성 요청의 `language`는 현재 UI 언어를 따른다(`contentLanguageForLocale`). 단 `subject === 'english'`는 항상 `en`
+
+**언어 추가 방법** (2단계):
+1. `src/i18n/messages/<code>.ts`를 `en.ts` 기준으로 번역 (`const xx: MessageSchema = {...}`)
+2. `src/i18n/locales.ts`의 `LOCALES`에 항목 추가 (`nativeLabel`, `htmlLang`, `shortLabel`, `contentLanguage`, `messages`)
+
+전환 UI·저장·`<html lang>`·생성 언어는 자동으로 따라온다. 콘텐츠 카탈로그 번역은
+`scripts/add-catalog-translations.py`처럼 `translations.<code>`를 채우면 된다.
+
+**주의**: 콘텐츠 본문(`public/contents/**/index.html`)은 번역 대상이 아니다. 카드/헤더의 제목·설명만 UI 언어를 따르고, 학습 콘텐츠 자체는 생성된 원문 언어로 표시된다.
 
 ## Code Conventions
 - **Vue**: `<script setup lang="ts">`, scoped styles, Composition API

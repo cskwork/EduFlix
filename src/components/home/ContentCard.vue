@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { ContentCardData, Subject } from '../../types/content'
-import { CONTENT_TYPE_LABELS, GRADE_LEVEL_LABELS } from '../../types/content'
+import { contentTypeLabel, gradeLevelLabel } from '../../i18n/labels'
 import { getContentHtmlPath, IFRAME_SANDBOX_ATTRS } from '../../services/content/loader'
 import { useContentStore } from '../../stores/content'
 
@@ -30,10 +30,10 @@ const subjectColorClass = computed(() => {
 })
 
 // 콘텐츠 타입 라벨
-const typeLabel = computed(() => CONTENT_TYPE_LABELS[props.content.type])
+const typeLabel = computed(() => contentTypeLabel(props.content.type))
 
 // 학년 레벨 라벨
-const gradeLevelLabel = computed(() => GRADE_LEVEL_LABELS[props.content.gradeLevel])
+const gradeLabel = computed(() => gradeLevelLabel(props.content.gradeLevel))
 
 // 콘텐츠 미리보기 URL
 const previewUrl = computed(() => getContentHtmlPath(props.content))
@@ -57,7 +57,7 @@ const previewUrl = computed(() => getContentHtmlPath(props.content))
       </div>
       <div class="card-badges">
         <span class="badge badge-type">{{ typeLabel }}</span>
-        <span class="badge badge-grade">{{ gradeLevelLabel }}</span>
+        <span class="badge badge-grade">{{ gradeLabel }}</span>
       </div>
     </div>
     <div class="card-info">

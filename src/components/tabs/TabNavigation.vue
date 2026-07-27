@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import IconSet, { type IconName } from '../icons/IconSet.vue'
+import { useI18n } from '../../i18n'
 
 interface Tab {
   id: string
@@ -10,14 +11,15 @@ interface Tab {
   path: string
 }
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const tabs: Tab[] = [
-  { id: 'contents', label: '콘텐츠', icon: 'contents', path: '/' },
-  { id: 'map', label: '학습맵', icon: 'learning-map', path: '/map' },
-  { id: 'my-learning', label: '내 학습', icon: 'my-learning', path: '/my-learning' },
-]
+const tabs = computed<Tab[]>(() => [
+  { id: 'contents', label: t('tabs.contents'), icon: 'contents', path: '/' },
+  { id: 'map', label: t('tabs.map'), icon: 'learning-map', path: '/map' },
+  { id: 'my-learning', label: t('tabs.myLearning'), icon: 'my-learning', path: '/my-learning' },
+])
 
 const activeTab = computed(() => {
   const path = route.path

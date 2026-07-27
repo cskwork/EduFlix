@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import CreatorWizard from '../components/creator/CreatorWizard.vue'
+import { useI18n } from '../i18n'
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="creator-view">
     <div class="creator-hero">
-      <h1 class="hero-title">나만의 콘텐츠 만들기</h1>
+      <h1 class="hero-title">{{ t('creator.heroTitle') }}</h1>
       <p class="hero-description">
-        좋아하는 것을 알려주면, AI가 재미있는 학습 콘텐츠를 만들어줘요!
+        {{ t('creator.heroDescription') }}
       </p>
     </div>
 

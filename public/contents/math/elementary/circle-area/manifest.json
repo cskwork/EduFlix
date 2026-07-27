@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "원을 부채꼴로 분할하여 직사각형으로 변환하는 과정을 통해 원의 넓이 공식을 발견하는 인터랙티브 콘텐츠",
   "thumbnail": "/contents/math/elementary/circle-area/assets/thumbnail.svg",
-  "path": "/contents/math/elementary/circle-area/index.html"
+  "path": "/contents/math/elementary/circle-area/index.html",
+  "translations": {
+    "en": {
+      "title": "Area of a Circle: The Pizza Secret",
+      "description": "Slice a circle into sectors, rearrange them into a rectangle, and discover the area formula yourself."
+    }
+  }
 }

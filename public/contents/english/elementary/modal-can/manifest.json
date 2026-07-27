@@ -8,5 +8,11 @@
   "language": "en",
   "description": "조동사 can을 사용하여 능력과 가능성을 표현하는 방법을 배우는 인터랙티브 학습",
   "thumbnail": "/contents/english/elementary/modal-can/assets/thumbnail.svg",
-  "path": "/contents/english/elementary/modal-can/index.html"
+  "path": "/contents/english/elementary/modal-can/index.html",
+  "translations": {
+    "en": {
+      "title": "I Can Do It! Talking About Abilities",
+      "description": "Interactive practice using the modal verb 'can' to talk about ability and possibility."
+    }
+  }
 }

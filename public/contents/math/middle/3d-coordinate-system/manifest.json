@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "드론을 조종하며 3D 좌표계 (x, y, z)의 개념을 익혀보세요!",
   "thumbnail": "/contents/math/middle/3d-coordinate-system/assets/thumbnail.svg",
-  "path": "/contents/math/middle/3d-coordinate-system/index.html"
+  "path": "/contents/math/middle/3d-coordinate-system/index.html",
+  "translations": {
+    "en": {
+      "title": "3D Coordinates: Drone Pilot",
+      "description": "Fly a drone and get comfortable with the 3D coordinate system (x, y, z)!"
+    }
+  }
 }

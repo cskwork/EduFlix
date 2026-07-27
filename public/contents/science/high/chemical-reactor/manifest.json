@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "다양한 화학 반응을 시뮬레이션하며 반응식과 원리를 배워보세요!",
   "thumbnail": "/contents/science/high/chemical-reactor/assets/thumbnail.svg",
-  "path": "/contents/science/high/chemical-reactor/index.html"
+  "path": "/contents/science/high/chemical-reactor/index.html",
+  "translations": {
+    "en": {
+      "title": "Chemical Reaction Simulator",
+      "description": "Simulate different chemical reactions and learn the equations and principles behind them!"
+    }
+  }
 }

@@ -2,6 +2,9 @@
 import { computed } from 'vue'
 import type { GenerationStatus, GenerationProgress as ProgressType } from '../../types/generation'
 import LivePreview from './LivePreview.vue'
+import { useI18n, type MessageKey } from '../../i18n'
+
+const { t } = useI18n()
 
 // Props
 const props = defineProps<{
@@ -18,22 +21,22 @@ const emit = defineEmits<{
   improve: [contentId: string]
 }>()
 
-// 상태별 메시지
-const statusMessages: Record<GenerationStatus, string> = {
-  idle: '대기 중...',
-  preparing: '콘텐츠 준비 중...',
-  queued: '생성 대기열에 추가되었어요...',
-  generating: 'AI가 콘텐츠를 만들고 있어요!',
-  'generating-images': '이미지를 생성하고 있어요...',
-  reviewing: '콘텐츠 품질을 검토하고 있어요...',
-  finalizing: '마무리 중...',
-  completed: '완성되었어요!',
-  error: '오류가 발생했어요',
+// 상태별 메시지 키
+const statusMessageKeys: Record<GenerationStatus, MessageKey> = {
+  idle: 'generation.status.idle',
+  preparing: 'generation.status.preparing',
+  queued: 'generation.status.queued',
+  generating: 'generation.status.generating',
+  'generating-images': 'generation.status.generatingImages',
+  reviewing: 'generation.status.reviewing',
+  finalizing: 'generation.status.finalizing',
+  completed: 'generation.status.completed',
+  error: 'generation.status.error',
 }
 
-// 현재 상태 메시지
+// 현재 상태 메시지 (스토어가 준 메시지가 있으면 우선)
 const currentMessage = computed(() => {
-  return props.progress.message || statusMessages[props.progress.status]
+  return props.progress.message || t(statusMessageKeys[props.progress.status])
 })
 
 // 진행률 표시 여부
@@ -106,11 +109,11 @@ function handleImprove(contentId: string) {
 
       <div class="progress-actions">
         <button v-if="isInProgress" type="button" class="btn btn-secondary" @click="handleCancel">
-          취소
+          {{ t('common.cancel') }}
         </button>
 
         <button v-if="isError" type="button" class="btn btn-primary" @click="handleRetry">
-          다시 시도
+          {{ t('common.retry') }}
         </button>
 
         <button
@@ -119,7 +122,7 @@ function handleImprove(contentId: string) {
           class="btn btn-primary"
           @click="handleViewContent(props.contentId)"
         >
-          콘텐츠 보기
+          {{ t('creator.progress.viewContent') }}
         </button>
 
         <button
@@ -128,14 +131,14 @@ function handleImprove(contentId: string) {
           class="btn btn-secondary btn-improve"
           @click="handleImprove(props.contentId)"
         >
-          개선하기
+          {{ t('creator.progress.improve') }}
         </button>
       </div>
     </div>
 
     <div v-if="isInProgress" class="progress-tips">
-      <p class="tip-title">잠깐만 기다려주세요!</p>
-      <p class="tip-text">AI가 관심사에 맞는 재미있는 콘텐츠를 만들고 있어요.</p>
+      <p class="tip-title">{{ t('creator.progress.tipTitle') }}</p>
+      <p class="tip-text">{{ t('creator.progress.tipText') }}</p>
     </div>
   </div>
 </template>

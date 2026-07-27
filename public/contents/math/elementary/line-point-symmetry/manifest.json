@@ -10,5 +10,17 @@
   "path": "/contents/math/elementary/line-point-symmetry/index.html",
   "thumbnail": "/contents/math/elementary/line-point-symmetry/thumbnail.png",
   "createdAt": "2026-07-13T00:00:00Z",
-  "tags": ["선대칭", "점대칭", "대응점", "초등수학", "도형"]
+  "tags": [
+    "선대칭",
+    "점대칭",
+    "대응점",
+    "초등수학",
+    "도형"
+  ],
+  "translations": {
+    "en": {
+      "title": "Dory and the Symmetry Museum Restoration",
+      "description": "A hands-on lesson that restores matching points through line symmetry (folding) and point symmetry (half turns)."
+    }
+  }
 }

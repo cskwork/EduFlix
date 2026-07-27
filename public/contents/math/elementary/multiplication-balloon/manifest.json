@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "구구단 문제의 정답이 적힌 풍선을 터트려 점수를 획득하는 게임",
   "thumbnail": "assets/thumbnail.svg",
-  "path": "math/elementary/multiplication-balloon"
+  "path": "math/elementary/multiplication-balloon",
+  "translations": {
+    "en": {
+      "title": "Times Table Balloon Pop",
+      "description": "A Phaser game where you pop the balloon showing the right answer to score points."
+    }
+  }
 }

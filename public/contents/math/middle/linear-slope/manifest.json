@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "스키장의 슬로프처럼 직선의 기울어진 정도를 숫자로 나타내볼까요?",
   "thumbnail": "/contents/math/middle/linear-slope/assets/thumbnail.svg",
-  "path": "/contents/math/middle/linear-slope/index.html"
+  "path": "/contents/math/middle/linear-slope/index.html",
+  "translations": {
+    "en": {
+      "title": "Linear Functions and Slope",
+      "description": "Just like a ski slope, how steep is a line? Let's put a number on it."
+    }
+  }
 }

@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "맛있는 피자를 통해 분수의 개념을 배워보세요! 피자 조각을 나누고 분수를 만들어 봅니다.",
   "thumbnail": "/contents/math/elementary/fractions-pizza/assets/thumbnail.svg",
-  "path": "/contents/math/elementary/fractions-pizza/index.html"
+  "path": "/contents/math/elementary/fractions-pizza/index.html",
+  "translations": {
+    "en": {
+      "title": "Fraction Pizza",
+      "description": "Learn what fractions are with a delicious pizza! Slice it up and build your own fractions."
+    }
+  }
 }

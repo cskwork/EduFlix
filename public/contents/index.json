@@ -12,7 +12,13 @@
       "language": "ko",
       "description": "맛있는 피자를 통해 분수의 개념을 배워보세요! 피자 조각을 나누고 분수를 만들어 봅니다.",
       "thumbnail": "/contents/math/elementary/fractions-pizza/assets/thumbnail.svg",
-      "path": "/contents/math/elementary/fractions-pizza/index.html"
+      "path": "/contents/math/elementary/fractions-pizza/index.html",
+      "translations": {
+        "en": {
+          "title": "Fraction Pizza",
+          "description": "Learn what fractions are with a delicious pizza! Slice it up and build your own fractions."
+        }
+      }
     },
     {
       "id": "shapes-explorer",
@@ -24,7 +30,13 @@
       "language": "ko",
       "description": "다양한 평면도형과 입체도형을 탐험하며 도형의 성질을 배워보세요!",
       "thumbnail": "/contents/math/elementary/shapes-explorer/assets/thumbnail.svg",
-      "path": "/contents/math/elementary/shapes-explorer/index.html"
+      "path": "/contents/math/elementary/shapes-explorer/index.html",
+      "translations": {
+        "en": {
+          "title": "Shape Explorer",
+          "description": "Explore flat and solid shapes and discover the properties that make each one special!"
+        }
+      }
     },
     {
       "id": "equation-puzzle",
@@ -36,7 +48,13 @@
       "language": "ko",
       "description": "재미있는 퍼즐로 일차방정식과 연립방정식을 풀어보세요!",
       "thumbnail": "/contents/math/middle/equation-puzzle/assets/thumbnail.svg",
-      "path": "/contents/math/middle/equation-puzzle/index.html"
+      "path": "/contents/math/middle/equation-puzzle/index.html",
+      "translations": {
+        "en": {
+          "title": "Equation Puzzle",
+          "description": "Solve linear equations and systems of equations through playful puzzles!"
+        }
+      }
     },
     {
       "id": "cell-explorer",
@@ -48,7 +66,13 @@
       "language": "ko",
       "description": "현미경으로 세포를 관찰하고 각 세포소기관의 역할을 탐험해보세요!",
       "thumbnail": "/contents/science/middle/cell-explorer/assets/thumbnail.svg",
-      "path": "/contents/science/middle/cell-explorer/index.html"
+      "path": "/contents/science/middle/cell-explorer/index.html",
+      "translations": {
+        "en": {
+          "title": "Cell Explorer",
+          "description": "Look through the microscope and explore what each organelle inside a cell does!"
+        }
+      }
     },
     {
       "id": "chemical-reactor",
@@ -60,7 +84,13 @@
       "language": "ko",
       "description": "다양한 화학 반응을 시뮬레이션하며 반응식과 원리를 배워보세요!",
       "thumbnail": "/contents/science/high/chemical-reactor/assets/thumbnail.svg",
-      "path": "/contents/science/high/chemical-reactor/index.html"
+      "path": "/contents/science/high/chemical-reactor/index.html",
+      "translations": {
+        "en": {
+          "title": "Chemical Reaction Simulator",
+          "description": "Simulate different chemical reactions and learn the equations and principles behind them!"
+        }
+      }
     },
     {
       "id": "pythagoras-theorem",
@@ -72,7 +102,13 @@
       "language": "ko",
       "description": "직각삼각형의 변들 사이에는 어떤 비밀이 있을까요? 직접 움직여보며 피타고라스의 정리를 발견해보세요.",
       "thumbnail": "/contents/math/middle/pythagoras-theorem/assets/thumbnail.svg",
-      "path": "/contents/math/middle/pythagoras-theorem/index.html"
+      "path": "/contents/math/middle/pythagoras-theorem/index.html",
+      "translations": {
+        "en": {
+          "title": "The Pythagorean Theorem",
+          "description": "What secret hides between the sides of a right triangle? Move the triangle yourself and discover the Pythagorean theorem."
+        }
+      }
     },
     {
       "id": "probability-coin",
@@ -84,7 +120,13 @@
       "language": "ko",
       "description": "동전을 많이 던지면 앞면과 뒷면의 비율은 어떻게 변할까요? 큰 수의 법칙을 실험해보세요.",
       "thumbnail": "/contents/math/middle/probability-coin/assets/thumbnail.svg",
-      "path": "/contents/math/middle/probability-coin/index.html"
+      "path": "/contents/math/middle/probability-coin/index.html",
+      "translations": {
+        "en": {
+          "title": "The World of Probability: Coin Toss",
+          "description": "What happens to the ratio of heads and tails as you toss more coins? Run the experiment and meet the law of large numbers."
+        }
+      }
     },
     {
       "id": "linear-slope",
@@ -96,7 +138,13 @@
       "language": "ko",
       "description": "스키장의 슬로프처럼 직선의 기울어진 정도를 숫자로 나타내볼까요?",
       "thumbnail": "/contents/math/middle/linear-slope/assets/thumbnail.svg",
-      "path": "/contents/math/middle/linear-slope/index.html"
+      "path": "/contents/math/middle/linear-slope/index.html",
+      "translations": {
+        "en": {
+          "title": "Linear Functions and Slope",
+          "description": "Just like a ski slope, how steep is a line? Let's put a number on it."
+        }
+      }
     },
     {
       "id": "negative-addition",
@@ -108,7 +156,13 @@
       "language": "ko",
       "description": "수직선 위를 움직이며 음수와 양수의 덧셈, 뺄셈 원리를 배워보세요.",
       "thumbnail": "/contents/math/middle/negative-addition/assets/thumbnail.svg",
-      "path": "/contents/math/middle/negative-addition/index.html"
+      "path": "/contents/math/middle/negative-addition/index.html",
+      "translations": {
+        "en": {
+          "title": "Adding and Subtracting Integers",
+          "description": "Move along the number line and learn how adding and subtracting positive and negative numbers works."
+        }
+      }
     },
     {
       "id": "quadratic-graph",
@@ -120,7 +174,13 @@
       "language": "ko",
       "description": "이차함수 y = ax² + bx + c 그래프가 계수에 따라 어떻게 변하는지 확인해보세요.",
       "thumbnail": "/contents/math/high/quadratic-graph/assets/thumbnail.svg",
-      "path": "/contents/math/high/quadratic-graph/index.html"
+      "path": "/contents/math/high/quadratic-graph/index.html",
+      "translations": {
+        "en": {
+          "title": "Quadratic Function Graphs",
+          "description": "See how the graph of y = ax² + bx + c changes as you adjust each coefficient."
+        }
+      }
     },
     {
       "id": "3d-shapes-discovery",
@@ -132,7 +192,13 @@
       "language": "ko",
       "description": "정육면체, 구, 원기둥, 삼각뿔을 360도로 돌려보며 면, 모서리, 꼭짓점을 알아보세요!",
       "thumbnail": "/contents/math/elementary/3d-shapes-discovery/assets/thumbnail.svg",
-      "path": "/contents/math/elementary/3d-shapes-discovery/index.html"
+      "path": "/contents/math/elementary/3d-shapes-discovery/index.html",
+      "translations": {
+        "en": {
+          "title": "3D Shape Expedition",
+          "description": "Spin a cube, sphere, cylinder and pyramid a full 360° to explore faces, edges and vertices!"
+        }
+      }
     },
     {
       "id": "volume-explorer",
@@ -144,7 +210,13 @@
       "language": "ko",
       "description": "단위 큐브로 상자를 채우면서 부피 = 가로 x 세로 x 높이를 발견해보세요!",
       "thumbnail": "/contents/math/elementary/volume-explorer/assets/thumbnail.svg",
-      "path": "/contents/math/elementary/volume-explorer/index.html"
+      "path": "/contents/math/elementary/volume-explorer/index.html",
+      "translations": {
+        "en": {
+          "title": "Volume Explorer",
+          "description": "Fill a box with unit cubes and discover that volume = length x width x height!"
+        }
+      }
     },
     {
       "id": "3d-coordinate-system",
@@ -156,7 +228,13 @@
       "language": "ko",
       "description": "드론을 조종하며 3D 좌표계 (x, y, z)의 개념을 익혀보세요!",
       "thumbnail": "/contents/math/middle/3d-coordinate-system/assets/thumbnail.svg",
-      "path": "/contents/math/middle/3d-coordinate-system/index.html"
+      "path": "/contents/math/middle/3d-coordinate-system/index.html",
+      "translations": {
+        "en": {
+          "title": "3D Coordinates: Drone Pilot",
+          "description": "Fly a drone and get comfortable with the 3D coordinate system (x, y, z)!"
+        }
+      }
     },
     {
       "id": "space-diagonal",
@@ -168,7 +246,13 @@
       "language": "ko",
       "description": "피타고라스를 두 번 적용해서 공간 대각선의 길이를 구해보세요!",
       "thumbnail": "/contents/math/middle/space-diagonal/assets/thumbnail.svg",
-      "path": "/contents/math/middle/space-diagonal/index.html"
+      "path": "/contents/math/middle/space-diagonal/index.html",
+      "translations": {
+        "en": {
+          "title": "Space Diagonal",
+          "description": "Apply the Pythagorean theorem twice to find the length of a space diagonal!"
+        }
+      }
     },
     {
       "id": "3d-vectors",
@@ -180,7 +264,13 @@
       "language": "ko",
       "description": "3D 공간에서 두 벡터를 합성하며 벡터 덧셈의 원리를 배워보세요!",
       "thumbnail": "/contents/math/high/3d-vectors/assets/thumbnail.svg",
-      "path": "/contents/math/high/3d-vectors/index.html"
+      "path": "/contents/math/high/3d-vectors/index.html",
+      "translations": {
+        "en": {
+          "title": "3D Vectors: Combining Forces",
+          "description": "Add two vectors in 3D space and learn how vector addition works!"
+        }
+      }
     },
     {
       "id": "pythagorean-squares",
@@ -192,7 +282,13 @@
       "language": "ko",
       "description": "정사각형의 넓이를 활용하여 피타고라스의 정리 a² + b² = c²를 시각적으로 발견하고 실생활 문제에 적용해보세요!",
       "thumbnail": "/contents/math/middle/pythagorean-squares/assets/thumbnail.svg",
-      "path": "/contents/math/middle/pythagorean-squares/index.html"
+      "path": "/contents/math/middle/pythagorean-squares/index.html",
+      "translations": {
+        "en": {
+          "title": "Pythagorean Theorem: The Secret of Squares",
+          "description": "Use the areas of squares to see a² + b² = c² for yourself, then apply it to real-life problems!"
+        }
+      }
     },
     {
       "id": "box-volume",
@@ -204,7 +300,13 @@
       "language": "ko",
       "description": "단위 큐브를 쌓아 직육면체의 부피 공식(가로x세로x높이)을 직관적으로 이해하는 인터랙티브 콘텐츠",
       "thumbnail": "/contents/math/elementary/box-volume/assets/thumbnail.svg",
-      "path": "/contents/math/elementary/box-volume/index.html"
+      "path": "/contents/math/elementary/box-volume/index.html",
+      "translations": {
+        "en": {
+          "title": "Volume of a Box: The Secret Inside",
+          "description": "Stack unit cubes to build an intuitive feel for the box volume formula (length x width x height)."
+        }
+      }
     },
     {
       "id": "circle-area",
@@ -216,7 +318,13 @@
       "language": "ko",
       "description": "원을 부채꼴로 분할하여 직사각형으로 변환하는 과정을 통해 원의 넓이 공식을 발견하는 인터랙티브 콘텐츠",
       "thumbnail": "/contents/math/elementary/circle-area/assets/thumbnail.svg",
-      "path": "/contents/math/elementary/circle-area/index.html"
+      "path": "/contents/math/elementary/circle-area/index.html",
+      "translations": {
+        "en": {
+          "title": "Area of a Circle: The Pizza Secret",
+          "description": "Slice a circle into sectors, rearrange them into a rectangle, and discover the area formula yourself."
+        }
+      }
     },
     {
       "id": "decimal-multiplication",
@@ -228,7 +336,13 @@
       "language": "ko",
       "description": "소수점 위치 변화를 시각화하여 소수 곱셈의 원리를 이해하는 인터랙티브 콘텐츠",
       "thumbnail": "/contents/math/elementary/decimal-multiplication/assets/thumbnail.svg",
-      "path": "/contents/math/elementary/decimal-multiplication/index.html"
+      "path": "/contents/math/elementary/decimal-multiplication/index.html",
+      "translations": {
+        "en": {
+          "title": "Multiplying Decimals",
+          "description": "Watch the decimal point move and understand exactly how decimal multiplication works."
+        }
+      }
     },
     {
       "id": "fraction-division",
@@ -240,7 +354,13 @@
       "language": "ko",
       "description": "피자 조각을 나누는 시각화를 통해 분수 나눗셈의 원리와 역수 곱셈 방법을 이해하는 인터랙티브 콘텐츠",
       "thumbnail": "/contents/math/elementary/fraction-division/assets/thumbnail.svg",
-      "path": "/contents/math/elementary/fraction-division/index.html"
+      "path": "/contents/math/elementary/fraction-division/index.html",
+      "translations": {
+        "en": {
+          "title": "Dividing Fractions: Sharing Equally",
+          "description": "Split pizza slices to see why dividing fractions means multiplying by the reciprocal."
+        }
+      }
     },
     {
       "id": "ratio-proportion",
@@ -252,7 +372,13 @@
       "language": "ko",
       "description": "떡볶이 레시피 조절을 통해 비와 비율의 개념을 실생활에서 이해하는 인터랙티브 콘텐츠",
       "thumbnail": "/contents/math/elementary/ratio-proportion/assets/thumbnail.svg",
-      "path": "/contents/math/elementary/ratio-proportion/index.html"
+      "path": "/contents/math/elementary/ratio-proportion/index.html",
+      "translations": {
+        "en": {
+          "title": "Ratio and Proportion: The Recipe Secret",
+          "description": "Scale a tteokbokki recipe up and down to understand ratio and proportion in everyday life."
+        }
+      }
     },
     {
       "id": "20260127-topic-105b382d",
@@ -268,7 +394,13 @@
       "tags": [
         "인사"
       ],
-      "createdAt": "2026-01-27T00:37:00.913Z"
+      "createdAt": "2026-01-27T00:37:00.913Z",
+      "translations": {
+        "en": {
+          "title": "The Magic of English Greetings",
+          "description": "An English lesson all about greetings."
+        }
+      }
     },
     {
       "id": "comparative-adjectives",
@@ -280,7 +412,13 @@
       "language": "en",
       "description": "비교급 형용사를 배우며 두 대상을 비교하는 방법을 익히는 인터랙티브 학습",
       "thumbnail": "/contents/english/elementary/comparative-adjectives/assets/thumbnail.svg",
-      "path": "/contents/english/elementary/comparative-adjectives/index.html"
+      "path": "/contents/english/elementary/comparative-adjectives/index.html",
+      "translations": {
+        "en": {
+          "title": "Who is Taller? Comparing with Adjectives",
+          "description": "Interactive practice with comparative adjectives and how to compare two things."
+        }
+      }
     },
     {
       "id": "modal-can",
@@ -292,7 +430,13 @@
       "language": "en",
       "description": "조동사 can을 사용하여 능력과 가능성을 표현하는 방법을 배우는 인터랙티브 학습",
       "thumbnail": "/contents/english/elementary/modal-can/assets/thumbnail.svg",
-      "path": "/contents/english/elementary/modal-can/index.html"
+      "path": "/contents/english/elementary/modal-can/index.html",
+      "translations": {
+        "en": {
+          "title": "I Can Do It! Talking About Abilities",
+          "description": "Interactive practice using the modal verb 'can' to talk about ability and possibility."
+        }
+      }
     },
     {
       "id": "present-tenses",
@@ -304,7 +448,13 @@
       "language": "en",
       "description": "현재 단순형과 현재 진행형의 차이를 구분하고 올바르게 사용하는 방법을 배우는 인터랙티브 학습",
       "thumbnail": "/contents/english/elementary/present-tenses/assets/thumbnail.svg",
-      "path": "/contents/english/elementary/present-tenses/index.html"
+      "path": "/contents/english/elementary/present-tenses/index.html",
+      "translations": {
+        "en": {
+          "title": "I play vs I'm playing: What's the Difference?",
+          "description": "Interactive practice telling the present simple and present continuous apart and using each correctly."
+        }
+      }
     },
     {
       "id": "will-vs-going-to-library",
@@ -316,7 +466,13 @@
       "language": "ko",
       "description": "will과 be going to의 차이를 도서관 방문 계획 상황에서 배우는 인터랙티브 학습",
       "thumbnail": "/contents/english/middle/will-vs-going-to-library/assets/thumbnail.svg",
-      "path": "/contents/english/middle/will-vs-going-to-library/index.html"
+      "path": "/contents/english/middle/will-vs-going-to-library/index.html",
+      "translations": {
+        "en": {
+          "title": "A Trip to the Library: will vs going to",
+          "description": "Interactive practice with the difference between 'will' and 'be going to' while planning a library visit."
+        }
+      }
     },
     {
       "id": "will-vs-going-to-zoo",
@@ -328,7 +484,13 @@
       "language": "en",
       "description": "will과 be going to의 차이를 동물원 방문 계획 상황에서 배우는 인터랙티브 학습",
       "thumbnail": "/contents/english/middle/will-vs-going-to-zoo/assets/thumbnail.svg",
-      "path": "/contents/english/middle/will-vs-going-to-zoo/index.html"
+      "path": "/contents/english/middle/will-vs-going-to-zoo/index.html",
+      "translations": {
+        "en": {
+          "title": "Travel Plans: will vs going to - Zoo Visit Adventure",
+          "description": "Interactive practice with the difference between 'will' and 'be going to' while planning a zoo visit."
+        }
+      }
     },
     {
       "id": "fraction-addition",
@@ -340,7 +502,13 @@
       "language": "ko",
       "description": "서로 다른 분모를 가진 분수의 덧셈 방법을 시각적으로 이해하는 인터랙티브 학습",
       "thumbnail": "/contents/math/elementary/fraction-addition/assets/thumbnail.svg",
-      "path": "/contents/math/elementary/fraction-addition/index.html"
+      "path": "/contents/math/elementary/fraction-addition/index.html",
+      "translations": {
+        "en": {
+          "title": "Adding Fractions with Unlike Denominators",
+          "description": "See, step by step, how to add fractions that do not share a denominator."
+        }
+      }
     },
     {
       "id": "moon-phases",
@@ -352,7 +520,13 @@
       "language": "ko",
       "description": "달의 모양이 왜 변하는지 태양-지구-달의 위치 관계를 통해 알아보는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/science/elementary/moon-phases/index.html"
+      "path": "/contents/science/elementary/moon-phases/index.html",
+      "translations": {
+        "en": {
+          "title": "Phases of the Moon: Why the Moon Changes",
+          "description": "Discover why the Moon changes shape by exploring how the Sun, Earth and Moon line up."
+        }
+      }
     },
     {
       "id": "states-of-matter",
@@ -364,7 +538,13 @@
       "language": "ko",
       "description": "고체, 액체, 기체 상태 변화와 분자 운동의 관계를 시각적으로 이해하는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/science/elementary/states-of-matter/index.html"
+      "path": "/contents/science/elementary/states-of-matter/index.html",
+      "translations": {
+        "en": {
+          "title": "States of Matter: The Secret Life of Molecules",
+          "description": "See how solids, liquids and gases relate to the motion of molecules."
+        }
+      }
     },
     {
       "id": "newtons-laws",
@@ -376,7 +556,13 @@
       "language": "ko",
       "description": "뉴턴의 세 가지 운동 법칙을 실험과 시뮬레이션으로 이해하는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/science/middle/newtons-laws/index.html"
+      "path": "/contents/science/middle/newtons-laws/index.html",
+      "translations": {
+        "en": {
+          "title": "Newton's Laws of Motion",
+          "description": "Understand Newton's three laws of motion through experiments and simulations."
+        }
+      }
     },
     {
       "id": "photosynthesis",
@@ -388,7 +574,13 @@
       "language": "ko",
       "description": "식물이 햇빛으로 양분을 만드는 광합성 과정을 시각적으로 탐구하는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/science/middle/photosynthesis/index.html"
+      "path": "/contents/science/middle/photosynthesis/index.html",
+      "translations": {
+        "en": {
+          "title": "Photosynthesis: A Plant's Secret Factory",
+          "description": "Explore how plants turn sunlight into food, step by step."
+        }
+      }
     },
     {
       "id": "plate-tectonics",
@@ -400,7 +592,13 @@
       "language": "ko",
       "description": "지구의 판이 어떻게 움직이고 지진이 발생하는지 알아보는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/science/middle/plate-tectonics/index.html"
+      "path": "/contents/science/middle/plate-tectonics/index.html",
+      "translations": {
+        "en": {
+          "title": "Earthquakes and Plate Tectonics",
+          "description": "Find out how Earth's plates move and why earthquakes happen."
+        }
+      }
     },
     {
       "id": "countable-uncountable",
@@ -412,7 +610,13 @@
       "language": "en",
       "description": "셀 수 있는 명사와 셀 수 없는 명사의 차이를 배우는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/english/elementary/countable-uncountable/index.html"
+      "path": "/contents/english/elementary/countable-uncountable/index.html",
+      "translations": {
+        "en": {
+          "title": "Can You Count It? Countable vs Uncountable",
+          "description": "Interactive practice telling countable and uncountable nouns apart."
+        }
+      }
     },
     {
       "id": "magic-e",
@@ -424,7 +628,13 @@
       "language": "en",
       "description": "단어 끝 Silent E가 모음 발음을 바꾸는 규칙을 배우는 파닉스 학습",
       "thumbnail": "",
-      "path": "/contents/english/elementary/magic-e/index.html"
+      "path": "/contents/english/elementary/magic-e/index.html",
+      "translations": {
+        "en": {
+          "title": "Magic E",
+          "description": "A phonics lesson on how a silent E at the end of a word changes the vowel sound."
+        }
+      }
     },
     {
       "id": "prepositions-place",
@@ -436,7 +646,13 @@
       "language": "en",
       "description": "in, on, under, next to, between 등 위치 전치사를 배우는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/english/elementary/prepositions-place/index.html"
+      "path": "/contents/english/elementary/prepositions-place/index.html",
+      "translations": {
+        "en": {
+          "title": "Prepositions of Place - Where is it?",
+          "description": "Interactive practice with in, on, under, next to, between and more."
+        }
+      }
     },
     {
       "id": "present-perfect",
@@ -448,7 +664,13 @@
       "language": "en",
       "description": "have/has + 과거분사 구조의 현재완료시제를 배우는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/english/middle/present-perfect/index.html"
+      "path": "/contents/english/middle/present-perfect/index.html",
+      "translations": {
+        "en": {
+          "title": "Present Perfect - Have You Ever...?",
+          "description": "Interactive practice with the have/has + past participle structure."
+        }
+      }
     },
     {
       "id": "word-families",
@@ -460,7 +682,13 @@
       "language": "en",
       "description": "-tion/-sion 접미사로 동사를 명사로 바꾸는 단어 변환 학습",
       "thumbnail": "",
-      "path": "/contents/english/elementary/word-families/index.html"
+      "path": "/contents/english/elementary/word-families/index.html",
+      "translations": {
+        "en": {
+          "title": "Word Families - Making Nouns",
+          "description": "Turn verbs into nouns with the -tion and -sion suffixes."
+        }
+      }
     },
     {
       "id": "prepositions-3d",
@@ -472,7 +700,13 @@
       "language": "ko",
       "description": "in, on, under, next to, between 등 위치 전치사를 Three.js 3D 시각화로 배우는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/english/elementary/prepositions-3d/index.html"
+      "path": "/contents/english/elementary/prepositions-3d/index.html",
+      "translations": {
+        "en": {
+          "title": "3D Prepositions of Place - Where is it?",
+          "description": "Learn in, on, under, next to and between through a Three.js 3D scene."
+        }
+      }
     },
     {
       "id": "platonic-solids",
@@ -484,7 +718,13 @@
       "language": "ko",
       "description": "정다면체가 왜 5가지뿐인지, 각 정다면체의 면/모서리/꼭짓점 관계와 오일러 공식을 탐구하는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/math/middle/platonic-solids/index.html"
+      "path": "/contents/math/middle/platonic-solids/index.html",
+      "translations": {
+        "en": {
+          "title": "Platonic Solids: Five Perfect Shapes",
+          "description": "Find out why there are exactly five Platonic solids, and explore faces, edges, vertices and Euler's formula."
+        }
+      }
     },
     {
       "id": "volume-solids",
@@ -496,7 +736,13 @@
       "language": "ko",
       "description": "원기둥, 원뿔, 구의 부피 공식을 발견하고 원기둥=원뿔×3 관계를 시뮬레이션으로 이해하는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/math/middle/volume-solids/index.html"
+      "path": "/contents/math/middle/volume-solids/index.html",
+      "translations": {
+        "en": {
+          "title": "Volume of Solids: Cylinder, Cone and Sphere",
+          "description": "Discover the volume formulas for cylinders, cones and spheres, and see why a cylinder equals three cones."
+        }
+      }
     },
     {
       "id": "3d-coordinates",
@@ -508,7 +754,13 @@
       "language": "ko",
       "description": "3차원 좌표 (x, y, z)를 이해하고 공간에서 점의 위치와 두 점 사이 거리를 구하는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/math/middle/3d-coordinates/index.html"
+      "path": "/contents/math/middle/3d-coordinates/index.html",
+      "translations": {
+        "en": {
+          "title": "Space Coordinates: Exploring Three Dimensions",
+          "description": "Understand 3D coordinates (x, y, z) and work out the distance between two points in space."
+        }
+      }
     },
     {
       "id": "angles-rocket",
@@ -520,7 +772,13 @@
       "language": "ko",
       "description": "로켓 발사를 통해 각도의 개념과 측정 방법을 배우는 인터랙티브 학습",
       "thumbnail": "",
-      "path": "/contents/math/elementary/angles-rocket/index.html"
+      "path": "/contents/math/elementary/angles-rocket/index.html",
+      "translations": {
+        "en": {
+          "title": "Launch the Rocket! Understanding Angles",
+          "description": "Learn what angles are and how to measure them by launching rockets."
+        }
+      }
     },
     {
       "id": "3d-geometry-explorer-donga",
@@ -532,7 +790,13 @@
       "language": "ko",
       "description": "3D 도형의 세계를 탐험하세요! 면, 모서리, 꼭짓점을 배우고 퀴즈로 실력을 테스트하세요.",
       "thumbnail": "",
-      "path": "/contents/math/elementary/3d-geometry-explorer-donga/index.html"
+      "path": "/contents/math/elementary/3d-geometry-explorer-donga/index.html",
+      "translations": {
+        "en": {
+          "title": "3D Geometry Explorer",
+          "description": "Explore the world of 3D shapes! Learn about faces, edges and vertices, then test yourself with a quiz."
+        }
+      }
     },
     {
       "id": "fraction-factory-3d",
@@ -544,7 +808,13 @@
       "language": "ko",
       "description": "3D 시각화로 분수의 덧셈, 뺄셈, 곱셈, 나눗셈을 배워보세요!",
       "thumbnail": "",
-      "path": "/contents/math/elementary/fraction-factory-3d/index.html"
+      "path": "/contents/math/elementary/fraction-factory-3d/index.html",
+      "translations": {
+        "en": {
+          "title": "Fraction Factory 3D",
+          "description": "Add, subtract, multiply and divide fractions with 3D visualisations!"
+        }
+      }
     },
     {
       "id": "multiplication-mountain-3d",
@@ -556,7 +826,13 @@
       "language": "ko",
       "description": "3D 산을 오르며 구구단을 마스터하세요! 재미있는 게이미피케이션으로 곱셈을 배워요.",
       "thumbnail": "",
-      "path": "/contents/math/elementary/multiplication-mountain-3d/index.html"
+      "path": "/contents/math/elementary/multiplication-mountain-3d/index.html",
+      "translations": {
+        "en": {
+          "title": "Times Table Mountain 3D",
+          "description": "Climb a 3D mountain and master your times tables through playful gamification."
+        }
+      }
     },
     {
       "id": "measurement-lab-3d",
@@ -568,7 +844,13 @@
       "language": "ko",
       "description": "3D 공간에서 길이, 무게, 부피를 측정하고 배워보세요!",
       "thumbnail": "",
-      "path": "/contents/math/elementary/measurement-lab-3d/index.html"
+      "path": "/contents/math/elementary/measurement-lab-3d/index.html",
+      "translations": {
+        "en": {
+          "title": "Measurement Lab 3D",
+          "description": "Measure length, weight and volume in a 3D lab."
+        }
+      }
     },
     {
       "id": "pattern-planet-3d",
@@ -580,7 +862,13 @@
       "language": "ko",
       "description": "우주를 여행하며 숫자와 도형 패턴을 발견하세요!",
       "thumbnail": "",
-      "path": "/contents/math/elementary/pattern-planet-3d/index.html"
+      "path": "/contents/math/elementary/pattern-planet-3d/index.html",
+      "translations": {
+        "en": {
+          "title": "Pattern Planet 3D",
+          "description": "Travel through space and discover number and shape patterns!"
+        }
+      }
     },
     {
       "id": "3d-algebra-city",
@@ -592,7 +880,13 @@
       "language": "ko",
       "description": "3D 도시에서 방정식과 대수를 배워보세요!",
       "thumbnail": "",
-      "path": "/contents/math/middle/3d-algebra-city/index.html"
+      "path": "/contents/math/middle/3d-algebra-city/index.html",
+      "translations": {
+        "en": {
+          "title": "3D Algebra City",
+          "description": "Learn equations and algebra while exploring a 3D city!"
+        }
+      }
     },
     {
       "id": "geometry-world-3d",
@@ -604,7 +898,13 @@
       "language": "ko",
       "description": "3D 공간에서 기하학의 세계를 탐험하세요! 넓이, 둘레, 부피를 배워요.",
       "thumbnail": "",
-      "path": "/contents/math/middle/geometry-world-3d/index.html"
+      "path": "/contents/math/middle/geometry-world-3d/index.html",
+      "translations": {
+        "en": {
+          "title": "Geometry World 3D",
+          "description": "Explore geometry in 3D space and learn about area, perimeter and volume."
+        }
+      }
     },
     {
       "id": "data-visualization-hub",
@@ -616,7 +916,13 @@
       "language": "ko",
       "description": "인터랙티브 차트로 통계와 데이터 분석을 배워보세요!",
       "thumbnail": "",
-      "path": "/contents/math/middle/data-visualization-hub/index.html"
+      "path": "/contents/math/middle/data-visualization-hub/index.html",
+      "translations": {
+        "en": {
+          "title": "Data Visualisation Hub",
+          "description": "Learn statistics and data analysis through interactive charts!"
+        }
+      }
     },
     {
       "id": "function-explorer-3d",
@@ -628,7 +934,13 @@
       "language": "ko",
       "description": "3D 공간에서 함수 그래프를 탐험하고 일차함수를 배워보세요!",
       "thumbnail": "",
-      "path": "/contents/math/middle/function-explorer-3d/index.html"
+      "path": "/contents/math/middle/function-explorer-3d/index.html",
+      "translations": {
+        "en": {
+          "title": "Function Explorer 3D",
+          "description": "Explore function graphs in 3D space and get to know linear functions."
+        }
+      }
     },
     {
       "id": "problem-solving-arena",
@@ -640,7 +952,13 @@
       "language": "ko",
       "description": "다양한 수학 문제를 풀며 실력을 겨뤄보세요!",
       "thumbnail": "",
-      "path": "/contents/math/middle/problem-solving-arena/index.html"
+      "path": "/contents/math/middle/problem-solving-arena/index.html",
+      "translations": {
+        "en": {
+          "title": "Problem Solving Arena",
+          "description": "Test your skills against a range of maths problems!"
+        }
+      }
     },
     {
       "id": "3d-vocabulary-adventure",
@@ -652,7 +970,13 @@
       "language": "en",
       "description": "3D 공간에서 영어 어휘를 탐험하며 재미있게 단어를 배워보세요!",
       "thumbnail": "",
-      "path": "/contents/english/elementary/3d-vocabulary-adventure/index.html"
+      "path": "/contents/english/elementary/3d-vocabulary-adventure/index.html",
+      "translations": {
+        "en": {
+          "title": "3D Vocabulary Adventure",
+          "description": "Explore English vocabulary in 3D space and pick up new words along the way!"
+        }
+      }
     },
     {
       "id": "story-word-builder",
@@ -664,7 +988,13 @@
       "language": "en",
       "description": "이야기를 만들며 영어 단어 조합과 문장 구성을 배워보세요!",
       "thumbnail": "",
-      "path": "/contents/english/elementary/story-word-builder/index.html"
+      "path": "/contents/english/elementary/story-word-builder/index.html",
+      "translations": {
+        "en": {
+          "title": "Story Word Builder",
+          "description": "Build a story while learning how English words and sentences fit together."
+        }
+      }
     },
     {
       "id": "phonics-3d-playground",
@@ -676,7 +1006,13 @@
       "language": "en",
       "description": "3D 놀이터에서 파닉스를 배우고 영어 발음의 기초를 다져보세요!",
       "thumbnail": "",
-      "path": "/contents/english/elementary/phonics-3d-playground/index.html"
+      "path": "/contents/english/elementary/phonics-3d-playground/index.html",
+      "translations": {
+        "en": {
+          "title": "Phonics 3D Playground",
+          "description": "Learn phonics in a 3D playground and build a solid pronunciation foundation."
+        }
+      }
     },
     {
       "id": "grammar-galaxy",
@@ -688,7 +1024,13 @@
       "language": "en",
       "description": "우주를 탐험하며 영어 문법의 기초를 재미있게 배워보세요!",
       "thumbnail": "",
-      "path": "/contents/english/elementary/grammar-galaxy/index.html"
+      "path": "/contents/english/elementary/grammar-galaxy/index.html",
+      "translations": {
+        "en": {
+          "title": "Grammar Galaxy",
+          "description": "Explore the galaxy while learning the basics of English grammar."
+        }
+      }
     },
     {
       "id": "spelling-bee-arena",
@@ -700,7 +1042,13 @@
       "language": "en",
       "description": "스펠링 비 대회에 참가하여 영어 철자 실력을 겨뤄보세요!",
       "thumbnail": "",
-      "path": "/contents/english/elementary/spelling-bee-arena/index.html"
+      "path": "/contents/english/elementary/spelling-bee-arena/index.html",
+      "translations": {
+        "en": {
+          "title": "Spelling Bee Arena",
+          "description": "Enter the spelling bee and put your English spelling to the test!"
+        }
+      }
     },
     {
       "id": "literature-3d-theater",
@@ -712,7 +1060,13 @@
       "language": "en",
       "description": "3D 극장에서 영미 문학 작품을 체험하며 독해력을 키워보세요!",
       "thumbnail": "",
-      "path": "/contents/english/middle/literature-3d-theater/index.html"
+      "path": "/contents/english/middle/literature-3d-theater/index.html",
+      "translations": {
+        "en": {
+          "title": "Literature 3D Theater",
+          "description": "Experience works of English literature in a 3D theatre and build your reading skills."
+        }
+      }
     },
     {
       "id": "word-detective-3d",
@@ -724,7 +1078,13 @@
       "language": "en",
       "description": "탐정이 되어 단어의 의미와 어원을 추적하며 어휘력을 향상시켜보세요!",
       "thumbnail": "",
-      "path": "/contents/english/middle/word-detective-3d/index.html"
+      "path": "/contents/english/middle/word-detective-3d/index.html",
+      "translations": {
+        "en": {
+          "title": "Word Detective 3D",
+          "description": "Become a detective, track down word meanings and origins, and grow your vocabulary!"
+        }
+      }
     },
     {
       "id": "grammar-builder-3d",
@@ -736,7 +1096,13 @@
       "language": "en",
       "description": "3D 블록으로 영어 문법 구조를 시각적으로 배우고 문장을 조립해보세요!",
       "thumbnail": "",
-      "path": "/contents/english/middle/grammar-builder-3d/index.html"
+      "path": "/contents/english/middle/grammar-builder-3d/index.html",
+      "translations": {
+        "en": {
+          "title": "Grammar Builder 3D",
+          "description": "Assemble sentences with 3D blocks and see English grammar structure for yourself."
+        }
+      }
     },
     {
       "id": "reading-comprehension-quest",
@@ -748,7 +1114,13 @@
       "language": "en",
       "description": "다양한 지문을 읽고 퀘스트를 완료하며 독해력을 향상시켜보세요!",
       "thumbnail": "",
-      "path": "/contents/english/middle/reading-comprehension-quest/index.html"
+      "path": "/contents/english/middle/reading-comprehension-quest/index.html",
+      "translations": {
+        "en": {
+          "title": "Reading Comprehension Quest",
+          "description": "Read a range of passages, complete quests and sharpen your comprehension."
+        }
+      }
     },
     {
       "id": "vocabulary-mountain",
@@ -760,7 +1132,13 @@
       "language": "en",
       "description": "산을 오르며 중학교 필수 영어 어휘를 마스터해보세요!",
       "thumbnail": "",
-      "path": "/contents/english/middle/vocabulary-mountain/index.html"
+      "path": "/contents/english/middle/vocabulary-mountain/index.html",
+      "translations": {
+        "en": {
+          "title": "Vocabulary Mountain",
+          "description": "Climb the mountain and master essential middle-school English vocabulary!"
+        }
+      }
     },
     {
       "id": "action-verbs-game",
@@ -772,7 +1150,13 @@
       "language": "ko",
       "description": "동작 동사(run, walk, jump 등)를 움직임/만들기/감정 카테고리로 분류하는 Phaser 드래그 앤 드롭 게임",
       "thumbnail": "/contents/english/elementary/action-verbs-game/assets/thumbnail.svg",
-      "path": "/contents/english/elementary/action-verbs-game/index.html"
+      "path": "/contents/english/elementary/action-verbs-game/index.html",
+      "translations": {
+        "en": {
+          "title": "Action Verb Sorting Game",
+          "description": "A Phaser drag-and-drop game that sorts action verbs (run, walk, jump and more) into movement, making and feeling categories."
+        }
+      }
     },
     {
       "id": "multiplication-balloon",
@@ -784,7 +1168,13 @@
       "language": "ko",
       "description": "구구단 문제의 정답이 적힌 풍선을 터트려 점수를 획득하는 Phaser 게임",
       "thumbnail": "/contents/math/elementary/multiplication-balloon/assets/thumbnail.svg",
-      "path": "/contents/math/elementary/multiplication-balloon/index.html"
+      "path": "/contents/math/elementary/multiplication-balloon/index.html",
+      "translations": {
+        "en": {
+          "title": "Times Table Balloon Pop",
+          "description": "A Phaser game where you pop the balloon showing the right answer to score points."
+        }
+      }
     },
     {
       "id": "multiplication-racing",
@@ -797,7 +1187,13 @@
       "description": "떨어지는 구구단 문제를 빠르게 풀어서 점수를 획득하는 Phaser 게임. 연속 정답 시 콤보 보너스!",
       "thumbnail": "",
       "path": "/contents/math/elementary/multiplication-racing/index.html",
-      "createdAt": "2026-01-28T12:00:00.000Z"
+      "createdAt": "2026-01-28T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "Times Table Racing",
+          "description": "A Phaser game where you solve falling times-table questions fast for points. Chain correct answers for a combo bonus!"
+        }
+      }
     },
     {
       "id": "coordinate-explorer",
@@ -810,7 +1206,13 @@
       "description": "좌표평면 위에서 보물을 찾는 Phaser 게임. (x, y) 좌표를 읽고 정확한 위치를 클릭하세요!",
       "thumbnail": "",
       "path": "/contents/math/elementary/coordinate-explorer/index.html",
-      "createdAt": "2026-01-28T12:00:00.000Z"
+      "createdAt": "2026-01-28T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "Coordinate Expedition",
+          "description": "A Phaser treasure hunt on the coordinate plane. Read the (x, y) coordinates and click the exact spot!"
+        }
+      }
     },
     {
       "id": "pythagorean-3d",
@@ -823,7 +1225,13 @@
       "description": "3D 큐브 시각화를 통해 피타고라스 정리 a² + b² = c²의 기하학적 의미를 직관적으로 이해하는 인터랙티브 학습",
       "thumbnail": "",
       "path": "/contents/math/middle/pythagorean-3d/index.html",
-      "createdAt": "2026-01-27T12:00:00.000Z"
+      "createdAt": "2026-01-27T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "Pythagorean Theorem - 3D Cube Proof",
+          "description": "Use 3D cube visualisations to grasp the geometric meaning of a² + b² = c²."
+        }
+      }
     },
     {
       "id": "rotation-solid",
@@ -836,7 +1244,13 @@
       "description": "평면도형을 회전시켜 원기둥, 원뿔, 구 등 회전체가 생성되는 원리를 3D로 탐구하는 인터랙티브 학습",
       "thumbnail": "",
       "path": "/contents/math/middle/rotation-solid/index.html",
-      "createdAt": "2026-01-27T12:00:00.000Z"
+      "createdAt": "2026-01-27T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "Solids of Revolution - From 2D to 3D",
+          "description": "Rotate flat shapes in 3D to see how cylinders, cones and spheres are formed."
+        }
+      }
     },
     {
       "id": "space-numbers",
@@ -849,7 +1263,13 @@
       "description": "우주의 크기를 통해 큰 수와 자릿수의 개념을 탐구하는 인터랙티브 학습",
       "thumbnail": "",
       "path": "/contents/math/elementary/space-numbers/index.html",
-      "createdAt": "2026-01-27T12:00:00.000Z"
+      "createdAt": "2026-01-27T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "The Size of Space and Big Numbers",
+          "description": "Explore large numbers and place value through the scale of the universe."
+        }
+      }
     },
     {
       "id": "pythagorean-isometric",
@@ -862,7 +1282,13 @@
       "description": "Phaser 아이소메트릭 3D 블록으로 피타고라스 정리를 시각적으로 확인하고 퀴즈에 도전하는 게임",
       "thumbnail": "",
       "path": "/contents/math/middle/pythagorean-isometric/index.html",
-      "createdAt": "2026-02-06T12:00:00.000Z"
+      "createdAt": "2026-02-06T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "Pythagoras Expedition 3D - Isometric",
+          "description": "A Phaser isometric block game where you check the Pythagorean theorem visually and take on quizzes."
+        }
+      }
     },
     {
       "id": "8bit-math-quest",
@@ -875,7 +1301,13 @@
       "description": "8비트 레트로 스타일의 동굴 탐험에서 사칙연산 문제를 풀며 진행하는 RPG 게임",
       "thumbnail": "",
       "path": "/contents/math/elementary/8bit-math-quest/index.html",
-      "createdAt": "2026-02-07T12:00:00.000Z"
+      "createdAt": "2026-02-07T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "8-Bit Math Quest: Arithmetic Cave Raid",
+          "description": "An 8-bit retro RPG where you clear arithmetic problems to push deeper into the cave."
+        }
+      }
     },
     {
       "id": "fraction-precision-alpha",
@@ -888,7 +1320,13 @@
       "description": "분수의 크기를 정밀하게 비교하고 맞추는 인터랙티브 분수 게임 (알파 버전)",
       "thumbnail": "",
       "path": "/contents/math/elementary/fraction-precision-alpha/index.html",
-      "createdAt": "2026-02-07T12:00:00.000Z"
+      "createdAt": "2026-02-07T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "Fraction Precision: Alpha",
+          "description": "An interactive fraction game about comparing and matching fraction sizes precisely (alpha build)."
+        }
+      }
     },
     {
       "id": "fraction-precision-beta",
@@ -901,7 +1339,13 @@
       "description": "분수의 크기를 정밀하게 비교하고 맞추는 인터랙티브 분수 게임 (베타 버전)",
       "thumbnail": "",
       "path": "/contents/math/elementary/fraction-precision-beta/index.html",
-      "createdAt": "2026-02-07T12:00:00.000Z"
+      "createdAt": "2026-02-07T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "Fraction Precision: Beta",
+          "description": "An interactive fraction game about comparing and matching fraction sizes precisely (beta build)."
+        }
+      }
     },
     {
       "id": "fraction-precision-gamma",
@@ -914,7 +1358,13 @@
       "description": "분수의 크기를 정밀하게 비교하고 맞추는 인터랙티브 분수 게임 (감마 버전)",
       "thumbnail": "",
       "path": "/contents/math/elementary/fraction-precision-gamma/index.html",
-      "createdAt": "2026-02-07T12:00:00.000Z"
+      "createdAt": "2026-02-07T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "Fraction Precision: Gamma",
+          "description": "An interactive fraction game about comparing and matching fraction sizes precisely (gamma build)."
+        }
+      }
     },
     {
       "id": "fraction-precision-delta",
@@ -927,7 +1377,13 @@
       "description": "분수의 크기를 정밀하게 비교하고 맞추는 인터랙티브 분수 게임 (델타 버전)",
       "thumbnail": "",
       "path": "/contents/math/elementary/fraction-precision-delta/index.html",
-      "createdAt": "2026-02-07T12:00:00.000Z"
+      "createdAt": "2026-02-07T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "Fraction Precision: Delta",
+          "description": "An interactive fraction game about comparing and matching fraction sizes precisely (delta build)."
+        }
+      }
     },
     {
       "id": "fraction-precision-epsilon",
@@ -940,7 +1396,13 @@
       "description": "오차 범위(Epsilon) 개념을 게임 히트박스 만들기로 배우는 인터랙티브 분수 게임",
       "thumbnail": "",
       "path": "/contents/math/elementary/fraction-precision-epsilon/index.html",
-      "createdAt": "2026-02-07T12:00:00.000Z"
+      "createdAt": "2026-02-07T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "The Magic of Epsilon: Building Game Hitboxes",
+          "description": "An interactive fraction game that teaches the idea of an error margin (epsilon) by building game hitboxes."
+        }
+      }
     },
     {
       "id": "mario-country-quiz",
@@ -953,7 +1415,13 @@
       "description": "슈퍼마리오 스타일 플랫포머에서 세계 나라 이름을 배우는 퀴즈 게임",
       "thumbnail": "",
       "path": "/contents/world-history/elementary/mario-country-quiz/index.html",
-      "createdAt": "2026-02-09T12:00:00.000Z"
+      "createdAt": "2026-02-09T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "Super Mario Country Name Quiz",
+          "description": "A Mario-style platformer quiz game for learning the names of countries around the world."
+        }
+      }
     },
     {
       "id": "world-quiz-battle",
@@ -966,7 +1434,13 @@
       "description": "격투 게임 스타일로 세계 상식 퀴즈에 도전하는 배틀 게임",
       "thumbnail": "",
       "path": "/contents/world-history/middle/world-quiz-battle/index.html",
-      "createdAt": "2026-02-09T12:00:00.000Z"
+      "createdAt": "2026-02-09T12:00:00.000Z",
+      "translations": {
+        "en": {
+          "title": "WORLD QUIZ BATTLE",
+          "description": "A fighting-game-style battle where you take on quiz questions about the world."
+        }
+      }
     },
     {
       "id": "line-point-symmetry",
@@ -986,7 +1460,13 @@
         "대응점",
         "초등수학",
         "도형"
-      ]
+      ],
+      "translations": {
+        "en": {
+          "title": "Dory and the Symmetry Museum Restoration",
+          "description": "A hands-on lesson that restores matching points through line symmetry (folding) and point symmetry (half turns)."
+        }
+      }
     },
     {
       "id": "animal-adaptation-game",
@@ -1007,9 +1487,14 @@
         "초등학교 4학년",
         "생명",
         "게임"
-      ]
-    }
-  ,
+      ],
+      "translations": {
+        "en": {
+          "title": "Secrets of Animal Village: The Adaptation Mission",
+          "description": "Meet animal friends in a game world and learn, through card matching and quizzes, how their bodies and behaviour adapted to their habitats."
+        }
+      }
+    },
     {
       "id": "cylinder-volume",
       "title": "원기둥의 부피: 공간의 들이를 계산하자",
@@ -1029,9 +1514,14 @@
         "시뮬레이션",
         "초등수학",
         "공간의들이"
-      ]
-    }
-  ,
+      ],
+      "translations": {
+        "en": {
+          "title": "Volume of a Cylinder: Measuring Space",
+          "description": "Rotate and handle 3D solids to discover and calculate that a cylinder's volume is base area x height."
+        }
+      }
+    },
     {
       "id": "irp-future-wealth-simulator",
       "title": "시간 여행 자산 시뮬레이터: 30년 뒤 나의 지갑은?",
@@ -1052,9 +1542,14 @@
         "경제교육",
         "자산관리",
         "중학교수학"
-      ]
-    }
-  ,
+      ],
+      "translations": {
+        "en": {
+          "title": "Time Travel Wealth Simulator: What's in My Wallet in 30 Years?",
+          "description": "A discovery lesson where you operate a 3D time-travel simulation of the three IRP effects: mandatory transfer, tax credits and tax deferral."
+        }
+      }
+    },
     {
       "id": "python-list-comprehension-factory",
       "title": "파이썬 복제 기계: 리스트 컴프리헨션 공장",
@@ -1074,7 +1569,13 @@
         "중학교",
         "알고리즘",
         "리스트"
-      ]
+      ],
+      "translations": {
+        "en": {
+          "title": "The Python Cloning Machine: A List Comprehension Factory",
+          "description": "Python list comprehensions visualised as factory machines you can operate to discover what the code produces."
+        }
+      }
     }
   ]
 }

@@ -2,7 +2,8 @@
 import { ref, computed } from 'vue'
 import type { KnowledgeNode, LearningStatus } from '../../types/knowledge-map'
 import type { Subject, GradeLevel } from '../../types/content'
-import { SUBJECT_LABELS, GRADE_LEVEL_LABELS } from '../../types/content'
+import { gradeLevelLabel, subjectLabel as resolveSubjectLabel } from '../../i18n/labels'
+import { useI18n } from '../../i18n'
 import NodeCard from './NodeCard.vue'
 import IconSet, { type IconName } from '../icons/IconSet.vue'
 
@@ -12,6 +13,7 @@ interface Props {
   getNodeStatus: (nodeId: string) => LearningStatus
 }
 
+const { t } = useI18n()
 const props = defineProps<Props>()
 const emit = defineEmits<{
   (e: 'node-click', node: KnowledgeNode): void
@@ -19,7 +21,7 @@ const emit = defineEmits<{
 
 const isExpanded = ref(false)
 
-const subjectLabel = computed(() => SUBJECT_LABELS[props.subject] ?? props.subject)
+const subjectLabel = computed(() => resolveSubjectLabel(props.subject))
 
 const subjectIcon = computed<IconName>(() => {
   const icons: Record<string, IconName> = {
@@ -49,7 +51,7 @@ const nodesByGrade = computed(() => {
     if (levelNodes.length > 0) {
       result.push({
         level,
-        label: GRADE_LEVEL_LABELS[level],
+        label: gradeLevelLabel(level),
         nodes: levelNodes,
       })
     }
@@ -98,7 +100,9 @@ function handleNodeClick(node: KnowledgeNode) {
         <div v-for="group in nodesByGrade" :key="group.level" class="grade-group">
           <h3 class="grade-header">
             <span class="grade-label">{{ group.label }}</span>
-            <span class="grade-count">{{ group.nodes.length }}개 주제</span>
+            <span class="grade-count">{{
+              t('learningMap.topicCount', { count: group.nodes.length })
+            }}</span>
           </h3>
 
           <div class="nodes-list">

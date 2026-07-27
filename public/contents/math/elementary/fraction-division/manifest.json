@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "피자 조각을 나누는 시각화를 통해 분수 나눗셈의 원리와 역수 곱셈 방법을 이해하는 인터랙티브 콘텐츠",
   "thumbnail": "/contents/math/elementary/fraction-division/assets/thumbnail.svg",
-  "path": "/contents/math/elementary/fraction-division/index.html"
+  "path": "/contents/math/elementary/fraction-division/index.html",
+  "translations": {
+    "en": {
+      "title": "Dividing Fractions: Sharing Equally",
+      "description": "Split pizza slices to see why dividing fractions means multiplying by the reciprocal."
+    }
+  }
 }

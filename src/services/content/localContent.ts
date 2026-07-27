@@ -5,6 +5,7 @@
 // IndexedDB에 보관하고 뷰어가 Blob URL로 렌더링한다.
 // localStorage가 아니라 IndexedDB를 쓰는 이유: 콘텐츠 3파일 합계가 5MB 한도를 넘길 수 있다.
 import type { ContentManifest, ContentType, GradeLevel, Subject } from '../../types/content'
+import { t } from '../../i18n'
 
 const DB_NAME = 'eduflix-local-content'
 const DB_VERSION = 1
@@ -35,7 +36,7 @@ export function isLocalContentId(id: string): boolean {
 function openDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     if (typeof indexedDB === 'undefined') {
-      reject(new Error('이 브라우저는 IndexedDB를 지원하지 않습니다'))
+      reject(new Error(t('errors.indexedDbUnsupported')))
       return
     }
     const request = indexedDB.open(DB_NAME, DB_VERSION)
@@ -46,7 +47,7 @@ function openDatabase(): Promise<IDBDatabase> {
       }
     }
     request.onsuccess = () => resolve(request.result)
-    request.onerror = () => reject(request.error ?? new Error('IndexedDB를 열지 못했습니다'))
+    request.onerror = () => reject(request.error ?? new Error(t('errors.indexedDbOpenFailed')))
   })
 }
 
@@ -60,7 +61,8 @@ async function withStore<T>(
       const transaction = db.transaction(STORE_NAME, mode)
       const request = run(transaction.objectStore(STORE_NAME))
       request.onsuccess = () => resolve(request.result)
-      request.onerror = () => reject(request.error ?? new Error('IndexedDB 작업에 실패했습니다'))
+      request.onerror = () =>
+        reject(request.error ?? new Error(t('errors.indexedDbOperationFailed')))
     })
   } finally {
     db.close()

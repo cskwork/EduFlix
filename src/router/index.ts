@@ -1,48 +1,55 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import { watch } from 'vue'
 import { canGenerate } from '../services/api/capabilities'
+import { t, useI18n, type MessageKey } from '../i18n'
 
-// 라우트 정의
+// 라우트 정의 - 타이틀은 번역 키로 두고 언어 전환 시 다시 계산한다
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
     component: () => import('../views/HomeView.vue'),
-    meta: { title: '홈', showTabs: true },
+    meta: { titleKey: 'routes.home', showTabs: true },
   },
   {
     path: '/map',
     name: 'learning-map',
     component: () => import('../views/LearningMapView.vue'),
-    meta: { title: '학습맵', showTabs: true },
+    meta: { titleKey: 'routes.learningMap', showTabs: true },
   },
   {
     path: '/my-learning',
     name: 'my-learning',
     component: () => import('../views/MyLearningView.vue'),
-    meta: { title: '내 학습', showTabs: true },
+    meta: { titleKey: 'routes.myLearning', showTabs: true },
   },
   {
     path: '/content/:id',
     name: 'content',
     component: () => import('../views/ContentView.vue'),
-    meta: { title: '콘텐츠', showTabs: false },
+    meta: { titleKey: 'routes.content', showTabs: false },
     props: true,
   },
   {
     path: '/create',
     name: 'create',
     component: () => import('../views/CreatorView.vue'),
-    meta: { title: '창조 모드', showTabs: false },
+    meta: { titleKey: 'routes.create', showTabs: false },
   },
   {
     // 404 페이지
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('../views/NotFoundView.vue'),
-    meta: { title: '페이지를 찾을 수 없음', showTabs: false },
+    meta: { titleKey: 'routes.notFound', showTabs: false },
   },
 ]
+
+function applyDocumentTitle(titleKey?: MessageKey) {
+  const title = titleKey ? t(titleKey) : ''
+  document.title = title ? `${title} - EduFlix` : 'EduFlix'
+}
 
 // 라우터 인스턴스 생성
 const router = createRouter({
@@ -66,9 +73,14 @@ router.beforeEach((to, _from, next) => {
     return
   }
 
-  const title = to.meta.title as string | undefined
-  document.title = title ? `${title} - EduFlix` : 'EduFlix'
+  applyDocumentTitle(to.meta.titleKey as MessageKey | undefined)
   next()
+})
+
+// 언어를 바꾸면 현재 페이지 타이틀도 즉시 갱신한다
+const { locale } = useI18n()
+watch(locale, () => {
+  applyDocumentTitle(router.currentRoute.value.meta.titleKey as MessageKey | undefined)
 })
 
 export default router

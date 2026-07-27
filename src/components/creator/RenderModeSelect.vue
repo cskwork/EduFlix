@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { RenderMode } from '../../types/generation'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 // Props
 const props = defineProps<{
@@ -12,45 +16,47 @@ const emit = defineEmits<{
 }>()
 
 // 제작 방식 옵션 (3d가 기본 추천)
-const modes: {
-  value: RenderMode
-  label: string
-  description: string
-  color: string
-  recommended?: boolean
-}[] = [
+const modes = computed<
+  {
+    value: RenderMode
+    label: string
+    description: string
+    color: string
+    recommended?: boolean
+  }[]
+>(() => [
   {
     value: '3d',
-    label: '3D 시뮬레이션',
-    description: '빙글빙글 돌려 보는 입체 모형',
+    label: t('creator.renderMode.simulation3dLabel'),
+    description: t('creator.renderMode.simulation3dDescription'),
     color: 'var(--color-subject-math)',
     recommended: true,
   },
   {
     value: '3d-game',
-    label: '3D 게임',
-    description: '3D 공간에서 미션을 깨요',
+    label: t('creator.renderMode.game3dLabel'),
+    description: t('creator.renderMode.game3dDescription'),
     color: 'var(--color-subject-science)',
   },
   {
     value: 'canvas-game',
-    label: '2D 게임',
-    description: '아케이드처럼 조작하는 게임',
+    label: t('creator.renderMode.canvasGameLabel'),
+    description: t('creator.renderMode.canvasGameDescription'),
     color: 'var(--color-brand-primary)',
   },
   {
     value: 'svg',
-    label: '인터랙티브 그림',
-    description: '그림을 움직이며 발견해요',
+    label: t('creator.renderMode.svgLabel'),
+    description: t('creator.renderMode.svgDescription'),
     color: 'var(--color-subject-english)',
   },
   {
     value: 'dom',
-    label: '카드·버튼 활동',
-    description: '카드와 버튼으로 차근차근',
+    label: t('creator.renderMode.domLabel'),
+    description: t('creator.renderMode.domDescription'),
     color: 'var(--color-subject-world-history)',
   },
-]
+])
 
 function selectMode(mode: RenderMode) {
   emit('update:modelValue', mode)
@@ -63,8 +69,8 @@ function isSelected(mode: RenderMode) {
 
 <template>
   <div class="render-mode-select">
-    <label class="input-label">어떤 방식으로 만들까요?</label>
-    <p class="input-description">콘텐츠를 만드는 방식을 선택해주세요. 3D 시뮬레이션을 추천해요.</p>
+    <label class="input-label">{{ t('creator.renderMode.label') }}</label>
+    <p class="input-description">{{ t('creator.renderMode.description') }}</p>
 
     <div class="modes-grid">
       <button
@@ -110,7 +116,9 @@ function isSelected(mode: RenderMode) {
         <span class="mode-text">
           <span class="mode-label">
             {{ mode.label }}
-            <span v-if="mode.recommended" class="recommended-badge">추천</span>
+            <span v-if="mode.recommended" class="recommended-badge">{{
+              t('common.recommended')
+            }}</span>
           </span>
           <span class="mode-description">{{ mode.description }}</span>
         </span>

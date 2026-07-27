@@ -9,8 +9,24 @@
   "description": "in, on, under, next to, between 등 위치 전치사를 Three.js 3D 시각화로 배우는 인터랙티브 학습",
   "thumbnail": "",
   "path": "/contents/english/elementary/prepositions-3d/index.html",
-  "tags": ["grammar", "prepositions", "3d", "three.js"],
-  "prerequisites": ["기본 명사", "Where is...? 질문"],
-  "nextTopics": ["방향 전치사 (to, from, into)"],
-  "createdAt": "2026-01-27T08:17:00.000Z"
+  "tags": [
+    "grammar",
+    "prepositions",
+    "3d",
+    "three.js"
+  ],
+  "prerequisites": [
+    "기본 명사",
+    "Where is...? 질문"
+  ],
+  "nextTopics": [
+    "방향 전치사 (to, from, into)"
+  ],
+  "createdAt": "2026-01-27T08:17:00.000Z",
+  "translations": {
+    "en": {
+      "title": "3D Prepositions of Place - Where is it?",
+      "description": "Learn in, on, under, next to and between through a Three.js 3D scene."
+    }
+  }
 }

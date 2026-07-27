@@ -17,5 +17,11 @@
     "시뮬레이션",
     "초등수학",
     "공간의들이"
-  ]
+  ],
+  "translations": {
+    "en": {
+      "title": "Volume of a Cylinder: Measuring Space",
+      "description": "Rotate and handle 3D solids to discover and calculate that a cylinder's volume is base area x height."
+    }
+  }
 }

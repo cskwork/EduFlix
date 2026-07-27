@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "피타고라스를 두 번 적용해서 공간 대각선의 길이를 구해보세요!",
   "thumbnail": "/contents/math/middle/space-diagonal/assets/thumbnail.svg",
-  "path": "/contents/math/middle/space-diagonal/index.html"
+  "path": "/contents/math/middle/space-diagonal/index.html",
+  "translations": {
+    "en": {
+      "title": "Space Diagonal",
+      "description": "Apply the Pythagorean theorem twice to find the length of a space diagonal!"
+    }
+  }
 }

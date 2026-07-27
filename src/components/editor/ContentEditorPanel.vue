@@ -14,6 +14,9 @@ import StyleEditor from './StyleEditor.vue'
 import QuizEditor from './QuizEditor.vue'
 import ExportImportButtons from './ExportImportButtons.vue'
 import { withAdminToken } from '../../services/api/adminToken'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   contentId: string
@@ -53,11 +56,14 @@ const editableContent = computed<EditableContent>(() => ({
 }))
 
 // 탭 정보
-const tabs = [
-  { id: 'text', label: '텍스트', icon: 'T' },
-  { id: 'style', label: '스타일', icon: 'S' },
-  { id: 'quiz', label: '퀴즈', icon: 'Q' }
-] as const
+const tabs = computed(
+  () =>
+    [
+      { id: 'text', label: t('editor.tabText'), icon: 'T' },
+      { id: 'style', label: t('editor.tabStyle'), icon: 'S' },
+      { id: 'quiz', label: t('editor.tabQuiz'), icon: 'Q' }
+    ] as const
+)
 
 // postMessage 핸들러
 function handleMessage(event: MessageEvent) {
@@ -165,10 +171,10 @@ async function handleSave() {
       }))
       emit('save', editableContent.value)
     } else {
-      error.value = result.error || '저장에 실패했습니다'
+      error.value = result.error || t('editor.saveFailed')
     }
   } catch (e) {
-    error.value = '서버 연결에 실패했습니다'
+    error.value = t('editor.connectionFailed')
     console.error('저장 오류:', e)
   } finally {
     isSaving.value = false
@@ -177,7 +183,7 @@ async function handleSave() {
 
 // 취소 (원본으로 복원)
 function handleCancel() {
-  if (hasChanges.value && !confirm('변경사항이 저장되지 않습니다. 취소하시겠습니까?')) {
+  if (hasChanges.value && !confirm(t('editor.confirmDiscard'))) {
     return
   }
 
@@ -240,8 +246,8 @@ onUnmounted(() => {
 <template>
   <aside class="editor-panel">
     <header class="editor-header">
-      <h2>콘텐츠 편집</h2>
-      <button class="close-btn" aria-label="닫기" @click="handleCancel">
+      <h2>{{ t('editor.title') }}</h2>
+      <button class="close-btn" :aria-label="t('common.close')" @click="handleCancel">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
@@ -266,13 +272,13 @@ onUnmounted(() => {
     <!-- 로딩 상태 -->
     <div v-if="isLoading" class="editor-loading">
       <div class="loading-spinner"></div>
-      <p>콘텐츠 분석 중...</p>
+      <p>{{ t('editor.analyzing') }}</p>
     </div>
 
     <!-- 에러 상태 -->
     <div v-else-if="error" class="editor-error">
       <p>{{ error }}</p>
-      <button class="retry-btn" @click="initEditor">다시 시도</button>
+      <button class="retry-btn" @click="initEditor">{{ t('common.retry') }}</button>
     </div>
 
     <!-- 편집 콘텐츠 -->
@@ -305,20 +311,20 @@ onUnmounted(() => {
 
       <div class="action-buttons">
         <button class="btn-cancel" :disabled="isSaving" @click="handleCancel">
-          취소
+          {{ t('common.cancel') }}
         </button>
         <button
           class="btn-save"
           :disabled="!hasChanges || isSaving"
           @click="handleSave"
         >
-          <span v-if="isSaving">저장 중...</span>
-          <span v-else>저장</span>
+          <span v-if="isSaving">{{ t('common.saving') }}</span>
+          <span v-else>{{ t('common.save') }}</span>
         </button>
       </div>
 
       <div v-if="hasChanges" class="unsaved-indicator">
-        변경사항이 있습니다
+        {{ t('editor.unsavedChanges') }}
       </div>
     </footer>
   </aside>
