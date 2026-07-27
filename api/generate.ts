@@ -74,7 +74,14 @@ function timingSafeEqual(a: string, b: string): boolean {
   return diff === 0
 }
 
+// 공개 데모용: 토큰 없이 생성을 허용한다.
+// 생성만 열리며 콘텐츠 삭제·편집 등 나머지 쓰기 API는 여전히 ADMIN_TOKEN을 요구한다.
+// 대신 LLM 키가 소진되지 않도록 아래 레이트 리밋이 항상 함께 적용된다.
+const allowPublicGeneration = process.env.ALLOW_PUBLIC_GENERATION === 'true'
+
 function checkWriteAccess(req: Request): { status: number; message: string } | undefined {
+  if (allowPublicGeneration) return undefined
+
   const adminToken = process.env.ADMIN_TOKEN?.trim()
   if (!adminToken) {
     if (process.env.NODE_ENV === 'production') {
@@ -92,6 +99,53 @@ function checkWriteAccess(req: Request): { status: number; message: string } | u
   if (!provided || !timingSafeEqual(provided, adminToken)) {
     return { status: 401, message: '관리자 토큰이 필요합니다 (X-Admin-Token 헤더).' }
   }
+  return undefined
+}
+
+// --- 레이트 리밋 -------------------------------------------------------------
+//
+// 공개 생성을 허용하면 누구나 운영자의 LLM 키를 소모할 수 있으므로 상한을 건다.
+// 서버리스는 인스턴스 간 상태를 공유하지 않아 이 카운터는 완전하지 않다(인스턴스가
+// 여러 개면 그만큼 배수로 통과할 수 있다). 키를 완전히 보호하려면 Vercel KV 같은
+// 공유 저장소가 필요하다. 그래도 fluid compute가 인스턴스를 재사용하므로
+// 봇이 무한정 호출하는 상황은 실질적으로 막아준다.
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000
+const RATE_LIMIT_PER_IP = 3
+const RATE_LIMIT_GLOBAL = 30
+
+const requestLog: { ip: string; at: number }[] = []
+
+function clientIp(req: Request): string {
+  const forwarded = req.headers.get('x-forwarded-for')
+  if (forwarded) return forwarded.split(',')[0].trim()
+  return req.headers.get('x-real-ip') || 'unknown'
+}
+
+function checkRateLimit(req: Request): { status: number; message: string } | undefined {
+  if (!allowPublicGeneration) return undefined
+
+  const now = Date.now()
+  const cutoff = now - RATE_LIMIT_WINDOW_MS
+  // 창을 벗어난 기록 제거
+  while (requestLog.length > 0 && requestLog[0].at < cutoff) requestLog.shift()
+
+  if (requestLog.length >= RATE_LIMIT_GLOBAL) {
+    return {
+      status: 429,
+      message: '지금 생성 요청이 많아요. 잠시 후 다시 시도해주세요.',
+    }
+  }
+
+  const ip = clientIp(req)
+  const mine = requestLog.filter((entry) => entry.ip === ip).length
+  if (mine >= RATE_LIMIT_PER_IP) {
+    return {
+      status: 429,
+      message: `콘텐츠 생성은 1시간에 ${RATE_LIMIT_PER_IP}번까지 가능해요. 잠시 후 다시 시도해주세요.`,
+    }
+  }
+
+  requestLog.push({ ip, at: now })
   return undefined
 }
 
@@ -349,9 +403,14 @@ export async function OPTIONS(): Promise<Response> {
 }
 
 export async function POST(req: Request): Promise<Response> {
-  // 이 함수는 운영자의 LLM 키를 소모하므로 쓰기 API와 동일한 인증을 요구한다
+  // 이 함수는 운영자의 LLM 키를 소모한다.
+  // 기본은 쓰기 API와 동일한 인증을 요구하고, ALLOW_PUBLIC_GENERATION=true인
+  // 공개 데모 배포에서는 인증 대신 레이트 리밋으로 키를 보호한다.
   const denial = checkWriteAccess(req)
   if (denial) return fail(denial.message, denial.status)
+
+  const throttled = checkRateLimit(req)
+  if (throttled) return fail(throttled.message, throttled.status)
 
   let body: GenerateBody
   try {
