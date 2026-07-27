@@ -74,10 +74,13 @@ function timingSafeEqual(a: string, b: string): boolean {
   return diff === 0
 }
 
-// 공개 데모용: 토큰 없이 생성을 허용한다.
+// 공개 데모용: 토큰 없이 생성을 허용한다. 기본값 true.
 // 생성만 열리며 콘텐츠 삭제·편집 등 나머지 쓰기 API는 여전히 ADMIN_TOKEN을 요구한다.
 // 대신 LLM 키가 소진되지 않도록 아래 레이트 리밋이 항상 함께 적용된다.
-const allowPublicGeneration = process.env.ALLOW_PUBLIC_GENERATION === 'true'
+//
+// ⚠️ 자체 배포 시 주의: 기본값이 열림이므로 방문자가 여러분의 LLM 키를 소모할 수 있다.
+//    운영자만 생성하게 하려면 ALLOW_PUBLIC_GENERATION=false로 두고 ADMIN_TOKEN을 쓰면 된다.
+const allowPublicGeneration = process.env.ALLOW_PUBLIC_GENERATION !== 'false'
 
 function checkWriteAccess(req: Request): { status: number; message: string } | undefined {
   if (allowPublicGeneration) return undefined
