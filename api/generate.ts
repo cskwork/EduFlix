@@ -303,6 +303,12 @@ function buildPrompt(body: GenerateBody): string {
       : '5. 외부 스크립트/CDN을 사용하지 말 것 (순수 HTML/CSS/JS)',
     '6. 모든 텍스트는 한국어로 작성할 것',
     '',
+    '## 분량 제한 (중요)',
+    // 실측: 분량 제한이 없으면 출력 50KB에 274초가 걸려 300초 한도에 근접한다.
+    // 스트리밍 토큰 수가 곧 소요 시간이므로 분량을 직접 제한해 타임아웃을 예방한다.
+    'style.css는 250줄 이내, script.js는 250줄 이내로 간결하게 작성하세요.',
+    '장식용 CSS와 중복 스타일은 생략하고, 학습에 필요한 최소한의 코드만 쓰세요.',
+    '',
     '## 메타데이터',
     'index.html의 <head>에 아래 주석을 정확히 한 줄 포함하세요:',
     '<!--META {"title":"제목","description":"한 문장 설명","type":"simulation|game|quiz|exploration|story"} META-->',
