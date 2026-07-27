@@ -8,8 +8,8 @@ Cloudflare Tunnel은 Vercel 배포의 백업 옵션으로, 로컬 서버를 안�
 
 ## 배포 정보
 
-- **URL**: https://eduflix.agentic-worker.store
-- **터널 ID**: `90cc3e76-2361-49e4-972f-fd94cdd33cd8`
+- **URL**: https://eduflix.example.com
+- **터널 ID**: `<your-tunnel-id>`
 - **설정 파일**: `~/.cloudflared/eduflix-config.yml`
 
 ---
@@ -51,11 +51,11 @@ cloudflared tunnel create eduflix
 `~/.cloudflared/eduflix-config.yml`:
 
 ```yaml
-tunnel: 90cc3e76-2361-49e4-972f-fd94cdd33cd8
-credentials-file: /Users/your-username/.cloudflared/90cc3e76-2361-49e4-972f-fd94cdd33cd8.json
+tunnel: <your-tunnel-id>
+credentials-file: /Users/your-username/.cloudflared/<your-tunnel-id>.json
 
 ingress:
-  - hostname: eduflix.agentic-worker.store
+  - hostname: eduflix.example.com
     service: http://localhost:9888
   - service: http_status:404
 ```
@@ -63,7 +63,7 @@ ingress:
 ### DNS 라우팅
 
 ```bash
-cloudflared tunnel route dns eduflix eduflix.agentic-worker.store
+cloudflared tunnel route dns eduflix eduflix.example.com
 ```
 
 ---
@@ -248,7 +248,7 @@ journalctl -u cloudflared -f
 curl http://localhost:9888/api/content
 
 # 터널 테스트
-curl https://eduflix.agentic-worker.store/api/content
+curl https://eduflix.example.com/api/content
 ```
 
 ---

@@ -329,7 +329,6 @@ function resetWizard() {
       >
         이전
       </button>
-      <div v-else></div>
 
       <button
         type="button"
@@ -464,8 +463,9 @@ function resetWizard() {
 
 .wizard-footer {
   display: flex;
-  justify-content: space-between;
-  margin-top: var(--spacing-2xl);
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-xl);
   padding-top: var(--spacing-lg);
   border-top: 1px solid rgba(59, 53, 98, 0.08);
 }

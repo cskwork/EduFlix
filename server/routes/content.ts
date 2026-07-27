@@ -1,9 +1,29 @@
 // 콘텐츠 CRUD API 엔드포인트
 import type { ContentManifest, ContentCatalog } from '../../src/types/content'
 import type { SaveContentRequest, EditableText, EditableStyle } from '../../src/types/editor'
+import { checkWriteAccess, isContentSlug, isGradeLevel, isInside } from '../security'
 
 type JsonResponse = (data: unknown, status?: number) => Response
 type ErrorResponse = (message: string, status?: number) => Response
+
+// ZIP import로 저장을 허용할 파일 (정적 서빙되는 디렉터리이므로 화이트리스트로 제한)
+const IMPORTABLE_FILES = new Set(['index.html', 'style.css', 'script.js', 'manifest.json'])
+const MAX_IMPORT_BYTES = 2 * 1024 * 1024
+const MAX_IMPORT_ENTRIES = 32
+
+// 카탈로그 항목으로부터 콘텐츠 디렉터리 경로를 재구성한다.
+// manifest.path는 클라이언트가 넣을 수 있는 값이므로 신뢰하지 않고 subject/gradeLevel/id로만 만든다.
+function resolveContentDir(
+  path: typeof import('path'),
+  content: Pick<ContentManifest, 'id' | 'subject' | 'gradeLevel'>
+): string | undefined {
+  if (!isContentSlug(content.id) || !isContentSlug(content.subject) || !isGradeLevel(content.gradeLevel)) {
+    return undefined
+  }
+  const contentsDir = path.resolve('public/contents')
+  const resolved = path.resolve(path.join('public/contents', content.subject, content.gradeLevel, content.id))
+  return isInside(contentsDir, resolved) ? resolved : undefined
+}
 
 // 콘텐츠 CRUD API 핸들러
 export async function handleContentRoute(
@@ -16,6 +36,12 @@ export async function handleContentRoute(
   const fs = await import('fs/promises')
 
   const CATALOG_PATH = 'public/contents/index.json'
+
+  // 읽기(GET)를 제외한 모든 요청은 관리자 권한이 필요하다
+  if (req.method !== 'GET') {
+    const denial = checkWriteAccess(req)
+    if (denial) return errorResponse(denial.message, denial.status)
+  }
 
   // 카탈로그 로드 헬퍼
   async function loadCatalog(): Promise<ContentCatalog> {
@@ -96,6 +122,12 @@ export async function handleContentRoute(
       if (!body.id || !body.title || !body.subject || !body.gradeLevel || !body.type) {
         return errorResponse('필수 필드가 누락되었습니다: id, title, subject, gradeLevel, type', 400)
       }
+      if (!isContentSlug(body.id) || !isContentSlug(body.subject)) {
+        return errorResponse('id와 subject는 영문 소문자·숫자·하이픈 slug여야 합니다', 400)
+      }
+      if (!isGradeLevel(body.gradeLevel)) {
+        return errorResponse('gradeLevel은 elementary, middle, high 중 하나여야 합니다', 400)
+      }
 
       const catalog = await loadCatalog()
 
@@ -115,7 +147,8 @@ export async function handleContentRoute(
         language: body.language || 'ko',
         description: body.description || '',
         thumbnail: body.thumbnail || '',
-        path: body.path || `contents/${body.subject}/${body.gradeLevel}/${body.id}/index.html`,
+        // path는 클라이언트 입력을 쓰지 않고 항상 서버가 구성한다 (임의 경로 지정 방지)
+        path: `contents/${body.subject}/${body.gradeLevel}/${body.id}/index.html`,
         prerequisites: body.prerequisites || [],
         createdAt: new Date().toISOString(),
         tags: body.tags || [],
@@ -148,10 +181,15 @@ export async function handleContentRoute(
       }
 
       // 업데이트 가능한 필드만 수정
+      const existing = catalog.contents[index]
       const updatedContent: ContentManifest = {
-        ...catalog.contents[index],
+        ...existing,
         ...body,
         id: contentId!, // ID는 변경 불가
+        // 경로 결정 필드는 변경 불가 (파일 조작 경로가 클라이언트 입력으로 바뀌지 않도록)
+        subject: existing.subject,
+        gradeLevel: existing.gradeLevel,
+        path: existing.path,
         updatedAt: new Date().toISOString(),
       }
 
@@ -182,14 +220,9 @@ export async function handleContentRoute(
         return errorResponse('콘텐츠를 찾을 수 없습니다', 404)
       }
 
-      // 콘텐츠 디렉토리 경로
-      const contentPath = content.path.startsWith('/') ? content.path.slice(1) : content.path
-      const contentDir = path.join('public', path.dirname(contentPath))
-      const resolvedDir = path.resolve(contentDir)
-      const contentsDir = path.resolve('public/contents')
-
-      // Path traversal 방지
-      if (!resolvedDir.startsWith(contentsDir)) {
+      // 콘텐츠 디렉토리 경로 (카탈로그의 path 문자열이 아니라 subject/gradeLevel/id로 재구성)
+      const resolvedDir = resolveContentDir(path, content)
+      if (!resolvedDir) {
         return errorResponse('잘못된 콘텐츠 경로입니다', 400)
       }
 
@@ -251,14 +284,9 @@ export async function handleContentRoute(
         return errorResponse('콘텐츠를 찾을 수 없습니다', 404)
       }
 
-      // 콘텐츠 디렉토리 경로
-      const contentPath = content.path.startsWith('/') ? content.path.slice(1) : content.path
-      const contentDir = path.join('public', path.dirname(contentPath))
-      const resolvedDir = path.resolve(contentDir)
-      const contentsDir = path.resolve('public/contents')
-
-      // Path traversal 방지
-      if (!resolvedDir.startsWith(contentsDir)) {
+      // 콘텐츠 디렉토리 경로 (카탈로그의 path 문자열이 아니라 subject/gradeLevel/id로 재구성)
+      const resolvedDir = resolveContentDir(path, content)
+      if (!resolvedDir) {
         return errorResponse('잘못된 콘텐츠 경로입니다', 400)
       }
 
@@ -318,16 +346,38 @@ export async function handleContentRoute(
 
       const path = await import('path')
       const arrayBuffer = await file.arrayBuffer()
+      if (arrayBuffer.byteLength > MAX_IMPORT_BYTES) {
+        return errorResponse(`ZIP 파일은 ${MAX_IMPORT_BYTES / 1024 / 1024}MB 이하여야 합니다`, 413)
+      }
       const files = await extractZipBuffer(Buffer.from(arrayBuffer))
+
+      if (Object.keys(files).length > MAX_IMPORT_ENTRIES) {
+        return errorResponse(`ZIP 항목은 ${MAX_IMPORT_ENTRIES}개 이하여야 합니다`, 400)
+      }
 
       // manifest.json 검증
       if (!files['manifest.json']) {
         return errorResponse('manifest.json이 필요합니다', 400)
       }
 
+      // 정적으로 서빙되는 디렉터리이므로 허용 목록 밖의 파일은 받지 않는다
+      const disallowed = Object.keys(files).filter((name) => !IMPORTABLE_FILES.has(name))
+      if (disallowed.length > 0) {
+        return errorResponse(
+          `허용되지 않은 파일이 포함되어 있습니다: ${disallowed.join(', ')} (허용: ${[...IMPORTABLE_FILES].join(', ')})`,
+          400
+        )
+      }
+
       const manifest = JSON.parse(files['manifest.json'])
       if (!manifest.id || !manifest.title || !manifest.subject || !manifest.gradeLevel || !manifest.type) {
         return errorResponse('manifest.json에 필수 필드가 누락되었습니다', 400)
+      }
+      if (!isContentSlug(manifest.id) || !isContentSlug(manifest.subject)) {
+        return errorResponse('manifest의 id와 subject는 영문 소문자·숫자·하이픈 slug여야 합니다', 400)
+      }
+      if (!isGradeLevel(manifest.gradeLevel)) {
+        return errorResponse('manifest의 gradeLevel은 elementary, middle, high 중 하나여야 합니다', 400)
       }
 
       const catalog = await loadCatalog()
@@ -344,18 +394,18 @@ export async function handleContentRoute(
       }
 
       // 콘텐츠 디렉토리 생성
-      const contentDir = path.join('public/contents', manifest.subject, manifest.gradeLevel, finalId)
-      const resolvedDir = path.resolve(contentDir)
-      const contentsDir = path.resolve('public/contents')
-
-      // Path traversal 방지
-      if (!resolvedDir.startsWith(contentsDir)) {
+      const resolvedDir = resolveContentDir(path, {
+        id: finalId,
+        subject: manifest.subject,
+        gradeLevel: manifest.gradeLevel,
+      })
+      if (!resolvedDir) {
         return errorResponse('잘못된 콘텐츠 경로입니다', 400)
       }
 
       await fs.mkdir(resolvedDir, { recursive: true })
 
-      // 파일 저장
+      // 파일 저장 (파일명은 위에서 허용 목록으로 검증됨)
       for (const [fileName, fileContent] of Object.entries(files)) {
         if (fileName === 'manifest.json') continue
         const filePath = path.join(resolvedDir, fileName)
@@ -412,16 +462,14 @@ export async function handleContentRoute(
 
       // 콘텐츠 파일 삭제 (선택적)
       const deleteFiles = url.searchParams.get('deleteFiles') === 'true'
-      if (deleteFiles && deletedContent.path) {
+      if (deleteFiles) {
         try {
           const path = await import('path')
-          const contentDir = 'public' + deletedContent.path.replace('/index.html', '')
-          const resolvedPath = path.resolve(contentDir)
-          const contentsDir = path.resolve('public/contents')
-
-          // Path traversal 방지: contents 디렉토리 내부인지 확인
-          if (!resolvedPath.startsWith(contentsDir)) {
-            console.error('잘못된 콘텐츠 경로:', resolvedPath)
+          // 카탈로그의 path 문자열을 신뢰하면 "/contents" 같은 값으로 콘텐츠 루트 전체가 지워질 수 있다.
+          // subject/gradeLevel/id로 경로를 재구성하고 contents 루트 자신은 거부한다.
+          const resolvedPath = resolveContentDir(path, deletedContent)
+          if (!resolvedPath) {
+            console.error('잘못된 콘텐츠 경로로 파일 삭제를 건너뜁니다:', deletedContent.id)
           } else {
             await fs.rm(resolvedPath, { recursive: true, force: true })
           }

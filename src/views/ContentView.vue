@@ -1,11 +1,16 @@
 <script setup lang="ts">
 // 콘텐츠 상세 페이지
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useContentStore } from '../stores/content'
 import ContentViewer from '../components/viewer/ContentViewer.vue'
 import ContentEditorPanel from '../components/editor/ContentEditorPanel.vue'
 import { getContentHtmlPath } from '../services/content/loader'
+import {
+  createLocalContentUrl,
+  getLocalContent,
+  isLocalContentId,
+} from '../services/content/localContent'
 import { useViewportHeight } from '../composables/useViewportHeight'
 import {
   SUBJECT_LABELS,
@@ -30,9 +35,20 @@ const viewerRef = ref<InstanceType<typeof ContentViewer> | null>(null)
 const isEditing = ref(false)
 useViewportHeight()
 
+// 브라우저에 보관된 생성 콘텐츠는 파일이 없어 Blob URL로 렌더링한다
+const localContentUrl = ref<string | null>(null)
+
+function releaseLocalContentUrl() {
+  if (localContentUrl.value) {
+    URL.revokeObjectURL(localContentUrl.value)
+    localContentUrl.value = null
+  }
+}
+
 // 콘텐츠 HTML 경로
 const contentSrc = computed(() => {
   if (!content.value) return ''
+  if (isLocalContentId(content.value.id)) return localContentUrl.value ?? ''
   return getContentHtmlPath(content.value)
 })
 
@@ -61,6 +77,23 @@ const subjectColorClass = computed(() => {
 async function loadContent() {
   isLoading.value = true
   error.value = null
+
+  releaseLocalContentUrl()
+
+  // 브라우저에 보관된 생성 콘텐츠는 카탈로그가 아니라 IndexedDB에서 읽는다
+  if (isLocalContentId(props.id)) {
+    const local = await getLocalContent(props.id).catch(() => undefined)
+    if (!local) {
+      error.value = '콘텐츠를 찾을 수 없습니다'
+      isLoading.value = false
+      return
+    }
+    localContentUrl.value = createLocalContentUrl(local)
+    const { toManifest } = await import('../services/content/localContent')
+    content.value = toManifest(local)
+    isLoading.value = false
+    return
+  }
 
   // 스토어에 콘텐츠가 없으면 먼저 로드
   if (contentStore.contents.length === 0) {
@@ -136,6 +169,10 @@ watch(
 
 onMounted(() => {
   loadContent()
+})
+
+onUnmounted(() => {
+  releaseLocalContentUrl()
 })
 </script>
 

@@ -27,15 +27,41 @@ start.bat                # Windows 동일 (Vite + Bun API)
 선택적으로 `FACTORY_LLM_PROVIDER=codex`를 사용할 수 있습니다.
 
 **Vite Configuration** (vite.config.ts):
-- `server.allowedHosts: ['eduflix.agentic-worker.store']` - Cloudflare Tunnel 도메인에서 dev 서버 접근 허용
+- `server.allowedHosts`: `VITE_ALLOWED_HOSTS` 환경변수(쉼표 구분)로 지정. 터널 도메인에서 dev 서버 접근 시 필요
 
 ## Environment
 ```bash
-# .env (required)
-ANTHROPIC_API_KEY=sk-...
-GEMINI_API_KEY=...
+# .env — LLM provider (FACTORY_LLM_PROVIDER로 선택, 기본값 zai)
+ZAI_API_KEY=...          # provider=zai (GLM-5.2, 기본값)
+FACTORY_LLM_PROVIDER=zai # zai | codex
+# ZAI_MODEL=glm-5.2      # provider=zai 모델 오버라이드
+# FACTORY_CODEX_MODEL=   # provider=codex 모델 (기본 gpt-5.6-sol, 구독 인증이라 키 불필요)
+
+# 향후 provider 확장용 (현재 팩토리 파이프라인에서는 미사용, 설정만 유지)
+ANTHROPIC_API_KEY=sk-... # Claude 경로 복원 시 사용
+GEMINI_API_KEY=...       # 이미지 생성(/api/generate/image) 구현 시 사용
+
 PORT=3001                # API 서버 포트 (기본값: 3001, Cloudflare Tunnel: 9888)
+
+# 공개 배포 시 필수
+ADMIN_TOKEN=...          # 쓰기 API 인증 토큰 (openssl rand -hex 32)
+# CORS_ORIGIN=...        # 교차 origin 허용이 필요할 때만
+# VITE_ALLOWED_HOSTS=... # dev 서버 외부 도메인 접근 허용
 ```
+
+**LLM Provider 확장 지점**: `agents/content-factory/pipeline/lib/engine.ts`
+- `FactoryLlmProvider` 유니온 타입에 provider 추가
+- `getFactoryLlmConfig()`에 키·모델·URL 해석 분기 추가
+- `runFactoryText()` / `runFactoryFiles()`에 호출 분기 추가
+
+## Security Model
+쓰기 계열 API(콘텐츠 생성·편집·삭제, 추천 초기화)는 `server/security.ts`의 `checkWriteAccess`로 보호된다.
+- `ADMIN_TOKEN` 설정 시: `X-Admin-Token` 또는 `Authorization: Bearer` 헤더 검증. 헤더 기반이라 CSRF도 차단
+- `ADMIN_TOKEN` 미설정 시: 개발 모드만 통과, `NODE_ENV=production`에서는 503으로 비활성화
+- 프런트엔드는 `src/services/api/adminToken.ts`의 `withAdminToken()`으로 토큰 첨부 (localStorage `eduflix_admin_token`)
+- CORS: 프로덕션 와일드카드 금지. `CORS_ORIGIN`이 명시된 경우에만 교차 origin 허용
+- 경로 봉쇄: `isInside(base, target)` 사용. `resolve().startsWith()`는 `contents-evil` 같은 형제 경로를 통과시키므로 금지
+- 콘텐츠 디렉터리는 카탈로그의 `path` 문자열이 아니라 `subject/gradeLevel/id`로 재구성 (`resolveContentDir`)
 
 ## Project Structure
 ```
@@ -240,12 +266,28 @@ archive/                # 더 이상 제공하지 않는 콘텐츠
 
 **Vercel** (Primary):
 - URL: https://eduflix.vercel.app
-- 설정: `vercel.json` SPA 라우팅 + 콘텐츠 캐싱
+- 설정: `vercel.json` SPA 라우팅 + 콘텐츠 캐싱 + `api/generate.ts` maxDuration
 - 배포: `vercel --prod` (일일 100회 무료 한도)
+- 필요한 환경변수: `ZAI_API_KEY`, `ADMIN_TOKEN`, `VITE_STATIC_MODE=true`
+
+**두 가지 생성 경로** (배포 형태에 따라 자동 분기):
+
+| | 로컬 / Cloudflare Tunnel | Vercel 정적 배포 |
+|---|---|---|
+| 진입점 | `server/routes/generate.ts` | `api/generate.ts` (서버리스) |
+| 파이프라인 | 6단계 (plan→storyboard→assets→build→qa→publish) | 단일 LLM 호출 |
+| 저장 위치 | **PC 파일시스템** (`public/contents/`) | 브라우저 IndexedDB |
+| 시간 제한 | 없음 (폴링 상한 8시간) | **300초** (Vercel 하드 리밋, Pro 800초) |
+| 품질 | QA·리뷰 포함 | 경량 (QA 없음) |
+| 분기 조건 | `VITE_STATIC_MODE !== 'true'` | `VITE_STATIC_MODE === 'true'` |
+
+- 정적 배포 관련 모듈: `src/services/content/localContent.ts` (IndexedDB + Blob URL 렌더링),
+  `generateContentServerless()` (`src/services/api/claude.ts`)
+- 로컬 콘텐츠 id는 `local-` 접두사로 서버 카탈로그와 구분하고, 뷰어가 `isLocalContentId`로 분기해 Blob URL을 쓴다
 
 **Cloudflare Tunnel** (Backup - Vercel 한도 초과 시):
-- URL: https://eduflix.agentic-worker.store
-- 터널 ID: `90cc3e76-2361-49e4-972f-fd94cdd33cd8`
+- URL: https://eduflix.example.com
+- 터널 ID: `<your-tunnel-id>`
 - 설정 파일: `~/.cloudflared/eduflix-config.yml`
 - 배포 순서:
   ```bash

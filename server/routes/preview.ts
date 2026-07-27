@@ -65,12 +65,15 @@ export async function handlePreviewRoute(
   if (!dependencies.getJob(jobId)) return errorResponse('작업을 찾을 수 없습니다', 404)
 
   if (req.method === 'GET' && pathname.startsWith('/api/preview/stream/')) {
+    const streamOrigin =
+      process.env.CORS_ORIGIN ||
+      (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5173')
     return new Response(createPreviewStream(jobId, dependencies), {
       headers: {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
-        'Access-Control-Allow-Origin': process.env.CORS_ORIGIN || 'http://localhost:5173',
+        ...(streamOrigin ? { 'Access-Control-Allow-Origin': streamOrigin, Vary: 'Origin' } : {}),
       },
     })
   }

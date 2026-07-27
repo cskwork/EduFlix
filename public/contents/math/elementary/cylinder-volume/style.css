@@ -115,7 +115,7 @@ html, body {
 .scene-story {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
-    url('../../../backgrounds/bg-math-formulas-overlay-20260124.png');
+    url('/contents/backgrounds/bg-math-formulas-overlay-20260124.png');
   background-size: cover, 320px;
   background-repeat: no-repeat, repeat;
   background-position: center;
@@ -124,7 +124,7 @@ html, body {
 .scene-wrap {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
-    url('../../../backgrounds/bg-math-formulas-overlay-20260124.png');
+    url('/contents/backgrounds/bg-math-formulas-overlay-20260124.png');
   background-size: cover, 320px;
   background-repeat: no-repeat, repeat;
   background-position: center;

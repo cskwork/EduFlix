@@ -7,6 +7,7 @@ import {
   clearAllClicks,
   type RecommendedContent,
 } from '../services/recommendations'
+import { checkWriteAccess } from '../security'
 
 type JsonResponse = (data: unknown, status?: number) => Response
 type ErrorResponse = (message: string, status?: number) => Response
@@ -89,8 +90,10 @@ export async function handleRecommendationsRoute(
     }
   }
 
-  // POST /api/recommendations/clear - 전체 클릭 데이터 초기화
+  // POST /api/recommendations/clear - 전체 클릭 데이터 초기화 (관리자 전용)
   if (req.method === 'POST' && pathname === '/api/recommendations/clear') {
+    const denial = checkWriteAccess(req)
+    if (denial) return errorResponse(denial.message, denial.status)
     try {
       const cleared = clearAllClicks()
 

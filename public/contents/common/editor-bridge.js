@@ -248,17 +248,9 @@
    * postMessage 핸들러
    */
   function handleMessage(event) {
-    // origin 검증 (같은 origin만 허용)
-    // 개발 환경에서는 localhost 허용
-    const allowedOrigins = [
-      window.location.origin,
-      'http://localhost:5173',
-      'http://localhost:3001',
-      'https://eduflix.vercel.app',
-      'https://eduflix.agentic-worker.store'
-    ];
-
-    if (!allowedOrigins.some(origin => event.origin.includes(origin.replace(/^https?:\/\//, '')))) {
+    // origin 검증: 콘텐츠 iframe과 편집 패널은 항상 같은 origin에서 서빙되므로 정확히 일치해야 한다.
+    // 부분 일치(includes)는 evil-eduflix.example.com 같은 도메인도 통과시키므로 사용하지 않는다.
+    if (event.origin !== window.location.origin) {
       return;
     }
 
@@ -276,7 +268,7 @@
         window.parent.postMessage({
           type: 'EDITOR_READY',
           payload: { ready: true }
-        }, '*');
+        }, window.location.origin);
         break;
 
       case 'EXTRACT_CONTENT':
@@ -284,7 +276,7 @@
         window.parent.postMessage({
           type: 'CONTENT_EXTRACTED',
           payload: content
-        }, '*');
+        }, window.location.origin);
         break;
 
       case 'UPDATE_TEXT':
@@ -293,7 +285,7 @@
           window.parent.postMessage({
             type: 'UPDATE_APPLIED',
             payload: { type: 'text', id: payload.id, success }
-          }, '*');
+          }, window.location.origin);
         }
         break;
 
@@ -303,7 +295,7 @@
           window.parent.postMessage({
             type: 'UPDATE_APPLIED',
             payload: { type: 'style', variable: payload.variable, success }
-          }, '*');
+          }, window.location.origin);
         }
         break;
 
@@ -313,7 +305,7 @@
           window.parent.postMessage({
             type: 'UPDATE_APPLIED',
             payload: { type: 'quiz', id: payload.id, success }
-          }, '*');
+          }, window.location.origin);
         }
         break;
 
@@ -368,7 +360,7 @@
     window.parent.postMessage({
       type: 'EDITOR_READY',
       payload: { ready: true, auto: true }
-    }, '*');
+    }, window.location.origin);
     console.log('[EduFlix Editor Bridge] 자동 EDITOR_READY 전송');
   }
 

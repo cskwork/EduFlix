@@ -2,6 +2,7 @@
 // 서버 API 없이 브라우저 localStorage에서 클릭 데이터 관리
 
 import { buildApiUrl } from './url'
+import { withAdminToken } from './adminToken'
 
 const STORAGE_KEY = 'eduflix_content_clicks'
 const STORAGE_VERSION = 'v1'
@@ -326,6 +327,7 @@ export async function clearClickData(scope?: RecommendationScope): Promise<boole
     try {
       const response = await fetch(buildApiUrl('/api/recommendations/clear', API_BASE_URL), {
         method: 'POST',
+        headers: withAdminToken(),
       })
 
       if (response.ok) {

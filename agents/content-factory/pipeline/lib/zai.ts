@@ -4,7 +4,7 @@ import { dirname, resolve } from 'node:path'
 export const DEFAULT_ZAI_URL = 'https://api.z.ai/api/coding/paas/v4/chat/completions'
 export const DEFAULT_ZAI_TIMEOUT_MS = 10 * 60 * 1000
 
-interface ZaiRequestOptions {
+export interface ZaiRequestOptions {
   prompt: string
   label?: string
   timeoutMs?: number
@@ -221,16 +221,30 @@ export async function runZaiText(options: ZaiTextOptions): Promise<void> {
   })
 }
 
-export async function runZaiFiles(options: ZaiFilesOptions): Promise<void> {
+export interface ZaiGeneratedFiles {
+  files: Record<string, string>
+  raw: string
+}
+
+// 파일시스템에 쓰지 않고 파일 내용만 생성한다.
+// 디스크가 읽기 전용인 환경(서버리스 함수)에서 재사용하기 위해 분리했다.
+export async function generateZaiFiles(
+  options: ZaiRequestOptions & { requiredFiles: readonly string[] },
+): Promise<ZaiGeneratedFiles> {
   assertApiKey(options.apiKey)
   validateRequiredFiles(options.requiredFiles)
   const markers = options.requiredFiles
     .map((name) => `===FILE: ${name}===\n<${name} 본문>\n===END FILE===`).join('\n')
   const prompt = `${options.prompt}\n\n파일을 직접 쓸 수 없습니다. 반드시 아래 marker 형식으로 ` +
     `정확히 ${options.requiredFiles.length}개 파일을 반환하세요.\n${markers}`
-  await requestWithRetry(options, prompt, async (raw) => {
-    const files = parseBuildMarkers(raw, options.requiredFiles)
-    await writeBuildFiles(options.stagingDir, files, options.requiredFiles)
-    await writeAtomic(options.responseFile, raw)
-  })
+  return requestWithRetry(options, prompt, async (raw) => ({
+    files: parseBuildMarkers(raw, options.requiredFiles),
+    raw,
+  }))
+}
+
+export async function runZaiFiles(options: ZaiFilesOptions): Promise<void> {
+  const { files, raw } = await generateZaiFiles(options)
+  await writeBuildFiles(options.stagingDir, files, options.requiredFiles)
+  await writeAtomic(options.responseFile, raw)
 }

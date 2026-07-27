@@ -12,8 +12,31 @@ import type {
   ReviewProgress,
   ReviewStatusResponse,
 } from '../../types/generation'
-import type { Subject, Grade, Language, Difficulty } from '../../types/content'
+import type { Subject, Grade, Language, Difficulty, ContentType } from '../../types/content'
+import { gradeForDifficulty, gradeLevelForGrade } from '../../types/content'
 import { buildApiUrl } from './url'
+import { withAdminToken } from './adminToken'
+import {
+  LOCAL_CONTENT_PREFIX,
+  saveLocalContent,
+  type LocalContent,
+} from '../content/localContent'
+
+// 서버리스 생성 함수(api/generate.ts)의 응답 형태
+interface ServerlessGenerationResult {
+  success?: boolean
+  error?: string
+  storage?: string
+  content?: {
+    title: string
+    description: string
+    type: ContentType
+    renderMode: RenderMode
+    html: string
+    css: string
+    js: string
+  }
+}
 
 // API 엔드포인트 설정
 const API_BASE_URL = import.meta.env.VITE_API_URL || ''
@@ -108,6 +131,112 @@ function mapJobStatusToProgress(jobStatus: JobStatusResponse): GenerationProgres
   }
 }
 
+// 정적 배포(Vercel)용 단일 호출 생성
+//
+// 팩토리 서버가 없는 환경이라 job 폴링을 쓸 수 없다. 서버리스 함수가 3개 파일을
+// 응답 본문으로 한 번에 돌려주고, 여기서 IndexedDB에 보관한다.
+// 진행률은 실제 단계가 없으므로 대기 중임을 알리는 수준으로만 갱신한다.
+export async function generateContentServerless(
+  options: ContentGenerationOptions,
+  onProgress?: ProgressCallback,
+): Promise<GenerationResponse> {
+  const startedAt = new Date().toISOString()
+  onProgress?.({
+    status: 'generating',
+    progress: 10,
+    message: 'AI가 콘텐츠를 만들고 있어요... (최대 5분 소요)',
+    startedAt,
+  })
+
+  // 응답이 올 때까지 진행률만 천천히 올려 사용자가 멈춘 것으로 오해하지 않게 한다
+  let progress = 10
+  const ticker = setInterval(() => {
+    progress = Math.min(progress + 2, 90)
+    onProgress?.({
+      status: 'generating',
+      progress,
+      message: 'AI가 콘텐츠를 만들고 있어요... (최대 5분 소요)',
+      startedAt,
+    })
+  }, 5000)
+
+  try {
+    const request: GenerationRequest = {
+      mode: options.mode,
+      interests: options.interests,
+      subject: options.subject,
+      grade: options.grade,
+      language: options.language,
+      renderMode: options.renderMode,
+      additionalContext: options.additionalContext,
+      problem: options.problem,
+      difficulty: options.difficulty,
+    }
+
+    const response = await fetch(buildApiUrl('/api/generate', API_BASE_URL), {
+      method: 'POST',
+      headers: withAdminToken({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify(request),
+    })
+
+    if (!response.ok) {
+      throw new Error(await extractErrorMessage(response, '/api/generate'))
+    }
+
+    const result = await parseJsonResponse<ServerlessGenerationResult>(response, '/api/generate')
+    if (!result.success || !result.content) {
+      throw new Error(result.error || '콘텐츠 생성에 실패했습니다')
+    }
+
+    const grade = options.grade ?? (options.difficulty ? gradeForDifficulty(options.difficulty) : 'elementary-5')
+    const contentId = `${LOCAL_CONTENT_PREFIX}${crypto.randomUUID()}`
+    const stored: LocalContent = {
+      id: contentId,
+      title: result.content.title,
+      description: result.content.description,
+      subject: options.subject ?? 'general',
+      gradeLevel: gradeLevelForGrade(grade),
+      grade,
+      type: result.content.type,
+      language: options.language,
+      html: result.content.html,
+      css: result.content.css,
+      js: result.content.js,
+      createdAt: new Date().toISOString(),
+    }
+    await saveLocalContent(stored)
+
+    onProgress?.({
+      status: 'completed',
+      progress: 100,
+      message: '콘텐츠가 완성되었어요! (이 브라우저에 저장됩니다)',
+      completedAt: new Date().toISOString(),
+    })
+
+    return {
+      success: true,
+      contentId,
+      manifest: {
+        id: contentId,
+        title: stored.title,
+        description: stored.description,
+        type: stored.type,
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : '콘텐츠 생성 실패'
+    onProgress?.({
+      status: 'error',
+      progress: 0,
+      message: '생성 중 오류가 발생했어요',
+      error: message,
+    })
+    return { success: false, error: message }
+  } finally {
+    clearInterval(ticker)
+  }
+}
+
 // Claude API 래퍼 클래스
 export class ClaudeApiClient {
   private baseUrl: string
@@ -146,20 +275,10 @@ export class ClaudeApiClient {
     onProgress?: ProgressCallback,
     onJobCreated?: JobCreatedCallback,
   ): Promise<GenerationResponse> {
-    // 정적 배포 모드에서는 AI 생성 기능 비활성화
+    // 정적 배포에는 팩토리 서버가 없으므로 서버리스 단일 호출 경로로 위임한다
+    // (결과는 서버 파일시스템 대신 브라우저 IndexedDB에 보관된다)
     if (isStaticMode) {
-      if (onProgress) {
-        onProgress({
-          status: 'error',
-          progress: 0,
-          message: '정적 배포 모드에서는 AI 생성 기능을 사용할 수 없습니다',
-          error: '정적 배포 모드에서는 AI 생성 기능을 사용할 수 없습니다',
-        })
-      }
-      return {
-        success: false,
-        error: '정적 배포 모드에서는 AI 생성 기능을 사용할 수 없습니다. 추후 백엔드 연결 시 활성화됩니다.',
-      }
+      return generateContentServerless(options, onProgress)
     }
 
     // 생성 시작 알림
@@ -201,9 +320,9 @@ export class ClaudeApiClient {
       const createUrl = buildApiUrl('/api/generate', this.baseUrl)
       const createResponse = await fetch(createUrl, {
         method: 'POST',
-        headers: {
+        headers: withAdminToken({
           'Content-Type': 'application/json',
-        },
+        }),
         body: JSON.stringify(request),
       })
 
@@ -420,9 +539,9 @@ export async function reviewContent(
     const createUrl = buildApiUrl('/api/generate/review', API_BASE_URL)
     const createResponse = await fetch(createUrl, {
       method: 'POST',
-      headers: {
+      headers: withAdminToken({
         'Content-Type': 'application/json',
-      },
+      }),
       body: JSON.stringify({ moduleId, modulePath }),
     })
 

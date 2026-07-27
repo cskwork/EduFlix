@@ -30,6 +30,8 @@ progress*.txt
 .env
 .env.local
 .env.*.local
+.env.development
+.env.production.local
 
 # temp directories
 temp-vite
@@ -41,3 +43,22 @@ server/db/*.db-wal
 server/db/*.db-shm
 .env*.local
 .playwright-cli/
+
+# 에이전트 로컬 설정·작업 메모 (공유 대상 아님)
+.claude/settings.local.json
+.claude/auto-memory/
+.do-work/
+
+# 콘텐츠 팩토리 실행 산출물 (LLM 원본 응답, QA 리포트, 로컬 절대경로 포함)
+agents/content-factory/runs/
+
+# 자격증명·인증서
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+
+# OS/에디터
+Thumbs.db
+.DS_Store
