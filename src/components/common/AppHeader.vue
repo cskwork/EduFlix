@@ -14,7 +14,9 @@ const searchText = ref('')
 const searchInputRef = ref<FocusableElement | null>(null)
 
 // 정적 배포 모드 확인
-const isStaticMode = computed(() => import.meta.env.VITE_STATIC_MODE === 'true')
+import { canGenerate } from '../../services/api/capabilities'
+
+const canGenerateContent = computed(() => canGenerate)
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 50
@@ -187,7 +189,7 @@ watch(
         </div>
 
         <!-- 모드 토글 (정적 모드에서는 숨김) -->
-        <ModeToggle v-if="!isStaticMode" />
+        <ModeToggle v-if="canGenerateContent" />
       </div>
     </div>
   </header>
