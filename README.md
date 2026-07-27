@@ -1,208 +1,248 @@
 # EduFlix
 
-Netflix 스타일의 인터랙티브 교육 콘텐츠 플랫폼
+A Netflix-style platform for interactive educational content.
 
-## 소개
+**English** · [한국어](README.ko.md)
 
-EduFlix는 초등학생부터 고등학생까지를 대상으로 하는 교육 콘텐츠 플랫폼입니다. Netflix의 직관적인 UI와 AI 기반 콘텐츠 자동 생성 기능을 결합하여 학습을 재미있고 개인화된 경험으로 만들어줍니다.
+[Live demo](https://eduflix.vercel.app) · [Docs](docs/)
 
-### 주요 기능
+## About
 
-- **보기 모드**: Netflix 스타일의 콘텐츠 브라우징 및 학습
-- **창조 모드**: AI(Claude + Gemini)를 활용한 맞춤형 콘텐츠 자동 생성
-- **지식맵**: 선수 지식과 콘텐츠 간의 연결 관계 시각화
-- **Sandbox 실행**: iframe 기반의 안전한 콘텐츠 실행 환경
+EduFlix is a learning platform for students from elementary through high school. It pairs a Netflix-style browsing experience with AI-generated content, so a lesson can be created on demand around whatever a learner is interested in — dinosaurs, football, space — and played straight in the browser.
 
-## 기술 스택
+Every lesson is a self-contained bundle of vanilla HTML/CSS/JS that runs inside a sandboxed iframe, so nothing an AI generates can reach the host app.
 
-| 분류 | 기술 |
-|------|------|
-| Frontend | Vue 3 + TypeScript + Vite |
-| Backend | Bun (경량 HTTP 서버) |
-| AI | Claude (Anthropic) + Gemini (이미지) |
-| Storage | 로컬 파일시스템 |
-| Content | Vanilla HTML/CSS/JS |
+### Features
 
-## 시작하기
+- **View mode** — browse and play lessons, Netflix style
+- **Create mode** — generate a tailored lesson with AI, from your interests or from a problem you paste in
+- **Learning map** — see how topics and prerequisites connect
+- **Sandboxed playback** — lessons run in an isolated iframe
+- **Bilingual UI** — English by default, switchable to Korean from the header
 
-### 필수 요구사항
+## Tech stack
 
-- [Bun](https://bun.sh/) v1.0 이상
-- Node.js v18 이상 (선택적)
+| Layer | Technology |
+|-------|------------|
+| Frontend | Vue 3 + TypeScript + Vite + Pinia |
+| Backend | Bun (lightweight HTTP server) |
+| AI | GLM via Z.ai (configurable provider) |
+| Storage | Local filesystem (IndexedDB on static deployments) |
+| Content | Vanilla HTML/CSS/JS, Three.js for 3D |
 
-### 설치
+## Getting started
+
+### Requirements
+
+- [Bun](https://bun.sh/) v1.0 or later
+- Node.js v18 or later (optional)
+
+### Install
 
 ```bash
-# 저장소 클론
-git clone <repository-url>
+git clone https://github.com/cskwork/EduFlix.git
 cd EduFlix
 
-# 의존성 설치
 bun install
 
-# 환경 변수 설정
 cp .env.example .env
-# .env 파일을 열어 API 키 설정
+# open .env and set your API keys
 ```
 
-### 환경 변수
+### Environment variables
 
-`.env.example`을 복사해 사용합니다. 주요 항목:
+Copy `.env.example` and fill in what you need:
 
-| 변수 | 필수 | 설명 |
-|------|------|------|
-| `ZAI_API_KEY` | 콘텐츠 생성 시 | 콘텐츠 팩토리가 사용하는 LLM 키 |
-| `ADMIN_TOKEN` | **공개 배포 시** | 쓰기 API 인증 토큰. 아래 "보안" 참고 |
-| `PORT` | - | API 서버 포트 (기본 3001) |
-| `CORS_ORIGIN` | - | 교차 origin 허용이 필요할 때만 |
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `ZAI_API_KEY` | for content generation | LLM key used by the content factory |
+| `FACTORY_LLM_PROVIDER` | – | `zai` (default) or `codex` |
+| `ADMIN_TOKEN` | **for public deployments** | Auth token for write APIs — see [Security](#security) |
+| `PORT` | – | API server port (default `3001`) |
+| `CORS_ORIGIN` | – | Only when you need cross-origin access |
+| `VITE_ALLOWED_HOSTS` | – | Extra hosts allowed to reach the dev server (tunnels) |
 
-### 보안
-
-콘텐츠 생성·편집·삭제 API는 LLM 비용과 디스크 쓰기를 유발하므로 **쓰기 계열 요청에 관리자 인증이 필요**합니다.
-
-- **개발**(`NODE_ENV != production`): `ADMIN_TOKEN`을 설정하지 않으면 인증 없이 열립니다.
-- **공개 배포**(`NODE_ENV=production`, `bun run start`): `ADMIN_TOKEN`이 **필수**입니다. 설정하지 않으면 쓰기 API가 503으로 비활성화됩니다.
+### Run the dev servers
 
 ```bash
-# 토큰 생성
-openssl rand -hex 32
-
-# 서버: .env에 설정
-ADMIN_TOKEN=<생성한 값>
-
-# 브라우저: 콘솔에서 한 번 등록
-localStorage.setItem('eduflix_admin_token', '<같은 값>')
-```
-
-토큰은 `X-Admin-Token` 헤더로 전달됩니다. 브라우저가 자동으로 붙이지 않으므로 CSRF도 함께 차단됩니다.
-읽기 API(`GET`)와 콘텐츠 열람은 인증 없이 공개됩니다.
-
-### 개발 서버 실행
-
-```bash
-# 프론트엔드 개발 서버 (http://localhost:5173)
+# frontend only (http://localhost:5173)
 bun run dev
 
-# 백엔드 API 서버 (http://localhost:3000)
+# backend API only (http://localhost:3001)
 bun run dev:server
 
-# 프론트엔드 + 백엔드 동시 실행
+# both at once — recommended
 bun run dev:all
+# or ./start.sh  (start.bat on Windows)
 ```
 
-### 프로덕션 빌드
+> The API server is required for content generation and for the "Popular now" row, which is backed by SQLite.
+
+### Production build
 
 ```bash
-# 빌드
-bun run build
-
-# 빌드 결과물 미리보기
-bun run preview
+bun run build     # outputs to dist/
+bun run preview   # preview the build
+bun run start     # serve dist/ + the API from one Bun server
 ```
 
-## 프로젝트 구조
+## Security
+
+Content generation, editing and deletion cost LLM credits and write to disk, so **write requests require admin authentication**.
+
+- **Development** (`NODE_ENV != production`): leaving `ADMIN_TOKEN` unset keeps write APIs open.
+- **Public deployment** (`NODE_ENV=production`, `bun run start`): `ADMIN_TOKEN` is **required**. Without it, write APIs return `503`.
+
+```bash
+# generate a token
+openssl rand -hex 32
+
+# server: put it in .env
+ADMIN_TOKEN=<generated value>
+
+# browser: register it once from the console
+localStorage.setItem('eduflix_admin_token', '<same value>')
+```
+
+The token travels in the `X-Admin-Token` header. Because browsers don't attach it automatically, this also blocks CSRF. Read APIs (`GET`) and lesson playback stay public.
+
+## Internationalization
+
+The UI ships in English and Korean. English is the default; the switcher sits in the top-right of the header, and the choice is remembered in `localStorage`.
+
+The i18n layer is dependency-free and lives in `src/i18n/`. **Adding a language takes two steps:**
+
+1. Copy `src/i18n/messages/en.ts` to `src/i18n/messages/<code>.ts` and translate it. Declaring it as `MessageSchema` means a missing key fails the build.
+2. Register it in `LOCALES` in `src/i18n/locales.ts`.
+
+The switcher, persistence, `<html lang>`, the document title and the content-generation language all follow automatically.
+
+Message keys are typed — `t('a.b.c')` is checked at compile time, so a typo fails `vue-tsc` rather than rendering a raw key at runtime.
+
+Catalog metadata is localized separately: `manifest.json` keeps `title` and `description` in the lesson's original language and adds optional per-language overrides.
+
+```json
+{
+  "title": "피자로 배우는 분수",
+  "translations": {
+    "en": { "title": "Fraction Pizza", "description": "Learn what fractions are with a delicious pizza!" }
+  }
+}
+```
+
+Search matches both the original and the translations. Note that the **lesson bodies themselves are not translated** — only the surrounding UI and catalog metadata follow the selected language.
+
+## Project structure
 
 ```
 EduFlix/
-├── src/                      # 프론트엔드 소스
-│   ├── components/           # Vue 컴포넌트
-│   │   ├── common/          # 공통 컴포넌트
-│   │   ├── home/            # 홈 화면 컴포넌트
-│   │   ├── viewer/          # 콘텐츠 뷰어
-│   │   └── creator/         # 창조 모드 컴포넌트
-│   ├── views/               # 페이지 컴포넌트
-│   ├── composables/         # Vue 3 Composables
-│   ├── services/            # API 서비스
-│   ├── stores/              # Pinia 상태 관리
-│   └── types/               # TypeScript 타입
-├── server/                  # Bun 백엔드
-│   ├── index.ts             # HTTP 서버
-│   └── routes/              # API 라우트
-├── agents/                  # AI 콘텐츠 생성기
-│   └── content-generator/   # 템플릿, 프롬프트, 스타일
-├── contents/                # 생성된 콘텐츠
-│   ├── index.json           # 콘텐츠 카탈로그
-│   ├── knowledge-map.json   # 지식맵 데이터
-│   └── {subject}/{level}/   # 콘텐츠 파일
-└── docs/                    # 문서
+├── src/                      # frontend source
+│   ├── components/           # Vue components (common, home, viewer, creator, editor)
+│   ├── views/                # page components
+│   ├── composables/          # Vue 3 composables
+│   ├── services/             # API and content services
+│   ├── stores/               # Pinia stores
+│   ├── i18n/                 # i18n runtime, locale registry, message catalogs
+│   └── types/                # TypeScript types
+├── server/                   # Bun backend
+│   ├── index.ts              # HTTP server
+│   └── routes/               # API routes
+├── api/                      # Vercel serverless functions
+├── agents/                   # AI content factory (pipeline, prompts, templates)
+├── public/contents/          # generated lessons
+│   ├── index.json            # content catalog
+│   ├── knowledge-map.json    # knowledge graph
+│   └── {subject}/{level}/    # lesson files
+└── docs/                     # documentation
 ```
 
-## 콘텐츠 구조
+## Content structure
 
-각 콘텐츠는 다음 구조를 따릅니다:
+Each lesson follows this layout:
 
 ```
-contents/{subject}/{level}/{content-name}/
-├── manifest.json    # 메타데이터
-├── index.html       # 메인 콘텐츠
-├── style.css        # 스타일 (선택)
-└── script.js        # 로직 (선택)
+public/contents/{subject}/{level}/{content-id}/
+├── manifest.json    # metadata
+├── index.html       # the lesson
+├── style.css        # styles (optional)
+└── script.js        # logic (optional)
 ```
 
-### 콘텐츠 타입
+### Content types
 
-| 타입 | 설명 |
-|------|------|
-| game | 게임화된 학습 활동 |
-| quiz | 퀴즈 및 문제 풀이 |
-| exploration | 탐험형 학습 |
-| simulation | 시뮬레이션 |
-| story | 스토리 기반 학습 |
+| Type | Description |
+|------|-------------|
+| `game` | Gamified learning activity |
+| `quiz` | Questions and problem solving |
+| `exploration` | Open-ended exploration |
+| `simulation` | Interactive simulation |
+| `story` | Story-driven learning |
 
-## 키보드 단축키
+### Render modes
 
-| 키 | 기능 |
-|----|------|
-| `h` | 홈으로 이동 |
-| `c` | 창조 모드로 이동 |
-| `/` | 검색 |
-| `ESC` | 이전으로/전체화면 종료 |
-| `화살표` | 콘텐츠 탐색 |
-| `Enter/Space` | 콘텐츠 선택 |
+`renderMode` controls *how* a lesson is built, independently of its educational type:
 
-## 개발 명령어
+| Mode | Description |
+|------|-------------|
+| `3d` | Three.js simulation (**default**) |
+| `3d-game` | Three.js with a game loop |
+| `canvas-game` | Canvas 2D game |
+| `svg` | Interactive SVG |
+| `dom` | Classic cards and buttons |
+
+### Included content
+
+84 lessons ship with the repository:
+
+| Subject | Count |
+|---------|-------|
+| Math | 50 |
+| English | 23 |
+| Science | 8 |
+| World history | 2 |
+| Coding | 1 |
+
+By level: 47 elementary, 34 middle, 3 high school.
+
+## Keyboard shortcuts
+
+| Key | Action |
+|-----|--------|
+| `h` | Go home |
+| `c` | Create mode |
+| `/` | Search |
+| `ESC` | Back / exit fullscreen |
+| Arrow keys | Browse content |
+| `Enter` / `Space` | Select content |
+
+## Development commands
 
 ```bash
-# 린트 검사
-bun run lint
-
-# 린트 자동 수정
-bun run lint:fix
-
-# 코드 포맷팅
-bun run format
-
-# 테스트 실행
-bun run test
+bun run lint       # lint
+bun run lint:fix   # lint and autofix
+bun run format     # format with Prettier
+bun run test       # run the test suite
+bun run factory    # run the content factory from the CLI
 ```
 
-## 포함된 콘텐츠
+## Deployment
 
-| # | 과목 | 학년 | 제목 | 타입 |
-|---|------|------|------|------|
-| 1 | 수학 | 초3 | 피자로 배우는 분수 | game |
-| 2 | 수학 | 초5 | 도형 탐험가 | exploration |
-| 3 | 수학 | 중2 | 방정식 퍼즐 | quiz |
-| 4 | 과학 | 초4 | 태양계 여행 | simulation |
-| 5 | 과학 | 초6 | 전기회로 실험실 | simulation |
-| 6 | 과학 | 중1 | 세포 탐험 | exploration |
-| 7 | 과학 | 고1 | 화학 반응 시뮬레이터 | simulation |
-| 8 | 영어 | 초3 | Word Safari | game |
-| 9 | 영어 | 중2 | Grammar Quest | quiz |
-| 10 | 영어 | 고1 | Debate Arena | story |
+**Vercel** (primary) — `vercel --prod`. Requires `ZAI_API_KEY`, `ADMIN_TOKEN` and `VITE_STATIC_MODE=true`. On static deployments, generation runs through a single serverless LLM call and the result is stored in the browser's IndexedDB.
 
-## 접근성
+**Self-hosted** — `bun run build`, then `PORT=9888 bun run start` serves the static files and the API from one process, with the full six-stage generation pipeline and lessons written to disk.
 
-EduFlix는 다음 접근성 기능을 지원합니다:
+See [docs/deployment](docs/deployment/) for details.
 
-- 키보드 네비게이션
-- 스크린 리더 호환 (ARIA 속성)
-- 고대비 모드 지원
-- 모션 감소 모드 지원
-- 스킵 네비게이션 링크
+## Accessibility
 
-## 라이선스
+- Keyboard navigation
+- Screen reader support (ARIA attributes)
+- High contrast mode
+- Reduced motion mode
+- Skip navigation link
 
-[GNU AGPL-3.0](LICENSE) - Copyright (c) 2026 cskwork
+## License
 
-네트워크를 통해 이 소프트웨어(또는 수정본)를 서비스로 제공하는 경우, 해당 버전의 전체 소스 코드를 이용자에게 공개해야 합니다.
+[GNU AGPL-3.0](LICENSE) — Copyright (c) 2026 cskwork
+
+If you run this software (or a modified version) as a network service, you must make the complete source code of that version available to its users.
