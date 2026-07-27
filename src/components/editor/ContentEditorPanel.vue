@@ -13,6 +13,7 @@ import TextEditor from './TextEditor.vue'
 import StyleEditor from './StyleEditor.vue'
 import QuizEditor from './QuizEditor.vue'
 import ExportImportButtons from './ExportImportButtons.vue'
+import { withAdminToken } from '../../services/api/adminToken'
 
 const props = defineProps<{
   contentId: string
@@ -60,6 +61,9 @@ const tabs = [
 
 // postMessage 핸들러
 function handleMessage(event: MessageEvent) {
+  // 콘텐츠 iframe은 같은 origin에서 서빙되므로, 다른 창이 보낸 메시지는 무시한다
+  if (event.origin !== window.location.origin) return
+
   const { type, payload } = event.data || {}
 
   console.log('[Editor] 메시지 수신:', type)
@@ -98,7 +102,7 @@ function handleMessage(event: MessageEvent) {
 // iframe으로 메시지 전송
 function sendToIframe(message: EditorMessage) {
   if (props.iframeRef?.contentWindow) {
-    props.iframeRef.contentWindow.postMessage(message, '*')
+    props.iframeRef.contentWindow.postMessage(message, window.location.origin)
   }
 }
 
@@ -146,7 +150,7 @@ async function handleSave() {
   try {
     const response = await fetch(`/api/content/${props.contentId}/files`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withAdminToken({ 'Content-Type': 'application/json' }),
       body: JSON.stringify(editableContent.value)
     })
 

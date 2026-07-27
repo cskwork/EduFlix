@@ -47,10 +47,35 @@ cp .env.example .env
 
 ### 환경 변수
 
-```env
-ANTHROPIC_API_KEY=your-anthropic-api-key
-GEMINI_API_KEY=your-gemini-api-key
+`.env.example`을 복사해 사용합니다. 주요 항목:
+
+| 변수 | 필수 | 설명 |
+|------|------|------|
+| `ZAI_API_KEY` | 콘텐츠 생성 시 | 콘텐츠 팩토리가 사용하는 LLM 키 |
+| `ADMIN_TOKEN` | **공개 배포 시** | 쓰기 API 인증 토큰. 아래 "보안" 참고 |
+| `PORT` | - | API 서버 포트 (기본 3001) |
+| `CORS_ORIGIN` | - | 교차 origin 허용이 필요할 때만 |
+
+### 보안
+
+콘텐츠 생성·편집·삭제 API는 LLM 비용과 디스크 쓰기를 유발하므로 **쓰기 계열 요청에 관리자 인증이 필요**합니다.
+
+- **개발**(`NODE_ENV != production`): `ADMIN_TOKEN`을 설정하지 않으면 인증 없이 열립니다.
+- **공개 배포**(`NODE_ENV=production`, `bun run start`): `ADMIN_TOKEN`이 **필수**입니다. 설정하지 않으면 쓰기 API가 503으로 비활성화됩니다.
+
+```bash
+# 토큰 생성
+openssl rand -hex 32
+
+# 서버: .env에 설정
+ADMIN_TOKEN=<생성한 값>
+
+# 브라우저: 콘솔에서 한 번 등록
+localStorage.setItem('eduflix_admin_token', '<같은 값>')
 ```
+
+토큰은 `X-Admin-Token` 헤더로 전달됩니다. 브라우저가 자동으로 붙이지 않으므로 CSRF도 함께 차단됩니다.
+읽기 API(`GET`)와 콘텐츠 열람은 인증 없이 공개됩니다.
 
 ### 개발 서버 실행
 
@@ -178,4 +203,6 @@ EduFlix는 다음 접근성 기능을 지원합니다:
 
 ## 라이선스
 
-Private - All rights reserved
+[GNU AGPL-3.0](LICENSE) - Copyright (c) 2026 cskwork
+
+네트워크를 통해 이 소프트웨어(또는 수정본)를 서비스로 제공하는 경우, 해당 버전의 전체 소스 코드를 이용자에게 공개해야 합니다.

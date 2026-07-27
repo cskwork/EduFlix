@@ -136,7 +136,7 @@ class EduFlixEngine {
                 </div>
                 <div style="display:flex; gap: 20px;">
                     <button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button>
-                    <button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button>
+                    <button class="btn btn-primary-large" onclick="window.parent.postMessage('close', window.location.origin)">홈으로</button>
                 </div>
             `;
         });

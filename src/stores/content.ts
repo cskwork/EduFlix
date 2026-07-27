@@ -22,6 +22,7 @@ import {
   recordClick as recordLocalClick,
   calculateSortScore,
 } from '../services/clickTracker'
+import { listLocalContents, toManifest } from '../services/content/localContent'
 
 export const useContentStore = defineStore('content', () => {
   // 상태
@@ -146,6 +147,15 @@ export const useContentStore = defineStore('content', () => {
     }
   })
 
+  // 브라우저에 보관된 생성 콘텐츠를 카탈로그 항목 형태로 읽는다 (IndexedDB 미지원 시 빈 배열)
+  async function loadLocalManifests(): Promise<ContentManifest[]> {
+    try {
+      return (await listLocalContents()).map(toManifest)
+    } catch {
+      return []
+    }
+  }
+
   // 액션: 콘텐츠 카탈로그 로드
   async function loadContents(force = false) {
     isLoading.value = true
@@ -162,11 +172,12 @@ export const useContentStore = defineStore('content', () => {
         throw new Error('콘텐츠 카탈로그를 불러올 수 없습니다')
       }
       const catalog = await response.json()
-      contents.value = catalog.contents || []
+      // 정적 배포에서 브라우저에 보관한 생성 콘텐츠를 서버 카탈로그 앞에 붙인다
+      contents.value = [...(await loadLocalManifests()), ...(catalog.contents || [])]
     } catch (e) {
       error.value = e instanceof Error ? e.message : '알 수 없는 오류가 발생했습니다'
       // 개발 환경에서 더미 데이터 사용
-      contents.value = getDummyContents()
+      contents.value = [...(await loadLocalManifests()), ...getDummyContents()]
     } finally {
       isLoading.value = false
     }

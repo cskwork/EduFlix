@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // Export/Import 버튼 컴포넌트
 import { ref } from 'vue'
+import { withAdminToken } from '../../services/api/adminToken'
 
 const props = defineProps<{
   contentId: string
@@ -67,6 +68,7 @@ async function handleImport(event: Event) {
 
     const response = await fetch('/api/content/import', {
       method: 'POST',
+      headers: withAdminToken(),
       body: formData
     })
 

@@ -99,4 +99,4 @@ bun run lint:fix      # ESLint 자동 수정
 ## 관련 링크
 
 - **프로덕션**: https://eduflix.vercel.app
-- **백업**: https://eduflix.agentic-worker.store (Cloudflare Tunnel)
+- **백업**: https://eduflix.example.com (Cloudflare Tunnel)

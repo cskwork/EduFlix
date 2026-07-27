@@ -61,12 +61,18 @@ async function serveStaticFile(pathname: string): Promise<Response | null> {
   return null
 }
 
-// CORS 헤더 설정 (프로덕션 모드에서는 동일 origin이므로 * 허용)
+// CORS 헤더 설정
+// 프로덕션은 dist/를 같은 서버에서 서빙하므로 동일 origin이다. 교차 origin 접근이 실제로 필요한
+// 경우에만 CORS_ORIGIN으로 명시적으로 열고, 그 외에는 헤더 자체를 내리지 않는다(와일드카드 금지).
 const isProduction = process.env.NODE_ENV === 'production'
-const corsHeaders = {
-  'Access-Control-Allow-Origin': isProduction ? '*' : (process.env.CORS_ORIGIN || 'http://localhost:5173'),
+export const allowedCorsOrigin =
+  process.env.CORS_ORIGIN || (isProduction ? '' : 'http://localhost:5173')
+const corsHeaders: Record<string, string> = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Admin-Token',
+  ...(allowedCorsOrigin
+    ? { 'Access-Control-Allow-Origin': allowedCorsOrigin, Vary: 'Origin' }
+    : {}),
 }
 
 // JSON 응답 헬퍼
