@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "이차함수 y = ax² + bx + c 그래프가 계수에 따라 어떻게 변하는지 확인해보세요.",
   "thumbnail": "/contents/math/high/quadratic-graph/assets/thumbnail.svg",
-  "path": "/contents/math/high/quadratic-graph/index.html"
+  "path": "/contents/math/high/quadratic-graph/index.html",
+  "translations": {
+    "en": {
+      "title": "Quadratic Function Graphs",
+      "description": "See how the graph of y = ax² + bx + c changes as you adjust each coefficient."
+    }
+  }
 }

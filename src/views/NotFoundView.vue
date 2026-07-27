@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from '../i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 const mascotFailed = ref(false)
 
@@ -15,14 +17,14 @@ function goHome() {
     <div v-if="!mascotFailed" class="mascot-sticker">
       <img
         src="/mascot/mascot-think.webp"
-        alt="고민하는 에듀 마스코트"
+        :alt="t('notFound.mascotAlt')"
         class="mascot-img"
         @error="mascotFailed = true"
       />
     </div>
     <h1 class="not-found-code">404</h1>
-    <p class="not-found-message">앗! 여기는 아직 만들어지지 않은 길이에요.</p>
-    <button class="home-btn" @click="goHome">홈으로 돌아가기</button>
+    <p class="not-found-message">{{ t('notFound.message') }}</p>
+    <button class="home-btn" @click="goHome">{{ t('notFound.goHome') }}</button>
   </div>
 </template>
 

@@ -10,6 +10,7 @@ import type {
   SubjectProgress,
 } from '../types/knowledge-map'
 import type { Subject } from '../types/content'
+import { t } from '../i18n'
 
 const STORAGE_KEY = 'eduflix_learning_progress'
 const STREAK_KEY = 'eduflix_learning_streak'
@@ -64,12 +65,12 @@ export const useLearningStore = defineStore('learning', () => {
     try {
       const response = await fetch('/contents/knowledge-map.json')
       if (!response.ok) {
-        throw new Error('지식맵을 불러올 수 없습니다')
+        throw new Error(t('errors.knowledgeMapLoadFailed'))
       }
       knowledgeMap.value = await response.json()
       loadProgressFromStorage()
     } catch (e) {
-      error.value = e instanceof Error ? e.message : '알 수 없는 오류가 발생했습니다'
+      error.value = e instanceof Error ? e.message : t('common.unknownError')
     } finally {
       isLoading.value = false
     }

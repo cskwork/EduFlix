@@ -23,6 +23,8 @@ export default tseslint.config(
         console: 'readonly',
         KeyboardEvent: 'readonly',
         MessageEvent: 'readonly',
+        MouseEvent: 'readonly',
+        Node: 'readonly',
         Event: 'readonly',
         HTMLInputElement: 'readonly',
         FormData: 'readonly',

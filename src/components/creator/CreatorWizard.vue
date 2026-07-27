@@ -12,6 +12,9 @@ import RenderModeSelect from './RenderModeSelect.vue'
 import ProblemInput, { type ProblemInputValue } from './ProblemInput.vue'
 import GenerationProgressVue from './GenerationProgress.vue'
 import { useGenerationStore } from '../../stores/generation'
+import { useI18n } from '../../i18n'
+
+const { t, contentLanguage } = useI18n()
 
 // Router
 const router = useRouter()
@@ -62,23 +65,25 @@ const generationProgress = computed(() => generationStore.currentProgress)
 const currentJobId = computed(() => generationStore.currentJobId)
 
 // 모드별 단계 시퀀스
-const interestSteps: { key: WizardStep; label: string; number: number }[] = [
-  { key: 'interests', label: '관심사', number: 2 },
-  { key: 'subject', label: '과목', number: 3 },
-  { key: 'difficulty', label: '난이도', number: 4 },
-  { key: 'mode', label: '만드는 방식', number: 5 },
-]
+const interestSteps = computed<{ key: WizardStep; label: string; number: number }[]>(() => [
+  { key: 'interests', label: t('creator.steps.interests'), number: 2 },
+  { key: 'subject', label: t('creator.steps.subject'), number: 3 },
+  { key: 'difficulty', label: t('creator.steps.difficulty'), number: 4 },
+  { key: 'mode', label: t('creator.steps.renderMode'), number: 5 },
+])
 
-const problemSteps: { key: WizardStep; label: string; number: number }[] = [
-  { key: 'problem', label: '문제 입력', number: 2 },
-  { key: 'mode', label: '만드는 방식', number: 3 },
-]
+const problemSteps = computed<{ key: WizardStep; label: string; number: number }[]>(() => [
+  { key: 'problem', label: t('creator.steps.problem'), number: 2 },
+  { key: 'mode', label: t('creator.steps.renderMode'), number: 3 },
+])
 
 // 표시할 단계 (모드 선택 + 모드별 시퀀스)
 const steps = computed(() => {
-  const baseStep = [{ key: 'mode-select' as WizardStep, label: '방식', number: 1 }]
-  if (creatorMode.value === 'problem') return [...baseStep, ...problemSteps]
-  if (creatorMode.value === 'interest') return [...baseStep, ...interestSteps]
+  const baseStep = [
+    { key: 'mode-select' as WizardStep, label: t('creator.steps.method'), number: 1 },
+  ]
+  if (creatorMode.value === 'problem') return [...baseStep, ...problemSteps.value]
+  if (creatorMode.value === 'interest') return [...baseStep, ...interestSteps.value]
   return baseStep
 })
 
@@ -179,7 +184,8 @@ async function startGeneration() {
       // Option 2: problem mode
       result = await generationStore.startGeneration({
         mode: 'problem',
-        language: 'ko',
+        // 생성 언어는 현재 UI 언어를 따른다
+        language: contentLanguage.value,
         renderMode: renderMode.value,
         problem: problemState.value.problem,
         subject: problemState.value.subject ?? undefined,
@@ -203,7 +209,8 @@ async function startGeneration() {
         interests: interests.value,
         subject: subject.value,
         grade,
-        language: subject.value === 'english' ? 'en' : 'ko',
+        // 영어 과목은 언제나 영어로, 그 외에는 현재 UI 언어를 따른다
+        language: subject.value === 'english' ? 'en' : contentLanguage.value,
         renderMode: renderMode.value,
       })
       if (result.success && result.contentId) {
@@ -327,7 +334,7 @@ function resetWizard() {
         class="btn btn-secondary"
         @click="prevStep"
       >
-        이전
+        {{ t('common.back') }}
       </button>
 
       <button
@@ -336,7 +343,7 @@ function resetWizard() {
         :disabled="!canProceed"
         @click="nextStep"
       >
-        {{ currentStep === 'mode' ? '만들기 시작!' : '다음' }}
+        {{ currentStep === 'mode' ? t('creator.startGeneration') : t('common.next') }}
       </button>
     </div>
 
@@ -345,7 +352,7 @@ function resetWizard() {
       class="wizard-complete-footer"
     >
       <button type="button" class="btn btn-secondary" @click="resetWizard">
-        새로운 콘텐츠 만들기
+        {{ t('creator.createAnother') }}
       </button>
     </div>
   </div>

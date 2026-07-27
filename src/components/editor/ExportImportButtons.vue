@@ -2,6 +2,9 @@
 // Export/Import 버튼 컴포넌트
 import { ref } from 'vue'
 import { withAdminToken } from '../../services/api/adminToken'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   contentId: string
@@ -35,7 +38,7 @@ async function handleExport() {
     URL.revokeObjectURL(url)
   } catch (e) {
     console.error('Export 오류:', e)
-    alert('콘텐츠 내보내기에 실패했습니다')
+    alert(t('editor.transfer.exportFailed'))
   } finally {
     isExporting.value = false
   }
@@ -55,7 +58,7 @@ async function handleImport(event: Event) {
 
   // ZIP 파일 검증
   if (!file.name.endsWith('.zip')) {
-    importError.value = 'ZIP 파일만 가져올 수 있습니다'
+    importError.value = t('editor.transfer.zipOnly')
     return
   }
 
@@ -75,19 +78,19 @@ async function handleImport(event: Event) {
     const result = await response.json()
 
     if (result.success) {
-      let message = '콘텐츠를 성공적으로 가져왔습니다'
+      let message = t('editor.transfer.importSucceeded')
       if (result.contentId !== result.originalId) {
-        message += `\n(ID 충돌로 새 ID 생성: ${result.contentId})`
+        message += t('editor.transfer.importIdConflict', { contentId: result.contentId })
       }
       alert(message)
       // 페이지 리로드하여 새 콘텐츠 반영
       window.location.reload()
     } else {
-      importError.value = result.error || '가져오기 실패'
+      importError.value = result.error || t('editor.transfer.importFailed')
     }
   } catch (e) {
     console.error('Import 오류:', e)
-    importError.value = '서버 연결에 실패했습니다'
+    importError.value = t('editor.transfer.connectionFailed')
   } finally {
     isImporting.value = false
     // 파일 입력 초기화
@@ -109,8 +112,8 @@ async function handleImport(event: Event) {
           <polyline points="7 10 12 15 17 10" />
           <line x1="12" y1="15" x2="12" y2="3" />
         </svg>
-        <span v-if="isExporting">내보내는 중...</span>
-        <span v-else>내보내기</span>
+        <span v-if="isExporting">{{ t('editor.transfer.exporting') }}</span>
+        <span v-else>{{ t('editor.transfer.export') }}</span>
       </button>
 
       <button
@@ -123,8 +126,8 @@ async function handleImport(event: Event) {
           <polyline points="17 8 12 3 7 8" />
           <line x1="12" y1="3" x2="12" y2="15" />
         </svg>
-        <span v-if="isImporting">가져오는 중...</span>
-        <span v-else>가져오기</span>
+        <span v-if="isImporting">{{ t('editor.transfer.importing') }}</span>
+        <span v-else>{{ t('editor.transfer.import') }}</span>
       </button>
 
       <input

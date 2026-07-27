@@ -2,7 +2,10 @@
 import { computed, ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ModeToggle from './ModeToggle.vue'
+import LanguageSwitcher from './LanguageSwitcher.vue'
+import { useI18n } from '../../i18n'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const isScrolled = ref(false)
@@ -33,18 +36,18 @@ onUnmounted(() => {
 // 현재 페이지 타이틀 결정
 const pageTitle = computed(() => {
   if (route.path === '/') return ''
-  if (route.path === '/create') return '콘텐츠 만들기'
-  if (route.path.startsWith('/content/')) return '콘텐츠 학습'
+  if (route.path === '/create') return t('header.pageTitleCreate')
+  if (route.path.startsWith('/content/')) return t('header.pageTitleContent')
   return ''
 })
 
-// 네비게이션 항목
-const navItems = [
-  { name: '홈', path: '/' },
-  { name: '수학', path: '/?subject=math' },
-  { name: '과학', path: '/?subject=science' },
-  { name: '영어', path: '/?subject=english' },
-]
+// 네비게이션 항목 (언어 전환에 반응하도록 computed)
+const navItems = computed(() => [
+  { name: t('nav.home'), path: '/' },
+  { name: t('nav.math'), path: '/?subject=math' },
+  { name: t('nav.science'), path: '/?subject=science' },
+  { name: t('nav.english'), path: '/?subject=english' },
+])
 
 // 활성 네비게이션 체크
 const isNavActive = (path: string) => {
@@ -155,7 +158,7 @@ watch(
         <div class="search-wrapper" :class="{ open: isSearchOpen }">
           <button
             class="icon-button"
-            aria-label="검색"
+            :aria-label="t('header.searchLabel')"
             :aria-expanded="isSearchOpen"
             type="button"
             @click="toggleSearch"
@@ -172,21 +175,24 @@ watch(
               v-model="searchText"
               class="search-input"
               type="search"
-              placeholder="콘텐츠 검색"
-              aria-label="콘텐츠 검색"
+              :placeholder="t('header.searchPlaceholder')"
+              :aria-label="t('header.searchLabel')"
               @keydown.escape.prevent="handleSearchEscape"
             />
             <button
               v-if="searchText"
               type="button"
               class="search-clear"
-              aria-label="검색어 지우기"
+              :aria-label="t('header.clearSearch')"
               @click="clearSearch"
             >
               ×
             </button>
           </form>
         </div>
+
+        <!-- 언어 전환 -->
+        <LanguageSwitcher />
 
         <!-- 모드 토글 (정적 모드에서는 숨김) -->
         <ModeToggle v-if="canGenerateContent" />

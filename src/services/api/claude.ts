@@ -15,6 +15,7 @@ import type {
 import type { Subject, Grade, Language, Difficulty, ContentType } from '../../types/content'
 import { gradeForDifficulty, gradeLevelForGrade } from '../../types/content'
 import { buildApiUrl } from './url'
+import { t } from '../../i18n'
 import { isStaticMode } from './capabilities'
 import { withAdminToken } from './adminToken'
 import {
@@ -50,9 +51,8 @@ const POLL_INTERVAL_MS = 2000 // 2초마다 폴링
 export const GENERATION_MAX_POLL_DURATION_MS = 8 * 60 * 60 * 1000
 export const REVIEW_MAX_POLL_DURATION_MS = 35 * 60 * 1000
 
-// 공통 에러 메시지: 백엔드 연결/환경변수 안내
-const API_UNAVAILABLE_MESSAGE =
-  '백엔드 API(/api)가 연결되어 있는지 확인해주세요. 정적 배포라면 VITE_STATIC_MODE=true, 백엔드를 분리했다면 VITE_API_URL 설정이 필요합니다.'
+// 공통 에러 메시지: 백엔드 연결/환경변수 안내 (언어 전환에 맞춰 매번 새로 읽는다)
+const apiUnavailableMessage = () => t('errors.apiUnavailable')
 
 // 생성 요청 타입
 export interface ContentGenerationOptions {
@@ -85,15 +85,17 @@ async function parseJsonResponse<T>(response: Response, context: string): Promis
   if (!isJsonResponse(response)) {
     // HTML 응답 등은 body를 살짝 읽어 디버깅 단서를 남긴다
     const preview = (await response.text().catch(() => '')).slice(0, 80)
-    const hint = preview.toLowerCase().includes('<!doctype') ? ' HTML 응답이 감지되었습니다.' : ''
-    throw new Error(`API 응답이 JSON이 아닙니다 (${context}).${hint} ${API_UNAVAILABLE_MESSAGE}`)
+    const hint = preview.toLowerCase().includes('<!doctype') ? t('errors.htmlResponseHint') : ''
+    throw new Error(
+      t('errors.notJson', { context, hint, apiHint: apiUnavailableMessage() })
+    )
   }
 
   try {
     return (await response.json()) as T
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'JSON 파싱 실패'
-    throw new Error(`JSON 파싱에 실패했습니다 (${context}): ${message}`)
+    const message = error instanceof Error ? error.message : t('common.unknownError')
+    throw new Error(t('errors.jsonParseFailed', { context, message }))
   }
 }
 
@@ -104,13 +106,13 @@ async function extractErrorMessage(response: Response, context: string): Promise
     if (errorData?.error) {
       return errorData.error
     }
-    return `HTTP 오류: ${response.status}`
+    return t('errors.httpError', { status: response.status })
   }
 
   // JSON이 아닌 경우 (정적 index.html 등)에는 안내 메시지를 우선 제공
   const preview = (await response.text().catch(() => '')).slice(0, 80)
-  const hint = preview.toLowerCase().includes('<!doctype') ? ' HTML 응답이 감지되었습니다.' : ''
-  return `API 오류 응답이 JSON이 아닙니다 (${context}).${hint} ${API_UNAVAILABLE_MESSAGE}`
+  const hint = preview.toLowerCase().includes('<!doctype') ? t('errors.htmlResponseHint') : ''
+  return t('errors.notJson', { context, hint, apiHint: apiUnavailableMessage() })
 }
 
 // 상태 매핑: JobStatusResponse → GenerationProgress
@@ -145,7 +147,7 @@ export async function generateContentServerless(
   onProgress?.({
     status: 'generating',
     progress: 10,
-    message: 'AI가 콘텐츠를 만들고 있어요... (최대 5분 소요)',
+    message: t('generation.generatingWithLimit'),
     startedAt,
   })
 
@@ -156,7 +158,7 @@ export async function generateContentServerless(
     onProgress?.({
       status: 'generating',
       progress,
-      message: 'AI가 콘텐츠를 만들고 있어요... (최대 5분 소요)',
+      message: t('generation.generatingWithLimit'),
       startedAt,
     })
   }, 5000)
@@ -186,7 +188,7 @@ export async function generateContentServerless(
 
     const result = await parseJsonResponse<ServerlessGenerationResult>(response, '/api/generate')
     if (!result.success || !result.content) {
-      throw new Error(result.error || '콘텐츠 생성에 실패했습니다')
+      throw new Error(result.error || t('generation.failed'))
     }
 
     const grade = options.grade ?? (options.difficulty ? gradeForDifficulty(options.difficulty) : 'elementary-5')
@@ -210,7 +212,7 @@ export async function generateContentServerless(
     onProgress?.({
       status: 'completed',
       progress: 100,
-      message: '콘텐츠가 완성되었어요! (이 브라우저에 저장됩니다)',
+      message: t('generation.savedLocally'),
       completedAt: new Date().toISOString(),
     })
 
@@ -225,11 +227,11 @@ export async function generateContentServerless(
       },
     }
   } catch (error) {
-    const message = error instanceof Error ? error.message : '콘텐츠 생성 실패'
+    const message = error instanceof Error ? error.message : t('generation.failed')
     onProgress?.({
       status: 'error',
       progress: 0,
-      message: '생성 중 오류가 발생했어요',
+      message: t('generation.errorOccurred'),
       error: message,
     })
     return { success: false, error: message }
@@ -253,20 +255,21 @@ export class ClaudeApiClient {
       const response = await fetch(healthUrl)
 
       if (!response.ok) {
-        throw new Error(`헬스 체크 실패: ${response.status}`)
+        throw new Error(t('errors.healthCheckFailed', { status: response.status }))
       }
 
       const data = await parseJsonResponse<{ status?: string }>(response, '/api/health')
       if (data.status !== 'ok') {
-        throw new Error('헬스 체크 응답이 예상과 다릅니다')
+        throw new Error(t('errors.healthCheckUnexpected'))
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : API_UNAVAILABLE_MESSAGE
-      // 메시지에 이미 안내 문구가 포함되어 있지 않다면 붙여준다
-      if (message.includes('VITE_API_URL') || message.includes('백엔드')) {
+      const hint = apiUnavailableMessage()
+      const message = error instanceof Error ? error.message : hint
+      // 안내 문구가 이미 포함되어 있으면 중복해서 붙이지 않는다
+      if (message.includes(hint) || message.includes('VITE_API_URL')) {
         throw new Error(message)
       }
-      throw new Error(`${message}. ${API_UNAVAILABLE_MESSAGE}`)
+      throw new Error(`${message}. ${hint}`)
     }
   }
 
@@ -287,7 +290,7 @@ export class ClaudeApiClient {
       onProgress({
         status: 'preparing',
         progress: 0,
-        message: '콘텐츠 준비 중...',
+        message: t('generation.status.preparing'),
         startedAt: new Date().toISOString(),
       })
     }
@@ -314,7 +317,7 @@ export class ClaudeApiClient {
         onProgress({
           status: 'preparing',
           progress: 5,
-          message: '콘텐츠 생성을 요청하고 있어요...',
+          message: t('generation.requesting'),
         })
       }
 
@@ -338,7 +341,7 @@ export class ClaudeApiClient {
       )
 
       if (!createResult.success || !createResult.jobId) {
-        throw new Error(createResult.error || '작업 생성에 실패했습니다')
+        throw new Error(createResult.error || t('generation.createJobFailed'))
       }
 
       const jobId = createResult.jobId
@@ -349,7 +352,7 @@ export class ClaudeApiClient {
         onProgress({
           status: 'queued',
           progress: 10,
-          message: '생성 대기열에 추가되었어요...',
+          message: t('generation.status.queued'),
         })
       }
 
@@ -361,7 +364,7 @@ export class ClaudeApiClient {
         onProgress({
           status: result.success ? 'completed' : 'error',
           progress: result.success ? 100 : 0,
-          message: result.success ? '콘텐츠가 완성되었어요!' : result.error || '생성에 실패했어요',
+          message: result.success ? t('generation.completed') : result.error || t('generation.failed'),
           completedAt: new Date().toISOString(),
           error: result.error,
         })
@@ -374,14 +377,14 @@ export class ClaudeApiClient {
         onProgress({
           status: 'error',
           progress: 0,
-          message: '생성 중 오류가 발생했어요',
-          error: error instanceof Error ? error.message : '알 수 없는 오류',
+          message: t('generation.errorOccurred'),
+          error: error instanceof Error ? error.message : t('common.unknownError'),
         })
       }
 
       return {
         success: false,
-        error: error instanceof Error ? error.message : '콘텐츠 생성 실패',
+        error: error instanceof Error ? error.message : t('generation.failed'),
       }
     }
   }
@@ -436,7 +439,7 @@ export class ClaudeApiClient {
         return {
           success: false,
           jobId,
-          error: status.error || '콘텐츠 생성에 실패했습니다',
+          error: status.error || t('generation.failed'),
         }
       }
 
@@ -448,7 +451,7 @@ export class ClaudeApiClient {
     return {
       success: false,
       jobId,
-      error: '콘텐츠 생성 시간이 초과되었습니다. 다시 시도해주세요.',
+      error: t('generation.timedOut'),
     }
   }
 
@@ -459,7 +462,7 @@ export class ClaudeApiClient {
       const response = await fetch(statusUrl)
 
       if (!response.ok) {
-        throw new Error('상태 조회 실패')
+        throw new Error(t('generation.statusFetchFailed'))
       }
 
       const data = await parseJsonResponse<JobStatusResponse>(
@@ -471,7 +474,7 @@ export class ClaudeApiClient {
       return {
         status: 'error',
         progress: 0,
-        message: '상태 조회 중 오류 발생',
+        message: t('generation.statusFetchError'),
       }
     }
   }
@@ -522,7 +525,7 @@ export async function reviewContent(
   if (isStaticMode) {
     return {
       success: false,
-      error: '정적 배포 모드에서는 리뷰 기능을 사용할 수 없습니다',
+      error: t('generation.reviewUnavailableStatic'),
     }
   }
 
@@ -531,7 +534,7 @@ export async function reviewContent(
     onProgress({
       status: 'reviewing',
       progress: 0,
-      message: '콘텐츠 품질 검토를 시작합니다...',
+      message: t('generation.reviewStarted'),
     })
   }
 
@@ -557,7 +560,7 @@ export async function reviewContent(
     )
 
     if (!createResult.success || !createResult.jobId) {
-      throw new Error(createResult.error || '리뷰 작업 생성에 실패했습니다')
+      throw new Error(createResult.error || t('generation.reviewJobCreateFailed'))
     }
 
     const jobId = createResult.jobId
@@ -571,7 +574,7 @@ export async function reviewContent(
       const statusResponse = await fetch(statusUrl)
 
       if (!statusResponse.ok) {
-        throw new Error('리뷰 상태 조회 실패')
+        throw new Error(t('generation.reviewStatusFetchFailed'))
       }
 
       const status = await parseJsonResponse<ReviewStatusResponse>(
@@ -603,7 +606,7 @@ export async function reviewContent(
       if (status.status === 'failed') {
         return {
           success: false,
-          error: status.error || '리뷰에 실패했습니다',
+          error: status.error || t('generation.reviewFailed'),
         }
       }
 
@@ -614,21 +617,21 @@ export async function reviewContent(
     // 타임아웃
     return {
       success: false,
-      error: '리뷰 시간이 초과되었습니다',
+      error: t('generation.reviewTimedOut'),
     }
   } catch (error) {
     if (onProgress) {
       onProgress({
         status: 'error',
         progress: 0,
-        message: '리뷰 중 오류가 발생했습니다',
-        error: error instanceof Error ? error.message : '알 수 없는 오류',
+        message: t('generation.reviewErrorOccurred'),
+        error: error instanceof Error ? error.message : t('common.unknownError'),
       })
     }
 
     return {
       success: false,
-      error: error instanceof Error ? error.message : '리뷰 실패',
+      error: error instanceof Error ? error.message : t('generation.reviewFailed'),
     }
   }
 }

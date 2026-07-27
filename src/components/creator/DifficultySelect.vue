@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { Difficulty } from '../../types/content'
-import { DIFFICULTY_LABELS, DIFFICULTY_EMOJI } from '../../types/content'
+import { DIFFICULTY_EMOJI, difficultyLabel } from '../../i18n/labels'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 // Props
 const props = defineProps<{
@@ -13,39 +17,41 @@ const emit = defineEmits<{
 }>()
 
 // 난이도 옵션 (학년 대신 사용)
-const difficulties: {
-  value: Difficulty
-  label: string
-  emoji: string
-  desc: string
-  example: string
-  mappedGrade: string
-}[] = [
+const difficulties = computed<
+  {
+    value: Difficulty
+    label: string
+    emoji: string
+    desc: string
+    example: string
+    mappedGrade: string
+  }[]
+>(() => [
   {
     value: 'easy',
-    label: DIFFICULTY_LABELS.easy,
+    label: difficultyLabel('easy'),
     emoji: DIFFICULTY_EMOJI.easy,
-    desc: '처음 배우는 수준',
-    example: '초등학교 고학년 수준의 언어와 사례',
+    desc: t('creator.difficulty.easyDesc'),
+    example: t('creator.difficulty.easyExample'),
     mappedGrade: 'elementary-5',
   },
   {
     value: 'medium',
-    label: DIFFICULTY_LABELS.medium,
+    label: difficultyLabel('medium'),
     emoji: DIFFICULTY_EMOJI.medium,
-    desc: '기본기를 다지는 수준',
-    example: '중학교 수준의 언어와 사례',
+    desc: t('creator.difficulty.mediumDesc'),
+    example: t('creator.difficulty.mediumExample'),
     mappedGrade: 'middle-2',
   },
   {
     value: 'hard',
-    label: DIFFICULTY_LABELS.hard,
+    label: difficultyLabel('hard'),
     emoji: DIFFICULTY_EMOJI.hard,
-    desc: '응용까지 도전',
-    example: '고등학교 수준의 언어와 사례',
+    desc: t('creator.difficulty.hardDesc'),
+    example: t('creator.difficulty.hardExample'),
     mappedGrade: 'high-2',
   },
-]
+])
 
 function selectDifficulty(d: Difficulty) {
   emit('update:modelValue', d)
@@ -58,9 +64,9 @@ function isSelected(d: Difficulty) {
 
 <template>
   <div class="difficulty-select">
-    <label class="input-label">난이도를 골라주세요</label>
+    <label class="input-label">{{ t('creator.difficulty.label') }}</label>
     <p class="input-description">
-      학습자 수준에 맞춰 언어와 사례를 조절해요. 자격증·코딩 같은 비학교 과목도 같은 기준을 써요.
+      {{ t('creator.difficulty.description') }}
     </p>
 
     <div class="difficulty-grid">

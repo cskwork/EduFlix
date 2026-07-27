@@ -9,6 +9,7 @@ import {
   SUBJECT_GENERATION_HINTS,
   ESTIMATED_GENERATION_TIME,
 } from '../../src/composables/useAIGeneration'
+import { subjectLabel } from '../../src/i18n/labels'
 
 // generateContent mock
 vi.mock('../../src/services/api/claude', () => ({
@@ -449,7 +450,7 @@ describe('content store', () => {
       const mathGroup = groups.find((g) => g.subject === 'math')
       expect(mathGroup).toBeDefined()
       expect(mathGroup?.contents).toHaveLength(2)
-      expect(mathGroup?.subjectLabel).toBe('수학')
+      expect(mathGroup?.subjectLabel).toBe(subjectLabel('math'))
 
       const scienceGroup = groups.find((g) => g.subject === 'science')
       expect(scienceGroup).toBeDefined()

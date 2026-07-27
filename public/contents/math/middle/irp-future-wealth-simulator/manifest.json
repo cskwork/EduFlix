@@ -18,5 +18,11 @@
     "경제교육",
     "자산관리",
     "중학교수학"
-  ]
+  ],
+  "translations": {
+    "en": {
+      "title": "Time Travel Wealth Simulator: What's in My Wallet in 30 Years?",
+      "description": "A discovery lesson where you operate a 3D time-travel simulation of the three IRP effects: mandatory transfer, tax credits and tax deferral."
+    }
+  }
 }

@@ -8,7 +8,6 @@ import type {
   Subject,
   GradeLevel,
 } from '../types/content'
-import { SUBJECT_LABELS } from '../types/content'
 import {
   getRecommendations,
   recordContentClick,
@@ -23,6 +22,9 @@ import {
   calculateSortScore,
 } from '../services/clickTracker'
 import { listLocalContents, toManifest } from '../services/content/localContent'
+import { t } from '../i18n'
+import { subjectLabel } from '../i18n/labels'
+import { localizedDescription, localizedTitle } from '../i18n/content'
 
 export const useContentStore = defineStore('content', () => {
   // 상태
@@ -65,12 +67,12 @@ export const useContentStore = defineStore('content', () => {
   const contentCards = computed<ContentCardData[]>(() => {
     return filteredContents.value.map((c) => ({
       id: c.id,
-      title: c.title,
+      title: localizedTitle(c),
       thumbnail: c.thumbnail,
       subject: c.subject,
       gradeLevel: c.gradeLevel,
       type: c.type,
-      description: c.description,
+      description: localizedDescription(c),
     }))
   })
 
@@ -95,15 +97,15 @@ export const useContentStore = defineStore('content', () => {
 
         groups.push({
           subject,
-          subjectLabel: SUBJECT_LABELS[subject] ?? subject,
+          subjectLabel: subjectLabel(subject),
           contents: sortedContents.map((c) => ({
             id: c.id,
-            title: c.title,
+            title: localizedTitle(c),
             thumbnail: c.thumbnail,
             subject: c.subject,
             gradeLevel: c.gradeLevel,
             type: c.type,
-            description: c.description,
+            description: localizedDescription(c),
           })),
         })
       }
@@ -128,12 +130,12 @@ export const useContentStore = defineStore('content', () => {
       if (content) {
         recommendedContents.push({
           id: content.id,
-          title: content.title,
+          title: localizedTitle(content),
           thumbnail: content.thumbnail,
           subject: content.subject,
           gradeLevel: content.gradeLevel,
           type: content.type,
-          description: content.description,
+          description: localizedDescription(content),
         })
       }
     }
@@ -142,7 +144,7 @@ export const useContentStore = defineStore('content', () => {
 
     return {
       subject: 'math', // 임시 - 실제로는 혼합 과목
-      subjectLabel: '🔥 인기 콘텐츠',
+      subjectLabel: t('home.popularRow'),
       contents: recommendedContents,
     }
   })
@@ -169,13 +171,13 @@ export const useContentStore = defineStore('content', () => {
         cache: 'no-cache',
       })
       if (!response.ok) {
-        throw new Error('콘텐츠 카탈로그를 불러올 수 없습니다')
+        throw new Error(t('errors.catalogLoadFailed'))
       }
       const catalog = await response.json()
       // 정적 배포에서 브라우저에 보관한 생성 콘텐츠를 서버 카탈로그 앞에 붙인다
       contents.value = [...(await loadLocalManifests()), ...(catalog.contents || [])]
     } catch (e) {
-      error.value = e instanceof Error ? e.message : '알 수 없는 오류가 발생했습니다'
+      error.value = e instanceof Error ? e.message : t('common.unknownError')
       // 개발 환경에서 더미 데이터 사용
       contents.value = [...(await loadLocalManifests()), ...getDummyContents()]
     } finally {
@@ -287,11 +289,18 @@ function normalizeSearchText(value: string) {
 }
 
 function matchesSearchQuery(content: ContentManifest, query: string) {
+  // 원문과 번역 제목을 모두 검색 대상에 넣어, 어떤 언어로 입력해도 찾히게 한다
+  const translated = Object.values(content.translations ?? {}).flatMap((entry) => [
+    entry.title ?? '',
+    entry.description ?? '',
+  ])
+
   const parts = [
     content.title,
     content.description ?? '',
+    ...translated,
     content.subject ?? '',
-    SUBJECT_LABELS[content.subject] ?? '',
+    subjectLabel(content.subject),
     (content.tags ?? []).join(' '),
   ]
 

@@ -2,6 +2,9 @@
 // 스타일 편집 컴포넌트 (색상, 폰트 크기)
 import { computed } from 'vue'
 import type { EditableStyle } from '../../types/editor'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   styles: EditableStyle[]
@@ -27,14 +30,14 @@ const groupedStyles = computed(() => {
 })
 
 // 카테고리 라벨
-const categoryLabels: Record<string, string> = {
-  primary: '주요 색상',
-  secondary: '보조 색상',
-  accent: '강조 색상',
-  background: '배경',
-  text: '텍스트',
-  other: '기타'
-}
+const categoryLabels = computed<Record<string, string>>(() => ({
+  primary: t('editor.style.category.primary'),
+  secondary: t('editor.style.category.secondary'),
+  accent: t('editor.style.category.accent'),
+  background: t('editor.style.category.background'),
+  text: t('editor.style.category.text'),
+  other: t('editor.style.category.other')
+}))
 
 // 색상 변경 핸들러
 function handleColorChange(style: EditableStyle, newValue: string) {
@@ -52,7 +55,7 @@ const colorPresets = [
 <template>
   <div class="style-editor">
     <div v-if="styles.length === 0" class="empty-state">
-      <p>편집 가능한 스타일이 없습니다</p>
+      <p>{{ t('editor.style.empty') }}</p>
     </div>
 
     <div v-else class="style-groups">
@@ -118,10 +121,10 @@ const colorPresets = [
 
       <!-- 폰트 크기 조절 -->
       <div class="style-group">
-        <h3 class="group-title">폰트 크기</h3>
+        <h3 class="group-title">{{ t('editor.style.fontSizeTitle') }}</h3>
         <div class="font-size-controls">
           <div class="font-size-item">
-            <label>콘텐츠 전체</label>
+            <label>{{ t('editor.style.fontSizeLabel') }}</label>
             <div class="size-slider">
               <span class="size-label">A</span>
               <input
@@ -135,7 +138,7 @@ const colorPresets = [
               <span class="size-value">100%</span>
               <span class="size-label large">A</span>
             </div>
-            <p class="size-hint">실시간 미리보기는 현재 세션에만 적용됩니다</p>
+            <p class="size-hint">{{ t('editor.style.fontSizeHint') }}</p>
           </div>
         </div>
       </div>

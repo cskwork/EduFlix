@@ -4,6 +4,9 @@ import { useRoute } from 'vue-router'
 import AppHeader from './components/common/AppHeader.vue'
 import TabNavigation from './components/tabs/TabNavigation.vue'
 import { useKeyboardNavigation } from './composables/useKeyboardNavigation'
+import { useI18n } from './i18n'
+
+const { t } = useI18n()
 
 // 키보드 네비게이션 활성화
 const { handleSkipLink } = useKeyboardNavigation()
@@ -20,7 +23,7 @@ const showTabs = computed(() => route.meta.showTabs === true)
       class="skip-link"
       @click.prevent="handleSkipLink('main-content')"
     >
-      메인 콘텐츠로 건너뛰기
+      {{ t('app.skipToContent') }}
     </a>
 
     <AppHeader v-if="!isContentPage" />

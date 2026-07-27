@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "3D 공간에서 두 벡터를 합성하며 벡터 덧셈의 원리를 배워보세요!",
   "thumbnail": "/contents/math/high/3d-vectors/assets/thumbnail.svg",
-  "path": "/contents/math/high/3d-vectors/index.html"
+  "path": "/contents/math/high/3d-vectors/index.html",
+  "translations": {
+    "en": {
+      "title": "3D Vectors: Combining Forces",
+      "description": "Add two vectors in 3D space and learn how vector addition works!"
+    }
+  }
 }

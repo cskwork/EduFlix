@@ -17,5 +17,11 @@
     "초등학교 4학년",
     "생명",
     "게임"
-  ]
+  ],
+  "translations": {
+    "en": {
+      "title": "Secrets of Animal Village: The Adaptation Mission",
+      "description": "Meet animal friends in a game world and learn, through card matching and quizzes, how their bodies and behaviour adapted to their habitats."
+    }
+  }
 }

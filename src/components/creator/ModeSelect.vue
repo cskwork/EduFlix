@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { CreatorMode } from '../../types/generation'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 // Props
 const props = defineProps<{
@@ -12,28 +16,30 @@ const emit = defineEmits<{
 }>()
 
 // 모드 옵션
-const modes: {
-  value: CreatorMode
-  label: string
-  description: string
-  icon: string
-  color: string
-}[] = [
+const modes = computed<
+  {
+    value: CreatorMode
+    label: string
+    description: string
+    icon: string
+    color: string
+  }[]
+>(() => [
   {
     value: 'interest',
-    label: '관심사로 만들기',
-    description: '좋아하는 것을 고르면 AI가 학습 콘텐츠를 만들어요',
+    label: t('creator.mode.interestLabel'),
+    description: t('creator.mode.interestDescription'),
     icon: 'sparkles',
     color: 'var(--color-brand-primary)',
   },
   {
     value: 'problem',
-    label: '내 문제로 만들기',
-    description: '내가 갖고 있는 문제를 재미있게 변환해요',
+    label: t('creator.mode.problemLabel'),
+    description: t('creator.mode.problemDescription'),
     icon: 'wand',
     color: 'var(--color-subject-science)',
   },
-]
+])
 
 function selectMode(mode: CreatorMode) {
   emit('update:modelValue', mode)
@@ -46,8 +52,8 @@ function isSelected(mode: CreatorMode) {
 
 <template>
   <div class="mode-select">
-    <label class="input-label">어떻게 만들까요?</label>
-    <p class="input-description">두 가지 방법 중 하나를 골라주세요.</p>
+    <label class="input-label">{{ t('creator.mode.label') }}</label>
+    <p class="input-description">{{ t('creator.mode.description') }}</p>
 
     <div class="modes-grid">
       <button

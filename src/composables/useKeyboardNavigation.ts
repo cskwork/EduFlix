@@ -1,6 +1,7 @@
 // 키보드 네비게이션 컴포저블
 import { onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { t } from '../i18n'
 
 export interface KeyboardNavigationOptions {
   enableGlobalShortcuts?: boolean
@@ -40,8 +41,9 @@ export function useKeyboardNavigation(options: KeyboardNavigationOptions = {}) {
         case '/': {
           // /: 검색 포커스
           event.preventDefault()
+          // aria-label은 언어에 따라 바뀌므로 구조 기반 선택자를 쓴다
           const searchButton = document.querySelector(
-            '.icon-button[aria-label="검색"]'
+            '.search-wrapper .icon-button'
           ) as HTMLElement
           const searchInput = document.querySelector('.search-input') as
             | { focus?: () => void; offsetWidth?: number }
@@ -78,12 +80,14 @@ export function useKeyboardNavigation(options: KeyboardNavigationOptions = {}) {
         case '?':
           // ?: 키보드 단축키 도움말 (미구현)
           console.info(
-            '키보드 단축키:\n' +
-              'h: 홈으로 이동\n' +
-              'c: 창조 모드\n' +
-              '/: 검색\n' +
-              'ESC: 이전으로/전체화면 종료\n' +
-              '화살표: 콘텐츠 탐색'
+            [
+              t('keyboard.helpTitle'),
+              t('keyboard.helpHome'),
+              t('keyboard.helpCreate'),
+              t('keyboard.helpSearch'),
+              t('keyboard.helpEscape'),
+              t('keyboard.helpArrows'),
+            ].join('\n')
           )
           break
       }

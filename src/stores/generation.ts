@@ -13,6 +13,7 @@ import type {
 } from '../types/generation'
 import type { Subject, Grade, Language, Difficulty, ContentManifest } from '../types/content'
 import { generateContent, reviewContent, type ProgressCallback, type ReviewProgressCallback } from '../services/api/claude'
+import { t } from '../i18n'
 import { useContentStore } from './content'
 
 export const useGenerationStore = defineStore('generation', () => {
@@ -108,7 +109,7 @@ export const useGenerationStore = defineStore('generation', () => {
     currentProgress.value = {
       status: 'preparing',
       progress: 0,
-      message: '콘텐츠 준비 중...',
+      message: t('generation.status.preparing'),
       startedAt: new Date().toISOString(),
     }
     currentJobId.value = null
@@ -140,7 +141,7 @@ export const useGenerationStore = defineStore('generation', () => {
           console.warn('콘텐츠 ID가 누락되어 카탈로그에 추가되지 않았습니다')
           finalResult = {
             ...result,
-            warning: '콘텐츠가 생성되었으나 카탈로그에 추가되지 않았습니다 (ID 누락)',
+            warning: t('generation.missingContentId'),
           }
         } else {
           // Option 1은 subject/grade가 확정. Option 2는 서버가 AI 추론 subject를 반영한
@@ -195,7 +196,7 @@ export const useGenerationStore = defineStore('generation', () => {
 
       return finalResult
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류'
+      const errorMessage = error instanceof Error ? error.message : t('common.unknownError')
 
       currentProgress.value = {
         status: 'error',
@@ -284,7 +285,7 @@ export const useGenerationStore = defineStore('generation', () => {
     reviewProgress.value = {
       status: 'reviewing',
       progress: 0,
-      message: '리뷰 준비 중...',
+      message: t('generation.reviewing'),
     }
 
     try {
@@ -294,21 +295,21 @@ export const useGenerationStore = defineStore('generation', () => {
         reviewProgress.value = {
           status: 'completed',
           progress: 100,
-          message: '리뷰가 완료되었습니다!',
+          message: t('generation.reviewCompleted'),
           issues: result.issues,
         }
       } else {
         reviewProgress.value = {
           status: 'error',
           progress: 0,
-          message: result.error || '리뷰에 실패했습니다',
+          message: result.error || t('generation.reviewFailed'),
           error: result.error,
         }
       }
 
       return result
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류'
+      const errorMessage = error instanceof Error ? error.message : t('common.unknownError')
       reviewProgress.value = {
         status: 'error',
         progress: 0,

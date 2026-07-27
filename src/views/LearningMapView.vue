@@ -8,7 +8,10 @@ import ErrorMessage from '../components/common/ErrorMessage.vue'
 import IconSet from '../components/icons/IconSet.vue'
 import type { KnowledgeNode } from '../types/knowledge-map'
 import type { Subject } from '../types/content'
+import { useI18n } from '../i18n'
+import { learningStatusLabel } from '../i18n/labels'
 
+const { t } = useI18n()
 const learningStore = useLearningStore()
 const router = useRouter()
 
@@ -44,24 +47,24 @@ function handleNodeClick(node: KnowledgeNode) {
     <header class="map-header">
       <h1 class="map-title">
         <IconSet name="learning-map" :size="32" class="title-icon" />
-        학습맵
+        {{ t('learningMap.title') }}
       </h1>
-      <p class="map-subtitle">순차적 학습 경로를 따라 지식을 쌓아가세요</p>
+      <p class="map-subtitle">{{ t('learningMap.subtitle') }}</p>
     </header>
 
     <!-- 로딩 상태 -->
     <LoadingSpinner
       v-if="learningStore.isLoading"
       size="lg"
-      message="학습맵을 불러오는 중..."
+      :message="t('learningMap.loading')"
     />
 
     <!-- 에러 상태 -->
     <ErrorMessage
       v-else-if="learningStore.error"
-      title="학습맵을 불러올 수 없습니다"
+      :title="t('learningMap.errorTitle')"
       :message="learningStore.error"
-      retry-label="다시 시도"
+      :retry-label="t('common.retry')"
       @retry="learningStore.loadKnowledgeMap()"
     />
 
@@ -71,19 +74,19 @@ function handleNodeClick(node: KnowledgeNode) {
       <div class="status-legend">
         <div class="legend-item">
           <IconSet name="completed" :size="20" class="legend-icon" />
-          <span class="legend-label">완료</span>
+          <span class="legend-label">{{ learningStatusLabel('completed') }}</span>
         </div>
         <div class="legend-item">
           <IconSet name="in-progress" :size="20" class="legend-icon" />
-          <span class="legend-label">진행 중</span>
+          <span class="legend-label">{{ learningStatusLabel('in_progress') }}</span>
         </div>
         <div class="legend-item">
           <IconSet name="available" :size="20" class="legend-icon" />
-          <span class="legend-label">학습 가능</span>
+          <span class="legend-label">{{ learningStatusLabel('available') }}</span>
         </div>
         <div class="legend-item">
           <IconSet name="locked" :size="20" class="legend-icon" />
-          <span class="legend-label">잠금</span>
+          <span class="legend-label">{{ learningStatusLabel('locked') }}</span>
         </div>
       </div>
 

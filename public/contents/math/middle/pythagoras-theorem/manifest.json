@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "직각삼각형의 변들 사이에는 어떤 비밀이 있을까요? 직접 움직여보며 피타고라스의 정리를 발견해보세요.",
   "thumbnail": "/contents/math/middle/pythagoras-theorem/assets/thumbnail.svg",
-  "path": "/contents/math/middle/pythagoras-theorem/index.html"
+  "path": "/contents/math/middle/pythagoras-theorem/index.html",
+  "translations": {
+    "en": {
+      "title": "The Pythagorean Theorem",
+      "description": "What secret hides between the sides of a right triangle? Move the triangle yourself and discover the Pythagorean theorem."
+    }
+  }
 }

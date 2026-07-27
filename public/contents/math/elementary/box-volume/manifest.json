@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "단위 큐브를 쌓아 직육면체의 부피 공식(가로x세로x높이)을 직관적으로 이해하는 인터랙티브 콘텐츠",
   "thumbnail": "/contents/math/elementary/box-volume/assets/thumbnail.svg",
-  "path": "/contents/math/elementary/box-volume/index.html"
+  "path": "/contents/math/elementary/box-volume/index.html",
+  "translations": {
+    "en": {
+      "title": "Volume of a Box: The Secret Inside",
+      "description": "Stack unit cubes to build an intuitive feel for the box volume formula (length x width x height)."
+    }
+  }
 }

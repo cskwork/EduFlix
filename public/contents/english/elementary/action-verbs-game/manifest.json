@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "동작 동사(run, walk, jump 등)를 움직임/만들기/감정 카테고리로 분류하는 드래그 앤 드롭 게임",
   "thumbnail": "assets/thumbnail.svg",
-  "path": "english/elementary/action-verbs-game"
+  "path": "english/elementary/action-verbs-game",
+  "translations": {
+    "en": {
+      "title": "Action Verb Sorting Game",
+      "description": "A Phaser drag-and-drop game that sorts action verbs (run, walk, jump and more) into movement, making and feeling categories."
+    }
+  }
 }

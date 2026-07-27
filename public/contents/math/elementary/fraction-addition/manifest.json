@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "서로 다른 분모를 가진 분수의 덧셈 방법을 시각적으로 이해하는 인터랙티브 학습",
   "thumbnail": "/contents/math/elementary/fraction-addition/assets/thumbnail.svg",
-  "path": "/contents/math/elementary/fraction-addition/index.html"
+  "path": "/contents/math/elementary/fraction-addition/index.html",
+  "translations": {
+    "en": {
+      "title": "Adding Fractions with Unlike Denominators",
+      "description": "See, step by step, how to add fractions that do not share a denominator."
+    }
+  }
 }

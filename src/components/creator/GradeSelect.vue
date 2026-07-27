@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import type { Grade, GradeLevel } from '../../types/content'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 // Props
 const props = defineProps<{
@@ -16,38 +19,31 @@ const emit = defineEmits<{
 const selectedLevel = ref<GradeLevel | null>(null)
 
 // 학교급 옵션
-const levels: { value: GradeLevel; label: string; icon: string }[] = [
-  { value: 'elementary', label: '초등학교', icon: '🏫' },
-  { value: 'middle', label: '중학교', icon: '🎒' },
-  { value: 'high', label: '고등학교', icon: '🎓' },
-]
+const levels = computed<{ value: GradeLevel; label: string; icon: string }[]>(() => [
+  { value: 'elementary', label: t('creator.grade.elementary'), icon: '🏫' },
+  { value: 'middle', label: t('creator.grade.middle'), icon: '🎒' },
+  { value: 'high', label: t('creator.grade.high'), icon: '🎓' },
+])
 
-// 학교급별 학년 옵션
-const gradesByLevel: Record<GradeLevel, { value: Grade; label: string }[]> = {
-  elementary: [
-    { value: 'elementary-1', label: '1학년' },
-    { value: 'elementary-2', label: '2학년' },
-    { value: 'elementary-3', label: '3학년' },
-    { value: 'elementary-4', label: '4학년' },
-    { value: 'elementary-5', label: '5학년' },
-    { value: 'elementary-6', label: '6학년' },
-  ],
-  middle: [
-    { value: 'middle-1', label: '1학년' },
-    { value: 'middle-2', label: '2학년' },
-    { value: 'middle-3', label: '3학년' },
-  ],
-  high: [
-    { value: 'high-1', label: '1학년' },
-    { value: 'high-2', label: '2학년' },
-    { value: 'high-3', label: '3학년' },
-  ],
+// 학교급별 학년 수
+const gradeCountByLevel: Record<GradeLevel, number> = {
+  elementary: 6,
+  middle: 3,
+  high: 3,
 }
 
 // 현재 선택된 학교급의 학년 옵션
-const currentGrades = computed(() => {
-  if (!selectedLevel.value) return []
-  return gradesByLevel[selectedLevel.value]
+const currentGrades = computed<{ value: Grade; label: string }[]>(() => {
+  const level = selectedLevel.value
+  if (!level) return []
+
+  return Array.from({ length: gradeCountByLevel[level] }, (_, index) => {
+    const number = index + 1
+    return {
+      value: `${level}-${number}` as Grade,
+      label: t('creator.grade.gradeNumber', { number }),
+    }
+  })
 })
 
 // 학교급 선택
@@ -80,8 +76,8 @@ watch(
 
 <template>
   <div class="grade-select">
-    <label class="input-label">학년을 선택해주세요</label>
-    <p class="input-description">학년에 맞는 난이도로 콘텐츠를 만들어요.</p>
+    <label class="input-label">{{ t('creator.grade.label') }}</label>
+    <p class="input-description">{{ t('creator.grade.description') }}</p>
 
     <div class="levels-row">
       <button

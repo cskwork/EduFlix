@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "재미있는 퍼즐로 일차방정식과 연립방정식을 풀어보세요!",
   "thumbnail": "/contents/math/middle/equation-puzzle/assets/thumbnail.svg",
-  "path": "/contents/math/middle/equation-puzzle/index.html"
+  "path": "/contents/math/middle/equation-puzzle/index.html",
+  "translations": {
+    "en": {
+      "title": "Equation Puzzle",
+      "description": "Solve linear equations and systems of equations through playful puzzles!"
+    }
+  }
 }

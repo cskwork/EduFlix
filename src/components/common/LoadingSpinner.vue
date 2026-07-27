@@ -1,5 +1,9 @@
 <script setup lang="ts">
 // 로딩 스피너 컴포넌트
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
+
 defineProps<{
   size?: 'sm' | 'md' | 'lg'
   message?: string
@@ -14,7 +18,7 @@ defineProps<{
       <div class="spinner-ring"></div>
     </div>
     <p v-if="message" class="loading-message">{{ message }}</p>
-    <span class="sr-only">로딩 중...</span>
+    <span class="sr-only">{{ t('common.loading') }}</span>
   </div>
 </template>
 

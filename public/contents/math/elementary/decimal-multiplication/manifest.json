@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "소수점 위치 변화를 시각화하여 소수 곱셈의 원리를 이해하는 인터랙티브 콘텐츠",
   "thumbnail": "/contents/math/elementary/decimal-multiplication/assets/thumbnail.svg",
-  "path": "/contents/math/elementary/decimal-multiplication/index.html"
+  "path": "/contents/math/elementary/decimal-multiplication/index.html",
+  "translations": {
+    "en": {
+      "title": "Multiplying Decimals",
+      "description": "Watch the decimal point move and understand exactly how decimal multiplication works."
+    }
+  }
 }

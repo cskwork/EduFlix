@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "동전을 많이 던지면 앞면과 뒷면의 비율은 어떻게 변할까요? 큰 수의 법칙을 실험해보세요.",
   "thumbnail": "/contents/math/middle/probability-coin/assets/thumbnail.svg",
-  "path": "/contents/math/middle/probability-coin/index.html"
+  "path": "/contents/math/middle/probability-coin/index.html",
+  "translations": {
+    "en": {
+      "title": "The World of Probability: Coin Toss",
+      "description": "What happens to the ratio of heads and tails as you toss more coins? Run the experiment and meet the law of large numbers."
+    }
+  }
 }

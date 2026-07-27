@@ -13,12 +13,17 @@ import {
 } from '../services/content/localContent'
 import { useViewportHeight } from '../composables/useViewportHeight'
 import {
-  SUBJECT_LABELS,
-  GRADE_LEVEL_LABELS,
-  CONTENT_TYPE_LABELS,
-} from '../types/content'
+  contentTypeLabel,
+  difficultyLabel,
+  gradeLevelLabel,
+  subjectLabel as resolveSubjectLabel,
+} from '../i18n/labels'
+import { localizedDescription, localizedTitle } from '../i18n/content'
+import { useI18n } from '../i18n'
 import type { ContentManifest } from '../types/content'
 import type { EditableContent } from '../types/editor'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   id: string
@@ -53,20 +58,21 @@ const contentSrc = computed(() => {
 })
 
 // 콘텐츠 메타데이터
-const subjectLabel = computed(() => {
-  if (!content.value) return ''
-  return SUBJECT_LABELS[content.value.subject]
-})
+const subjectBadge = computed(() =>
+  content.value ? resolveSubjectLabel(content.value.subject) : ''
+)
 
-const gradeLevelLabel = computed(() => {
-  if (!content.value) return ''
-  return GRADE_LEVEL_LABELS[content.value.gradeLevel]
-})
+const gradeBadge = computed(() =>
+  content.value ? gradeLevelLabel(content.value.gradeLevel) : ''
+)
 
-const contentTypeLabel = computed(() => {
-  if (!content.value) return ''
-  return CONTENT_TYPE_LABELS[content.value.type]
-})
+const typeBadge = computed(() => (content.value ? contentTypeLabel(content.value.type) : ''))
+
+// 카탈로그 메타데이터는 현재 UI 언어 번역이 있으면 그것을 쓴다
+const displayTitle = computed(() => (content.value ? localizedTitle(content.value) : ''))
+const displayDescription = computed(() =>
+  content.value ? localizedDescription(content.value) : ''
+)
 
 const subjectColorClass = computed(() => {
   if (!content.value) return ''
@@ -84,7 +90,7 @@ async function loadContent() {
   if (isLocalContentId(props.id)) {
     const local = await getLocalContent(props.id).catch(() => undefined)
     if (!local) {
-      error.value = '콘텐츠를 찾을 수 없습니다'
+      error.value = t('errors.contentNotFound')
       isLoading.value = false
       return
     }
@@ -111,7 +117,7 @@ async function loadContent() {
   }
 
   if (!found) {
-    error.value = '콘텐츠를 찾을 수 없습니다'
+    error.value = t('errors.contentNotFound')
     isLoading.value = false
     return
   }
@@ -180,7 +186,7 @@ onUnmounted(() => {
   <div class="content-view">
     <!-- 상단 바 -->
     <header class="content-header">
-      <button class="back-btn" aria-label="뒤로 가기" @click="goBack">
+      <button class="back-btn" :aria-label="t('contentView.back')" @click="goBack">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -198,11 +204,11 @@ onUnmounted(() => {
       </button>
 
       <div v-if="content" class="content-info">
-        <h1 class="content-title">{{ content.title }}</h1>
+        <h1 class="content-title">{{ displayTitle }}</h1>
         <div class="content-meta">
-          <span class="badge" :class="subjectColorClass">{{ subjectLabel }}</span>
-          <span class="badge badge-outline">{{ gradeLevelLabel }}</span>
-          <span class="badge badge-outline">{{ contentTypeLabel }}</span>
+          <span class="badge" :class="subjectColorClass">{{ subjectBadge }}</span>
+          <span class="badge badge-outline">{{ gradeBadge }}</span>
+          <span class="badge badge-outline">{{ typeBadge }}</span>
         </div>
       </div>
 
@@ -210,8 +216,8 @@ onUnmounted(() => {
         <button
           class="action-btn edit-btn"
           :class="{ active: isEditing }"
-          aria-label="편집 모드"
-          title="콘텐츠 편집"
+          :aria-label="t('contentView.editMode')"
+          :title="t('contentView.editContent')"
           @click="toggleEditMode"
         >
           <svg
@@ -229,7 +235,11 @@ onUnmounted(() => {
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
           </svg>
         </button>
-        <button class="action-btn" aria-label="전체화면" @click="toggleFullscreen">
+        <button
+          class="action-btn"
+          :aria-label="t('contentView.fullscreen')"
+          @click="toggleFullscreen"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -253,15 +263,15 @@ onUnmounted(() => {
     <!-- 로딩 상태 -->
     <div v-if="isLoading" class="content-loading">
       <div class="loading-spinner"></div>
-      <p>콘텐츠 정보 로딩 중...</p>
+      <p>{{ t('contentView.loading') }}</p>
     </div>
 
     <!-- 에러 상태 -->
     <div v-else-if="error" class="content-error">
       <div class="error-icon">!</div>
-      <h2>콘텐츠를 불러올 수 없습니다</h2>
+      <h2>{{ t('contentView.errorTitle') }}</h2>
       <p>{{ error }}</p>
-      <button class="retry-btn" @click="goBack">홈으로 돌아가기</button>
+      <button class="retry-btn" @click="goBack">{{ t('contentView.goHome') }}</button>
     </div>
 
     <!-- 콘텐츠 뷰어 -->
@@ -269,7 +279,7 @@ onUnmounted(() => {
       <ContentViewer
         ref="viewerRef"
         :src="contentSrc"
-        :title="content?.title || '콘텐츠'"
+        :title="displayTitle || t('contentView.fallbackTitle')"
         :edit-mode="isEditing"
         @load="handleViewerLoad"
         @error="handleViewerError"
@@ -287,28 +297,28 @@ onUnmounted(() => {
     </aside>
 
     <!-- 콘텐츠 설명 (편집 모드가 아닐 때만 표시) -->
-    <aside v-else-if="content && content.description && !isEditing" class="content-sidebar">
+    <aside v-else-if="content && displayDescription && !isEditing" class="content-sidebar">
       <section class="sidebar-section">
-        <h3>설명</h3>
-        <p>{{ content.description }}</p>
+        <h3>{{ t('contentView.descriptionHeading') }}</h3>
+        <p>{{ displayDescription }}</p>
       </section>
 
       <section v-if="content.tags && content.tags.length > 0" class="sidebar-section">
-        <h3>태그</h3>
+        <h3>{{ t('contentView.tagsHeading') }}</h3>
         <div class="tags">
           <span v-for="tag in content.tags" :key="tag" class="tag">{{ tag }}</span>
         </div>
       </section>
 
       <section v-if="content.duration" class="sidebar-section">
-        <h3>예상 소요 시간</h3>
-        <p>약 {{ content.duration }}분</p>
+        <h3>{{ t('contentView.durationHeading') }}</h3>
+        <p>{{ t('contentView.durationValue', { minutes: content.duration }) }}</p>
       </section>
 
       <section v-if="content.difficulty" class="sidebar-section">
-        <h3>난이도</h3>
+        <h3>{{ t('contentView.difficultyHeading') }}</h3>
         <p class="difficulty" :class="`difficulty-${content.difficulty}`">
-          {{ content.difficulty === 'easy' ? '쉬움' : content.difficulty === 'medium' ? '보통' : '어려움' }}
+          {{ difficultyLabel(content.difficulty) }}
         </p>
       </section>
     </aside>

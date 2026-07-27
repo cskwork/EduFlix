@@ -12,5 +12,11 @@
   "tags": [
     "인사"
   ],
-  "createdAt": "2026-01-27T00:37:00.913Z"
+  "createdAt": "2026-01-27T00:37:00.913Z",
+  "translations": {
+    "en": {
+      "title": "The Magic of English Greetings",
+      "description": "An English lesson all about greetings."
+    }
+  }
 }

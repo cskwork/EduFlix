@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useI18n } from '../../i18n'
+
+const { t, locale } = useI18n()
 
 // Props
 const props = defineProps<{
@@ -39,19 +42,19 @@ function handleKeydown(e: KeyboardEvent) {
   }
 }
 
-// 추천 관심사 목록
-const suggestions = [
-  '공룡',
-  '우주',
-  '로봇',
-  '게임',
-  '축구',
-  '요리',
-  '음악',
-  '그림',
-  '동물',
-  '마법',
-]
+// 추천 관심사 목록 (현재 언어로 표시 - 태그 자체가 생성 프롬프트에 들어간다)
+const suggestions = computed(() => [
+  t('creator.interests.suggestions.dinosaur'),
+  t('creator.interests.suggestions.space'),
+  t('creator.interests.suggestions.robot'),
+  t('creator.interests.suggestions.game'),
+  t('creator.interests.suggestions.soccer'),
+  t('creator.interests.suggestions.cooking'),
+  t('creator.interests.suggestions.music'),
+  t('creator.interests.suggestions.drawing'),
+  t('creator.interests.suggestions.animal'),
+  t('creator.interests.suggestions.magic'),
+])
 
 // 추천 태그 추가
 function addSuggestion(suggestion: string) {
@@ -64,9 +67,9 @@ function addSuggestion(suggestion: string) {
 const availableSuggestions = ref<string[]>([])
 
 watch(
-  () => props.modelValue,
-  (tags) => {
-    availableSuggestions.value = suggestions.filter((s) => !tags.includes(s))
+  [() => props.modelValue, suggestions, locale],
+  ([tags, currentSuggestions]) => {
+    availableSuggestions.value = currentSuggestions.filter((s) => !tags.includes(s))
   },
   { immediate: true }
 )
@@ -74,14 +77,19 @@ watch(
 
 <template>
   <div class="interest-input">
-    <label class="input-label">관심사를 알려주세요</label>
-    <p class="input-description">좋아하는 것들을 입력하면, AI가 맞춤형 콘텐츠를 만들어요!</p>
+    <label class="input-label">{{ t('creator.interests.label') }}</label>
+    <p class="input-description">{{ t('creator.interests.description') }}</p>
 
     <div class="tags-container">
       <div class="tags-list">
         <span v-for="(tag, index) in modelValue" :key="tag" class="tag">
           {{ tag }}
-          <button type="button" class="tag-remove" aria-label="태그 제거" @click="removeTag(index)">
+          <button
+            type="button"
+            class="tag-remove"
+            :aria-label="t('creator.interests.removeTag')"
+            @click="removeTag(index)"
+          >
             x
           </button>
         </span>
@@ -89,7 +97,7 @@ watch(
           v-model="inputValue"
           type="text"
           class="tag-input"
-          placeholder="예: 공룡, 우주, 축구..."
+          :placeholder="t('creator.interests.placeholder')"
           @keydown="handleKeydown"
           @blur="addTag"
         />
@@ -97,7 +105,7 @@ watch(
     </div>
 
     <div v-if="availableSuggestions.length > 0" class="suggestions">
-      <span class="suggestions-label">추천:</span>
+      <span class="suggestions-label">{{ t('creator.interests.suggestionsLabel') }}</span>
       <button
         v-for="suggestion in availableSuggestions.slice(0, 5)"
         :key="suggestion"

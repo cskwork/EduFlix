@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 // 현재 모드 상태 (view: 보기 모드, create: 창조 모드)
 const currentMode = ref<'view' | 'create'>('view')
@@ -27,7 +30,9 @@ const toggleMode = () => {
     <span class="toggle-track">
       <span class="toggle-thumb"></span>
     </span>
-    <span class="toggle-label">{{ isCreateMode ? '창조' : '보기' }}</span>
+    <span class="toggle-label">{{
+      isCreateMode ? t('modeToggle.create') : t('modeToggle.view')
+    }}</span>
   </button>
 </template>
 

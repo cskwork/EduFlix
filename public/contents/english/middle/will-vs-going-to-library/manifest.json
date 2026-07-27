@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "will과 be going to의 차이를 도서관 방문 계획 상황에서 배우는 인터랙티브 학습",
   "thumbnail": "/contents/english/middle/will-vs-going-to-library/assets/thumbnail.svg",
-  "path": "/contents/english/middle/will-vs-going-to-library/index.html"
+  "path": "/contents/english/middle/will-vs-going-to-library/index.html",
+  "translations": {
+    "en": {
+      "title": "A Trip to the Library: will vs going to",
+      "description": "Interactive practice with the difference between 'will' and 'be going to' while planning a library visit."
+    }
+  }
 }

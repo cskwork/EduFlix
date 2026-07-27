@@ -3,6 +3,7 @@
 
 import type { PreviewContent } from '../../types/generation'
 import { buildApiUrl } from '../api/url'
+import { t } from '../../i18n'
 
 // API URL 설정
 const API_BASE_URL = import.meta.env.VITE_API_URL || ''
@@ -110,12 +111,12 @@ export function buildPreviewDocument(content: PreviewContent): string {
   if (!content.html) {
     const phaseText =
       content.phase === 'html'
-        ? 'HTML 생성 중...'
+        ? t('livePreview.phaseHtml')
         : content.phase === 'css'
-          ? 'CSS 생성 중...'
+          ? t('livePreview.phaseCss')
           : content.phase === 'js'
-            ? 'JavaScript 생성 중...'
-            : '완료!'
+            ? t('livePreview.phaseJs')
+            : t('livePreview.phaseComplete')
 
     return `
 <!DOCTYPE html>

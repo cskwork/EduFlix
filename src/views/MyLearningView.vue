@@ -4,8 +4,10 @@ import { useRouter } from 'vue-router'
 import { useLearningStore } from '../stores/learning'
 import LoadingSpinner from '../components/common/LoadingSpinner.vue'
 import IconSet, { type IconName } from '../components/icons/IconSet.vue'
-import { SUBJECT_LABELS } from '../types/content'
+import { subjectLabel } from '../i18n/labels'
+import { useI18n } from '../i18n'
 
+const { t } = useI18n()
 const learningStore = useLearningStore()
 const router = useRouter()
 
@@ -29,7 +31,7 @@ function iconForSubject(subject: string): IconName {
 }
 
 function labelForSubject(subject: string): string {
-  return SUBJECT_LABELS[subject] ?? subject
+  return subjectLabel(subject)
 }
 
 function goToMap() {
@@ -41,7 +43,7 @@ function goToContent(contentId: string) {
 }
 
 function resetProgress() {
-  if (window.confirm('모든 학습 진행도를 초기화하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
+  if (window.confirm(t('myLearning.confirmReset'))) {
     learningStore.resetProgress()
   }
 }
@@ -52,15 +54,15 @@ function resetProgress() {
     <header class="learning-header">
       <h1 class="learning-title">
         <IconSet name="my-learning" :size="32" class="title-icon" />
-        내 학습
+        {{ t('myLearning.title') }}
       </h1>
-      <p class="learning-subtitle">학습 진행 현황을 확인하세요</p>
+      <p class="learning-subtitle">{{ t('myLearning.subtitle') }}</p>
     </header>
 
     <LoadingSpinner
       v-if="learningStore.isLoading"
       size="lg"
-      message="학습 데이터를 불러오는 중..."
+      :message="t('myLearning.loading')"
     />
 
     <div v-else class="learning-content">
@@ -68,8 +70,10 @@ function resetProgress() {
       <div v-if="stats.streakDays > 0" class="streak-banner">
         <IconSet name="flame" :size="48" class="streak-icon" />
         <div class="streak-info">
-          <span class="streak-days">{{ stats.streakDays }}일 연속</span>
-          <span class="streak-label">학습 중!</span>
+          <span class="streak-days">{{
+            t('myLearning.streakDays', { count: stats.streakDays })
+          }}</span>
+          <span class="streak-label">{{ t('myLearning.streakLabel') }}</span>
         </div>
       </div>
 
@@ -77,32 +81,36 @@ function resetProgress() {
       <div class="stats-grid">
         <div class="stat-card">
           <span class="stat-value">{{ stats.completedNodes }}</span>
-          <span class="stat-label">완료한 주제</span>
-          <span class="stat-total">/ {{ stats.totalNodes }}개</span>
+          <span class="stat-label">{{ t('myLearning.completedTopics') }}</span>
+          <span class="stat-total">{{
+            t('myLearning.totalSuffix', { total: stats.totalNodes })
+          }}</span>
         </div>
 
         <div class="stat-card">
           <span class="stat-value">{{ stats.inProgressNodes }}</span>
-          <span class="stat-label">진행 중</span>
-          <span class="stat-total">개 주제</span>
+          <span class="stat-label">{{ t('myLearning.inProgressTopics') }}</span>
+          <span class="stat-total">{{ t('myLearning.inProgressUnit') }}</span>
         </div>
 
         <div class="stat-card">
           <span class="stat-value">{{ stats.completedContents }}</span>
-          <span class="stat-label">학습한 콘텐츠</span>
-          <span class="stat-total">/ {{ stats.totalContents }}개</span>
+          <span class="stat-label">{{ t('myLearning.completedContents') }}</span>
+          <span class="stat-total">{{
+            t('myLearning.totalSuffix', { total: stats.totalContents })
+          }}</span>
         </div>
 
         <div class="stat-card">
           <span class="stat-value">{{ stats.streakDays }}</span>
-          <span class="stat-label">연속 학습</span>
-          <span class="stat-total">일</span>
+          <span class="stat-label">{{ t('myLearning.streakStat') }}</span>
+          <span class="stat-total">{{ t('myLearning.streakUnit') }}</span>
         </div>
       </div>
 
       <!-- 과목별 진행도 -->
       <section class="subject-section">
-        <h2 class="section-title">과목별 진행도</h2>
+        <h2 class="section-title">{{ t('myLearning.subjectProgressTitle') }}</h2>
 
         <div class="subject-progress-list">
           <div
@@ -135,7 +143,7 @@ function resetProgress() {
 
       <!-- 추천 학습 -->
       <section v-if="nextNodes.length > 0" class="next-section">
-        <h2 class="section-title">추천 학습</h2>
+        <h2 class="section-title">{{ t('myLearning.nextUpTitle') }}</h2>
 
         <div class="next-nodes">
           <div
@@ -158,10 +166,10 @@ function resetProgress() {
       <div class="action-buttons">
         <button class="btn-primary" @click="goToMap">
           <IconSet name="learning-map" :size="20" />
-          학습맵 보기
+          {{ t('myLearning.openMap') }}
         </button>
         <button class="btn-secondary" @click="resetProgress">
-          초기화
+          {{ t('common.reset') }}
         </button>
       </div>
     </div>

@@ -8,5 +8,11 @@
   "language": "ko",
   "description": "수직선 위를 움직이며 음수와 양수의 덧셈, 뺄셈 원리를 배워보세요.",
   "thumbnail": "/contents/math/middle/negative-addition/assets/thumbnail.svg",
-  "path": "/contents/math/middle/negative-addition/index.html"
+  "path": "/contents/math/middle/negative-addition/index.html",
+  "translations": {
+    "en": {
+      "title": "Adding and Subtracting Integers",
+      "description": "Move along the number line and learn how adding and subtracting positive and negative numbers works."
+    }
+  }
 }

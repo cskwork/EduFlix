@@ -2,6 +2,9 @@
 // iframe 샌드박스 콘텐츠 뷰어
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { IFRAME_SANDBOX_ATTRS, IFRAME_ALLOW_ATTRS } from '../../services/content/loader'
+import { useI18n } from '../../i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   src: string
@@ -58,7 +61,7 @@ function injectEditorBridge() {
 // iframe 로드 에러 핸들러
 function handleError() {
   isLoading.value = false
-  loadError.value = '콘텐츠를 불러오는 데 실패했습니다'
+  loadError.value = t('viewer.loadFailed')
   emit('error', new Error(loadError.value))
 }
 
@@ -84,7 +87,9 @@ function handleFullscreenChange() {
 }
 
 // 전체화면 여부 계산
-const fullscreenButtonLabel = computed(() => (isFullscreen.value ? '전체화면 종료' : '전체화면'))
+const fullscreenButtonLabel = computed(() =>
+  isFullscreen.value ? t('viewer.exitFullscreen') : t('viewer.enterFullscreen')
+)
 
 // src 변경 시 로딩 상태 초기화
 watch(
@@ -141,7 +146,7 @@ defineExpose({
     <!-- 로딩 상태 -->
     <div v-if="isLoading" class="viewer-loading">
       <div class="loading-spinner"></div>
-      <p>콘텐츠 로딩 중...</p>
+      <p>{{ t('viewer.loading') }}</p>
     </div>
 
     <!-- 에러 상태 (로딩 완료 후에만 표시) -->

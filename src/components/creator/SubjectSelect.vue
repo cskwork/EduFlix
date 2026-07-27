@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { Subject } from '../../types/content'
 import { BUILTIN_SUBJECTS, isSubjectSlug } from '../../types/content'
+import { subjectLabel } from '../../i18n/labels'
+import { useI18n } from '../../i18n'
 import IconSet, { type IconName } from '../icons/IconSet.vue'
+
+const { t } = useI18n()
 
 // Props
 const props = defineProps<{
@@ -15,11 +19,23 @@ const emit = defineEmits<{
 }>()
 
 // 기본 과목 카드 (3개)
-const builtinSubjects: { value: Subject; label: string; icon: IconName; color: string }[] = [
-  { value: 'math', label: '수학', icon: 'math', color: 'var(--color-subject-math)' },
-  { value: 'science', label: '과학', icon: 'science', color: 'var(--color-subject-science)' },
-  { value: 'english', label: '영어', icon: 'english', color: 'var(--color-subject-english)' },
-]
+const builtinSubjects = computed<
+  { value: Subject; label: string; icon: IconName; color: string }[]
+>(() => [
+  { value: 'math', label: subjectLabel('math'), icon: 'math', color: 'var(--color-subject-math)' },
+  {
+    value: 'science',
+    label: subjectLabel('science'),
+    icon: 'science',
+    color: 'var(--color-subject-science)',
+  },
+  {
+    value: 'english',
+    label: subjectLabel('english'),
+    icon: 'english',
+    color: 'var(--color-subject-english)',
+  },
+])
 
 // 직접 입력 모드
 const isCustomMode = ref<boolean>(
@@ -31,12 +47,12 @@ const customInput = ref<string>(
 const customError = ref<string>('')
 
 // 추천 확장 과목 (빠른 선택용)
-const suggestions: { slug: Subject; label: string }[] = [
-  { slug: 'coding', label: '코딩' },
-  { slug: 'toeic', label: '토익' },
-  { slug: 'korean-history', label: '한국사' },
-  { slug: 'computer-science', label: '컴퓨터과학' },
-]
+const suggestions = computed<{ slug: Subject; label: string }[]>(() =>
+  (['coding', 'toeic', 'korean-history', 'computer-science'] as Subject[]).map((slug) => ({
+    slug,
+    label: subjectLabel(slug),
+  }))
+)
 
 const KO_TO_SLUG: Record<string, string> = {
   '코딩': 'coding', '프로그래밍': 'coding', '코딩테스트': 'coding-test',
@@ -85,7 +101,7 @@ function commitCustom() {
     return
   }
   if (!slug) {
-    customError.value = '영문 소문자·숫자·하이픈 slug만 가능해요 (예: coding, toeic)'
+    customError.value = t('creator.subject.customError')
     return
   }
   customError.value = ''
@@ -124,8 +140,8 @@ function isSelected(subject: Subject) {
 
 <template>
   <div class="subject-select">
-    <label class="input-label">어떤 과목으로 배울까요?</label>
-    <p class="input-description">기본 과목을 고르거나 직접 입력할 수 있어요.</p>
+    <label class="input-label">{{ t('creator.subject.label') }}</label>
+    <p class="input-description">{{ t('creator.subject.description') }}</p>
 
     <div class="subjects-grid">
       <button
@@ -151,14 +167,14 @@ function isSelected(subject: Subject) {
         @click="enableCustomMode"
       >
         <div class="subject-icon custom-icon">+</div>
-        <span class="subject-label">직접 입력</span>
+        <span class="subject-label">{{ t('creator.subject.customCardLabel') }}</span>
         <span v-if="isCustomMode" class="check-mark">V</span>
       </button>
     </div>
 
     <!-- 추천 확장 과목 칩 -->
     <div v-if="!isCustomMode" class="suggestions-row">
-      <span class="suggestions-label">빠른 선택:</span>
+      <span class="suggestions-label">{{ t('creator.subject.quickPickLabel') }}</span>
       <button
         v-for="item in suggestions"
         :key="item.slug"
@@ -174,21 +190,22 @@ function isSelected(subject: Subject) {
     <!-- 직접 입력 펼침 -->
     <transition name="expand">
       <div v-if="isCustomMode" class="custom-input-wrap">
-        <label class="custom-label">과목 이름 (영문 slug)</label>
+        <label class="custom-label">{{ t('creator.subject.customSlugLabel') }}</label>
         <input
           :value="customInput"
           type="text"
           class="custom-input"
-          placeholder="예: coding, toeic, korean-history, computer-science..."
+          :placeholder="t('creator.subject.customPlaceholder')"
           autofocus
           @input="onCustomInput"
         />
         <p v-if="customError" class="custom-error">{{ customError }}</p>
         <p v-else-if="customInput && !customError" class="custom-hint">
-          저장 경로: <code>public/contents/{{ customInput }}/...</code>
+          {{ t('creator.subject.savePathLabel') }}
+          <code>public/contents/{{ customInput }}/...</code>
         </p>
         <div v-if="customInput && !customError" class="suggestions-row">
-          <span class="suggestions-label">추천:</span>
+          <span class="suggestions-label">{{ t('creator.subject.suggestionsLabel') }}</span>
           <button
             v-for="item in suggestions"
             :key="item.slug"
