@@ -8,6 +8,7 @@ export interface EditableText {
   value: string
   type: 'title' | 'description' | 'instruction' | 'dialogue' | 'label'
   scene?: string // 속한 씬 (hook, story, core 등)
+  originalValue?: string
 }
 
 // 편집 가능한 스타일 항목
@@ -96,6 +97,7 @@ export interface UpdateQuizPayload {
 
 // 콘텐츠 추출 응답 페이로드
 export interface ExtractedContentPayload {
+  overrides?: SaveContentRequest
   texts: EditableText[]
   styles: EditableStyle[]
   quizzes: EditableQuiz[]

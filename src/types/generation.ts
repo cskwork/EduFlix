@@ -1,5 +1,5 @@
 // AI 생성 관련 타입 정의
-import type { Subject, Grade, ContentType, Language, Difficulty } from './content'
+import type { Subject, Grade, ContentType, ContentManifest, Language, Difficulty } from './content'
 
 // 콘텐츠 제작(렌더링) 방식 - 3d(Three.js 시뮬레이션)가 기본값
 export type RenderMode = '3d' | '3d-game' | 'canvas-game' | 'svg' | 'dom'
@@ -52,7 +52,7 @@ export interface GenerationResponse {
   success: boolean
   jobId?: string    // 작업 ID (비동기 생성용)
   contentId?: string
-  manifest?: {
+  manifest?: Partial<ContentManifest> & {
     id: string
     title: string
     description: string
@@ -73,7 +73,12 @@ export interface JobStatusResponse {
     id: string
     title: string
     description: string
-    type: string
+    type: ContentType
+    subject?: Subject
+    gradeLevel?: ContentManifest['gradeLevel']
+    grade?: Grade
+    path?: string
+    language?: Language
   }
   error?: string
 }

@@ -19,7 +19,13 @@ export const PROBLEM_MAX_LENGTH = 5000
 // 유효하면 undefined, 아니면 사용자에게 보여줄 오류 메시지를 반환한다
 export function validateGeneration(body: GenerationRequest): string | undefined {
   // 공통 필수
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return '요청 본문은 JSON 객체여야 합니다'
   if (!body.language) return '필수 필드가 누락되었습니다: language'
+  if (body.language !== 'ko' && body.language !== 'en') return 'language는 ko 또는 en이어야 합니다'
+  if (body.additionalContext !== undefined &&
+      (typeof body.additionalContext !== 'string' || body.additionalContext.length > 5000)) {
+    return 'additionalContext는 5000자 이하의 문자열이어야 합니다'
+  }
 
   const mode = body.mode ?? DEFAULT_CREATOR_MODE
   if (!VALID_MODES.has(mode)) return 'mode는 interest 또는 problem이어야 합니다'

@@ -67,6 +67,7 @@ while [ "$#" -gt 0 ]; do
   shift
 done
 for file in index.html style.css script.js manifest.json; do printf '%s' "new-$file" > "$cwd/$file"; done
+printf '%s' '{"language":"ko"}' > "$cwd/manifest.json"
 printf '%s' "$last" > "${capturedPrompt}"
 printf '%s' done > "$out"
 exit 0
@@ -74,7 +75,7 @@ exit 0
     await chmod(executable, 0o755);
     process.env.PATH = `${binDir}:${originalPath ?? ""}`;
     const context = { rootDir, factoryDir: join(rootDir, "agents/content-factory"), runDir,
-      contentDir, id: "new-id", topic: "신규", grade: "elementary-5",
+      contentDir, id: "new-id", language: "en", topic: "신규", grade: "elementary-5",
       gradeLevel: "elementary", subject: "math", force: true, skipImages: false } satisfies FactoryContext;
 
     await runBuildStage(context);
@@ -85,6 +86,8 @@ exit 0
     ]);
     const buildPrompt = await readFile(capturedPrompt, "utf8");
     expect(buildPrompt).toContain('"sourcePath":"thumbnail.png"');
+    expect(buildPrompt).toContain('Learner-facing text must use language en');
+    expect(JSON.parse(await readFile(join(contentDir, "manifest.json"), "utf8")).language).toBe("en");
     expect(buildPrompt).not.toContain(join(contentDir, "thumbnail.png"));
   });
 

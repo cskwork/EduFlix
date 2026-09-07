@@ -227,6 +227,11 @@ export const ko: MessageSchema = {
   },
 
   editor: {
+    quizUnsupported: '퀴즈 정답은 활동별 코드로 정해져 있습니다. 이 편집기에서는 텍스트와 색상을 수정할 수 있으며 정답 판정은 바꿀 수 없습니다.',
+    completeContent: '학습 완료로 표시',
+    contentCompleted: '학습 완료',
+    relatedContents: '이 주제 이어서 학습하기',
+    progressSaveFailed: '이 브라우저에 학습 진행도를 저장하지 못했습니다.',
     title: '콘텐츠 편집',
     close: '닫기',
     tabText: '텍스트',

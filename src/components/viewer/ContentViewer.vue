@@ -52,7 +52,7 @@ function injectEditorBridge() {
 
   const script = doc.createElement('script')
   script.id = 'editor-bridge-script'
-  script.src = '/contents/common/editor-bridge.js'
+  script.src = new URL('/contents/common/editor-bridge.js', window.location.origin).href
   doc.head.appendChild(script)
 
   console.log('[ContentViewer] editor-bridge.js 동적 주입 완료')
@@ -118,16 +118,6 @@ onUnmounted(() => {
   document.removeEventListener('fullscreenchange', handleFullscreenChange)
 })
 
-// iframe src 계산 (편집 모드일 때 editor-bridge.js 포함)
-const computedSrc = computed(() => {
-  if (!props.editMode) return props.src
-
-  // 편집 모드: URL에 editor 쿼리 파라미터 추가
-  const url = new URL(props.src, window.location.origin)
-  url.searchParams.set('editor', 'true')
-  return url.toString()
-})
-
 // iframe ref getter
 function getIframeRef(): HTMLIFrameElement | null {
   return iframeRef.value
@@ -158,7 +148,7 @@ defineExpose({
     <!-- iframe 콘텐츠 -->
     <iframe
       ref="iframeRef"
-      :src="computedSrc"
+      :src="src"
       :title="title"
       :sandbox="sandboxAttrs"
       :allow="allowAttrs"

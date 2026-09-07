@@ -229,7 +229,7 @@ export class FactoryRunner {
     const context: FactoryContext = {
       rootDir: this.rootDir, factoryDir: this.factoryDir, runDir,
       contentDir: join(this.rootDir, 'public/contents', subject, level, temporaryId),
-      id: temporaryId, topic, grade, gradeLevel: level, subject,
+      id: temporaryId, topic, grade, gradeLevel: level, subject, language: request.language,
       type: request.contentType, renderMode: request.renderMode ?? DEFAULT_RENDER_MODE,
       force: false, skipImages: provider === 'zai',
       interests: request.interests, additionalContext: request.additionalContext, llmProvider: provider,

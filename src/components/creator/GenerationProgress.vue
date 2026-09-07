@@ -11,6 +11,7 @@ const props = defineProps<{
   progress: ProgressType
   contentId?: string | null
   jobId?: string | null
+  canImprove?: boolean
 }>()
 
 // Emits
@@ -126,7 +127,7 @@ function handleImprove(contentId: string) {
         </button>
 
         <button
-          v-if="isCompleted && props.contentId"
+          v-if="isCompleted && props.contentId && canImprove !== false"
           type="button"
           class="btn btn-secondary btn-improve"
           @click="handleImprove(props.contentId)"
