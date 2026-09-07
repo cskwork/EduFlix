@@ -9,7 +9,9 @@ description: 한국 교육용 아트 에셋 검색. 카테고리(icons, illustra
 
 ## Repository Location
 
-- **경로**: `/Users/chaeseong-gug/Documents/PARA/Resource/art-assets/`
+`<asset-repo>`는 현재 환경에서 `assets-index.json` 또는 `assets.json`이 있는 art-assets 체크아웃으로 확인한다. 예전 사용자의 절대 경로를 가정하지 않는다.
+
+- **경로**: `<asset-repo>/`
 - **인덱스 파일**: `assets-index.json` (LLM 최적화, 경량)
 - **전체 메타데이터**: `assets.json` (기존 호환 형식)
 
@@ -23,7 +25,7 @@ description: 한국 교육용 아트 에셋 검색. 카테고리(icons, illustra
 | backgrounds | 배경 이미지 | PNG/JPG | 27 |
 | 3d | 3D 모델 (Three.js용) | GLB | 25 |
 
-**총 에셋**: 159개
+위 수량은 작성 당시 예시다. 현재 수량과 파일 존재 여부는 실제 인덱스와 파일로 확인한다.
 
 ## 태그 분류
 
@@ -75,7 +77,7 @@ description: 한국 교육용 아트 에셋 검색. 카테고리(icons, illustra
 ### Step 2: 인덱스 파일 읽기
 ```bash
 # assets-index.json 읽기
-Read /Users/chaeseong-gug/Documents/PARA/Resource/art-assets/assets-index.json
+Read <asset-repo>/assets-index.json
 ```
 
 ### Step 3: 필터링 및 매칭
