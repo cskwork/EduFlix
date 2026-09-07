@@ -1,0 +1,83 @@
+import { flushPromises, mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import * as localContent from '../../src/services/content/localContent'
+import ContentCard from '../../src/components/home/ContentCard.vue'
+import { useContentStore } from '../../src/stores/content'
+import { calculateSortScore } from '../../src/services/clickTracker'
+import type { ContentManifest } from '../../src/types/content'
+
+const lesson = (id: string, subject = 'math'): ContentManifest => ({
+  id, subject, title: id, gradeLevel: 'elementary', grade: 'elementary-3',
+  type: 'game', language: 'en', description: '', thumbnail: '', path: '',
+  createdAt: '2026-01-01T00:00:00Z',
+})
+
+beforeEach(() => setActivePinia(createPinia()))
+afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); vi.useRealTimers() })
+
+describe('catalog performance and discoverability', () => {
+  it('reads click statistics once while preserving popularity order and custom subjects', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-09-08T00:00:00Z'))
+    const read = vi.fn().mockReturnValue(JSON.stringify({ popular: { count: 5, lastClickedAt: '2026-09-07T00:00:00Z' } }))
+    vi.stubGlobal('localStorage', { getItem: read })
+    const store = useContentStore()
+    store.contents = [lesson('first'), lesson('popular'), lesson('custom', 'coding')]
+    read.mockClear()
+    expect(store.contentGroups.map((group) => [group.subject, group.contents.map((c) => c.id)]))
+      .toEqual([['math', ['popular', 'first']], ['coding', ['custom']]])
+    expect(read).toHaveBeenCalledTimes(1)
+    store.setSubjectFilter('coding')
+    expect(store.contentGroups[0]?.contents[0]?.id).toBe('custom')
+  })
+
+  it('keeps click, recency, invalid-date and future-date score semantics', () => {
+    const now = new Date('2026-09-08T00:00:00Z')
+    const stats = { a: { count: 2, lastClickedAt: '2026-09-07T00:00:00Z' } }
+    expect(calculateSortScore('a', '2026-09-06T00:00:00Z', stats, now)).toBe(110)
+    expect(calculateSortScore('a', 'invalid', stats, now)).toBe(16)
+    expect(calculateSortScore('a', '2026-09-09T00:00:00Z', stats, now)).toBe(116)
+  })
+
+  it('activates previews only on intersection and disconnects on unmount', async () => {
+    let callback: IntersectionObserverCallback = () => {}
+    const disconnect = vi.fn()
+    const observe = vi.fn()
+    vi.stubGlobal('IntersectionObserver', class {
+      constructor(cb: IntersectionObserverCallback) { callback = cb }
+      observe = observe
+      disconnect = disconnect
+    })
+    const wrapper = mount(ContentCard, {
+      props: { content: lesson('preview') }, global: { stubs: { RouterLink: { template: '<a><slot /></a>' } } },
+    })
+    expect(observe).toHaveBeenCalledOnce()
+    expect(wrapper.find('iframe').exists()).toBe(false)
+    callback([{ isIntersecting: false } as IntersectionObserverEntry], {} as IntersectionObserver)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('iframe').exists()).toBe(false)
+    callback([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('iframe').attributes('src')).toBe('/contents/math/elementary/preview/index.html')
+    expect(disconnect).toHaveBeenCalledOnce()
+    wrapper.unmount()
+    expect(disconnect).toHaveBeenCalledTimes(2)
+  })
+  it('uses a local Blob preview and releases it when the card unmounts', async () => {
+    vi.stubGlobal('IntersectionObserver', undefined)
+    vi.spyOn(localContent, 'getLocalContent').mockResolvedValue({
+      ...lesson('local-preview'), html: '<h1>Local preview</h1>', css: '', js: '',
+    })
+    vi.spyOn(localContent, 'createLocalContentUrl').mockReturnValue('blob:local-preview')
+    const revoke = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {})
+    const wrapper = mount(ContentCard, {
+      props: { content: lesson('local-preview') }, global: { stubs: { RouterLink: { template: '<a><slot /></a>' } } },
+    })
+    await flushPromises()
+    expect(wrapper.find('iframe').attributes('src')).toBe('blob:local-preview')
+    wrapper.unmount()
+    expect(revoke).toHaveBeenCalledWith('blob:local-preview')
+  })
+
+})

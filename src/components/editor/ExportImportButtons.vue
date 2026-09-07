@@ -1,10 +1,15 @@
 <script setup lang="ts">
 // Export/Import 버튼 컴포넌트
+import { useRouter } from 'vue-router'
+import { isStaticMode } from '../../services/api/capabilities'
+import { isLocalContentId } from '../../services/content/localContent'
+import { exportLocalArchive, importLocalArchive } from '../../services/content/localArchive'
 import { ref } from 'vue'
 import { withAdminToken } from '../../services/api/adminToken'
 import { useI18n } from '../../i18n'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const props = defineProps<{
   contentId: string
@@ -20,14 +25,14 @@ async function handleExport() {
   isExporting.value = true
 
   try {
-    const response = await fetch(`/api/content/${props.contentId}/export`)
-
-    if (!response.ok) {
-      throw new Error('Export 실패')
+    let blob: globalThis.Blob
+    if (isLocalContentId(props.contentId)) {
+      blob = new globalThis.Blob([Uint8Array.from(await exportLocalArchive(props.contentId))], { type: 'application/zip' })
+    } else {
+      const response = await fetch(`/api/content/${props.contentId}/export`)
+      if (!response.ok) throw new Error('Export failed')
+      blob = await response.blob()
     }
-
-    // Blob으로 다운로드
-    const blob = await response.blob()
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -57,7 +62,7 @@ async function handleImport(event: Event) {
   if (!file) return
 
   // ZIP 파일 검증
-  if (!file.name.endsWith('.zip')) {
+  if (!file.name.toLowerCase().endsWith('.zip')) {
     importError.value = t('editor.transfer.zipOnly')
     return
   }
@@ -66,6 +71,12 @@ async function handleImport(event: Event) {
   importError.value = null
 
   try {
+    if (isStaticMode || isLocalContentId(props.contentId)) {
+      if (file.size > 2 * 1024 * 1024) throw new Error('Archive is too large')
+      const id = await importLocalArchive(new Uint8Array(await file.arrayBuffer()))
+      await router.push(`/content/${id}`)
+      return
+    }
     const formData = new FormData()
     formData.append('file', file)
 

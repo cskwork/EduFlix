@@ -7,7 +7,7 @@ import ContentRow from '../components/home/ContentRow.vue'
 import LoadingSpinner from '../components/common/LoadingSpinner.vue'
 import ErrorMessage from '../components/common/ErrorMessage.vue'
 import EmptyState from '../components/common/EmptyState.vue'
-import type { Subject } from '../types/content'
+import { isSubjectSlug, type Subject } from '../types/content'
 import { useI18n } from '../i18n'
 
 const { t } = useI18n()
@@ -23,8 +23,6 @@ onMounted(async () => {
   // 추천 목록 로드 (콘텐츠 로드 후)
   contentStore.loadRecommendations()
 })
-
-const subjectOptions: Subject[] = ['math', 'science', 'english', 'world-history']
 
 // 해당 과목 섹션으로 스크롤 (콘텐츠 섹션 영역으로 이동)
 function scrollToSubjectSection(_subject: Subject) {
@@ -44,7 +42,7 @@ function scrollToSubjectSection(_subject: Subject) {
 function applyRouteFilters() {
   const subjectParam = route.query.subject
   const subject =
-    typeof subjectParam === 'string' && subjectOptions.includes(subjectParam as Subject)
+    typeof subjectParam === 'string' && isSubjectSlug(subjectParam)
       ? (subjectParam as Subject)
       : null
   contentStore.setSubjectFilter(subject)
@@ -63,7 +61,7 @@ watch(
   (groups) => {
     if (groups.length > 0) {
       const currentSubject = route.query.subject
-      if (typeof currentSubject === 'string' && subjectOptions.includes(currentSubject as Subject)) {
+      if (typeof currentSubject === 'string' && isSubjectSlug(currentSubject)) {
         scrollToSubjectSection(currentSubject as Subject)
       }
     }
@@ -75,7 +73,7 @@ watch(
 watch(
   () => route.query.subject,
   (newSubject) => {
-    if (typeof newSubject === 'string' && subjectOptions.includes(newSubject as Subject)) {
+    if (typeof newSubject === 'string' && isSubjectSlug(newSubject)) {
       // 콘텐츠가 이미 로드된 경우에만 스크롤
       if (contentStore.contentGroups.length > 0) {
         scrollToSubjectSection(newSubject as Subject)

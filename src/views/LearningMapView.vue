@@ -19,12 +19,12 @@ onMounted(async () => {
   await learningStore.loadKnowledgeMap()
 })
 
-const subjects: Subject[] = ['math', 'science', 'english']
+const subjects = computed(() => [...learningStore.nodesBySubject.keys()])
 
 const subjectNodes = computed(() => {
   const result: { subject: Subject; nodes: KnowledgeNode[] }[] = []
 
-  for (const subject of subjects) {
+  for (const subject of subjects.value) {
     const nodes = learningStore.nodesBySubject.get(subject) || []
     if (nodes.length > 0) {
       result.push({ subject, nodes })

@@ -23,14 +23,14 @@ export async function runAssetsStage(context: FactoryContext): Promise<void> {
   assertStoryboard(storyboard);
   const outFile = join(context.runDir, "assets.json");
   const sharedAssets = await listSharedAssets(context.rootDir);
-  const inputs = { storyboard, skipImages, sharedAssets };
+  const inputs = { storyboard, skipImages, sharedAssets, language: context.language ?? "ko" };
   const generated = await shouldRunStage(outFile, context.force, inputs);
   if (generated) {
     const prompt = await readPrompt(context, "03-assets.md");
     await runFactoryText({
       outFile,
       schemaFile: join(context.factoryDir, "schemas/assets.schema.json"),
-      prompt: `${prompt}\n\n입력:\n${JSON.stringify({
+      prompt: `${prompt}\nLearner-facing alt text must use language ${context.language ?? "ko"}.\n\n입력:\n${JSON.stringify({
         contentId: context.id,
         skipImages,
       })}\n\n스토리보드:\n${JSON.stringify(storyboard)}\n\n공용 에셋 목록:\n${sharedAssets.join("\n")}\nJSON만 출력하세요.`,

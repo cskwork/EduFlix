@@ -20,6 +20,7 @@ import {
 import {
   recordClick as recordLocalClick,
   calculateSortScore,
+  getClickStats,
 } from '../services/clickTracker'
 import { listLocalContents, toManifest } from '../services/content/localContent'
 import { t } from '../i18n'
@@ -81,7 +82,15 @@ export const useContentStore = defineStore('content', () => {
     // clickStatsVersion을 의존성으로 포함하여 클릭 시 재계산 트리거
     void clickStatsVersion.value
 
-    const subjects: Subject[] = ['math', 'english', 'science', 'world-history']
+    const subjects: Subject[] = [...new Set([
+      'math', 'english', 'science', 'world-history',
+      ...filteredContents.value.map((content) => content.subject),
+    ])]
+    const stats = getClickStats()
+    const now = new Date()
+    const scores = new Map(filteredContents.value.map((content) => [
+      content.id, calculateSortScore(content.id, content.createdAt, stats, now),
+    ]))
     const groups: ContentGroup[] = []
 
     for (const subject of subjects) {
@@ -90,8 +99,8 @@ export const useContentStore = defineStore('content', () => {
       if (subjectContents.length > 0) {
         // 클릭 빈도 + 최신순 점수로 정렬 (높은 점수가 왼쪽)
         const sortedContents = [...subjectContents].sort((a, b) => {
-          const scoreA = calculateSortScore(a.id, a.createdAt)
-          const scoreB = calculateSortScore(b.id, b.createdAt)
+          const scoreA = scores.get(a.id) ?? 0
+          const scoreB = scores.get(b.id) ?? 0
           return scoreB - scoreA // 내림차순 (높은 점수 먼저)
         })
 

@@ -142,6 +142,7 @@ function mapJobStatusToProgress(jobStatus: JobStatusResponse): GenerationProgres
 export async function generateContentServerless(
   options: ContentGenerationOptions,
   onProgress?: ProgressCallback,
+  signal?: AbortSignal,
 ): Promise<GenerationResponse> {
   const startedAt = new Date().toISOString()
   onProgress?.({
@@ -178,6 +179,7 @@ export async function generateContentServerless(
 
     const response = await fetch(buildApiUrl('/api/generate', API_BASE_URL), {
       method: 'POST',
+      signal,
       headers: withAdminToken({ 'Content-Type': 'application/json' }),
       body: JSON.stringify(request),
     })
@@ -207,6 +209,7 @@ export async function generateContentServerless(
       js: result.content.js,
       createdAt: new Date().toISOString(),
     }
+    signal?.throwIfAborted()
     await saveLocalContent(stored)
 
     onProgress?.({
@@ -249,10 +252,10 @@ export class ClaudeApiClient {
   }
 
   // 백엔드 API 연결 상태 확인 (정적 index.html 응답 방어 포함)
-  private async ensureApiAvailable(): Promise<void> {
+  private async ensureApiAvailable(signal?: AbortSignal): Promise<void> {
     try {
       const healthUrl = buildApiUrl('/api/health', this.baseUrl)
-      const response = await fetch(healthUrl)
+      const response = await fetch(healthUrl, { signal })
 
       if (!response.ok) {
         throw new Error(t('errors.healthCheckFailed', { status: response.status }))
@@ -278,11 +281,12 @@ export class ClaudeApiClient {
     options: ContentGenerationOptions,
     onProgress?: ProgressCallback,
     onJobCreated?: JobCreatedCallback,
+    signal?: AbortSignal,
   ): Promise<GenerationResponse> {
     // 정적 배포에는 팩토리 서버가 없으므로 서버리스 단일 호출 경로로 위임한다
     // (결과는 서버 파일시스템 대신 브라우저 IndexedDB에 보관된다)
     if (isStaticMode) {
-      return generateContentServerless(options, onProgress)
+      return generateContentServerless(options, onProgress, signal)
     }
 
     // 생성 시작 알림
@@ -297,7 +301,7 @@ export class ClaudeApiClient {
 
     try {
       // 정적 배포/프록시 오동작 시 HTML 응답을 조기에 감지한다
-      await this.ensureApiAvailable()
+      await this.ensureApiAvailable(signal)
 
       // API 요청 구성 - undefined 필드는 JSON.stringify에서 자동 제외됨
       const request: GenerationRequest = {
@@ -324,6 +328,7 @@ export class ClaudeApiClient {
       const createUrl = buildApiUrl('/api/generate', this.baseUrl)
       const createResponse = await fetch(createUrl, {
         method: 'POST',
+        signal,
         headers: withAdminToken({
           'Content-Type': 'application/json',
         }),
@@ -357,7 +362,7 @@ export class ClaudeApiClient {
       }
 
       // 폴링으로 작업 완료 대기
-      const result = await this.pollJobStatus(jobId, onProgress)
+      const result = await this.pollJobStatus(jobId, onProgress, signal)
 
       // 완료 알림
       if (onProgress) {
@@ -392,14 +397,16 @@ export class ClaudeApiClient {
   // 작업 상태 폴링
   private async pollJobStatus(
     jobId: string,
-    onProgress?: ProgressCallback
+    onProgress?: ProgressCallback,
+    signal?: AbortSignal,
   ): Promise<GenerationResponse> {
     const startTime = Date.now()
 
     while (Date.now() - startTime < GENERATION_MAX_POLL_DURATION_MS) {
+      signal?.throwIfAborted()
       // 상태 조회
       const statusUrl = buildApiUrl(`/api/generate/status/${jobId}`, this.baseUrl)
-      const statusResponse = await fetch(statusUrl)
+      const statusResponse = await fetch(statusUrl, { signal })
 
       if (!statusResponse.ok) {
         const errorMessage = await extractErrorMessage(
@@ -426,6 +433,7 @@ export class ClaudeApiClient {
           jobId,
           contentId: status.contentId,
           manifest: status.manifest ? {
+            ...status.manifest,
             id: status.manifest.id,
             title: status.manifest.title,
             description: status.manifest.description,
@@ -444,7 +452,12 @@ export class ClaudeApiClient {
       }
 
       // 대기 후 다시 폴링
-      await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS))
+      await new Promise<void>((resolve, reject) => {
+        const abort = () => { clearTimeout(timer); reject(new DOMException('Cancelled', 'AbortError')) }
+        const timer = setTimeout(() => { signal?.removeEventListener('abort', abort); resolve() }, POLL_INTERVAL_MS)
+        signal?.addEventListener('abort', abort, { once: true })
+        if (signal?.aborted) abort()
+      })
     }
 
     // 타임아웃
@@ -503,8 +516,9 @@ export async function generateContent(
   options: ContentGenerationOptions,
   onProgress?: ProgressCallback,
   onJobCreated?: JobCreatedCallback,
+  signal?: AbortSignal,
 ): Promise<GenerationResponse> {
-  return claudeApi.generateContent(options, onProgress, onJobCreated)
+  return claudeApi.generateContent(options, onProgress, onJobCreated, signal)
 }
 
 // 편의 함수: 건강 상태 확인

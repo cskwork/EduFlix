@@ -22,6 +22,7 @@ export const useLearningStore = defineStore('learning', () => {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const streakDays = ref(0)
+  const persistenceError = ref<string | null>(null)
   const lastStudyDate = ref<string | null>(null)
 
   // 초기화: localStorage에서 진행도 로드
@@ -46,6 +47,7 @@ export const useLearningStore = defineStore('learning', () => {
 
   // localStorage에 진행도 저장
   function saveProgressToStorage() {
+    persistenceError.value = null
     try {
       const data = Array.from(progressMap.value.values())
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
@@ -53,6 +55,7 @@ export const useLearningStore = defineStore('learning', () => {
       const streakData = { days: streakDays.value, lastDate: lastStudyDate.value }
       localStorage.setItem(STREAK_KEY, JSON.stringify(streakData))
     } catch (e) {
+      persistenceError.value = t('editor.progressSaveFailed')
       console.error('Failed to save learning progress:', e)
     }
   }
@@ -61,6 +64,7 @@ export const useLearningStore = defineStore('learning', () => {
   async function loadKnowledgeMap() {
     isLoading.value = true
     error.value = null
+    loadProgressFromStorage()
 
     try {
       const response = await fetch('/contents/knowledge-map.json')
@@ -68,7 +72,6 @@ export const useLearningStore = defineStore('learning', () => {
         throw new Error(t('errors.knowledgeMapLoadFailed'))
       }
       knowledgeMap.value = await response.json()
-      loadProgressFromStorage()
     } catch (e) {
       error.value = e instanceof Error ? e.message : t('common.unknownError')
     } finally {
@@ -125,6 +128,7 @@ export const useLearningStore = defineStore('learning', () => {
   function markContentCompleted(nodeId: string, contentId: string) {
     const existing = progressMap.value.get(nodeId)
     const node = knowledgeMap.value?.nodes.find((n) => n.id === nodeId)
+    if (!node || !node.contentIds.includes(contentId)) return
     const now = new Date().toISOString()
 
     const completedContentIds = existing?.completedContentIds || []
@@ -242,7 +246,7 @@ export const useLearningStore = defineStore('learning', () => {
   const subjectProgress = computed<SubjectProgress[]>(() => {
     if (!knowledgeMap.value) return []
 
-    const subjects: Subject[] = ['math', 'science', 'english']
+    const subjects = [...new Set(knowledgeMap.value.nodes.map(node => node.subject))]
     const result: SubjectProgress[] = []
 
     for (const subject of subjects) {
@@ -270,7 +274,7 @@ export const useLearningStore = defineStore('learning', () => {
     return knowledgeMap.value.nodes
       .filter((node) => {
         const status = getNodeStatus(node.id)
-        return status === 'available' || status === 'in_progress'
+        return node.contentIds.length > 0 && (status === 'available' || status === 'in_progress')
       })
       .slice(0, 5)
   })
@@ -291,6 +295,7 @@ export const useLearningStore = defineStore('learning', () => {
     error,
     streakDays,
     lastStudyDate,
+    persistenceError,
     // 계산된 속성
     nodesBySubject,
     nodesByGradeLevel,
