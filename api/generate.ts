@@ -154,8 +154,14 @@ function checkRateLimit(req: Request): { status: number; message: string } | und
 
 // --- 입력 검증 (원본: server/validation/generation.ts) -----------------------
 
-function validateGeneration(body: GenerateBody): string | undefined {
+export function validateGeneration(body: GenerateBody): string | undefined {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return '요청 본문은 JSON 객체여야 합니다'
   if (!body.language) return '필수 필드가 누락되었습니다: language'
+  if (body.language !== 'ko' && body.language !== 'en') return 'language는 ko 또는 en이어야 합니다'
+  if (body.additionalContext !== undefined &&
+      (typeof body.additionalContext !== 'string' || body.additionalContext.length > 5000)) {
+    return 'additionalContext는 5000자 이하의 문자열이어야 합니다'
+  }
 
   const mode = body.mode ?? 'interest'
   if (mode !== 'interest' && mode !== 'problem') return 'mode는 interest 또는 problem이어야 합니다'
@@ -173,7 +179,7 @@ function validateGeneration(body: GenerateBody): string | undefined {
         body.interests.some((item) => typeof item !== 'string' || item.length > 100)) {
       return 'interests는 최소 1개, 최대 10개의 문자열 배열이어야 합니다'
     }
-    if (!SUBJECT_SLUG_PATTERN.test(body.subject)) {
+    if (typeof body.subject !== 'string' || !SUBJECT_SLUG_PATTERN.test(body.subject)) {
       return 'subject는 영문 소문자·숫자·하이픈으로 된 slug여야 합니다 (예: math, coding, toeic)'
     }
     if (!VALID_GRADES.has(body.grade)) return '유효하지 않은 학년입니다'
@@ -182,10 +188,10 @@ function validateGeneration(body: GenerateBody): string | undefined {
         body.problem.trim().length < 5 || body.problem.length > PROBLEM_MAX_LENGTH) {
       return `problem은 5자 이상 ${PROBLEM_MAX_LENGTH}자 이하의 문자열이어야 합니다`
     }
-    if (!body.difficulty || !(body.difficulty in DIFFICULTY_TO_GRADE)) {
+    if (typeof body.difficulty !== 'string' || !Object.hasOwn(DIFFICULTY_TO_GRADE, body.difficulty)) {
       return `difficulty는 ${Object.keys(DIFFICULTY_TO_GRADE).join(', ')} 중 하나여야 합니다`
     }
-    if (body.subject !== undefined && !SUBJECT_SLUG_PATTERN.test(body.subject)) {
+    if (body.subject !== undefined && (typeof body.subject !== 'string' || !SUBJECT_SLUG_PATTERN.test(body.subject))) {
       return 'subject는 영문 소문자·숫자·하이픈으로 된 slug여야 합니다'
     }
   }
@@ -333,7 +339,7 @@ function resolveTopic(body: GenerateBody): { topic: string; grade: string; subje
   }
 }
 
-function buildPrompt(body: GenerateBody): string {
+export function buildPrompt(body: GenerateBody): string {
   const { topic, grade, subject } = resolveTopic(body)
   const renderMode = body.renderMode ?? DEFAULT_RENDER_MODE
   const isThree = renderMode === '3d' || renderMode === '3d-game'
@@ -358,7 +364,7 @@ function buildPrompt(body: GenerateBody): string {
     isThree
       ? '5. Three.js는 CDN(v0.128.0 three.min.js, OrbitControls.js)만 사용할 것'
       : '5. 외부 스크립트/CDN을 사용하지 말 것 (순수 HTML/CSS/JS)',
-    '6. 모든 텍스트는 한국어로 작성할 것',
+    `6. 모든 학습자용 텍스트는 ${body.language === 'en' ? '영어' : '한국어'}로 작성할 것`,
     '',
     '## 분량 제한 (중요)',
     // 실측: 분량 제한이 없으면 출력 50KB에 274초가 걸려 300초 한도에 근접한다.

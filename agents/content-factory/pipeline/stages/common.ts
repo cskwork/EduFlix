@@ -27,8 +27,8 @@ export const DIFFICULTY_TO_GRADE = {
 } as const;
 export type Difficulty = keyof typeof DIFFICULTY_TO_GRADE;
 
-export function isSubjectSlug(value: string): boolean {
-  return SUBJECT_SLUG_PATTERN.test(value);
+export function isSubjectSlug(value: unknown): value is string {
+  return typeof value === "string" && SUBJECT_SLUG_PATTERN.test(value);
 }
 
 export interface FactoryContext {
@@ -38,6 +38,7 @@ export interface FactoryContext {
   contentDir: string;
   id: string;
   topic: string;
+  language?: "ko" | "en";
   grade: string;
   gradeLevel: "elementary" | "middle" | "high";
   subject: string; // kebab-case slug (math, science, english, coding, toeic, ...)

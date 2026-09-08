@@ -1,6 +1,11 @@
+import { join, resolve } from "node:path"
+import { inflateRawSync } from "node:zlib"
+import { acquireCatalogLock, atomicWriteFile, validateCatalogSource } from "../services/catalog"
+import { embedEditorOverrides, validateEditorOverrides } from "../../src/services/editor/overrides"
+import { encodeContentZip, decodeContentZip } from "../../src/services/contentArchive"
 // 콘텐츠 CRUD API 엔드포인트
 import type { ContentManifest, ContentCatalog } from '../../src/types/content'
-import type { SaveContentRequest, EditableText, EditableStyle } from '../../src/types/editor'
+import type { SaveContentRequest } from '../../src/types/editor'
 import { checkWriteAccess, isContentSlug, isGradeLevel, isInside } from '../security'
 
 type JsonResponse = (data: unknown, status?: number) => Response
@@ -11,31 +16,56 @@ const IMPORTABLE_FILES = new Set(['index.html', 'style.css', 'script.js', 'manif
 const MAX_IMPORT_BYTES = 2 * 1024 * 1024
 const MAX_IMPORT_ENTRIES = 32
 
+// 64 KiB covers the single-file multipart boundary, headers and filename.
+// Bound the raw request before the multipart parser allocates its file buffers.
+const MAX_IMPORT_REQUEST_BYTES = MAX_IMPORT_BYTES + 64 * 1024
+class ImportRequestTooLarge extends Error {}
+async function readImportForm(req: Request): Promise<Awaited<ReturnType<Request['formData']>>> {
+  // Bun lazily generates FormData headers. Capture them before consuming body.
+  const headers = new Headers(req.headers)
+  const reader = req.body?.getReader()
+  if (!reader) return req.formData()
+  const body = new Uint8Array(MAX_IMPORT_REQUEST_BYTES)
+  let length = 0
+  try {
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      if (value.byteLength > MAX_IMPORT_REQUEST_BYTES - length) throw new ImportRequestTooLarge()
+      body.set(value, length)
+      length += value.byteLength
+    }
+  } finally { await reader.cancel().catch(() => undefined) }
+  return new Request(req.url, { method: 'POST', headers, body: body.subarray(0, length) }).formData()
+}
+
 // 카탈로그 항목으로부터 콘텐츠 디렉터리 경로를 재구성한다.
 // manifest.path는 클라이언트가 넣을 수 있는 값이므로 신뢰하지 않고 subject/gradeLevel/id로만 만든다.
 function resolveContentDir(
   path: typeof import('path'),
-  content: Pick<ContentManifest, 'id' | 'subject' | 'gradeLevel'>
+  content: Pick<ContentManifest, 'id' | 'subject' | 'gradeLevel'>,
+  rootDir: string,
 ): string | undefined {
   if (!isContentSlug(content.id) || !isContentSlug(content.subject) || !isGradeLevel(content.gradeLevel)) {
     return undefined
   }
-  const contentsDir = path.resolve('public/contents')
-  const resolved = path.resolve(path.join('public/contents', content.subject, content.gradeLevel, content.id))
+  const contentsDir = path.resolve(rootDir, 'public/contents')
+  const resolved = path.resolve(rootDir, 'public/contents', content.subject, content.gradeLevel, content.id)
   return isInside(contentsDir, resolved) ? resolved : undefined
 }
 
 // 콘텐츠 CRUD API 핸들러
-export async function handleContentRoute(
+async function handleContentRouteUnlocked(
   req: Request,
   jsonResponse: JsonResponse,
-  errorResponse: ErrorResponse
+  errorResponse: ErrorResponse,
+  rootDir: string,
 ): Promise<Response> {
   const url = new URL(req.url)
   const pathname = url.pathname
   const fs = await import('fs/promises')
 
-  const CATALOG_PATH = 'public/contents/index.json'
+  const CATALOG_PATH = join(rootDir, 'public/contents/index.json')
 
   // 읽기(GET)를 제외한 모든 요청은 관리자 권한이 필요하다
   if (req.method !== 'GET') {
@@ -45,18 +75,15 @@ export async function handleContentRoute(
 
   // 카탈로그 로드 헬퍼
   async function loadCatalog(): Promise<ContentCatalog> {
-    try {
-      const data = await fs.readFile(CATALOG_PATH, 'utf-8')
-      return JSON.parse(data)
-    } catch {
-      return { version: '1.0.0', lastUpdated: new Date().toISOString(), contents: [] }
-    }
+    const data = await fs.readFile(CATALOG_PATH, 'utf-8')
+    validateCatalogSource(data)
+    return JSON.parse(data)
   }
 
   // 카탈로그 저장 헬퍼
   async function saveCatalog(catalog: ContentCatalog): Promise<void> {
     catalog.lastUpdated = new Date().toISOString()
-    await fs.writeFile(CATALOG_PATH, JSON.stringify(catalog, null, 2), 'utf-8')
+    await atomicWriteFile(CATALOG_PATH, JSON.stringify(catalog, null, 2))
   }
 
   // GET /api/content - 콘텐츠 목록 조회
@@ -117,6 +144,7 @@ export async function handleContentRoute(
   if (req.method === 'POST' && pathname === '/api/content') {
     try {
       const body = (await req.json()) as Partial<ContentManifest>
+      if (!body || typeof body !== 'object' || Array.isArray(body)) return errorResponse('요청 본문은 JSON 객체여야 합니다', 400)
 
       // 필수 필드 검증
       if (!body.id || !body.title || !body.subject || !body.gradeLevel || !body.type) {
@@ -172,6 +200,7 @@ export async function handleContentRoute(
     try {
       const contentId = pathname.split('/').pop()
       const body = (await req.json()) as Partial<ContentManifest>
+      if (!body || typeof body !== 'object' || Array.isArray(body)) return errorResponse('요청 본문은 JSON 객체여야 합니다', 400)
 
       const catalog = await loadCatalog()
       const index = catalog.contents.findIndex((c) => c.id === contentId)
@@ -221,44 +250,22 @@ export async function handleContentRoute(
       }
 
       // 콘텐츠 디렉토리 경로 (카탈로그의 path 문자열이 아니라 subject/gradeLevel/id로 재구성)
-      const resolvedDir = resolveContentDir(path, content)
+      const resolvedDir = resolveContentDir(path, content, rootDir)
       if (!resolvedDir) {
         return errorResponse('잘못된 콘텐츠 경로입니다', 400)
       }
 
-      // style.css 업데이트
-      if (body.styles && body.styles.length > 0) {
-        const cssPath = path.join(resolvedDir, 'style.css')
-        try {
-          let cssContent = await fs.readFile(cssPath, 'utf-8')
-          cssContent = updateCssVariables(cssContent, body.styles)
-          await fs.writeFile(cssPath, cssContent, 'utf-8')
-        } catch (e) {
-          console.error('CSS 업데이트 오류:', e)
-        }
+      // Store one overlay atomically; the bridge reapplies supported text/style changes on reload.
+      let overrides: SaveContentRequest
+      try {
+        overrides = validateEditorOverrides(body)
+        if (overrides.contentId !== contentId) return errorResponse('contentId가 일치하지 않습니다', 400)
+      } catch (error) {
+        return errorResponse(error instanceof Error ? error.message : '잘못된 편집 데이터입니다', 400)
       }
-
-      // script.js 업데이트 (텍스트, 퀴즈)
-      if ((body.texts && body.texts.length > 0) || (body.quizzes && body.quizzes.length > 0)) {
-        // 텍스트와 퀴즈는 현재 실시간 DOM 업데이트만 지원
-        // 영구 저장은 추후 contentData 패턴 분석 필요
-        console.log('텍스트/퀴즈 변경사항 기록:', {
-          texts: body.texts?.length || 0,
-          quizzes: body.quizzes?.length || 0
-        })
-      }
-
-      // index.html 업데이트 (텍스트 내용)
-      if (body.texts && body.texts.length > 0) {
-        const htmlPath = path.join(resolvedDir, 'index.html')
-        try {
-          let htmlContent = await fs.readFile(htmlPath, 'utf-8')
-          htmlContent = updateHtmlTexts(htmlContent, body.texts)
-          await fs.writeFile(htmlPath, htmlContent, 'utf-8')
-        } catch (e) {
-          console.error('HTML 업데이트 오류:', e)
-        }
-      }
+      const htmlPath = path.join(resolvedDir, 'index.html')
+      const htmlContent = await fs.readFile(htmlPath, 'utf-8')
+      await atomicWriteFile(htmlPath, embedEditorOverrides(htmlContent, overrides))
 
       return jsonResponse({
         success: true,
@@ -285,7 +292,7 @@ export async function handleContentRoute(
       }
 
       // 콘텐츠 디렉토리 경로 (카탈로그의 path 문자열이 아니라 subject/gradeLevel/id로 재구성)
-      const resolvedDir = resolveContentDir(path, content)
+      const resolvedDir = resolveContentDir(path, content, rootDir)
       if (!resolvedDir) {
         return errorResponse('잘못된 콘텐츠 경로입니다', 400)
       }
@@ -293,13 +300,15 @@ export async function handleContentRoute(
       // 파일 읽기
       const files: Record<string, string> = {}
       const fileNames = ['index.html', 'style.css', 'script.js', 'manifest.json']
+      const unsupported = (await fs.readdir(resolvedDir)).filter(name => !name.startsWith('.') && !IMPORTABLE_FILES.has(name))
+      if (unsupported.length) return errorResponse(`이 ZIP 형식은 HTML/CSS/JS/manifest만 지원합니다. 별도 에셋이 있어 내보낼 수 없습니다: ${unsupported.join(', ')}`, 400)
 
       for (const fileName of fileNames) {
         try {
           const filePath = path.join(resolvedDir, fileName)
           files[fileName] = await fs.readFile(filePath, 'utf-8')
-        } catch {
-          // 파일이 없으면 건너뛰기
+        } catch (error) {
+          if (fileName === 'index.html' || (error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
         }
       }
 
@@ -312,6 +321,7 @@ export async function handleContentRoute(
           gradeLevel: content.gradeLevel,
           grade: content.grade,
           type: content.type,
+          language: content.language,
           description: content.description,
           exportedAt: new Date().toISOString(),
           version: '1.0.0'
@@ -319,7 +329,7 @@ export async function handleContentRoute(
       }
 
       // ZIP 생성 (Bun 내장 기능 사용)
-      const zipBuffer = await createZipBuffer(files, contentId)
+      const zipBuffer = encodeContentZip(files)
 
       return new Response(zipBuffer, {
         status: 200,
@@ -337,19 +347,33 @@ export async function handleContentRoute(
   // POST /api/content/import - 콘텐츠 ZIP 가져오기
   if (req.method === 'POST' && pathname === '/api/content/import') {
     try {
-      const formData = await req.formData()
-      const file = formData.get('file') as File
+      let formData: Awaited<ReturnType<Request['formData']>>
+      try { formData = await readImportForm(req) }
+      catch (error) {
+        if (error instanceof ImportRequestTooLarge) return errorResponse('ZIP 업로드 요청이 너무 큽니다', 413)
+        return errorResponse('잘못된 multipart 업로드 요청입니다', 400)
+      }
+      const file = formData.get('file')
 
-      if (!file) {
+      if (!(file instanceof File)) {
         return errorResponse('파일이 필요합니다', 400)
       }
 
       const path = await import('path')
-      const arrayBuffer = await file.arrayBuffer()
-      if (arrayBuffer.byteLength > MAX_IMPORT_BYTES) {
+      if (file.size > MAX_IMPORT_BYTES) {
         return errorResponse(`ZIP 파일은 ${MAX_IMPORT_BYTES / 1024 / 1024}MB 이하여야 합니다`, 413)
       }
-      const files = await extractZipBuffer(Buffer.from(arrayBuffer))
+      const arrayBuffer = await file.arrayBuffer()
+      let files: Record<string, string>
+      let manifest: Partial<ContentManifest>
+      try {
+        files = await decodeContentZip(new Uint8Array(arrayBuffer), async (data, maxBytes) =>
+          new Uint8Array(inflateRawSync(data, { maxOutputLength: maxBytes })))
+        manifest = JSON.parse(files['manifest.json'])
+        if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest)) throw new Error('manifest must be an object')
+      } catch (error) {
+        return errorResponse(error instanceof Error ? error.message : '잘못된 ZIP 파일입니다', 400)
+      }
 
       if (Object.keys(files).length > MAX_IMPORT_ENTRIES) {
         return errorResponse(`ZIP 항목은 ${MAX_IMPORT_ENTRIES}개 이하여야 합니다`, 400)
@@ -369,7 +393,6 @@ export async function handleContentRoute(
         )
       }
 
-      const manifest = JSON.parse(files['manifest.json'])
       if (!manifest.id || !manifest.title || !manifest.subject || !manifest.gradeLevel || !manifest.type) {
         return errorResponse('manifest.json에 필수 필드가 누락되었습니다', 400)
       }
@@ -384,13 +407,14 @@ export async function handleContentRoute(
       let finalId = manifest.id
       const originalId = manifest.id
 
-      // ID 충돌 처리 - 새 ID 자동 생성
-      if (catalog.contents.some((c) => c.id === manifest.id)) {
-        let counter = 2
-        while (catalog.contents.some((c) => c.id === `${manifest.id}-${counter}`)) {
-          counter++
-        }
-        finalId = `${manifest.id}-${counter}`
+      // Reserve only a fresh directory; uncatalogued factory output must also survive imports.
+      let counter = 2
+      while (catalog.contents.some((c) => c.id === finalId) ||
+          await fs.stat(path.join(rootDir, 'public/contents', manifest.subject, manifest.gradeLevel, finalId)).then(() => true, (error) => {
+            if ((error as NodeJS.ErrnoException).code === 'ENOENT') return false
+            throw error
+          })) {
+        finalId = `${originalId}-${counter++}`
       }
 
       // 콘텐츠 디렉토리 생성
@@ -398,12 +422,18 @@ export async function handleContentRoute(
         id: finalId,
         subject: manifest.subject,
         gradeLevel: manifest.gradeLevel,
-      })
+      }, rootDir)
       if (!resolvedDir) {
         return errorResponse('잘못된 콘텐츠 경로입니다', 400)
       }
 
-      await fs.mkdir(resolvedDir, { recursive: true })
+      await fs.mkdir(path.dirname(resolvedDir), { recursive: true })
+      try { await fs.mkdir(resolvedDir) }
+      catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'EEXIST') return errorResponse('콘텐츠 경로가 이미 존재합니다. 다시 시도하세요', 409)
+        throw error
+      }
+      try {
 
       // 파일 저장 (파일명은 위에서 허용 목록으로 검증됨)
       for (const [fileName, fileContent] of Object.entries(files)) {
@@ -429,8 +459,13 @@ export async function handleContentRoute(
         tags: manifest.tags || [],
       }
 
+      await fs.writeFile(path.join(resolvedDir, 'manifest.json'), JSON.stringify(newContent, null, 2), 'utf-8')
       catalog.contents.push(newContent)
       await saveCatalog(catalog)
+      } catch (error) {
+        await fs.rm(resolvedDir, { recursive: true, force: true })
+        throw error
+      }
 
       return jsonResponse({
         success: true,
@@ -460,27 +495,31 @@ export async function handleContentRoute(
 
       const deletedContent = catalog.contents[index]
 
-      // 콘텐츠 파일 삭제 (선택적)
+      // Move files aside first so a failed catalog commit can restore them.
       const deleteFiles = url.searchParams.get('deleteFiles') === 'true'
+      let removed: { original: string; temporary: string } | undefined
       if (deleteFiles) {
+        const path = await import('path')
+        const original = resolveContentDir(path, deletedContent, rootDir)
+        if (!original) return errorResponse('잘못된 콘텐츠 경로입니다', 400)
+        const temporary = `${original}.deleting-${crypto.randomUUID()}`
         try {
-          const path = await import('path')
-          // 카탈로그의 path 문자열을 신뢰하면 "/contents" 같은 값으로 콘텐츠 루트 전체가 지워질 수 있다.
-          // subject/gradeLevel/id로 경로를 재구성하고 contents 루트 자신은 거부한다.
-          const resolvedPath = resolveContentDir(path, deletedContent)
-          if (!resolvedPath) {
-            console.error('잘못된 콘텐츠 경로로 파일 삭제를 건너뜁니다:', deletedContent.id)
-          } else {
-            await fs.rm(resolvedPath, { recursive: true, force: true })
-          }
-        } catch {
-          // 파일 삭제 실패는 무시 (이미 없을 수 있음)
+          await fs.rename(original, temporary)
+          removed = { original, temporary }
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
         }
       }
-
-      // 카탈로그에서 제거
       catalog.contents.splice(index, 1)
-      await saveCatalog(catalog)
+      try { await saveCatalog(catalog) }
+      catch (error) {
+        if (removed) await fs.rename(removed.temporary, removed.original)
+        throw error
+      }
+      // Once committed, a cleanup failure must not turn a successful deletion
+      // into a retryable failure. The unlisted directory can be cleaned later.
+      if (removed) await fs.rm(removed.temporary, { recursive: true, force: true })
+        .catch(error => console.error('삭제된 콘텐츠 임시 디렉터리 정리 실패:', error))
 
       return jsonResponse({
         success: true,
@@ -496,227 +535,19 @@ export async function handleContentRoute(
   return errorResponse('지원하지 않는 엔드포인트입니다', 404)
 }
 
-// CSS 변수 업데이트 헬퍼
-function updateCssVariables(css: string, styles: EditableStyle[]): string {
-  let updatedCss = css
-
-  for (const style of styles) {
-    // CSS 변수 패턴: --variable-name: value;
-    const regex = new RegExp(`(${style.variable.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}):\\s*[^;]+;`, 'g')
-    updatedCss = updatedCss.replace(regex, `$1: ${style.value};`)
-  }
-
-  return updatedCss
-}
-
-// HTML 텍스트 업데이트 헬퍼
-function updateHtmlTexts(html: string, texts: EditableText[]): string {
-  let updatedHtml = html
-
-  for (const text of texts) {
-    // ID 기반 선택자인 경우
-    if (text.path.startsWith('#')) {
-      const id = text.path.slice(1)
-      // id="xxx">텍스트</tag> 패턴 매칭
-      const regex = new RegExp(`(id="${id}"[^>]*>)[^<]*(<)`, 'g')
-      updatedHtml = updatedHtml.replace(regex, `$1${escapeHtml(text.value)}$2`)
-    }
-  }
-
-  return updatedHtml
-}
-
-// HTML 이스케이프 헬퍼
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
-}
-
-// ZIP 버퍼 생성 헬퍼 (간단한 구현)
-async function createZipBuffer(files: Record<string, string>, _folderName: string): Promise<Buffer> {
-  // Bun의 내장 zip API 사용
-  const entries = Object.entries(files).map(([name, content]) => ({
-    path: name,
-    data: new TextEncoder().encode(content)
-  }))
-
-  // 간단한 ZIP 구조 생성 (비압축)
-  const chunks: Uint8Array[] = []
-  const centralDirectory: Uint8Array[] = []
-  let offset = 0
-
-  for (const entry of entries) {
-    const localHeader = createLocalFileHeader(entry.path, entry.data)
-    const centralHeader = createCentralDirectoryHeader(entry.path, entry.data, offset)
-
-    chunks.push(localHeader)
-    chunks.push(entry.data)
-
-    centralDirectory.push(centralHeader)
-    offset += localHeader.length + entry.data.length
-  }
-
-  const cdOffset = offset
-  for (const cd of centralDirectory) {
-    chunks.push(cd)
-    offset += cd.length
-  }
-
-  const endRecord = createEndOfCentralDirectory(entries.length, offset - cdOffset, cdOffset)
-  chunks.push(endRecord)
-
-  // 모든 청크 병합
-  const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0)
-  const result = new Uint8Array(totalLength)
-  let pos = 0
-  for (const chunk of chunks) {
-    result.set(chunk, pos)
-    pos += chunk.length
-  }
-
-  return Buffer.from(result)
-}
-
-// ZIP 로컬 파일 헤더 생성
-function createLocalFileHeader(filename: string, data: Uint8Array): Uint8Array {
-  const encoder = new TextEncoder()
-  const filenameBytes = encoder.encode(filename)
-  const header = new Uint8Array(30 + filenameBytes.length)
-  const view = new DataView(header.buffer)
-
-  view.setUint32(0, 0x04034b50, true) // 시그니처
-  view.setUint16(4, 20, true) // 버전
-  view.setUint16(6, 0, true) // 플래그
-  view.setUint16(8, 0, true) // 압축 방식 (저장)
-  view.setUint16(10, 0, true) // 수정 시간
-  view.setUint16(12, 0, true) // 수정 날짜
-  view.setUint32(14, crc32(data), true) // CRC-32
-  view.setUint32(18, data.length, true) // 압축 크기
-  view.setUint32(22, data.length, true) // 원본 크기
-  view.setUint16(26, filenameBytes.length, true) // 파일명 길이
-  view.setUint16(28, 0, true) // 추가 필드 길이
-
-  header.set(filenameBytes, 30)
-  return header
-}
-
-// ZIP 중앙 디렉토리 헤더 생성
-function createCentralDirectoryHeader(filename: string, data: Uint8Array, offset: number): Uint8Array {
-  const encoder = new TextEncoder()
-  const filenameBytes = encoder.encode(filename)
-  const header = new Uint8Array(46 + filenameBytes.length)
-  const view = new DataView(header.buffer)
-
-  view.setUint32(0, 0x02014b50, true) // 시그니처
-  view.setUint16(4, 20, true) // 생성 버전
-  view.setUint16(6, 20, true) // 필요 버전
-  view.setUint16(8, 0, true) // 플래그
-  view.setUint16(10, 0, true) // 압축 방식
-  view.setUint16(12, 0, true) // 수정 시간
-  view.setUint16(14, 0, true) // 수정 날짜
-  view.setUint32(16, crc32(data), true) // CRC-32
-  view.setUint32(20, data.length, true) // 압축 크기
-  view.setUint32(24, data.length, true) // 원본 크기
-  view.setUint16(28, filenameBytes.length, true) // 파일명 길이
-  view.setUint16(30, 0, true) // 추가 필드 길이
-  view.setUint16(32, 0, true) // 코멘트 길이
-  view.setUint16(34, 0, true) // 디스크 시작 번호
-  view.setUint16(36, 0, true) // 내부 속성
-  view.setUint32(38, 0, true) // 외부 속성
-  view.setUint32(42, offset, true) // 로컬 헤더 오프셋
-
-  header.set(filenameBytes, 46)
-  return header
-}
-
-// ZIP 끝 레코드 생성
-function createEndOfCentralDirectory(entryCount: number, cdSize: number, cdOffset: number): Uint8Array {
-  const record = new Uint8Array(22)
-  const view = new DataView(record.buffer)
-
-  view.setUint32(0, 0x06054b50, true) // 시그니처
-  view.setUint16(4, 0, true) // 디스크 번호
-  view.setUint16(6, 0, true) // CD 시작 디스크
-  view.setUint16(8, entryCount, true) // 이 디스크의 항목 수
-  view.setUint16(10, entryCount, true) // 전체 항목 수
-  view.setUint32(12, cdSize, true) // CD 크기
-  view.setUint32(16, cdOffset, true) // CD 오프셋
-  view.setUint16(20, 0, true) // 코멘트 길이
-
-  return record
-}
-
-// CRC-32 계산
-function crc32(data: Uint8Array): number {
-  let crc = 0xffffffff
-  const table = getCrc32Table()
-
-  for (let i = 0; i < data.length; i++) {
-    crc = (crc >>> 8) ^ table[(crc ^ data[i]) & 0xff]
-  }
-
-  return (crc ^ 0xffffffff) >>> 0
-}
-
-// CRC-32 테이블 생성
-let crc32Table: number[] | null = null
-function getCrc32Table(): number[] {
-  if (crc32Table) return crc32Table
-
-  crc32Table = []
-  for (let i = 0; i < 256; i++) {
-    let c = i
-    for (let j = 0; j < 8; j++) {
-      c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1)
-    }
-    crc32Table[i] = c >>> 0
-  }
-
-  return crc32Table
-}
-
-// ZIP 버퍼 추출 헬퍼
-async function extractZipBuffer(buffer: Buffer): Promise<Record<string, string>> {
-  const files: Record<string, string> = {}
-  const view = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength)
-  let offset = 0
-
-  while (offset < buffer.length - 4) {
-    const signature = view.getUint32(offset, true)
-
-    if (signature === 0x04034b50) {
-      // 로컬 파일 헤더
-      const filenameLength = view.getUint16(offset + 26, true)
-      const extraLength = view.getUint16(offset + 28, true)
-      const compressedSize = view.getUint32(offset + 18, true)
-
-      const filenameStart = offset + 30
-      const filenameEnd = filenameStart + filenameLength
-      const filename = new TextDecoder().decode(buffer.subarray(filenameStart, filenameEnd))
-
-      const dataStart = filenameEnd + extraLength
-      const dataEnd = dataStart + compressedSize
-      const data = buffer.subarray(dataStart, dataEnd)
-
-      // 폴더가 아닌 경우만 추가
-      if (!filename.endsWith('/')) {
-        // 경로에서 파일명만 추출
-        const basename = filename.split('/').pop() || filename
-        files[basename] = new TextDecoder().decode(data)
-      }
-
-      offset = dataEnd
-    } else if (signature === 0x02014b50) {
-      // 중앙 디렉토리 - 파싱 종료
-      break
-    } else {
-      offset++
-    }
-  }
-
-  return files
+// The same cross-process lock is used by factory publication and every CRUD mutation.
+export async function handleContentRoute(
+  req: Request, jsonResponse: JsonResponse, errorResponse: ErrorResponse,
+  options: { rootDir?: string } = {},
+): Promise<Response> {
+  const rootDir = resolve(options.rootDir ?? '.')
+  if (req.method === 'GET') return handleContentRouteUnlocked(req, jsonResponse, errorResponse, rootDir)
+  const denial = checkWriteAccess(req)
+  if (denial) return errorResponse(denial.message, denial.status)
+  const lockPath = join(rootDir, 'public/contents/index.json.lock')
+  let lock
+  try { lock = await acquireCatalogLock(lockPath) }
+  catch (error) { return errorResponse(error instanceof Error ? error.message : '카탈로그 잠금 실패', 409) }
+  try { return await handleContentRouteUnlocked(req, jsonResponse, errorResponse, rootDir) }
+  finally { await lock.release() }
 }

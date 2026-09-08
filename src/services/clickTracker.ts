@@ -57,12 +57,15 @@ export function getClickCount(contentId: string): number {
  * @param createdAt 콘텐츠 생성일 (ISO string)
  * @returns 정렬 점수 (높을수록 왼쪽)
  */
-export function calculateSortScore(contentId: string, createdAt: string | undefined): number {
-  const stats = getClickStats()
+export function calculateSortScore(
+  contentId: string,
+  createdAt: string | undefined,
+  stats: ClickStats = getClickStats(),
+  now: Date = new Date(),
+): number {
   const clickData = stats[contentId]
 
   // 최신순 점수: 최근 30일 내 생성된 콘텐츠에 높은 가산점 (최신 콘텐츠 우선)
-  const now = new Date()
   let recencyScore = 0
 
   if (createdAt) {

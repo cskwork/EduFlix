@@ -6,6 +6,8 @@
 // localStorage가 아니라 IndexedDB를 쓰는 이유: 콘텐츠 3파일 합계가 5MB 한도를 넘길 수 있다.
 import type { ContentManifest, ContentType, GradeLevel, Subject } from '../../types/content'
 import { t } from '../../i18n'
+import type { SaveContentRequest } from '../../types/editor'
+import { embedEditorOverrides } from '../editor/overrides'
 
 const DB_NAME = 'eduflix-local-content'
 const DB_VERSION = 1
@@ -27,6 +29,7 @@ export interface LocalContent {
   css: string
   js: string
   createdAt: string
+  editorOverrides?: SaveContentRequest
 }
 
 export function isLocalContentId(id: string): boolean {
@@ -60,7 +63,9 @@ async function withStore<T>(
     return await new Promise<T>((resolve, reject) => {
       const transaction = db.transaction(STORE_NAME, mode)
       const request = run(transaction.objectStore(STORE_NAME))
-      request.onsuccess = () => resolve(request.result)
+      transaction.oncomplete = () => resolve(request.result)
+      transaction.onabort = () => reject(transaction.error ?? new Error(t('errors.indexedDbOperationFailed')))
+      transaction.onerror = () => reject(transaction.error ?? new Error(t('errors.indexedDbOperationFailed')))
       request.onerror = () =>
         reject(request.error ?? new Error(t('errors.indexedDbOperationFailed')))
     })
@@ -107,7 +112,7 @@ export function toManifest(content: LocalContent): ContentManifest {
 }
 
 // 3개 파일을 하나의 실행 가능한 HTML 문서로 합친다
-export function buildLocalDocument(content: Pick<LocalContent, 'html' | 'css' | 'js'>): string {
+export function buildLocalDocument(content: Pick<LocalContent, 'html' | 'css' | 'js' | 'editorOverrides'>): string {
   let document = content.html
 
   if (content.css) {
@@ -131,11 +136,14 @@ export function buildLocalDocument(content: Pick<LocalContent, 'html' | 'css' | 
     }
   }
 
-  return document
+  return content.editorOverrides ? embedEditorOverrides(document, content.editorOverrides) : document
 }
 
 // 뷰어 iframe에 넘길 Blob URL 생성 (해제는 호출자 책임)
-export function createLocalContentUrl(content: Pick<LocalContent, 'html' | 'css' | 'js'>): string {
-  const blob = new Blob([buildLocalDocument(content)], { type: 'text/html' })
+export function createLocalContentUrl(content: Pick<LocalContent, 'html' | 'css' | 'js' | 'editorOverrides'>): string {
+  const document = buildLocalDocument(content)
+  const base = `<base href="${globalThis.location?.origin ?? 'http://localhost'}/">`
+  const html = /<head\b[^>]*>/i.test(document) ? document.replace(/<head\b[^>]*>/i, match => `${match}${base}`) : `${base}${document}`
+  const blob = new Blob([html], { type: 'text/html' })
   return URL.createObjectURL(blob)
 }

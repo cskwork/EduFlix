@@ -17,6 +17,8 @@ import { t } from '../i18n'
 import { useContentStore } from './content'
 
 export const useGenerationStore = defineStore('generation', () => {
+  let runVersion = 0
+  let controller: AbortController | null = null
   // 현재 생성 상태
   const currentProgress = ref<GenerationProgress>({
     status: 'idle',
@@ -88,6 +90,10 @@ export const useGenerationStore = defineStore('generation', () => {
     problem?: string
     difficulty?: Difficulty
   }): Promise<GenerationResponse> {
+    controller?.abort()
+    controller = new AbortController()
+    const signal = controller.signal
+    const version = ++runVersion
     const contentStore = useContentStore()
     const startTime = Date.now()
 
@@ -128,10 +134,12 @@ export const useGenerationStore = defineStore('generation', () => {
           problem: options.problem,
           difficulty: options.difficulty,
         },
-        handleProgress,
-        (jobId) => { currentJobId.value = jobId },
+        (progress) => { if (version === runVersion) handleProgress(progress) },
+        (jobId) => { if (version === runVersion) currentJobId.value = jobId },
+        signal,
       )
 
+      if (version !== runVersion) return { success: false, error: 'Cancelled' }
       // 성공 시 콘텐츠 스토어에 추가
       let finalResult = result
       if (result.success && result.manifest) {
@@ -144,36 +152,14 @@ export const useGenerationStore = defineStore('generation', () => {
             warning: t('generation.missingContentId'),
           }
         } else {
-          // Option 1은 subject/grade가 확정. Option 2는 서버가 AI 추론 subject를 반영한
-          // 매니페스트로 응답하지만, 현재 GenerationResponse에는 subject가 없으므로
-          // 카탈로그 추가 시 클라이언트가 아는 값을 기본값으로 쓴다.
-          // (정확한 subject는 서버가 public/contents/index.json에 기록함)
-          const grade = options.grade ?? (options.difficulty === 'easy' ? 'elementary-5'
-            : options.difficulty === 'hard' ? 'high-2' : 'middle-2')
-          const gradeLevel = grade.startsWith('elementary')
-            ? 'elementary'
-            : grade.startsWith('middle')
-              ? 'middle'
-              : 'high'
-          const subjectForCatalog = options.subject ?? 'general'
-
-          const newContent: ContentManifest = {
-            id: contentId,
-            title: result.manifest.title,
-            subject: subjectForCatalog,
-            gradeLevel,
-            grade,
-            type: result.manifest.type,
-            language: options.language || 'ko',
-            description: result.manifest.description,
-            thumbnail: '',
-            path: `/contents/${subjectForCatalog}/${gradeLevel}/${contentId}/index.html`,
-            createdAt: new Date().toISOString(),
-            tags: options.interests ?? [],
-            difficulty: options.difficulty,
+          const manifest = result.manifest
+          if (manifest.path && manifest.subject && manifest.gradeLevel && manifest.grade) {
+            contentStore.addContent({ ...manifest, id: contentId, language: manifest.language ?? options.language ?? 'ko', createdAt: manifest.createdAt ?? new Date().toISOString(), thumbnail: manifest.thumbnail ?? '', tags: manifest.tags ?? [] } as ContentManifest)
+          } else {
+            // Older APIs omit the canonical path; reload the catalog instead of guessing.
+            await contentStore.loadContents(true)
+            if (version !== runVersion) return { success: false, error: 'Cancelled' }
           }
-
-          contentStore.addContent(newContent)
         }
       }
 
@@ -196,6 +182,7 @@ export const useGenerationStore = defineStore('generation', () => {
 
       return finalResult
     } catch (error) {
+      if (version !== runVersion) return { success: false, error: 'Cancelled' }
       const errorMessage = error instanceof Error ? error.message : t('common.unknownError')
 
       currentProgress.value = {
@@ -218,6 +205,9 @@ export const useGenerationStore = defineStore('generation', () => {
 
   // 생성 취소
   function cancelGeneration() {
+    runVersion++
+    controller?.abort()
+    controller = null
     currentProgress.value = {
       status: 'idle',
       progress: 0,
@@ -229,6 +219,9 @@ export const useGenerationStore = defineStore('generation', () => {
 
   // 상태 초기화
   function resetState() {
+    runVersion++
+    controller?.abort()
+    controller = null
     currentProgress.value = {
       status: 'idle',
       progress: 0,

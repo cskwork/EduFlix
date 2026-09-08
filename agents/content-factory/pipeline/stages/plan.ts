@@ -18,7 +18,7 @@ export async function runPlanStage(context: FactoryContext): Promise<void> {
   const renderMode = context.renderMode ?? DEFAULT_RENDER_MODE;
   const mode = context.mode ?? "interest";
   const inputs = { topic: context.topic, grade: context.grade, subject: context.subject,
-    type: context.type ?? null, renderMode, mode,
+    type: context.type ?? null, renderMode, mode, language: context.language ?? "ko",
     interests: context.interests ?? [], additionalContext: context.additionalContext ?? null,
     problem: context.problem ?? null, difficulty: context.difficulty ?? null };
   const generated = await shouldRunStage(outFile, context.force, inputs);
@@ -28,7 +28,8 @@ export async function runPlanStage(context: FactoryContext): Promise<void> {
     await runFactoryText({
       outFile,
       schemaFile: join(context.factoryDir, "schemas/plan.schema.json"),
-      prompt: `${prompt}\n\n입력: ${JSON.stringify({
+      prompt: `${prompt}\nLearner-facing text must use language ${context.language ?? "ko"}.\n\n입력: ${JSON.stringify({
+        language: context.language ?? "ko",
         topic: context.topic,
         grade: context.grade,
         subject: context.subject,

@@ -65,6 +65,7 @@ async function normalizeManifestStructuralFields(
   } catch {
     return;
   }
+  manifest.language = context.language ?? "ko";
   manifest.id = context.id;
   manifest.subject = context.subject;
   manifest.grade = context.grade;
@@ -131,7 +132,7 @@ export async function runBuildStage(context: FactoryContext, revision = ""): Pro
     ({ assetId, kind, sourcePath }));
   const responseFile = join(context.runDir, "build-response.txt");
   const inputs = { plan, storyboard, assets, resolvedAssets, id: context.id, grade: context.grade,
-    subject: context.subject, type: context.type ?? null, renderMode };
+    subject: context.subject, type: context.type ?? null, renderMode, language: context.language ?? "ko" };
   const incomplete = !required.every((file) => existsSync(join(context.contentDir, file)));
   if (!revision && !await shouldRunStage(responseFile, context.force || incomplete, inputs)) return;
 
@@ -154,7 +155,7 @@ export async function runBuildStage(context: FactoryContext, revision = ""): Pro
       requiredFiles: required,
       // 4파일 전체 생성은 기본 10분보다 오래 걸릴 수 있어 코드 생성 단계만 상향
       timeoutMs: 40 * 60 * 1000,
-      prompt: `${revisionHeader}${prompt}\n\n출력 디렉터리: ${stagingDir}\n최종 콘텐츠 디렉터리: ${context.contentDir}\n제작 방식(renderMode): ${renderMode}\n모범 사례 파일 본문: ${JSON.stringify(exampleFiles)}\n기획: ${JSON.stringify(plan)}\nmanifest 메타데이터(반드시 그대로 사용, 임의 변경 금지): ${JSON.stringify({ id: context.id, title: plan.title, description: plan.description, subject: context.subject, grade: context.grade, gradeLevel: context.gradeLevel, path: `/contents/${context.subject}/${context.gradeLevel}/${context.id}/index.html` })}\n스토리보드: ${JSON.stringify(storyboard)}\n에셋 계획: ${JSON.stringify(assets)}\n검증된 에셋 참조 경로: ${JSON.stringify(assetReferences)}\n반드시 출력 디렉터리에 4개 계약 파일을 직접 작성하세요.`,
+      prompt: `${revisionHeader}${prompt}\nLearner-facing text must use language ${context.language ?? "ko"}.\n\n출력 디렉터리: ${stagingDir}\n최종 콘텐츠 디렉터리: ${context.contentDir}\n제작 방식(renderMode): ${renderMode}\n모범 사례 파일 본문: ${JSON.stringify(exampleFiles)}\n기획: ${JSON.stringify(plan)}\nmanifest 메타데이터(반드시 그대로 사용, 임의 변경 금지): ${JSON.stringify({ language: context.language ?? "ko", id: context.id, title: plan.title, description: plan.description, subject: context.subject, grade: context.grade, gradeLevel: context.gradeLevel, path: `/contents/${context.subject}/${context.gradeLevel}/${context.id}/index.html` })}\n스토리보드: ${JSON.stringify(storyboard)}\n에셋 계획: ${JSON.stringify(assets)}\n검증된 에셋 참조 경로: ${JSON.stringify(assetReferences)}\n반드시 출력 디렉터리에 4개 계약 파일을 직접 작성하세요.`,
     });
     const missing: string[] = [];
     for (const file of required) {

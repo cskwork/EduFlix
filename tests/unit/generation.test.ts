@@ -509,3 +509,34 @@ describe('generation constants', () => {
     })
   })
 })
+
+describe('generation run isolation', () => {
+  beforeEach(() => { setActivePinia(createPinia()); vi.clearAllMocks() })
+  it('aborts client work and ignores late callbacks and results from a cancelled run', async () => {
+    let finish!: (result: {success:boolean;contentId:string}) => void
+    let lateProgress: ((value: {status:'completed';progress:number;message:string}) => void) | undefined
+    let signal: AbortSignal | undefined
+    vi.mocked(generateContent).mockImplementation((_options, progress, _job, abortSignal) => {
+      lateProgress = progress
+      signal = abortSignal
+      return new Promise(resolve => { finish = resolve })
+    })
+    const store = useGenerationStore()
+    const pending = store.startGeneration({ subject:'math' })
+    store.cancelGeneration()
+    expect(signal?.aborted).toBe(true)
+    lateProgress?.({status:'completed',progress:100,message:'Late'})
+    finish({success:true,contentId:'old'})
+    expect((await pending).success).toBe(false)
+    expect(store.currentProgress.status).toBe('idle')
+    expect(store.lastResult).toBeNull()
+    expect(store.history).toHaveLength(0)
+  })
+  it('uses the server manifest path for inferred-subject content', async () => {
+    vi.mocked(generateContent).mockResolvedValue({success:true,contentId:'inferred',manifest:{id:'inferred',title:'Inferred',description:'',type:'simulation',subject:'science',gradeLevel:'middle',grade:'middle-2',path:'/contents/science/middle/inferred/index.html'}})
+    const store = useGenerationStore()
+    await store.startGeneration({mode:'problem',problem:'Why does light bend?'})
+    expect(useContentStore().getContentById('inferred')?.path).toBe('/contents/science/middle/inferred/index.html')
+    expect(useContentStore().getContentById('inferred')?.subject).toBe('science')
+  })
+})

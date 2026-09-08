@@ -206,8 +206,9 @@ class EduFlixEngine {
         let sceneEl = document.createElement('div');
         sceneEl.id = 'scene-' + id;
         sceneEl.className = 'scene scene-' + id;
-        renderFn(sceneEl);
+        // onInit hooks look up their controls through document.getElementById.
         this.container.appendChild(sceneEl);
+        renderFn(sceneEl);
         const scene = new Scene(id, sceneEl);
         if (onEnterFn) scene.onEnter = onEnterFn;
         if (onExitFn) scene.onExit = onExitFn;

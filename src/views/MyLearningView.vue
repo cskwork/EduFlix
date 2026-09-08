@@ -2,6 +2,7 @@
 import { onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLearningStore } from '../stores/learning'
+import ErrorMessage from '../components/common/ErrorMessage.vue'
 import LoadingSpinner from '../components/common/LoadingSpinner.vue'
 import IconSet, { type IconName } from '../components/icons/IconSet.vue'
 import { subjectLabel } from '../i18n/labels'
@@ -65,6 +66,7 @@ function resetProgress() {
       :message="t('myLearning.loading')"
     />
 
+    <ErrorMessage v-else-if="learningStore.error" :message="learningStore.error" @retry="learningStore.loadKnowledgeMap()" />
     <div v-else class="learning-content">
       <!-- 연속 학습 배너 -->
       <div v-if="stats.streakDays > 0" class="streak-banner">

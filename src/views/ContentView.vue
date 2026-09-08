@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // 콘텐츠 상세 페이지
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
+import { useLearningStore } from '../stores/learning'
 import { useContentStore } from '../stores/content'
 import ContentViewer from '../components/viewer/ContentViewer.vue'
 import ContentEditorPanel from '../components/editor/ContentEditorPanel.vue'
@@ -31,6 +32,14 @@ const props = defineProps<{
 
 const router = useRouter()
 const contentStore = useContentStore()
+const learningStore = useLearningStore()
+const editorRef = ref<InstanceType<typeof ContentEditorPanel> | null>(null)
+const learningNodes = computed(() => learningStore.knowledgeMap?.nodes.filter(node => node.contentIds.includes(props.id)) ?? [])
+const isCompleted = computed(() => learningNodes.value.length > 0 && learningNodes.value.every(node => learningStore.progressMap.get(node.id)?.completedContentIds.includes(props.id)))
+const relatedContents = computed(() => [...new Set(learningNodes.value.flatMap(node => node.contentIds))].filter(id => id !== props.id).map(id => contentStore.getContentById(id)).filter((item): item is ContentManifest => item !== null))
+function markComplete() {
+  for (const node of learningNodes.value) learningStore.markContentCompleted(node.id, props.id)
+}
 
 // 상태
 const isLoading = ref(true)
@@ -80,15 +89,20 @@ const subjectColorClass = computed(() => {
 })
 
 // 콘텐츠 로드
+let loadVersion = 0
 async function loadContent() {
+  const version = ++loadVersion
+  const id = props.id
   isLoading.value = true
   error.value = null
+  content.value = null
 
   releaseLocalContentUrl()
 
   // 브라우저에 보관된 생성 콘텐츠는 카탈로그가 아니라 IndexedDB에서 읽는다
-  if (isLocalContentId(props.id)) {
-    const local = await getLocalContent(props.id).catch(() => undefined)
+  if (isLocalContentId(id)) {
+    const local = await getLocalContent(id).catch(() => undefined)
+    if (version !== loadVersion) return
     if (!local) {
       error.value = t('errors.contentNotFound')
       isLoading.value = false
@@ -107,13 +121,15 @@ async function loadContent() {
   }
 
   // ID로 콘텐츠 찾기
-  let found = contentStore.getContentById(props.id)
+  if (version !== loadVersion) return
+  let found = contentStore.getContentById(id)
 
   // 찾지 못했으면 캐시된 카탈로그일 수 있으니 강제 새로고침 후 재시도.
   // 생성 직후 브라우저가 옛날 index.json을 캐시해둔 경우가 흔하다.
   if (!found) {
     await contentStore.loadContents(true)
-    found = contentStore.getContentById(props.id)
+    if (version !== loadVersion) return
+    found = contentStore.getContentById(id)
   }
 
   if (!found) {
@@ -138,13 +154,19 @@ function toggleFullscreen() {
 
 // 편집 모드 토글
 function toggleEditMode() {
-  isEditing.value = !isEditing.value
+  if (isEditing.value) editorRef.value?.requestClose()
+  else isEditing.value = true
 }
 
 // 편집 저장 핸들러
-function handleEditorSave(_content: EditableContent) {
-  // 저장 완료 후 처리
-  console.log('콘텐츠 저장 완료')
+async function handleEditorSave(_content: EditableContent) {
+  if (isLocalContentId(props.id)) {
+    const local = await getLocalContent(props.id)
+    if (local) {
+      releaseLocalContentUrl()
+      localContentUrl.value = createLocalContentUrl(local)
+    }
+  }
 }
 
 // 편집 패널 닫기 핸들러
@@ -153,6 +175,9 @@ function handleEditorClose() {
 }
 
 // iframe ref 계산
+onBeforeRouteLeave(() => editorRef.value?.confirmDiscard() ?? true)
+onBeforeRouteUpdate(() => editorRef.value?.confirmDiscard() ?? true)
+
 const iframeRef = computed(() => viewerRef.value?.getIframeRef() || null)
 
 // 콘텐츠 로드 완료 핸들러
@@ -169,21 +194,24 @@ function handleViewerError(err: Error) {
 watch(
   () => props.id,
   () => {
+    isEditing.value = false
     loadContent()
   }
 )
 
 onMounted(() => {
+  learningStore.loadKnowledgeMap()
   loadContent()
 })
 
 onUnmounted(() => {
+  loadVersion++
   releaseLocalContentUrl()
 })
 </script>
 
 <template>
-  <div class="content-view">
+  <div class="content-view" :class="{ 'has-learning-actions': learningNodes.length && !isEditing && !error }">
     <!-- 상단 바 -->
     <header class="content-header">
       <button class="back-btn" :aria-label="t('contentView.back')" @click="goBack">
@@ -289,6 +317,7 @@ onUnmounted(() => {
     <!-- 편집 패널 -->
     <aside v-if="isEditing && content" class="editor-sidebar">
       <ContentEditorPanel
+        ref="editorRef"
         :content-id="content.id"
         :iframe-ref="iframeRef"
         @save="handleEditorSave"
@@ -296,8 +325,17 @@ onUnmounted(() => {
       />
     </aside>
 
+    <section v-if="content && !isLoading && !error && learningNodes.length && !isEditing" class="learning-actions" :aria-label="t('editor.relatedContents')">
+      <button class="retry-btn" :disabled="isCompleted && !learningStore.persistenceError" @click="markComplete">{{ t(isCompleted && !learningStore.persistenceError ? 'editor.contentCompleted' : 'editor.completeContent') }}</button>
+      <p v-if="learningStore.persistenceError" role="alert">{{ learningStore.persistenceError }}</p>
+      <nav v-if="relatedContents.length">
+        <span>{{ t('editor.relatedContents') }}</span>
+        <RouterLink v-for="related in relatedContents" :key="related.id" :to="`/content/${related.id}`">{{ localizedTitle(related) }}</RouterLink>
+      </nav>
+    </section>
+
     <!-- 콘텐츠 설명 (편집 모드가 아닐 때만 표시) -->
-    <aside v-else-if="content && displayDescription && !isEditing" class="content-sidebar">
+    <aside v-if="content && displayDescription && !isEditing" class="content-sidebar">
       <section class="sidebar-section">
         <h3>{{ t('contentView.descriptionHeading') }}</h3>
         <p>{{ displayDescription }}</p>
@@ -571,8 +609,34 @@ onUnmounted(() => {
 
 /* 편집 사이드바 */
 .editor-sidebar {
-  display: none;
+  display: block;
+  position: fixed;
+  top: var(--header-height);
+  bottom: 0;
+  right: 0;
+  width: min(100%, 360px);
+  z-index: var(--z-fixed);
+  box-shadow: -4px 0 16px rgba(0,0,0,.15);
 }
+.learning-actions {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  height: 80px;
+  overflow: auto;
+  z-index: 25;
+  padding: 8px;
+  border-radius: 12px;
+  background: var(--color-bg-card);
+  box-shadow: var(--card-shadow);
+}
+.has-learning-actions .viewer-container { margin-top: calc(var(--header-height) + 80px); height: calc(100dvh - var(--header-height) - 80px); min-height: calc(100dvh - var(--header-height) - 80px); }
+@media (min-width: 768px) { .has-learning-actions .viewer-container { top: calc(var(--header-height) + 80px); margin-top: 0; height: auto; min-height: 0; } }
+@media (min-width: 1200px) { .learning-actions { right: 300px; } }
+.learning-actions nav { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.learning-actions a { text-decoration: underline; }
+.learning-actions button:disabled { opacity: .7; }
 
 @media (min-width: 1200px) {
   .content-view {
