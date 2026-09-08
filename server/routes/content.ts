@@ -1,5 +1,4 @@
 import { join, resolve } from "node:path"
-import { unlink } from "node:fs/promises"
 import { inflateRawSync } from "node:zlib"
 import { acquireCatalogLock, atomicWriteFile, validateCatalogSource } from "../services/catalog"
 import { embedEditorOverrides, validateEditorOverrides } from "../../src/services/editor/overrides"
@@ -16,6 +15,29 @@ type ErrorResponse = (message: string, status?: number) => Response
 const IMPORTABLE_FILES = new Set(['index.html', 'style.css', 'script.js', 'manifest.json'])
 const MAX_IMPORT_BYTES = 2 * 1024 * 1024
 const MAX_IMPORT_ENTRIES = 32
+
+// 64 KiB covers the single-file multipart boundary, headers and filename.
+// Bound the raw request before the multipart parser allocates its file buffers.
+const MAX_IMPORT_REQUEST_BYTES = MAX_IMPORT_BYTES + 64 * 1024
+class ImportRequestTooLarge extends Error {}
+async function readImportForm(req: Request): Promise<Awaited<ReturnType<Request['formData']>>> {
+  // Bun lazily generates FormData headers. Capture them before consuming body.
+  const headers = new Headers(req.headers)
+  const reader = req.body?.getReader()
+  if (!reader) return req.formData()
+  const body = new Uint8Array(MAX_IMPORT_REQUEST_BYTES)
+  let length = 0
+  try {
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      if (value.byteLength > MAX_IMPORT_REQUEST_BYTES - length) throw new ImportRequestTooLarge()
+      body.set(value, length)
+      length += value.byteLength
+    }
+  } finally { await reader.cancel().catch(() => undefined) }
+  return new Request(req.url, { method: 'POST', headers, body: body.subarray(0, length) }).formData()
+}
 
 // 카탈로그 항목으로부터 콘텐츠 디렉터리 경로를 재구성한다.
 // manifest.path는 클라이언트가 넣을 수 있는 값이므로 신뢰하지 않고 subject/gradeLevel/id로만 만든다.
@@ -285,8 +307,8 @@ async function handleContentRouteUnlocked(
         try {
           const filePath = path.join(resolvedDir, fileName)
           files[fileName] = await fs.readFile(filePath, 'utf-8')
-        } catch {
-          // 파일이 없으면 건너뛰기
+        } catch (error) {
+          if (fileName === 'index.html' || (error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
         }
       }
 
@@ -325,7 +347,12 @@ async function handleContentRouteUnlocked(
   // POST /api/content/import - 콘텐츠 ZIP 가져오기
   if (req.method === 'POST' && pathname === '/api/content/import') {
     try {
-      const formData = await req.formData()
+      let formData: Awaited<ReturnType<Request['formData']>>
+      try { formData = await readImportForm(req) }
+      catch (error) {
+        if (error instanceof ImportRequestTooLarge) return errorResponse('ZIP 업로드 요청이 너무 큽니다', 413)
+        return errorResponse('잘못된 multipart 업로드 요청입니다', 400)
+      }
       const file = formData.get('file')
 
       if (!(file instanceof File)) {
@@ -333,10 +360,10 @@ async function handleContentRouteUnlocked(
       }
 
       const path = await import('path')
-      const arrayBuffer = await file.arrayBuffer()
-      if (arrayBuffer.byteLength > MAX_IMPORT_BYTES) {
+      if (file.size > MAX_IMPORT_BYTES) {
         return errorResponse(`ZIP 파일은 ${MAX_IMPORT_BYTES / 1024 / 1024}MB 이하여야 합니다`, 413)
       }
+      const arrayBuffer = await file.arrayBuffer()
       let files: Record<string, string>
       let manifest: Partial<ContentManifest>
       try {
@@ -468,27 +495,31 @@ async function handleContentRouteUnlocked(
 
       const deletedContent = catalog.contents[index]
 
-      // 콘텐츠 파일 삭제 (선택적)
+      // Move files aside first so a failed catalog commit can restore them.
       const deleteFiles = url.searchParams.get('deleteFiles') === 'true'
+      let removed: { original: string; temporary: string } | undefined
       if (deleteFiles) {
+        const path = await import('path')
+        const original = resolveContentDir(path, deletedContent, rootDir)
+        if (!original) return errorResponse('잘못된 콘텐츠 경로입니다', 400)
+        const temporary = `${original}.deleting-${crypto.randomUUID()}`
         try {
-          const path = await import('path')
-          // 카탈로그의 path 문자열을 신뢰하면 "/contents" 같은 값으로 콘텐츠 루트 전체가 지워질 수 있다.
-          // subject/gradeLevel/id로 경로를 재구성하고 contents 루트 자신은 거부한다.
-          const resolvedPath = resolveContentDir(path, deletedContent, rootDir)
-          if (!resolvedPath) {
-            console.error('잘못된 콘텐츠 경로로 파일 삭제를 건너뜁니다:', deletedContent.id)
-          } else {
-            await fs.rm(resolvedPath, { recursive: true, force: true })
-          }
-        } catch {
-          // 파일 삭제 실패는 무시 (이미 없을 수 있음)
+          await fs.rename(original, temporary)
+          removed = { original, temporary }
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
         }
       }
-
-      // 카탈로그에서 제거
       catalog.contents.splice(index, 1)
-      await saveCatalog(catalog)
+      try { await saveCatalog(catalog) }
+      catch (error) {
+        if (removed) await fs.rename(removed.temporary, removed.original)
+        throw error
+      }
+      // Once committed, a cleanup failure must not turn a successful deletion
+      // into a retryable failure. The unlisted directory can be cleaned later.
+      if (removed) await fs.rm(removed.temporary, { recursive: true, force: true })
+        .catch(error => console.error('삭제된 콘텐츠 임시 디렉터리 정리 실패:', error))
 
       return jsonResponse({
         success: true,
@@ -518,5 +549,5 @@ export async function handleContentRoute(
   try { lock = await acquireCatalogLock(lockPath) }
   catch (error) { return errorResponse(error instanceof Error ? error.message : '카탈로그 잠금 실패', 409) }
   try { return await handleContentRouteUnlocked(req, jsonResponse, errorResponse, rootDir) }
-  finally { await lock.close(); await unlink(lockPath) }
+  finally { await lock.release() }
 }

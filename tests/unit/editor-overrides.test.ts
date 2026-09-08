@@ -1,11 +1,17 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
+import { reactive } from 'vue'
 import { embedEditorOverrides, validateEditorOverrides } from '../../src/services/editor/overrides'
 
 const bridge = readFileSync('public/contents/common/editor-bridge.js', 'utf8')
 const changes = { contentId: 'fixture', texts: [{ id: 't', path: 'h2:nth-of-type(2)', value: '</script><b>$& plain text</b>' }], styles: [{ variable: '--primary-color', value: '#123456' }], quizzes: [] }
 
 describe('durable editor changes', () => {
+  it('makes reactive editor entries cloneable for native IndexedDB writes', () => {
+    const reactiveChanges = reactive(changes)
+    expect(() => structuredClone(reactiveChanges)).toThrow()
+    expect(structuredClone(validateEditorOverrides(reactiveChanges))).toEqual(changes)
+  })
   it('escapes HTML payload and replaces previous overrides', () => {
     const html = embedEditorOverrides('<body><h2>A</h2></body>', changes)
     expect(html).not.toContain('</script><b>')

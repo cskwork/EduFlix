@@ -173,10 +173,7 @@ export async function runPublishStage(context: FactoryContext): Promise<void> {
     await writeFile(tempPath, updated, { encoding: "utf8", flag: "wx" });
     await rename(tempPath, catalogPath);
   } finally {
-    try { await lock.close(); }
-    finally {
-      await unlink(lockPath);
-      await unlink(tempPath).catch(() => undefined);
-    }
+    try { await lock.release(); }
+    finally { await unlink(tempPath).catch(() => undefined); }
   }
 }

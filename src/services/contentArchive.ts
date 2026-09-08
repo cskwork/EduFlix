@@ -99,7 +99,9 @@ export async function decodeContentZip(
     const local = view.getUint32(cursor + 42, true)
     check(cursor + 46, nameLength + extraLength + commentLength)
     const name = decoder.decode(bytes.subarray(cursor + 46, cursor + 46 + nameLength))
-    if ((flags & ~0x808) !== 0 || (method !== 0 && method !== 8)) throw new Error('Unsupported ZIP encryption or compression')
+    // DEFLATE bits 1/2 describe compression speed, not encryption.
+    const allowedFlags = method === 8 ? 0x80e : 0x808
+    if ((flags & ~allowedFlags) !== 0 || (method !== 0 && method !== 8)) throw new Error('Unsupported ZIP encryption or compression')
     if (!name || name.startsWith('/') || name.includes('\\') || name.split('/').some(p => p === '..' || p === '.')) {
       throw new Error('Unsafe ZIP path')
     }
