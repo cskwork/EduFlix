@@ -249,7 +249,7 @@ if (pathname.startsWith('/contents/')) {
 PORT=3001                    # API 서버 포트
 FACTORY_LLM_PROVIDER=zai     # zai(기본) 또는 codex
 ZAI_API_KEY=...              # Z.ai API 키
-ZAI_MODEL=glm-5.2            # 선택 모델
+ZAI_MODEL=glm-5.3-flash            # 선택 모델
 ZAI_API_URL=https://api.z.ai/api/coding/paas/v4/chat/completions
 ```
 

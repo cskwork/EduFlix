@@ -43,7 +43,7 @@ export function getFactoryLlmConfig(env: Env = process.env): FactoryLlmConfig {
   const apiKey = env.ZAI_API_KEY?.trim()
   return {
     provider: 'zai',
-    model: env.ZAI_MODEL?.trim() || 'glm-5.2',
+    model: env.ZAI_MODEL?.trim() || 'glm-5.3-flash',
     apiKey,
     apiUrl: env.ZAI_API_URL?.trim() || DEFAULT_ZAI_URL,
     keyConfigured: Boolean(apiKey),
