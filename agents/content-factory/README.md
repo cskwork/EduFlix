@@ -36,7 +36,7 @@ QA 게이트 ── 정적 검사 + 22항목 교사 관점 심사
 
 최종 콘텐츠는 `public/contents/<subject>/<gradeLevel>/<id>/`에 생성된다. QA는 네 핵심 파일, manifest 경로, 다섯 씬, 로컬 이미지, 모바일·모션 감소·접근성 계약을 확인한다. 심사 실패가 두 번 수정 후에도 남으면 카탈로그에 등록하지 않고 오류와 `qa-report.json`을 남긴다. 같은 ID는 기본적으로 덮어쓰지 않는다.
 
-기본 생성 엔진은 `ZAI_API_KEY`를 사용하는 Z.ai `glm-5.2`다. Z.ai는 파일을 직접 쓸 수 없으므로 build marker 응답을 검증한 뒤 staging에 기록한다. `FACTORY_LLM_PROVIDER=codex`를 설정하면 기존 Codex CLI의 workspace-write 실행을 사용한다. 두 경로 모두 외부 npm 의존성을 추가하지 않는다.
+기본 생성 엔진은 `ZAI_API_KEY`를 사용하는 Z.ai `glm-5.3-flash`다. Z.ai는 파일을 직접 쓸 수 없으므로 build marker 응답을 검증한 뒤 staging에 기록한다. `FACTORY_LLM_PROVIDER=codex`를 설정하면 기존 Codex CLI의 workspace-write 실행을 사용한다. 두 경로 모두 외부 npm 의존성을 추가하지 않는다.
 
 ## 방법론
 

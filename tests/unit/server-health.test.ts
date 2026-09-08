@@ -3,8 +3,8 @@ import { getLlmHealth } from '../../server/services/health'
 
 describe('생성 엔진 헬스 체크', () => {
   it('기본 Z.ai 모델과 키 준비 상태를 반환한다', () => {
-    expect(getLlmHealth({})).toEqual({ provider: 'zai', model: 'glm-5.2', keyConfigured: false })
-    expect(getLlmHealth({ ZAI_API_KEY: 'key' })).toEqual({ provider: 'zai', model: 'glm-5.2', keyConfigured: true })
+    expect(getLlmHealth({})).toEqual({ provider: 'zai', model: 'glm-5.3-flash', keyConfigured: false })
+    expect(getLlmHealth({ ZAI_API_KEY: 'key' })).toEqual({ provider: 'zai', model: 'glm-5.3-flash', keyConfigured: true })
   })
 
   it('선택적 Codex provider를 반환한다', () => {

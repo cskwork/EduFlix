@@ -149,7 +149,7 @@ async function requestOnce(options: ZaiRequestOptions, prompt: string): Promise<
       method: 'POST',
       headers: { Authorization: `Bearer ${options.apiKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: options.model ?? 'glm-5.2',
+        model: options.model ?? 'glm-5.3-flash',
         messages: [{ role: 'user', content: prompt }],
         stream: true,
       }),

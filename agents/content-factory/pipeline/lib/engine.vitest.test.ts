@@ -3,7 +3,7 @@ import { getFactoryLlmConfig, runFactoryFiles, runFactoryText } from './engine'
 
 describe('팩토리 LLM 엔진 라우팅', () => {
   it('기본 Z.ai와 선택적 Codex 설정을 해석한다', () => {
-    expect(getFactoryLlmConfig({ ZAI_API_KEY: 'key' })).toMatchObject({ provider: 'zai', model: 'glm-5.2', keyConfigured: true })
+    expect(getFactoryLlmConfig({ ZAI_API_KEY: 'key' })).toMatchObject({ provider: 'zai', model: 'glm-5.3-flash', keyConfigured: true })
     expect(getFactoryLlmConfig({ FACTORY_LLM_PROVIDER: 'codex' })).toMatchObject({ provider: 'codex', keyConfigured: true })
   })
 
@@ -14,7 +14,7 @@ describe('팩토리 LLM 엔진 라우팅', () => {
     await runFactoryText(options, {
       env: { ZAI_API_KEY: 'key' }, runZaiText, runCodex,
     })
-    expect(runZaiText).toHaveBeenCalledWith(expect.objectContaining(options))
+    expect(runZaiText).toHaveBeenCalledWith(expect.objectContaining({ ...options, model: 'glm-5.3-flash' }))
     await runFactoryText(options, {
       env: { FACTORY_LLM_PROVIDER: 'codex' }, runZaiText, runCodex,
     })
@@ -36,7 +36,7 @@ describe('팩토리 LLM 엔진 라우팅', () => {
     await runFactoryFiles(options, {
       env: { ZAI_API_KEY: 'key' }, runZaiFiles, runCodex,
     })
-    expect(runZaiFiles).toHaveBeenCalledWith(expect.objectContaining(options))
+    expect(runZaiFiles).toHaveBeenCalledWith(expect.objectContaining({ ...options, model: 'glm-5.3-flash' }))
 
     await runFactoryFiles(options, {
       env: { FACTORY_LLM_PROVIDER: 'codex' }, runZaiFiles, runCodex,

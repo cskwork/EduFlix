@@ -32,9 +32,9 @@ start.bat                # Windows 동일 (Vite + Bun API)
 ## Environment
 ```bash
 # .env — LLM provider (FACTORY_LLM_PROVIDER로 선택, 기본값 zai)
-ZAI_API_KEY=...          # provider=zai (GLM-5.2, 기본값)
+ZAI_API_KEY=...          # provider=zai (GLM-5.3-Flash, 기본값)
 FACTORY_LLM_PROVIDER=zai # zai | codex
-# ZAI_MODEL=glm-5.2      # provider=zai 모델 오버라이드
+# ZAI_MODEL=glm-5.3-flash      # provider=zai 모델 오버라이드
 # FACTORY_CODEX_MODEL=   # provider=codex 모델 (기본 gpt-5.6-sol, 구독 인증이라 키 불필요)
 
 # 향후 provider 확장용 (현재 팩토리 파이프라인에서는 미사용, 설정만 유지)
