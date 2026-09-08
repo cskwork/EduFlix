@@ -1,9 +1,10 @@
-import { afterEach, expect, test } from 'bun:test'
+import { afterEach, expect, test, spyOn } from 'bun:test'
 import { mkdtemp, mkdir, readFile, writeFile, rm, unlink } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { handleContentRoute } from './routes/content'
 import { acquireCatalogLock } from './services/catalog'
+import * as catalogService from './services/catalog'
 import { encodeContentZip, decodeContentZip } from '../src/services/contentArchive'
 import { inflateRawSync } from 'node:zlib'
 
@@ -43,7 +44,7 @@ test('CRUD respects the publication lock and can retry without losing entries', 
   const path = join(root,'public/contents/index.json.lock')
   const lock = await acquireCatalogLock(path)
   try { expect((await request(root,'','POST',{...manifest,id:'second'})).status).toBe(409) }
-  finally { await lock.close(); await unlink(path) }
+  finally { await lock.release() }
   const responses = await Promise.all(['second','third'].map(id => request(root,'','POST',{...manifest,id})))
   expect(responses.some(r=>r.status===201)).toBe(true)
   for (let i=0;i<responses.length;i++) if (responses[i].status===409) expect((await request(root,'','POST',{...manifest,id:['second','third'][i]})).status).toBe(201)
@@ -97,6 +98,16 @@ test('ordinary DEFLATE enclosing-folder archive supports standalone HTML', async
   const bytes = new Uint8Array(Buffer.from('UEsDBBQAAAAIAOQuKF18oxIhGwAAABoAAAARAAAAbGVzc29uL2luZGV4Lmh0bWyzyTC0Cy5JzEtJzMnPS1XISS0uzs+z0QeKAgBQSwMEFAAAAAgA5C4oXX/oTIFMAAAAWgAAABQAAABsZXNzb24vbWFuaWZlc3QuanNvbqtWykxRslIqzsxLz0lV0lEqySwB0lZKwTCB4tKkrNTkEqBQbmJJBlAgvSgxJdUntSw1ByiWmpOam5pXklhUCdJbWQDSWlySD+TWAgBQSwECFAMUAAAACADkLihdfKMSIRsAAAAaAAAAEQAAAAAAAAAAAAAAgAEAAAAAbGVzc29uL2luZGV4Lmh0bWxQSwECFAMUAAAACADkLihdf+hMgUwAAABaAAAAFAAAAAAAAAAAAAAAgAFKAAAAbGVzc29uL21hbmlmZXN0Lmpzb25QSwUGAAAAAAIAAgCBAAAAyAAAAAAA', 'base64'))
   const files = await decodeContentZip(bytes,inflate)
   expect(files['index.html']).toBe('<h1>Standalone lesson</h1>')
+  for (const speedBits of [2, 4, 6]) {
+    const hinted = bytes.slice()
+    const headers = new DataView(hinted.buffer)
+    for (let offset = 0; offset < hinted.length - 10; offset++) {
+      const signature = headers.getUint32(offset, true)
+      if (signature === 0x04034b50) headers.setUint16(offset + 6, speedBits, true)
+      if (signature === 0x02014b50) headers.setUint16(offset + 8, speedBits, true)
+    }
+    expect((await decodeContentZip(hinted, inflate))['index.html']).toBe(files['index.html'])
+  }
   expect(files['style.css']).toBe('')
   expect(files['script.js']).toBe('')
   const {root} = await fixture()
@@ -129,4 +140,116 @@ test('export reports unsupported assets instead of silently omitting them', asyn
   const response = await request(root,`/${manifest.id}/export`)
   expect(response.status).toBe(400)
   expect(await response.text()).toContain('diagram.png')
+})
+
+
+test('simultaneous stale-lock contenders leave the lock and catalog intact', async () => {
+  const {root} = await fixture()
+  const path = join(root, 'public/contents/index.json.lock')
+  const source = JSON.stringify({pid: 99_999_999})
+  await writeFile(path, source)
+  const results = await Promise.allSettled([acquireCatalogLock(path), acquireCatalogLock(path)])
+  expect(results.every(result => result.status === 'rejected')).toBe(true)
+  expect(await readFile(path, 'utf8')).toBe(source)
+})
+
+test('release preserves a replacement lock owned by another acquisition', async () => {
+  const {root} = await fixture()
+  const path = join(root, 'public/contents/index.json.lock')
+  const original = await acquireCatalogLock(path)
+  await unlink(path)
+  const replacement = await acquireCatalogLock(path)
+  await original.release()
+  expect(await Bun.file(path).exists()).toBe(true)
+  await replacement.release()
+  expect(await Bun.file(path).exists()).toBe(false)
+})
+
+test('delete restores lesson files when catalog commit fails, then can retry', async () => {
+  const {root, dir, files} = await fixture()
+  const path = join(root, 'public/contents/index.json')
+  const before = await readFile(path, 'utf8')
+  const write = spyOn(catalogService, 'atomicWriteFile').mockRejectedValue(new Error('injected commit failure'))
+  try {
+    expect((await request(root, `/${manifest.id}?deleteFiles=true`, 'DELETE')).status).toBe(500)
+  } finally { write.mockRestore() }
+  expect(await readFile(path, 'utf8')).toBe(before)
+  expect(await readFile(join(dir, 'index.html'), 'utf8')).toBe(files['index.html'])
+  expect((await request(root, `/${manifest.id}?deleteFiles=true`, 'DELETE')).status).toBe(200)
+  expect(JSON.parse(await readFile(path, 'utf8')).contents).toEqual([])
+  expect(await Bun.file(join(dir, 'index.html')).exists()).toBe(false)
+})
+
+
+test('export requires readable HTML while absent CSS and JS remain optional', async () => {
+  const {root, dir} = await fixture()
+  await unlink(join(dir, 'style.css'))
+  await unlink(join(dir, 'script.js'))
+  expect((await request(root, `/${manifest.id}/export`)).status).toBe(200)
+  await unlink(join(dir, 'index.html'))
+  expect((await request(root, `/${manifest.id}/export`)).status).toBe(500)
+})
+
+
+async function streamingImport(root: string, bytes: Uint8Array, headers: Record<string, string>, chunkSize = 997) {
+  let offset = 0
+  const stream = new ReadableStream<Uint8Array>({
+    pull(controller) {
+      if (offset === bytes.length) { controller.close(); return }
+      const next = Math.min(offset + chunkSize, bytes.length)
+      controller.enqueue(bytes.slice(offset, next)); offset = next
+    },
+  })
+  if (process.env.ADMIN_TOKEN) headers['X-Admin-Token'] = process.env.ADMIN_TOKEN
+  const req = new Request('http://localhost/api/content/import', {method: 'POST', headers, body: stream, duplex: 'half'} as RequestInit)
+  return handleContentRoute(req, json, fail, {rootDir: root})
+}
+
+test('streaming multipart imports an exact 2 MiB ZIP with framing overhead', async () => {
+  const {root, files} = await fixture()
+  const initial = encodeContentZip(files)
+  files['index.html'] += ' '.repeat(2 * 1024 * 1024 - initial.length)
+  const zip = encodeContentZip(files)
+  expect(zip.length).toBe(2 * 1024 * 1024)
+  const form = new FormData(); form.set('file', new File([zip], 'lesson.zip'))
+  const source = new Request('http://localhost', {method: 'POST', body: form})
+  const headers = Object.fromEntries(source.headers)
+  const bytes = new Uint8Array(await source.arrayBuffer())
+  expect(bytes.length).toBeGreaterThan(zip.length)
+  expect((await streamingImport(root, bytes, headers)).status).toBe(201)
+})
+
+test('oversize streaming multipart is canceled before parsing and preserves catalog', async () => {
+  const {root} = await fixture()
+  const catalog = join(root, 'public/contents/index.json')
+  const before = await readFile(catalog, 'utf8')
+  let canceled = false
+  let pulls = 0
+  const stream = new ReadableStream<Uint8Array>({
+    pull(controller) { pulls++; controller.enqueue(new Uint8Array(256 * 1024)) },
+    cancel() { canceled = true },
+  })
+  const headers: Record<string, string> = {'Content-Type': 'multipart/form-data; boundary=test'}
+  if (process.env.ADMIN_TOKEN) headers['X-Admin-Token'] = process.env.ADMIN_TOKEN
+  const req = new Request('http://localhost/api/content/import', {method: 'POST', headers, body: stream, duplex: 'half'} as RequestInit)
+  const response = await handleContentRoute(req, json, fail, {rootDir: root})
+  expect(response.status).toBe(413)
+  expect(canceled).toBe(true)
+  expect(pulls).toBeLessThanOrEqual(11)
+  expect(await readFile(catalog, 'utf8')).toBe(before)
+  expect(await Bun.file(`${catalog}.lock`).exists()).toBe(false)
+})
+
+test('file size is rejected before arrayBuffer even inside the multipart request bound', async () => {
+  const {root} = await fixture()
+  const form = new FormData(); form.set('file', new File([new Uint8Array(2 * 1024 * 1024 + 1)], 'large.zip'))
+  const read = spyOn(File.prototype, 'arrayBuffer').mockImplementation(() => { throw new Error('must not read oversized file') })
+  try { expect((await request(root, '/import', 'POST', form)).status).toBe(413) }
+  finally { read.mockRestore() }
+})
+
+test('malformed multipart returns 400 and releases its lock', async () => {
+  const {root} = await fixture()
+  expect((await streamingImport(root, new TextEncoder().encode('broken'), {'Content-Type':'multipart/form-data; boundary=missing'})).status).toBe(400)
+  expect(await Bun.file(join(root, 'public/contents/index.json.lock')).exists()).toBe(false)
 })

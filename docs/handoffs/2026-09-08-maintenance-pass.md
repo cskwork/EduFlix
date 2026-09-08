@@ -1,6 +1,28 @@
 # EduFlix maintenance handoff
 
-Status: **Paused by the user, work in progress.** This checkpoint is not a completed maintenance release.
+Status: **Reliability/usability and performance acceptance complete. Feature improvements paused at the v0.4.0 release checkpoint.**
+
+## Continuation checkpoint
+
+The user resumed this work, authorized fixes and focused improvements, requested sequential stages, then authorized commit/push, merge to `main`, and a minor release before pausing at feature improvements. No feature-phase implementation has started.
+
+The original outstanding items below are now resolved within the documented test boundaries. Continuation fixes cover native IndexedDB proxy serialization, valid DEFLATE flags, initial preview subscription, catalog lock ownership, delete rollback, required-HTML export errors, and bounded multipart uploads. Current browser checks cover repeated editor saves, ZIP transfer, dirty navigation, local preview cleanup, learning persistence/unlocking/retry, creator cancellation/restart, and catalog performance/responsiveness.
+
+Final combined checks: **370 Vitest tests across 33 files; 93 Bun tests across 17 files with 837 assertions; production build, ESLint, server TypeScript, and whitespace checks passed.** Version metadata is `0.4.0`; dependency resolutions are unchanged. The unrelated skill change on `main` must be preserved during merge.
+
+Evidence:
+
+- [Editor and ZIP browser acceptance](2026-09-08-maintenance-evidence/continuation-editor.md)
+- [Learning and creator browser acceptance](2026-09-08-maintenance-evidence/continuation-learning.md), including the repeatable driver and assertion log
+- [Independent storage review and fixes](2026-09-08-maintenance-evidence/continuation-storage-review.md)
+- [Performance and responsiveness](2026-09-08-maintenance-evidence/continuation-performance.md)
+- [v0.4.0 changelog](../changelog/changelog-2026-09-08.md)
+
+Resume only after the user resumes the feature phase. Candidate scope includes the display-only font-size control, clearer combined search/filter feedback, a supported quiz model, generation playback checks, and Blender assets. Define the selected feature and observable acceptance before implementing it. No Blender, dependency, migration, or authentication-policy work was included here.
+
+Limits: browser proof is Chromium/local; generation was mocked and does not establish provider quality, live SSE transport, or server-side cancellation. Lesson ZIPs contain text files and may depend on shared/external assets. Stale-lock recovery requires stopped writers and operator cleanup. Catalog/filesystem changes handle ordinary exceptions but are not a crash-recovery journal. Production browser/deployment acceptance is separate from the authorized GitHub merge/release.
+
+The remainder preserves the original pause record for context; its outstanding statuses and test counts are historical.
 
 On 2026-09-08 the user requested a broad bug, missing-feature, and performance pass with subagents, followed by feature recommendations including Blender integration. After the initial audit, the user approved the proposed local implementation scope. The latest instruction was: “pause make handoff doc will continue later commit push in current state”. Implementation stopped and this snapshot was prepared for commit and push on `dev`.
 

@@ -9,7 +9,8 @@ export function validateEditorOverrides(value: unknown): SaveContentRequest {
       data.styles.some(style => !style || typeof style.variable !== 'string' || !/^--[\w-]+$/.test(style.variable) || typeof style.value !== 'string')) {
     throw new Error('Invalid text or style changes')
   }
-  return { contentId: data.contentId, texts: data.texts, styles: data.styles, quizzes: [] }
+  // Editor entries can be Vue proxies; IndexedDB requires plain cloneable records.
+  return { contentId: data.contentId, texts: data.texts.map(text => ({ ...text })), styles: data.styles.map(style => ({ ...style })), quizzes: [] }
 }
 
 export function embedEditorOverrides(html: string, value: unknown): string {

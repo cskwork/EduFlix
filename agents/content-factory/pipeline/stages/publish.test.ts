@@ -213,15 +213,15 @@ ${preserved}
     }
   });
 
-  test("소유 프로세스가 종료된 stale 락은 회수하고 퍼블리시한다", async () => {
+  test("소유 프로세스가 종료된 stale 락도 안전하게 보존한다", async () => {
     const rootDir = await mkdtemp(join(tmpdir(), "factory-publish-stale-"));
     const context = await makePublishFixture(rootDir);
     const catalogPath = join(rootDir, "public/contents/index.json");
     await writeFile(`${catalogPath}.lock`, JSON.stringify({ pid: 99_999_999, createdAt: new Date().toISOString() }));
     try {
-      await expect(runPublishStage(context)).resolves.toBeUndefined();
-      expect(JSON.parse(await Bun.file(catalogPath).text()).contents).toHaveLength(2);
-      expect(await Bun.file(`${catalogPath}.lock`).exists()).toBe(false);
+      await expect(runPublishStage(context)).rejects.toThrow("종료된 프로세스");
+      expect(await Bun.file(catalogPath).text()).toBe(catalog);
+      expect(await Bun.file(`${catalogPath}.lock`).exists()).toBe(true);
     } finally { await rm(rootDir, { recursive: true, force: true }); }
   });
 });
