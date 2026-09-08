@@ -15,7 +15,7 @@ describe('서버 설정', () => {
     expect(getZaiConfig({ ZAI_API_KEY: 'test' })).toMatchObject({
       apiKey: 'test',
       apiUrl: 'https://api.z.ai/api/coding/paas/v4/chat/completions',
-      model: 'glm-5.2',
+      model: 'glm-5.3-flash',
     })
   })
 })

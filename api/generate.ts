@@ -282,7 +282,7 @@ async function requestOnce(prompt: string, deadline: number): Promise<string> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: process.env.ZAI_MODEL?.trim() || 'glm-5.2',
+        model: process.env.ZAI_MODEL?.trim() || 'glm-5.3-flash',
         messages: [{ role: 'user', content: prompt }],
         stream: true,
       }),
