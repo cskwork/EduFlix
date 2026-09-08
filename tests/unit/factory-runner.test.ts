@@ -294,6 +294,7 @@ describe('웹 팩토리 runner - Option 2 (problem 모드)', () => {
     await runner.waitForJob(jobHard.jobId)
     expect(getObserved()!.grade).toBe('high-2')
     expect(getObserved()!.gradeLevel).toBe('high')
+    expect(getObserved()!.language).toBe('en')
   })
 
   it('사용자가 subject 안 주면 plan 추론 subject로 contentDir를 보정한다', async () => {

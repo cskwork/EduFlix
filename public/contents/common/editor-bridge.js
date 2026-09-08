@@ -68,7 +68,7 @@
    */
   function generateSelector(element) {
     if (element.id) {
-      return `#${element.id}`;
+      return `#${CSS.escape(element.id)}`;
     }
 
     const path = [];
@@ -76,19 +76,8 @@
 
     while (current && current !== document.body) {
       let selector = current.tagName.toLowerCase();
-
-      if (current.className && typeof current.className === 'string') {
-        const classes = current.className.trim().split(/\s+/).filter(c => c && !c.startsWith('active'));
-        if (classes.length > 0) {
-          selector += '.' + classes.join('.');
-        }
-      }
-
-      const siblings = current.parentNode?.querySelectorAll(`:scope > ${selector}`);
-      if (siblings && siblings.length > 1) {
-        const index = Array.from(siblings).indexOf(current);
-        selector += `:nth-of-type(${index + 1})`;
-      }
+      const siblings = Array.from(current.parentNode?.children || []).filter(el => el.tagName === current.tagName);
+      if (siblings.length > 1) selector += `:nth-of-type(${siblings.indexOf(current) + 1})`;
 
       path.unshift(selector);
       current = current.parentNode;
@@ -125,47 +114,8 @@
    * 퀴즈 데이터 추출
    */
   function extractQuizzes() {
-    const quizzes = [];
-    const quizScene = document.getElementById('quiz-scene');
-
-    if (!quizScene) return quizzes;
-
-    const questionEl = quizScene.querySelector('.quiz-question');
-    const optionBtns = quizScene.querySelectorAll('.opt-btn');
-    const feedbackEl = quizScene.querySelector('.quiz-feedback');
-
-    if (questionEl && optionBtns.length > 0) {
-      const options = [];
-
-      optionBtns.forEach((btn, index) => {
-        // onclick 속성에서 값 추출
-        const onclick = btn.getAttribute('onclick') || '';
-        const match = onclick.match(/checkAnswer\(([^)]+)\)/);
-        const value = match ? parseFloat(match[1]) : index;
-
-        // 정답 여부 (314가 정답인 circle-area 콘텐츠 기준)
-        const isCorrect = value === 314;
-
-        options.push({
-          label: btn.textContent?.trim() || '',
-          value: value,
-          isCorrect: isCorrect
-        });
-      });
-
-      quizzes.push({
-        id: 'quiz-main',
-        question: questionEl.textContent?.trim() || '',
-        options: options,
-        feedback: {
-          correct: '정답입니다!',
-          incorrect: '다시 생각해보세요.'
-        },
-        scene: 'quiz'
-      });
-    }
-
-    return quizzes;
+    // Arbitrary generated scripts do not expose a reliable answer model.
+    return [];
   }
 
   /**
@@ -201,35 +151,6 @@
    * 퀴즈 업데이트
    */
   function updateQuiz(id, updates) {
-    try {
-      const quizScene = document.getElementById('quiz-scene');
-      if (!quizScene) return false;
-
-      if (updates.question) {
-        const questionEl = quizScene.querySelector('.quiz-question');
-        if (questionEl) {
-          // 기존 small 태그 보존
-          const small = questionEl.querySelector('small');
-          const smallHtml = small ? small.outerHTML : '';
-          questionEl.innerHTML = updates.question + (smallHtml ? '<br>' + smallHtml : '');
-        }
-      }
-
-      if (updates.options) {
-        const optionBtns = quizScene.querySelectorAll('.opt-btn');
-        updates.options.forEach((opt, index) => {
-          if (optionBtns[index]) {
-            optionBtns[index].textContent = opt.label;
-            // onclick 업데이트
-            optionBtns[index].setAttribute('onclick', `ContentApp.checkAnswer(${opt.value})`);
-          }
-        });
-      }
-
-      return true;
-    } catch (e) {
-      console.warn('퀴즈 업데이트 실패:', e);
-    }
     return false;
   }
 
@@ -237,7 +158,10 @@
    * 전체 콘텐츠 추출
    */
   function extractAllContent() {
+    let overrides;
+    try { overrides = JSON.parse(document.getElementById('eduflix-editor-overrides')?.textContent || 'null'); } catch {}
     return {
+      overrides,
       texts: extractTexts(),
       styles: extractStyles(),
       quizzes: extractQuizzes()
@@ -250,7 +174,7 @@
   function handleMessage(event) {
     // origin 검증: 콘텐츠 iframe과 편집 패널은 항상 같은 origin에서 서빙되므로 정확히 일치해야 한다.
     // 부분 일치(includes)는 evil-eduflix.example.com 같은 도메인도 통과시키므로 사용하지 않는다.
-    if (event.origin !== window.location.origin) {
+    if (event.origin !== window.location.origin || event.source !== window.parent) {
       return;
     }
 
@@ -338,6 +262,30 @@
    * 초기화
    */
   function init() {
+    if (window.EduFlixEditor) return;
+    const stored = document.getElementById('eduflix-editor-overrides');
+    if (stored) {
+      try {
+        const changes = JSON.parse(stored.textContent);
+        const apply = () => {
+          if (isEditMode) return;
+          (changes.texts || []).forEach(text => {
+            let element;
+            try { element = document.querySelector(text.path); } catch { return; }
+            if (!element || element.textContent === text.value) return;
+            const scene = element.closest('.scene');
+            if (text.scene && text.scene !== 'global' && scene?.id.replace('-scene', '') !== text.scene) return;
+            if (typeof text.originalValue === 'string' && element.textContent?.trim() !== text.originalValue) return;
+            element.textContent = text.value;
+          });
+          (changes.styles || []).forEach(style => {
+            if (document.documentElement.style.getPropertyValue(style.variable) !== style.value) updateStyle(style.variable, style.value);
+          });
+        };
+        apply();
+        new MutationObserver(apply).observe(document.body, { childList: true, subtree: true, characterData: true });
+      } catch (error) { console.error('Saved editor changes could not be applied', error); }
+    }
     // 메시지 리스너 등록
     window.addEventListener('message', handleMessage);
 

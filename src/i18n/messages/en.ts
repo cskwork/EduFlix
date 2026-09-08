@@ -230,6 +230,11 @@ export const en = {
   },
 
   editor: {
+    quizUnsupported: 'Quiz answers are controlled by each activity. This editor supports text and colors; it cannot change answer logic.',
+    completeContent: 'Mark complete',
+    contentCompleted: 'Completed',
+    relatedContents: 'Continue this topic',
+    progressSaveFailed: 'Progress could not be saved on this browser.',
     title: 'Edit content',
     close: 'Close',
     tabText: 'Text',

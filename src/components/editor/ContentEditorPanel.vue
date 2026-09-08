@@ -5,15 +5,16 @@ import type {
   EditableContent,
   EditableText,
   EditableStyle,
-  EditableQuiz,
   EditorMessage,
+  SaveContentRequest,
   ExtractedContentPayload
 } from '../../types/editor'
 import TextEditor from './TextEditor.vue'
 import StyleEditor from './StyleEditor.vue'
-import QuizEditor from './QuizEditor.vue'
 import ExportImportButtons from './ExportImportButtons.vue'
 import { withAdminToken } from '../../services/api/adminToken'
+import { getLocalContent, isLocalContentId, saveLocalContent } from '../../services/content/localContent'
+import { validateEditorOverrides } from '../../services/editor/overrides'
 import { useI18n } from '../../i18n'
 
 const { t } = useI18n()
@@ -38,9 +39,12 @@ const error = ref<string | null>(null)
 // 편집 데이터
 const texts = ref<EditableText[]>([])
 const styles = ref<EditableStyle[]>([])
-const quizzes = ref<EditableQuiz[]>([])
+const quizzes = ref<EditableContent['quizzes']>([])
 
 // 원본 데이터 (변경 감지용)
+let retryTimer: ReturnType<typeof setTimeout> | undefined
+
+const savedOverrides = ref<SaveContentRequest | null>(null)
 const originalData = ref<ExtractedContentPayload | null>(null)
 
 // 현재 편집 콘텐츠
@@ -68,7 +72,7 @@ const tabs = computed(
 // postMessage 핸들러
 function handleMessage(event: MessageEvent) {
   // 콘텐츠 iframe은 같은 origin에서 서빙되므로, 다른 창이 보낸 메시지는 무시한다
-  if (event.origin !== window.location.origin) return
+  if (event.origin !== window.location.origin || event.source !== props.iframeRef?.contentWindow) return
 
   const { type, payload } = event.data || {}
 
@@ -78,17 +82,18 @@ function handleMessage(event: MessageEvent) {
     case 'EDITOR_READY':
       // iframe 준비 완료 - 콘텐츠 추출 요청
       console.log('[Editor] EDITOR_READY 수신 - EXTRACT_CONTENT 요청')
-      sendToIframe({ type: 'EXTRACT_CONTENT' })
+      sendToIframe({ type: payload?.auto ? 'EDITOR_INIT' : 'EXTRACT_CONTENT' })
       break
 
     case 'CONTENT_EXTRACTED':
-      if (payload) {
+      if (payload && !hasChanges.value) {
         console.log('[Editor] CONTENT_EXTRACTED 수신 - 분석 완료')
         const extracted = payload as ExtractedContentPayload
         texts.value = extracted.texts || []
         styles.value = extracted.styles || []
         quizzes.value = extracted.quizzes || []
         originalData.value = JSON.parse(JSON.stringify(extracted))
+        savedOverrides.value = extracted.overrides ?? null
         isLoading.value = false
       }
       break
@@ -114,6 +119,7 @@ function sendToIframe(message: EditorMessage) {
 
 // 텍스트 업데이트 핸들러
 function handleTextUpdate(text: EditableText) {
+  hasChanges.value = true
   const index = texts.value.findIndex(t => t.id === text.id)
   if (index !== -1) {
     texts.value[index] = text
@@ -126,6 +132,7 @@ function handleTextUpdate(text: EditableText) {
 
 // 스타일 업데이트 핸들러
 function handleStyleUpdate(style: EditableStyle) {
+  hasChanges.value = true
   const index = styles.value.findIndex(s => s.id === style.id)
   if (index !== -1) {
     styles.value[index] = style
@@ -136,34 +143,39 @@ function handleStyleUpdate(style: EditableStyle) {
   }
 }
 
-// 퀴즈 업데이트 핸들러
-function handleQuizUpdate(quiz: EditableQuiz) {
-  const index = quizzes.value.findIndex(q => q.id === quiz.id)
-  if (index !== -1) {
-    quizzes.value[index] = quiz
-    sendToIframe({
-      type: 'UPDATE_QUIZ',
-      payload: quiz
-    })
-  }
-}
-
 // 저장
 async function handleSave() {
   isSaving.value = true
   error.value = null
 
   try {
-    const response = await fetch(`/api/content/${props.contentId}/files`, {
-      method: 'PUT',
-      headers: withAdminToken({ 'Content-Type': 'application/json' }),
-      body: JSON.stringify(editableContent.value)
+    const changedTexts = texts.value.filter(text => originalData.value?.texts.find(item => item.path === text.path)?.value !== text.value).map(text => ({ ...text, originalValue: savedOverrides.value?.texts.find(item => item.path === text.path)?.originalValue ?? originalData.value?.texts.find(item => item.path === text.path)?.value }))
+    const changedStyles = styles.value.filter(style => originalData.value?.styles.find(item => item.variable === style.variable)?.value !== style.value)
+    const changes = validateEditorOverrides({
+      contentId: props.contentId,
+      texts: [...(savedOverrides.value?.texts ?? []).filter(text => !changedTexts.some(item => item.path === text.path)), ...changedTexts],
+      styles: [...(savedOverrides.value?.styles ?? []).filter(style => !changedStyles.some(item => item.variable === style.variable)), ...changedStyles],
+      quizzes: []
     })
-
-    const result = await response.json()
+    let result: { success: boolean; error?: string }
+    if (isLocalContentId(props.contentId)) {
+      const local = await getLocalContent(props.contentId)
+      if (!local) throw new Error(t('errors.contentNotFound'))
+      await saveLocalContent({ ...local, editorOverrides: changes })
+      result = { success: true }
+    } else {
+      const response = await fetch(`/api/content/${props.contentId}/files`, {
+        method: 'PUT',
+        headers: withAdminToken({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify(changes)
+      })
+      result = await response.json()
+      if (!response.ok) result.success = false
+    }
 
     if (result.success) {
       hasChanges.value = false
+      savedOverrides.value = changes
       originalData.value = JSON.parse(JSON.stringify({
         texts: texts.value,
         styles: styles.value,
@@ -183,7 +195,7 @@ async function handleSave() {
 
 // 취소 (원본으로 복원)
 function handleCancel() {
-  if (hasChanges.value && !confirm(t('editor.confirmDiscard'))) {
+  if (!confirmDiscard()) {
     return
   }
 
@@ -206,15 +218,20 @@ function handleCancel() {
 function initEditor() {
   if (props.iframeRef) {
     isLoading.value = true
+    error.value = null
     console.log('[Editor] initEditor 호출 - EDITOR_INIT 전송')
     // iframe 로드 완료 후 편집 모드 초기화
     sendToIframe({ type: 'EDITOR_INIT' })
 
     // 3초 후에도 분석이 안 끝났으면 재시도
-    setTimeout(() => {
+    window.clearTimeout(retryTimer)
+    retryTimer = setTimeout(() => {
       if (isLoading.value) {
         console.warn('[Editor] 재시도 - EDITOR_INIT (3초 타임아웃)')
         sendToIframe({ type: 'EDITOR_INIT' })
+        retryTimer = setTimeout(() => {
+          if (isLoading.value) { isLoading.value = false; error.value = t('editor.connectionFailed') }
+        }, 3000)
       }
     }, 3000)
   }
@@ -238,9 +255,13 @@ watch(() => props.iframeRef, (newRef) => {
 }, { immediate: true })
 
 onUnmounted(() => {
+  window.clearTimeout(retryTimer)
+  props.iframeRef?.removeEventListener('load', initEditor)
   window.removeEventListener('message', handleMessage)
   console.log('[Editor] 메시지 리스너 제거')
 })
+function confirmDiscard() { return !hasChanges.value || confirm(t('editor.confirmDiscard')) }
+defineExpose({ requestClose: handleCancel, confirmDiscard })
 </script>
 
 <template>
@@ -298,11 +319,7 @@ onUnmounted(() => {
       />
 
       <!-- 퀴즈 편집 탭 -->
-      <QuizEditor
-        v-if="activeTab === 'quiz'"
-        :quizzes="quizzes"
-        @update="handleQuizUpdate"
-      />
+      <p v-if="activeTab === 'quiz'">{{ t('editor.quizUnsupported') }}</p>
     </div>
 
     <!-- 하단 액션 버튼 -->

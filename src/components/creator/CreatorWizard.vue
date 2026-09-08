@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Subject, Difficulty } from '../../types/content'
 import type { RenderMode, CreatorMode } from '../../types/generation'
-import { gradeForDifficulty, gradeLevelForGrade } from '../../types/content'
+import { gradeForDifficulty } from '../../types/content'
 import ModeSelect from './ModeSelect.vue'
 import InterestInput from './InterestInput.vue'
 import SubjectSelect from './SubjectSelect.vue'
@@ -11,6 +11,7 @@ import DifficultySelect from './DifficultySelect.vue'
 import RenderModeSelect from './RenderModeSelect.vue'
 import ProblemInput, { type ProblemInputValue } from './ProblemInput.vue'
 import GenerationProgressVue from './GenerationProgress.vue'
+import { useContentStore } from '../../stores/content'
 import { useGenerationStore } from '../../stores/generation'
 import { useI18n } from '../../i18n'
 
@@ -21,6 +22,11 @@ const router = useRouter()
 
 // Generation Store
 const generationStore = useGenerationStore()
+const contentStore = useContentStore()
+function resolvedModulePath(id: string) {
+  const path = contentStore.getContentById(id)?.path
+  return path ? `public/${path.replace(/^\//, '').replace(/\/index\.html$/, '')}` : null
+}
 
 // 마법사 단계
 // - mode-select: Option 1(interest) vs Option 2(problem) 선택
@@ -177,6 +183,7 @@ function prevStep() {
 async function startGeneration() {
   currentStep.value = 'generating'
   generatedContentId.value = null
+  generatedModulePath.value = null
 
   try {
     let result
@@ -193,12 +200,7 @@ async function startGeneration() {
       })
       if (result.success && result.contentId) {
         generatedContentId.value = result.contentId
-        const diff = problemState.value.difficulty
-        const grade = gradeForDifficulty(diff)
-        const level = gradeLevelForGrade(grade)
-        // subject는 사용자가 선택했을 수도, AI가 추론했을 수도 있음. 매니페스트 기준 경로.
-        const subj = problemState.value.subject ?? 'general'
-        generatedModulePath.value = `public/contents/${subj}/${level}/${result.contentId}`
+        generatedModulePath.value = resolvedModulePath(result.contentId)
       }
     } else {
       // Option 1: interest mode
@@ -215,8 +217,7 @@ async function startGeneration() {
       })
       if (result.success && result.contentId) {
         generatedContentId.value = result.contentId
-        const level = gradeLevelForGrade(grade)
-        generatedModulePath.value = `public/contents/${subject.value}/${level}/${result.contentId}`
+        generatedModulePath.value = resolvedModulePath(result.contentId)
       }
     }
   } catch (error) {
@@ -316,6 +317,7 @@ function resetWizard() {
         <div v-else-if="currentStep === 'generating'" key="generating" class="step-content">
           <GenerationProgressVue
             :progress="generationProgress"
+            :can-improve="!!generatedModulePath && !generationStore.isReviewing"
             :content-id="generatedContentId"
             :job-id="currentJobId"
             @cancel="cancelGeneration"

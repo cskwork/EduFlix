@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import type { ContentCardData, Subject } from '../../types/content'
 import { contentTypeLabel, gradeLevelLabel } from '../../i18n/labels'
 import { getContentHtmlPath, IFRAME_SANDBOX_ATTRS } from '../../services/content/loader'
+import { createLocalContentUrl, getLocalContent, isLocalContentId } from '../../services/content/localContent'
 import { useContentStore } from '../../stores/content'
 
 // Props 정의
@@ -35,16 +36,57 @@ const typeLabel = computed(() => contentTypeLabel(props.content.type))
 // 학년 레벨 라벨
 const gradeLabel = computed(() => gradeLevelLabel(props.content.gradeLevel))
 
+// Start lesson scripts only when their card reaches the viewport; keep a started
+// preview mounted so scrolling back preserves its state.
+const thumbnailElement = ref<HTMLElement | null>(null)
+const previewActive = ref(false)
+let previewObserver: InstanceType<typeof window.IntersectionObserver> | undefined
+onMounted(() => {
+  if (typeof window.IntersectionObserver === 'undefined') {
+    previewActive.value = true
+    return
+  }
+  previewObserver = new window.IntersectionObserver((entries) => {
+    if (entries.some((entry) => entry.isIntersecting)) {
+      previewActive.value = true
+      previewObserver?.disconnect()
+    }
+  })
+  if (thumbnailElement.value) previewObserver.observe(thumbnailElement.value)
+})
+onUnmounted(() => previewObserver?.disconnect())
+
 // 콘텐츠 미리보기 URL
-const previewUrl = computed(() => getContentHtmlPath(props.content))
+const localPreviewUrl = ref('')
+const previewUrl = computed(() => isLocalContentId(props.content.id)
+  ? localPreviewUrl.value
+  : getContentHtmlPath(contentStore.getContentById(props.content.id) ?? props.content))
+watch([previewActive, () => props.content.id], async ([active, id], _previous, onCleanup) => {
+  if (!active || !isLocalContentId(id)) return
+  let disposed = false
+  let blobUrl = ''
+  onCleanup(() => {
+    disposed = true
+    if (blobUrl) URL.revokeObjectURL(blobUrl)
+    localPreviewUrl.value = ''
+  })
+  try {
+    const local = await getLocalContent(id)
+    if (!local || disposed) return
+    blobUrl = createLocalContentUrl(local)
+    localPreviewUrl.value = blobUrl
+  } catch {
+    // Missing or inaccessible local content keeps its card without a broken URL.
+  }
+})
 </script>
 
 <template>
   <router-link :to="`/content/${content.id}`" class="content-card" :class="subjectColorClass" @click="handleClick">
-    <div class="card-thumbnail">
+    <div ref="thumbnailElement" class="card-thumbnail">
       <div class="iframe-container">
         <iframe
-          v-if="previewUrl"
+          v-if="previewActive && previewUrl"
           :src="previewUrl"
           class="preview-iframe"
           :sandbox="IFRAME_SANDBOX_ATTRS"

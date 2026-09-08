@@ -77,34 +77,15 @@ const iframeSrcDoc = computed(() => {
   return buildPreviewDocument(previewContent.value)
 })
 
-// jobId 변경 감지
+// Subscribe on mount as well as when the active job changes.
 watch(
-  () => props.jobId,
-  (newJobId, _oldJobId) => {
-    // 기존 연결 해제
-    if (connection) {
-      connection.close()
-      connection = null
-    }
-
-    // 새 연결 시작
-    if (newJobId && props.isActive) {
-      startPreviewStream(newJobId)
-    }
-  }
-)
-
-// isActive 변경 감지
-watch(
-  () => props.isActive,
-  (isActive) => {
-    if (!isActive && connection) {
-      connection.close()
-      connection = null
-    } else if (isActive && props.jobId && !connection) {
-      startPreviewStream(props.jobId)
-    }
-  }
+  [() => props.jobId, () => props.isActive],
+  ([jobId, isActive]) => {
+    connection?.close()
+    connection = null
+    if (jobId && isActive) startPreviewStream(jobId)
+  },
+  { immediate: true }
 )
 
 // SSE 스트림 시작

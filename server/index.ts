@@ -1,3 +1,4 @@
+import { serveStaticFile } from './static'
 // Bun HTTP 서버 진입점
 import { serve, file } from 'bun'
 import { join } from 'path'
@@ -11,55 +12,6 @@ import { getLlmHealth } from './services/health'
 // 정적 파일 서빙 설정
 const STATIC_DIR = join(import.meta.dir, '..', 'dist')
 const PUBLIC_DIR = join(import.meta.dir, '..', 'public')
-
-// MIME 타입 매핑
-const MIME_TYPES: Record<string, string> = {
-  '.html': 'text/html',
-  '.css': 'text/css',
-  '.js': 'application/javascript',
-  '.json': 'application/json',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif',
-  '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon',
-  '.woff': 'font/woff',
-  '.woff2': 'font/woff2',
-  '.ttf': 'font/ttf',
-  '.eot': 'application/vnd.ms-fontobject',
-}
-
-// 파일 확장자에서 MIME 타입 가져오기
-function getMimeType(path: string): string {
-  const ext = path.substring(path.lastIndexOf('.'))
-  return MIME_TYPES[ext] || 'application/octet-stream'
-}
-
-// 정적 파일 서빙 함수
-async function serveStaticFile(pathname: string): Promise<Response | null> {
-  // dist 폴더에서 먼저 찾기 (빌드된 파일)
-  let filePath = join(STATIC_DIR, pathname)
-  let bunFile = file(filePath)
-
-  if (await bunFile.exists()) {
-    return new Response(bunFile, {
-      headers: { 'Content-Type': getMimeType(pathname) },
-    })
-  }
-
-  // public 폴더에서 찾기 (개발 시 정적 파일)
-  filePath = join(PUBLIC_DIR, pathname)
-  bunFile = file(filePath)
-
-  if (await bunFile.exists()) {
-    return new Response(bunFile, {
-      headers: { 'Content-Type': getMimeType(pathname) },
-    })
-  }
-
-  return null
-}
 
 // CORS 헤더 설정
 // 프로덕션은 dist/를 같은 서버에서 서빙하므로 동일 origin이다. 교차 origin 접근이 실제로 필요한
@@ -137,7 +89,7 @@ async function handleRequest(req: Request, dependencies: RequestHandlerDependenc
     }
 
     // 정적 파일 서빙 (dist/ 또는 public/)
-    const staticResponse = await serveStaticFile(pathname)
+    const staticResponse = await serveStaticFile(pathname, { staticDir: STATIC_DIR, publicDir: PUBLIC_DIR })
     if (staticResponse) {
       return staticResponse
     }
