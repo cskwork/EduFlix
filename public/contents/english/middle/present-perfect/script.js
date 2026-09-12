@@ -59,7 +59,7 @@ const ContentApp = {
             ],
             feedback: {
                 correct: '정답! "just"와 함께 방금 완료된 일을 표현해요.',
-                incorrect: '"just"는 방금 완료된 일을 표현할 때 현재완료와 함께 사용해요.'
+                incorrect: '이 보기에서는 have just finished가 맞습니다. 현재완료는 have/has+과거분사이고, 미국 영어에서는 just와 단순 과거도 쓰입니다.'
             }
         }
     ],
@@ -142,8 +142,21 @@ const ContentApp = {
     setupDragDrop() {
         const words = document.querySelectorAll('.word-block[draggable="true"]');
         const slots = document.querySelectorAll('.drop-slot');
+        let selectedWord = null;
         
         words.forEach(word => {
+            word.tabIndex = 0;
+            word.setAttribute('role', 'button');
+            const selectWord = () => {
+                if (word.classList.contains('used')) return;
+                words.forEach(item => item.classList.remove('dragging'));
+                selectedWord = word;
+                word.classList.add('dragging');
+            };
+            word.addEventListener('click', selectWord);
+            word.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectWord(); }
+            });
             word.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('text/plain', word.textContent.trim());
                 e.dataTransfer.setData('word-type', word.dataset.type || '');
@@ -164,7 +177,27 @@ const ContentApp = {
             });
         });
         
-        slots.forEach(slot => {
+        slots.forEach((slot, index) => {
+            slot.tabIndex = 0;
+            slot.setAttribute('role', 'button');
+            slot.setAttribute('aria-label', `단어 자리 ${index + 1}`);
+            const placeWord = () => {
+                if (!selectedWord || selectedWord.classList.contains('used') || slot.classList.contains('correct')) return;
+                if (selectedWord.dataset.type !== slot.dataset.expects) {
+                    slot.textContent = '다시 선택';
+                    return;
+                }
+                slot.textContent = selectedWord.textContent.trim();
+                slot.classList.add('filled', 'correct');
+                selectedWord.classList.remove('dragging');
+                this.markWordAsUsed(selectedWord.textContent.trim());
+                selectedWord = null;
+                this.checkAllSlotsFilled();
+            };
+            slot.addEventListener('click', placeWord);
+            slot.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); placeWord(); }
+            });
             slot.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 slot.classList.add('highlight');

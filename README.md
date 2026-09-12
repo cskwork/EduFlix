@@ -10,15 +10,19 @@ A Netflix-style platform for interactive educational content.
 
 EduFlix is a learning platform for students from elementary through high school. It pairs a Netflix-style browsing experience with AI-generated content, so a lesson can be created on demand around whatever a learner is interested in — dinosaurs, football, space — and played straight in the browser.
 
-Every lesson is a self-contained bundle of vanilla HTML/CSS/JS that runs inside a sandboxed iframe, so nothing an AI generates can reach the host app.
+Every lesson is a self-contained bundle of vanilla HTML/CSS/JS. New Studio previews use an opaque-origin iframe. The legacy viewer retains `allow-scripts` and `allow-same-origin` for compatibility, so its sandbox does not guarantee isolation from the host app. Stronger isolation remains a required task before public operation.
 
 ### Features
 
 - **View mode** — browse and play lessons, Netflix style
 - **Create mode** — generate a tailored lesson with AI, from your interests or from a problem you paste in
 - **Learning map** — see how topics and prerequisites connect
-- **Sandboxed playback** — lessons run in an isolated iframe
+- **Iframe playback** — Studio previews use an opaque origin; the legacy viewer retains compatibility permissions
 - **Bilingual UI** — English by default, switchable to Korean from the header
+
+### Lesson studio
+
+Open `/studio` to build teacher-editable explanations, activities and quizzes. Save in this browser, preview the student lesson, and export/import portable JSON or offline HTML. It works without an LLM provider. See the [lesson studio guide](docs/lesson-studio.md) for storage, distribution and AI handoff details.
 
 ## Tech stack
 

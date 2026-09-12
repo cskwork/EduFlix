@@ -1,0 +1,14 @@
+{
+  "environment": "production",
+  "project": "agentic-era/eduflix",
+  "namesPresent": [
+    "VITE_STATIC_MODE",
+    "VITE_SERVERLESS_GENERATION",
+    "ALLOW_PUBLIC_GENERATION",
+    "ZAI_MODEL",
+    "ZAI_API_KEY",
+    "ADMIN_TOKEN"
+  ],
+  "values": "Provider returned redacted placeholders. Values were not verified from this output; deployed behavior must establish working configuration.",
+  "temporaryDownloadRemoved": true
+}

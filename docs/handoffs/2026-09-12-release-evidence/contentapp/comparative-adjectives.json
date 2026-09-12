@@ -1,0 +1,13 @@
+{
+  "id": "comparative-adjectives",
+  "frontDoor": true,
+  "activity": "Actual drag tall→taller and beautiful→more beautiful. Second short-word drag had no observed effect; not counted.",
+  "answers": [
+    "taller",
+    "more beautiful",
+    "better"
+  ],
+  "completion": true,
+  "reset": true,
+  "method": "Chrome CUA actual input and DOM snapshots"
+}

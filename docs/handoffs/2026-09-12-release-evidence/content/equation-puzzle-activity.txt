@@ -1,0 +1,18 @@
+[p1 "방정식 퍼즐" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "방정식 퍼즐"]
+root
+  heading
+    text "저울 균형 맞추기"
+  text "x를 입력해 저울을 맞추세요. 답을 누르기 전에 양변에 적용한 연산을 말하고, 맞춘 뒤 원래 식에 대입해 확인하세요. 막히면 힌트를 활용하세요."
+  container
+    text "2x = 6"
+    container
+      text "2x"
+      text "6"
+    container
+      text "x ="
+      spinbutton [ref=1, loc=css:input[placeholder="?"]]
+        text "?"
+      button [ref=2]
+        text "확인"
+      button [ref=3]
+        text "힌트"

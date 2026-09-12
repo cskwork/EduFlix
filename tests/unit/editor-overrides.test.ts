@@ -18,6 +18,13 @@ describe('durable editor changes', () => {
     expect(embedEditorOverrides(html, changes).match(/id="eduflix-editor-overrides"/g)).toHaveLength(1)
     expect(html).toContain('/contents/common/editor-bridge.js')
   })
+  it('extracts explicit editable paragraphs once and skips nested markup', () => {
+    document.body.innerHTML = '<h2 id="heading" data-editable>Title</h2><p id="explanation" data-editable>Explanation</p><p data-editable>Keep <em>markup</em></p>'
+    const targetWindow = { parent: { postMessage() {} }, location: window.location, addEventListener() {}, EduFlixEditor: undefined as undefined | { extractAllContent(): { texts: { path: string }[] } } }
+    new Function('window', 'document', 'getComputedStyle', 'MutationObserver', 'CSS', bridge)(targetWindow, document, getComputedStyle, MutationObserver, CSS)
+    document.dispatchEvent(new Event('DOMContentLoaded'))
+    expect(targetWindow.EduFlixEditor?.extractAllContent().texts.map(text => text.path)).toEqual(['#heading', '#explanation'])
+  })
   it('rejects unsupported quiz writes', () => {
     expect(() => validateEditorOverrides({ ...changes, quizzes: [{}] })).toThrow(/quiz/)
   })

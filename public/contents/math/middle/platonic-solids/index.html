@@ -19,7 +19,7 @@
         <div id="hook-ui" class="scene-ui active">
             <div class="info-panel bottom-panel">
                 <h1 class="hook-title">완벽한 입체는 몇 개일까?</h1>
-                <p class="hook-subtitle">정다각형으로만 만들 수 있는 입체를 찾아보자</p>
+                <p class="hook-subtitle">목표: 합동인 정다각형 면과 꼭짓점의 배열로 볼록 정다면체를 구별해요.</p>
             </div>
         </div>
         
@@ -33,16 +33,16 @@
         
         <div id="story-ui" class="scene-ui">
             <div class="info-panel bottom-panel story-panel">
-                <div class="character-badge">고대 그리스</div>
-                <h3>플라톤의 발견</h3>
-                <p id="story-text">2400년 전, 플라톤은 놀라운 사실을 발견했어. "정다각형으로만 입체를 만들면... 딱 5개만 가능하다고?!"</p>
+                <div class="character-badge">수학 탐구</div>
+                <h3>정다면체의 조건</h3>
+                <p id="story-text">모든 면이 합동인 정다각형이고, 각 꼭짓점에서 같은 수의 면이 만나는 볼록 다면체를 탐구합니다. 이 조건을 만족하는 정다면체는 다섯 가지입니다.</p>
             </div>
         </div>
         
         <div id="core-ui" class="scene-ui">
             <div class="info-panel top-panel">
                 <h2>5가지 정다면체</h2>
-                <p class="instruction">각 정다면체를 클릭해서 탐험해보세요!</p>
+                <p class="instruction">정육면체와 정팔면체를 선택해 F, E, V를 기록하세요. 8−12+6=2와 6−12+8=2를 비교하고 면과 꼭짓점 수가 어떻게 바뀌는지 설명하세요.</p>
             </div>
             <div class="solid-selector">
                 <button class="solid-btn active" data-solid="tetrahedron">
@@ -85,7 +85,7 @@
                 </div>
             </div>
             <div class="action-buttons core-actions">
-                <button class="action-btn" id="unfold-btn">전개도 보기</button>
+                <button class="action-btn" id="unfold-btn">확대 / 원래 크기</button>
                 <button class="action-btn" id="wireframe-btn">뼈대 보기</button>
             </div>
         </div>
@@ -125,7 +125,7 @@
                 <ul class="summary-list">
                     <li>정다면체는 딱 <strong>5가지</strong>만 존재해요</li>
                     <li>모든 정다면체는 <strong>V-E+F=2</strong> 공식을 만족해요</li>
-                    <li>정삼각형, 정사각형, 정오각형만 면으로 사용돼요</li>
+                    <li>정육면체와 정팔면체는 왜 둘 다 정다면체일까요? 면의 모양과 꼭짓점에서 만나는 면의 수로 설명하세요.</li>
                 </ul>
                 <div class="wrap-actions">
                     <button class="action-btn primary" id="free-explore-btn">자유 탐색 모드</button>

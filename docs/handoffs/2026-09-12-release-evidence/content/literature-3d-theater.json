@@ -1,0 +1,13 @@
+{
+  "id": "literature-3d-theater",
+  "family": "custom",
+  "frontDoor": false,
+  "activity": false,
+  "quizzes": [],
+  "modes": [],
+  "completion": false,
+  "reset": false,
+  "method": "Native DOM clicks; read-only question oracle; normal feedback timers and native result dialog/reload.",
+  "failure": "CdpRequestTimeoutError: CDP request timed out: Input.dispatchMouseEvent",
+  "lastObservation": null
+}

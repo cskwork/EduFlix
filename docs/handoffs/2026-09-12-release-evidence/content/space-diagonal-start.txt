@@ -1,0 +1,13 @@
+[p1 "공간 대각선" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "공간 대각선"]
+root
+  container
+    heading
+      text "방 한쪽 모서리에서 대각선 반대쪽 모서리까지 줄을 달면, 줄의 길이는 얼마일까요?"
+    paragraph
+      text "3D 공간에서 가장 긴 대각선을 찾아보세요!"
+    paragraph
+      text "학습 목표: 피타고라스 정리를 두 번 써서 직육면체의 공간 대각선을 구해요."
+  svg_root "피타고라스를 두 번!"
+    text "피타고라스를 두 번!"
+  button [ref=1]
+    text "시작하기"

@@ -1,5 +1,6 @@
 // 콘텐츠 로딩 서비스
 import type { ContentManifest, Subject, GradeLevel } from '../../types/content'
+import { revisionedContentUrl } from './revision'
 import { t } from '../../i18n'
 
 // 콘텐츠 HTML 경로 생성에 필요한 최소 타입
@@ -31,7 +32,7 @@ export function createInitialState(): ContentLoadState {
 // 콘텐츠 매니페스트 로드
 export async function loadContentManifest(contentPath: string): Promise<ContentManifest> {
   const manifestPath = `${contentPath}/manifest.json`
-  const response = await fetch(manifestPath)
+  const response = await fetch(revisionedContentUrl(manifestPath), { cache: 'no-cache' })
 
   if (!response.ok) {
     throw new Error(t('errors.manifestLoadFailed', { path: manifestPath }))
@@ -45,11 +46,11 @@ export function getContentHtmlPath(content: ContentPathInfo): string {
   // path 필드가 있으면 사용, 없으면 기본 경로 생성
   if (content.path) {
     // 상대경로면 절대경로로 변환
-    return content.path.startsWith('/') ? content.path : `/${content.path}`
+    return revisionedContentUrl(content.path.startsWith('/') ? content.path : `/${content.path}`)
   }
 
   // 기본 경로: /contents/{subject}/{gradeLevel}/{id}/index.html
-  return `/contents/${content.subject}/${content.gradeLevel}/${content.id}/index.html`
+  return revisionedContentUrl(`/contents/${content.subject}/${content.gradeLevel}/${content.id}/index.html`)
 }
 
 // 콘텐츠 존재 여부 확인
@@ -65,7 +66,7 @@ export async function checkContentExists(htmlPath: string): Promise<boolean> {
 // 콘텐츠 ID로 카탈로그에서 찾기
 export async function findContentById(id: string): Promise<ContentManifest | null> {
   try {
-    const response = await fetch('/contents/index.json')
+    const response = await fetch(revisionedContentUrl('/contents/index.json'), { cache: 'no-cache' })
     if (!response.ok) {
       return null
     }

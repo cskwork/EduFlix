@@ -1,0 +1,68 @@
+[p1 "패턴 행성 3D | 동아출판 수학" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "패턴 행성 3D | 동아출판 수학"]
+root
+  container
+    canvas
+    container
+      container
+        text "🪐"
+        text "행성"
+        text "3"
+      container
+        text "⭐"
+        text "점수"
+        text "15300"
+      container
+        text "✅"
+        text "정답"
+        text "34"
+    container
+      heading
+        text "🌟 패턴 유형"
+      button [ref=1]
+        text "🔢"
+        text "숫자 패턴"
+      button [ref=2]
+        text "🔷"
+        text "도형 패턴"
+      button [ref=3]
+        text "🎨"
+        text "색상 패턴"
+      button [ref=4]
+        text "🌈"
+        text "혼합 패턴"
+    container
+      text "🔴"
+      heading
+        text "화성"
+      paragraph
+        text "도전적인 패턴!"
+    container
+      text "패턴: 공식 패턴 - 빈칸에 들어갈 것은?"
+      container
+        text "🌟"
+        text "4"
+        text "🌙"
+        text "🌟"
+        text "10"
+        text "?"
+      container
+        text "🔶"
+        text "🌙"
+        text "🟡"
+        text "🔵"
+    container
+      container
+        text "연속 정답"
+        container
+          text "🔥"
+          text "34"
+      container
+        text "레벨"
+        container
+          text "🚀"
+          text "7"
+    text "🎉 정답!"
+  text "⭐"
+  text "⭐"
+  text "⭐"
+  text "⭐"

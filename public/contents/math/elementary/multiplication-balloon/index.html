@@ -795,7 +795,7 @@
                 this.add.text(width / 2, 40, '퀴즈 타임', TEXT_STYLES.title).setOrigin(0.5);
                 this.questionText = this.add.text(width / 2, 130, '', { ...TEXT_STYLES.body, fontSize: '36px' }).setOrigin(0.5);
                 this.optionButtons = [];
-                this.feedbackText = this.add.text(width / 2, 440, '', { fontFamily: 'Noto Sans KR', fontSize: '22px', color: '#fbbf24' }).setOrigin(0.5);
+                this.feedbackText = this.add.text(width / 2, 440, '', { fontFamily: 'Noto Sans KR', fontSize: '22px', color: '#fbbf24', wordWrap: { width: width - 48 }, align: 'center' }).setOrigin(0.5);
                 this.progressText = this.add.text(width / 2, 510, '', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#64748b' }).setOrigin(0.5);
                 this.showQuestion();
             }
@@ -842,7 +842,7 @@
                     this.registry.set('score', (this.registry.get('score') || 0) + 20);
                 } else {
                     btn.bg.clear(); btn.bg.fillStyle(COLORS.error, 1); btn.bg.fillRoundedRect(-70, -35, 140, 70, 12);
-                    this.feedbackText.setText(`아쉬워요! 정답은 ${correctAnswer}`).setColor('#ef4444');
+                    this.feedbackText.setText(`답은 ${correctAnswer}. 같은 수를 묶음 수만큼 더해 확인해요.`).setColor('#ef4444');
                     // Highlight correct
                     this.optionButtons.forEach(b => {
                         if (b.answer === correctAnswer) {

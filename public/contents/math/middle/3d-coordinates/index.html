@@ -19,7 +19,7 @@
         <div id="hook-ui" class="scene-ui active">
             <div class="info-panel bottom-panel">
                 <h1 class="hook-title">친구를 어디서 만날까?</h1>
-                <p class="hook-subtitle">3D 세계에서 정확한 위치를 알려주려면?</p>
+                <p class="hook-subtitle">목표: 좌표의 순서를 지켜 위치를 지정하고 두 점의 거리를 구해요.</p>
             </div>
         </div>
         
@@ -28,7 +28,7 @@
             <div class="info-panel bottom-panel">
                 <h2>이미 알고 있는 평면좌표</h2>
                 <div class="formula-mini">(x, y)</div>
-                <p class="bridge-text">여기에 높이 z를 추가하면?</p>
+                <p class="bridge-text">이 화면은 x=가로, y=높이, z=깊이로 정합니다. 평면에서 공간으로 한 축을 더하면?</p>
                 <div class="formula-result">(x, y, z)</div>
             </div>
         </div>
@@ -46,7 +46,7 @@
         <div id="core-ui" class="scene-ui">
             <div class="info-panel top-panel">
                 <h2>3D 좌표 배치하기</h2>
-                <p class="instruction">점을 드래그해서 목표 위치로 이동시키세요!</p>
+                <p class="instruction">점을 드래그하거나 W/S로 깊이, A/D로 가로, Q/E로 높이를 조절하세요. (3,2,4)를 만들기 전에 각 성분의 방향을 말하고 화면 축 이름과 비교하세요.</p>
             </div>
             <div class="info-panel stats-panel">
                 <div class="stat-item">
@@ -79,7 +79,7 @@
                 <div class="formula-display">
                     <span class="formula-text">d = √[(x₂-x₁)² + (y₂-y₁)² + (z₂-z₁)²]</span>
                 </div>
-                <p class="formula-explain">피타고라스 정리를 3차원으로 확장!</p>
+                <p class="formula-explain">(1,2,2)에서 원점까지는 √(1+4+4)=3입니다. 좌표를 더한 5는 거리가 아닙니다. 서로 수직인 성분의 제곱을 더하세요.</p>
                 <div class="distance-example">
                     <span>예: (0,0,0)에서 (3,4,0)까지</span>
                     <span class="example-result">d = √(9+16+0) = 5</span>
@@ -107,7 +107,7 @@
                 <h2>오늘 배운 것</h2>
                 <ul class="summary-list">
                     <li>3D 위치는 <strong>(x, y, z)</strong>로 표현해요</li>
-                    <li>x는 가로, y는 높이, z는 깊이</li>
+                    <li>이 화면에서 x는 가로, y는 높이, z는 깊이입니다. 시점을 돌려도 좌표가 유지되는 이유를 설명해 보세요.</li>
                     <li>거리 공식: <strong>√[(x₂-x₁)² + (y₂-y₁)² + (z₂-z₁)²]</strong></li>
                 </ul>
                 <div class="wrap-actions">

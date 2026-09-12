@@ -1,0 +1,19 @@
+[p1 "동물 마을의 비밀: 환경 적응 대작전" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "동물 마을의 비밀: 환경 적응 대작전"]
+root
+  container
+    heading
+      text "환경 적응 대작전 완료!"
+    image
+    container
+      paragraph
+        text "오늘 배운 동물들의 환경 적응 비밀을 도감에서 확인해 보세요!"
+      container
+        button [ref=1]
+          text "북극 도감 보기"
+        button [ref=2]
+          text "사막 도감 보기"
+    container
+      button [ref=3]
+        text "다시하기"
+      button [ref=4]
+        text "완료하기"

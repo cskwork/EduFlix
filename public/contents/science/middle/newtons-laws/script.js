@@ -37,6 +37,7 @@ const ScienceApp = {
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
             this.animationId = null;
+            this.isAnimating = false;
         }
         
         document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
@@ -105,7 +106,7 @@ const ScienceApp = {
         if (this.isAnimating) return;
         
         const mass = 1; // kg
-        const acceleration = this.force / mass;
+        // Acceleration is read from the live force each frame.
         const frictionCoef = this.friction ? 2 : 0;
         
         this.isAnimating = true;
@@ -118,7 +119,7 @@ const ScienceApp = {
         
         const animate = () => {
             // 가속도 계산
-            let netAccel = acceleration;
+            let netAccel = this.force / mass;
             
             // 마찰력 적용
             if (this.friction && this.boxVelocity > 0) {
@@ -250,7 +251,7 @@ const ScienceApp = {
             feedback.classList.remove('hidden', 'success');
             feedback.classList.add('error');
             feedbackIcon.textContent = '🤔';
-            feedbackText.textContent = '아쉬워요! 관성의 법칙을 생각해보세요. 다시 한번 도전해볼까요?';
+            feedbackText.textContent = '안전벨트가 몸에 힘을 가해 자동차와 함께 속도를 줄입니다. 합력이 0일 때는 속도가 유지되며, 작용·반작용은 서로 다른 물체에 작용합니다.';
             retryBtn.classList.remove('hidden');
             nextBtn.classList.remove('hidden');
         }

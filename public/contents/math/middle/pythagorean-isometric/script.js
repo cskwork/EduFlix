@@ -495,6 +495,7 @@ function nextQuizQuestion() {
 
   document.getElementById('quiz-question').textContent = questionText;
   document.getElementById('quiz-input').value = '';
+  document.getElementById('quiz-check').disabled = false;
   document.getElementById('quiz-feedback').textContent = '정답을 입력하세요.';
   document.getElementById('quiz-feedback').style.color = '#fde68a';
 
@@ -512,7 +513,7 @@ function setupQuiz() {
 
   check.addEventListener('click', function() {
     var q = APP.quiz.current;
-    if (!q) return;
+    if (!q || check.disabled) return;
 
     var value = Number(input.value);
     var feedback = document.getElementById('quiz-feedback');
@@ -523,6 +524,7 @@ function setupQuiz() {
       return;
     }
 
+    check.disabled = true;
     APP.quiz.total++;
     var expected = q.ans;
 

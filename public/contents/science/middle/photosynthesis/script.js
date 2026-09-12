@@ -136,7 +136,7 @@ const ScienceApp = {
         
         // 포도당과 산소 생성량
         const glucoseProduction = minLevel;
-        const oxygenProduction = minLevel * 0.9;
+        const oxygenProduction = minLevel; // Relative model index, not a molar quantity.
 
         // 미터 업데이트
         const glucoseMeter = document.getElementById('glucose-meter');
@@ -217,7 +217,7 @@ const ScienceApp = {
             feedback.classList.remove('hidden', 'error');
             feedback.classList.add('success');
             feedbackIcon.textContent = '🎉';
-            feedbackText.textContent = '정답! 식물이 광합성을 통해 산소를 만들어내기 때문에 숲 속 공기가 상쾌해요. 특히 낮에 햇빛을 받으면 광합성이 활발해져서 더 많은 산소가 나와요!';
+            feedbackText.textContent = '정답! 빛이 있는 조건에서 식물은 물과 이산화탄소를 이용해 유기물을 합성하고 산소를 방출합니다. 식물도 낮과 밤 모두 호흡하며, 숲의 상쾌함을 산소 농도만으로 설명할 수는 없습니다.';
             nextBtn.classList.remove('hidden');
             retryBtn.classList.add('hidden');
         } else {
@@ -231,7 +231,7 @@ const ScienceApp = {
             feedback.classList.remove('hidden', 'success');
             feedback.classList.add('error');
             feedbackIcon.textContent = '🤔';
-            feedbackText.textContent = '아쉬워요! 식물이 광합성으로 산소를 만들어내서 공기가 상쾌한 거예요. 다시 생각해볼까요?';
+            feedbackText.textContent = '광합성의 재료는 물과 이산화탄소이고 빛은 에너지원입니다. 산소는 생성물입니다. 화면 수치는 제한 요인을 비교하는 상대 지수이며 실제 생성량을 예측하지 않습니다.';
             retryBtn.classList.remove('hidden');
             nextBtn.classList.remove('hidden');
         }

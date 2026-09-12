@@ -1,0 +1,34 @@
+[p1 "물질의 상태 변화 - 분자의 비밀" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "물질의 상태 변화 - 분자의 비밀"]
+root
+  container
+    heading
+      text "오늘 발견한 것"
+    container
+      container
+        text "1"
+        paragraph
+          text "물질은"
+          text "고체, 액체, 기체"
+          text "세 가지 상태가 있다"
+      container
+        text "2"
+        paragraph
+          text "온도가 올라가면"
+          text "분자가 더 빨리 움직인다"
+      container
+        text "3"
+        paragraph
+          text "분자 운동이 활발해지면"
+          text "상태가 변한다"
+    container
+      heading
+        text "다음에 배울 것"
+      paragraph
+        text "열에너지와 온도의 관계, 끓는점과 녹는점"
+    container
+      button [ref=1]
+        svg_root
+        text "다시 실험하기"
+      button [ref=2]
+        svg_root
+        text "처음으로"

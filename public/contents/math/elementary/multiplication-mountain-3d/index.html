@@ -756,7 +756,7 @@
                 <div class="cloud" style="top: 70%; animation-delay: 15s;">☁️</div>
             </div>
             <h1>⛰️ 구구단 산 3D</h1>
-            <p class="subtitle">구구단 산을 정복하세요! 2단부터 9단까지 모든 산을 오르면 구구단 마스터가 됩니다!</p>
+            <p class="subtitle">한 묶음의 수 × 묶음 수를 계산하며 산을 올라요. 3 × 4는 3 + 3 + 3 + 3 = 12예요. 틀린 식은 묶음을 그려 다시 풀어 보세요.</p>
             <button id="start-btn">
                 <span>등반 시작!</span>
                 <span>🚀</span>
@@ -764,7 +764,7 @@
             <div class="features">
                 <div class="feature">
                     <div class="feature-icon">🏔️</div>
-                    <div class="feature-title">9개의 산</div>
+                    <div class="feature-title">8개의 산</div>
                     <div class="feature-desc">2단부터 9단까지 정복하세요</div>
                 </div>
                 <div class="feature">
@@ -1201,6 +1201,7 @@
         }
 
         function showProblem() {
+            document.getElementById("answer-input").disabled = false;
             document.getElementById('num1').textContent = currentTable;
             document.getElementById('num2').textContent = currentMultiplier;
             document.getElementById('answer-input').value = '';
@@ -1211,7 +1212,10 @@
         }
 
         function submitAnswer() {
-            const userAnswer = parseInt(document.getElementById('answer-input').value);
+            if (document.getElementById("answer-input").disabled) return;
+            const rawAnswer = document.getElementById('answer-input').value.trim();
+            const userAnswer = Number(rawAnswer);
+            if (!rawAnswer || !Number.isFinite(userAnswer)) return;
             const correctAnswer = currentTable * currentMultiplier;
 
             totalAttempts++;
@@ -1224,6 +1228,7 @@
         }
 
         function handleCorrectAnswer() {
+            document.getElementById("answer-input").disabled = true;
             streak++;
             if (streak > maxStreak) {
                 maxStreak = streak;
@@ -1283,7 +1288,7 @@
             streak = 0;
             score = Math.max(0, score - 10);
 
-            showFeedback(`❌ ${correctAnswer}예요!`, '#ef4444');
+            showFeedback(`${currentTable} × ${currentMultiplier} = ${currentTable} × ${currentMultiplier - 1} + ${currentTable} = ${correctAnswer}`, '#ef4444');
 
             document.getElementById('score').textContent = score;
             document.getElementById('streak').textContent = streak;

@@ -465,7 +465,7 @@
 
         <div id="start-screen">
             <h1>🏙️ 3D 대수 도시</h1>
-            <p class="subtitle">방정식을 풀어 도시를 건설하세요! 일차방정식, 대입, 식의 간단화를 마스터하면 멋진 도시가 완성됩니다!</p>
+            <p class="subtitle">방정식의 양변에 같은 연산을 하며 x를 구해요. 2x + 3 = 11 → 2x = 8 → x = 4. 구한 값을 원래 식에 넣어 양변이 같은지 확인해 보세요.</p>
             <button id="start-btn">
                 <span>도시 건설 시작!</span>
                 <span>🚀</span>
@@ -521,7 +521,7 @@
                 hard: () => {
                     const x = Math.floor(Math.random() * 8) + 2;
                     const a = Math.floor(Math.random() * 4) + 2;
-                    const b = Math.floor(Math.random() * 3) + 1;
+                    const b = a - 1;
                     const left = a * x + 5;
                     const right = b * x + (a - b) * x + 5;
                     return {
@@ -748,6 +748,7 @@
         }
 
         function generateProblem() {
+            document.getElementById("answer-input").disabled = false;
             const difficulty = correctCount < 5 ? 'easy' : (correctCount < 10 ? 'medium' : 'hard');
             const generator = problemGenerators[currentTopic];
             const diffGenerator = generator[difficulty] || generator.easy;
@@ -771,6 +772,7 @@
         }
 
         function submitAnswer() {
+            if (document.getElementById("answer-input").disabled) return;
             const userAnswer = parseFloat(document.getElementById('answer-input').value);
 
             if (isNaN(userAnswer)) {
@@ -778,7 +780,7 @@
                 return;
             }
 
-            if (Math.abs(userAnswer - currentProblem.answer) < 0.01) {
+            if (Math.abs(userAnswer - currentProblem.answer) < 1e-9) {
                 handleCorrect();
             } else {
                 handleWrong();
@@ -786,6 +788,7 @@
         }
 
         function handleCorrect() {
+            document.getElementById("answer-input").disabled = true;
             correctCount++;
             score += 100 + correctCount * 10;
             buildingIndex++;
@@ -804,7 +807,7 @@
 
         function handleWrong() {
             score = Math.max(0, score - 20);
-            showFeedback(`❌ 정답: ${currentProblem.answer}`, '#ef4444');
+            showFeedback(`${currentProblem.hint} → 답: ${currentProblem.answer}`, '#ef4444');
             document.getElementById('score').textContent = score;
         }
 

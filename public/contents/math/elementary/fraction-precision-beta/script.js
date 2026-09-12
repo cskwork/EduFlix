@@ -189,7 +189,7 @@ const ContentApp = {
 
     checkQuiz() {
         const input = document.getElementById('quiz-input');
-        const val = parseInt(input.value);
+        const val = input.value.trim() === "" ? NaN : Number(input.value);
         const feedback = document.getElementById('quiz-feedback');
         const liquid = document.getElementById('quiz-liquid');
         const retryBtn = document.querySelector('.retry-btn');
@@ -202,7 +202,7 @@ const ContentApp = {
         if (heightPct > 100) heightPct = 100;
         liquid.style.height = heightPct + '%';
 
-        if (isNaN(val)) {
+        if (!Number.isFinite(val) || val < 0 || val > 40) {
             feedback.innerHTML = '<span class="error">숫자를 입력해주세요.</span>';
             return;
         }

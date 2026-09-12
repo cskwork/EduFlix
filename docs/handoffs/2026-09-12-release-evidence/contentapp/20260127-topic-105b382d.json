@@ -1,0 +1,13 @@
+{
+  "id": "20260127-topic-105b382d",
+  "frontDoor": true,
+  "activity": "Slider Home/End and default50, all3 greetings accepted; added missing visible next button",
+  "answers": [
+    "Good morning",
+    "Good afternoon",
+    "Good evening"
+  ],
+  "completion": true,
+  "reset": true,
+  "method": "Chrome CUA actual input + DOM terminal and restart evidence"
+}

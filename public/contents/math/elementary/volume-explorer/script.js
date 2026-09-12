@@ -64,7 +64,7 @@ class EduFlixEngine {
                 <div class="hook-content">
                     <div class="question-box">
                         <h1 class="hook-question">${question}</h1>
-                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}<p class="scene-text">학습 목표: ${this.data.objective}</p>
                     </div>
                     ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
                     <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
@@ -75,7 +75,7 @@ class EduFlixEngine {
 
         this.createScene('story', (scene) => {
             const { character, situation } = this.data.story;
-            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
+            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}<br><br>${this.data.workedExample}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
         });
 
         this.createScene('core', (scene) => {
@@ -89,7 +89,7 @@ class EduFlixEngine {
         }
 
         this.createScene('wrap', (scene) => {
-            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
+            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3><p class="scene-text">${this.data.reflection}</p></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
         });
     }
 
@@ -127,31 +127,46 @@ class EduFlixEngine {
         if(btn) { btn.style.display = 'inline-block'; btn.classList.add('animate-fade-in'); }
     }
 
-    startQuiz() {
-        const q = this.data.quiz[0];
-        document.getElementById('quiz-question').textContent = q.question;
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = '';
-        q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
-            optsContainer.appendChild(btn);
+    startQuiz(index = 0) {
+        this.quizIndex = index;
+        const q = this.data.quiz[index];
+        const question = document.getElementById('quiz-question');
+        question.textContent = `${index + 1} / ${this.data.quiz.length} · ${q.question}`;
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        q.options.forEach((option, selected) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quiz-option';
+            button.textContent = option;
+            button.onclick = () => this.checkQuiz(selected, q.answer, button);
+            container.appendChild(button);
         });
+        const feedback = document.createElement('p');
+        feedback.id = 'quiz-explanation';
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        container.appendChild(feedback);
     }
 
-    checkQuiz(selectedIdx, correctIdx, btnElement) {
-        const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+    checkQuiz(selected, answer, button) {
+        const container = document.getElementById('quiz-options');
+        const options = container.querySelectorAll('.quiz-option');
+        if (button.disabled) return;
+        options.forEach(option => { option.disabled = true; });
+        button.classList.add(selected === answer ? 'correct' : 'incorrect');
+        options[answer].classList.add('correct');
+        document.getElementById('quiz-explanation').textContent =
+            (selected === answer ? '정답입니다. ' : '답을 비교해 보세요. ') + this.data.quiz[this.quizIndex].explanation;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '해설을 읽었어요 · 다음 문항' : '해설을 읽었어요 · 정리하기';
+        next.onclick = () => {
+            if (this.quizIndex + 1 < this.data.quiz.length) this.startQuiz(this.quizIndex + 1);
+            else this.nextScene();
+        };
+        container.appendChild(next);
     }
 }
 
@@ -166,6 +181,9 @@ window.Engine = new EduFlixEngine();
  */
 
 const volumeData = {
+    objective: "단위 정육면체의 개수로 직육면체의 부피를 구해요.",
+    workedExample: "가로 4cm, 세로 3cm인 한 층에는 1cm³ 큐브 12개가 들어갑니다. 높이 2cm이면 두 층이므로 12×2=24cm³입니다. 길이를 더하는 것이 아니라 각 층의 개수를 곱합니다.",
+    reflection: "같은 24cm³를 만드는 서로 다른 상자 크기 두 가지를 찾아보세요. 부피가 같아도 모양은 같지 않은 이유를 말하세요.",
     title: "부피 탐험가",
     hook: {
         question: "택배 상자 안에 물건을 가득 채우려면, 상자 크기를 어떻게 알 수 있을까요?",
@@ -210,7 +228,7 @@ const volumeData = {
     },
     interaction: {
         title: "상자 채우기",
-        instruction: "슬라이더를 조절하고 '채우기' 버튼을 눌러 단위 큐브로 상자를 채워보세요!",
+        instruction: "서로 다른 크기로 상자를 3번 채우면 다음 단계가 열립니다. 가로4·세로3·높이2에서 24개를 확인하고, 높이만4로 바꾸어 48개를 예상하세요. 마지막에는 가로2·세로3·높이4를 만들어 24개가 되는지 비교하세요.",
         onInit: (container, engine) => {
             let width = 3, height = 2, depth = 3;
             let cubes = [];
@@ -424,11 +442,27 @@ const volumeData = {
     },
     quiz: [
         {
-            question: "가로 4cm, 세로 3cm, 높이 2cm인 직육면체의 부피는?",
-            options: ["24 cm³", "18 cm³", "20 cm³", "12 cm³"],
-            answer: 0
+                "question": "가로 4cm, 세로 3cm, 높이 2cm인 직육면체의 부피는?",
+                "options": [
+                        "24 cm³",
+                        "18 cm³",
+                        "20 cm³",
+                        "12 cm³"
+                ],
+                "answer": 0,
+                "explanation": "한 층에 4×3=12개의 1cm³ 큐브가 있고 두 층이므로 24cm³입니다."
+        },
+        {
+                "question": "가로와 세로를 유지하고 높이만 2배로 하면 부피는?",
+                "options": [
+                        "그대로",
+                        "2배",
+                        "4배"
+                ],
+                "answer": 1,
+                "explanation": "층마다 큐브 수는 같고 층의 수만 2배가 되므로 전체 부피도 2배입니다."
         }
-    ]
+]
 };
 
 Engine.init(volumeData);

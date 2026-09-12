@@ -20,6 +20,7 @@ export function useKeyboardNavigation(options: KeyboardNavigationOptions = {}) {
     const isInputField =
       target.tagName === 'INPUT' ||
       target.tagName === 'TEXTAREA' ||
+      target.tagName === 'SELECT' ||
       target.isContentEditable
 
     if (isInputField && !event.key.startsWith('Escape')) {

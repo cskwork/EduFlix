@@ -1,0 +1,86 @@
+[
+  {
+    "id": "space-diagonal",
+    "file": "public/contents/math/middle/space-diagonal/style.css",
+    "matches": true,
+    "localSha256": "1a60526de9cb3531823fd49d4ce49331b6950cd939336dadf60513ad4c3cba47",
+    "servedSha256": "1a60526de9cb3531823fd49d4ce49331b6950cd939336dadf60513ad4c3cba47"
+  },
+  {
+    "id": "space-diagonal",
+    "file": "public/contents/math/middle/space-diagonal/script.js",
+    "matches": true,
+    "localSha256": "fbec5a385e1a25deabca089d4c1c73f0161921ca4d18590b2ed68b6c4e1de5c9",
+    "servedSha256": "fbec5a385e1a25deabca089d4c1c73f0161921ca4d18590b2ed68b6c4e1de5c9"
+  },
+  {
+    "id": "space-diagonal",
+    "file": "public/contents/math/middle/space-diagonal/index.html",
+    "matches": true,
+    "localSha256": "bbd0a3b309bb4d32927900d135741c8b0e533a18dedaccd94af2564cd48b58d7",
+    "servedSha256": "bbd0a3b309bb4d32927900d135741c8b0e533a18dedaccd94af2564cd48b58d7"
+  },
+  {
+    "id": "3d-vectors",
+    "file": "public/contents/math/high/3d-vectors/style.css",
+    "matches": true,
+    "localSha256": "9f19b94cc21aef847112b08bf015ece11a95ada6a32f7acabfb011bd06587276",
+    "servedSha256": "9f19b94cc21aef847112b08bf015ece11a95ada6a32f7acabfb011bd06587276"
+  },
+  {
+    "id": "3d-vectors",
+    "file": "public/contents/math/high/3d-vectors/script.js",
+    "matches": true,
+    "localSha256": "90151efc6f74fd1c46e1624c3a3e54dcf04088f21fdb24fd911193d1d2f6518d",
+    "servedSha256": "90151efc6f74fd1c46e1624c3a3e54dcf04088f21fdb24fd911193d1d2f6518d"
+  },
+  {
+    "id": "3d-vectors",
+    "file": "public/contents/math/high/3d-vectors/index.html",
+    "matches": true,
+    "localSha256": "75888037b754053c7adb3908ced9ca95f267706d38d5d57e23e3ae631b3050f5",
+    "servedSha256": "75888037b754053c7adb3908ced9ca95f267706d38d5d57e23e3ae631b3050f5"
+  },
+  {
+    "id": "volume-explorer",
+    "file": "public/contents/math/elementary/volume-explorer/style.css",
+    "matches": true,
+    "localSha256": "00128431c4464d8afae6f7ac65961b3c2a778f0585b763488cfd246dddf8f6ec",
+    "servedSha256": "00128431c4464d8afae6f7ac65961b3c2a778f0585b763488cfd246dddf8f6ec"
+  },
+  {
+    "id": "volume-explorer",
+    "file": "public/contents/math/elementary/volume-explorer/script.js",
+    "matches": true,
+    "localSha256": "927583026bc6e98d70e152491d64333b60875c48c174cbbc1c095fdcd8dc84eb",
+    "servedSha256": "927583026bc6e98d70e152491d64333b60875c48c174cbbc1c095fdcd8dc84eb"
+  },
+  {
+    "id": "volume-explorer",
+    "file": "public/contents/math/elementary/volume-explorer/index.html",
+    "matches": true,
+    "localSha256": "36d2c58eca951e174551568a06bb9e21d0b93e14e940b8de420f4878647fdb84",
+    "servedSha256": "36d2c58eca951e174551568a06bb9e21d0b93e14e940b8de420f4878647fdb84"
+  },
+  {
+    "id": "modal-can",
+    "file": "public/contents/english/elementary/modal-can/style.css",
+    "matches": true,
+    "localSha256": "74108a3d30cd1e764bcac7ec752059fc6db1822efc465c58599474a4209472b6",
+    "servedSha256": "74108a3d30cd1e764bcac7ec752059fc6db1822efc465c58599474a4209472b6"
+  },
+  {
+    "id": "modal-can",
+    "file": "public/contents/english/elementary/modal-can/script.js",
+    "matches": true,
+    "localSha256": "8b07fa690cdc79e4584cf276d9cf9a2fbbf3bc3352f37b49c33770e3f0df61ff",
+    "servedSha256": "8b07fa690cdc79e4584cf276d9cf9a2fbbf3bc3352f37b49c33770e3f0df61ff"
+  },
+  {
+    "id": "modal-can",
+    "file": "public/contents/english/elementary/modal-can/index.html",
+    "matches": true,
+    "localSha256": "1a9d3bd94c2ca27edb5b81859b3247ae30f909430240cf67aaf3506b5839f752",
+    "servedSha256": "1a9d3bd94c2ca27edb5b81859b3247ae30f909430240cf67aaf3506b5839f752"
+  }
+]

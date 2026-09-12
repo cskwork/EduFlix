@@ -1,0 +1,79 @@
+{
+  "id": "volume-explorer",
+  "title": "부피 탐험가",
+  "family": "classic",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": "가로 4cm, 세로 3cm, 높이 2cm인 직육면체의 부피는?",
+      "selected": "24 cm³",
+      "feedback": "정답입니다. 한 층에 4×3=12개의 1cm³ 큐브가 있고 두 층이므로 24cm³입니다."
+    },
+    {
+      "question": "가로와 세로를 유지하고 높이만 2배로 하면 부피는?",
+      "selected": "2배",
+      "feedback": "정답입니다. 층마다 큐브 수는 같고 층의 수만 2배가 되므로 전체 부피도 2배입니다."
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#scene-hook button"
+    },
+    {
+      "click": "#scene-story button"
+    },
+    {
+      "range": "#width-slider",
+      "key": "ArrowRight"
+    },
+    {
+      "click": "#fill-btn"
+    },
+    {
+      "range": "#width-slider",
+      "key": "ArrowLeft"
+    },
+    {
+      "click": "#fill-btn"
+    },
+    {
+      "range": "#width-slider",
+      "key": "ArrowRight"
+    },
+    {
+      "click": "#fill-btn"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(1)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#scene-wrap button:first-child"
+    }
+  ],
+  "errors": [],
+  "activityObservation": {
+    "scene": "core",
+    "text": "상자 채우기\n서로 다른 크기로 상자를 3번 채우면 다음 단계가 열립니다. 가로4·세로3·높이2에서 24개를 확인하고, 높이만4로 바꾸어 48개를 예상하세요. 마지막에는 가로2·세로3·높이4를 만들어 24개가 되는지 비교하세요.\n가로\n4\n세로\n2\n높이\n3\n가로 x 세로 x 높이 = 부피\n24\ncm³ (단위 큐브 개수)\n다시 채우기\n\n드래그해서 상자를 돌려볼 수 있어요!\n\n훌륭해요! 부피 = 가로 x 세로 x 높이 라는 것을 발견했어요!\n다음",
+    "errors": []
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "🎉 완료!\n\n오늘 배운 내용\n\n부피 탐험가\n\n같은 24cm³를 만드는 서로 다른 상자 크기 두 가지를 찾아보세요. 부피가 같아도 모양은 같지 않은 이유를 말하세요.\n\n다시하기\n홈으로",
+    "errors": []
+  }
+}

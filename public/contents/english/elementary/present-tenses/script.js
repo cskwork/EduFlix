@@ -77,6 +77,18 @@ const ContentApp = {
         const continuousDrop = document.getElementById('continuous-drop');
 
         cards.forEach(card => {
+            card.tabIndex = 0;
+            card.setAttribute('role', 'button');
+            const selectCard = () => {
+                if (card.classList.contains('used')) return;
+                cards.forEach(item => item.classList.remove('dragging'));
+                this.draggedCard = card;
+                card.classList.add('dragging');
+            };
+            card.addEventListener('click', selectCard);
+            card.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectCard(); }
+            });
             card.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('text/plain', card.querySelector('.english-text').textContent);
                 e.dataTransfer.setData('answer', card.dataset.answer);
@@ -110,6 +122,19 @@ const ContentApp = {
 
         // 드롭존 이벤트
         [simpleDrop, continuousDrop].forEach(zone => {
+            zone.tabIndex = 0;
+            zone.setAttribute('role', 'button');
+            zone.setAttribute('aria-label', zone.id === 'simple-drop' ? '현재형에 놓기' : '현재진행형에 놓기');
+            const placeCard = () => {
+                if (!this.draggedCard) return;
+                this.handleDrop(zone.id === 'simple-drop' ? 'simple' : 'continuous', this.draggedCard);
+                this.draggedCard.classList.remove('dragging');
+                this.draggedCard = null;
+            };
+            zone.addEventListener('click', placeCard);
+            zone.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); placeCard(); }
+            });
             zone.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 zone.classList.add('drag-over');
@@ -144,6 +169,7 @@ const ContentApp = {
     },
 
     handleDrop(dropZoneType, card) {
+        if (card.classList.contains('used')) return;
         const correctAnswer = card.dataset.answer;
         const isCorrect = dropZoneType === correctAnswer;
 
@@ -234,7 +260,7 @@ const ContentApp = {
             this.playSound('correct');
         } else {
             feedback.classList.add('incorrect');
-            feedback.innerHTML = `<strong>Not quite!</strong> 정답은 "${correct}"예요.`;
+            feedback.innerHTML = `<strong>Not quite!</strong> 정답은 "${correct}"예요. ${this.getExplanation(quizNum)}`;
             this.playSound('incorrect');
         }
 

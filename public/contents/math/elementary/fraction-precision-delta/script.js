@@ -107,7 +107,7 @@ const ContentApp = {
         const feedbackEl = document.getElementById('core-feedback');
 
         if (userDelta === correctDelta) {
-            feedbackEl.textContent = "정확해요! 목표치에 도달했습니다! (Aha Moment!)";
+            feedbackEl.textContent = "3/4 − 1/4 = 2/4 = 1/2만큼 더 채웠어요. 1/4 + 2/4 = 3/4로 검산해요.";
             feedbackEl.classList.add('success');
             document.getElementById('core-submit').style.display = 'none';
             setTimeout(() => this.nextScene(), 1500);
@@ -115,7 +115,7 @@ const ContentApp = {
             feedbackEl.textContent = "조금 더 부족해요! 에너지가 모자랍니다.";
             feedbackEl.classList.add('warning');
         } else {
-            feedbackEl.textContent = "너무 많아요! 폭발합니다!";
+            feedbackEl.textContent = "목표를 넘었어요. 목표 3조각에서 현재 1조각을 빼고, 필요한 조각 수만 더해요.";
             feedbackEl.classList.add('error');
         }
     },

@@ -1,0 +1,36 @@
+[p1 "뉴턴의 운동 법칙 - 힘과 운동의 비밀" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "뉴턴의 운동 법칙 - 힘과 운동의 비밀"]
+root
+  container
+    heading
+      text "오늘 발견한 것"
+    container
+      container
+        text "1"
+        paragraph
+          text "관성의 법칙"
+          text ": 물체는 현재 상태를 유지하려 한다"
+      container
+        text "2"
+        paragraph
+          text "가속도의 법칙"
+          text ": F = ma"
+      container
+        text "3"
+        paragraph
+          text "작용-반작용"
+          text ": 모든 힘에는 반대 힘이 있다"
+    container
+      heading
+        text "🚀 뉴턴 법칙이 쓰이는 곳"
+      paragraph
+        text "자동차 안전장치, 로켓 발사, 스포츠 역학 등 우리 생활 곳곳에!"
+    container
+      heading
+        text "다음에 배울 것"
+      paragraph
+        text "중력과 만유인력, 마찰력의 종류"
+    container
+      button [ref=1]
+        text "다시 실험하기"
+      button [ref=2]
+        text "처음으로"

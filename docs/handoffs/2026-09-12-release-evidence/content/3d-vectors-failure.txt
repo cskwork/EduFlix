@@ -1,0 +1,54 @@
+[p1 "3D 벡터: 힘의 합성" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "3D 벡터: 힘의 합성"]
+root
+  container [ref=1]
+    heading
+      text "3D 벡터 합성"
+    text "A와 B의 각 성분을 바꿔 합벡터를 관찰하세요. B를 A의 반대벡터로 만들고 합이 영벡터가 되는지 확인하세요. 두 벡터의 크기만 더하는 방법과 성분을 �..."
+    container
+      canvas
+      container
+        container
+          container
+            text "벡터 A"
+            container
+              text "x:"
+              spinbutton [ref=2]
+              text "3"
+            container
+              text "y:"
+              spinbutton [ref=3]
+              text "2"
+            container
+              text "z:"
+              spinbutton [ref=4]
+              text "3"
+          container
+            text "벡터 B"
+            container
+              text "x:"
+              spinbutton [ref=5]
+              text "2"
+            container
+              text "y:"
+              spinbutton [ref=6]
+              text "4"
+            container
+              text "z:"
+              spinbutton [ref=7]
+              text "2"
+          container
+            text "합력 A + B"
+            container
+              container
+                text "5"
+                text "x"
+              container
+                text "6"
+                text "y"
+              container
+                text "5"
+                text "z"
+            container
+              text "크기 |A+B| ="
+              text "9.27"
+        text "벡터 덧셈 공식"

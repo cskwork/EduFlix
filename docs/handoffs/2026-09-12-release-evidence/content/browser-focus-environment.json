@@ -1,0 +1,16 @@
+{
+  "setting": "Emulation.setFocusEmulationEnabled true",
+  "before": {
+    "focus": false,
+    "fps": 1.0633857480323599,
+    "frame": 225,
+    "now": 200837.6000000015
+  },
+  "after": {
+    "focus": false,
+    "fps": 1.265041735128773,
+    "frame": 231,
+    "now": 205842.90000000037
+  },
+  "thirtyFramesWithinFiveSeconds": false
+}

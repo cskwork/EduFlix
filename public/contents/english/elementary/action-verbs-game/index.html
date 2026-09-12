@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>동작 동사 분류 게임 | Action Verbs Game</title>
+    <title>동사 의미 분류 게임 | Action Verbs Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -86,7 +86,7 @@
             categories: {
                 move: { name: '움직임', color: COLORS.categoryMove },
                 make: { name: '만들기', color: COLORS.categoryMake },
-                feel: { name: '감정', color: COLORS.categoryFeel }
+                feel: { name: '감정·바람', color: COLORS.categoryFeel }
             }
         };
 
@@ -564,7 +564,7 @@
                 bg.fillRoundedRect(-55, -18, 110, 36, 8);
                 const starIcon = this.add.graphics();
                 Icons.drawStar(starIcon, -32, 0, 12, COLORS.gold);
-                this.scoreText = this.add.text(5, 0, (this.registry.get('score') || 0).toString(), { fontFamily: 'Noto Sans KR', fontSize: '22px', color: '#fbbf24', fontStyle: 'bold' }).setOrigin(0, 0.5);
+                this.scoreText = this.add.text(5, 0, (this.registry.get('score') || 0).toString(), { fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#fbbf24', wordWrap: { width: width - 60 }, align: 'center', fontStyle: 'bold' }).setOrigin(0, 0.5);
                 container.add([bg, starIcon, this.scoreText]);
             }
 
@@ -748,7 +748,7 @@
                 this.add.text(width / 2, 40, '퀴즈 타임', TEXT_STYLES.title).setOrigin(0.5);
                 this.questionText = this.add.text(width / 2, 130, '', { ...TEXT_STYLES.body, fontSize: '26px' }).setOrigin(0.5);
                 this.optionButtons = [];
-                this.feedbackText = this.add.text(width / 2, 440, '', { fontFamily: 'Noto Sans KR', fontSize: '22px', color: '#fbbf24' }).setOrigin(0.5);
+                this.feedbackText = this.add.text(width / 2, 440, '', { fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#fbbf24', wordWrap: { width: width - 60 }, align: 'center' }).setOrigin(0.5);
                 this.progressText = this.add.text(width / 2, 510, '', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#64748b' }).setOrigin(0.5);
                 this.showQuestion();
             }
@@ -786,7 +786,7 @@
 
                 if (isCorrect) {
                     btn.bg.clear(); btn.bg.fillStyle(COLORS.success, 1); btn.bg.fillRoundedRect(-140, -26, 280, 52, 10);
-                    this.feedbackText.setText('정답이에요!').setColor('#22c55e');
+                    this.feedbackText.setText(['swim은 몸을 움직여 수영하는 행동입니다.', 'love는 감정을 나타내는 상태 동사입니다.', 'draw는 그림을 만드는 행동입니다.', 'jump와 run은 이 활동에서 움직임으로 묶습니다.', 'hate와 love는 반대 감정을 나타냅니다.'][this.currentQuestion]).setColor('#22c55e');
                     this.quizScore++;
                     this.registry.set('score', (this.registry.get('score') || 0) + 20);
                 } else {

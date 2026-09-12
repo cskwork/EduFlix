@@ -1,6 +1,8 @@
 // AI 생성 관련 타입 정의
 import type { Subject, Grade, ContentType, ContentManifest, Language, Difficulty } from './content'
 
+import type { LessonDocument } from './lesson'
+
 // 콘텐츠 제작(렌더링) 방식 - 3d(Three.js 시뮬레이션)가 기본값
 export type RenderMode = '3d' | '3d-game' | 'canvas-game' | 'svg' | 'dom'
 
@@ -9,6 +11,8 @@ export type CreatorMode = 'interest' | 'problem'
 
 // 생성 요청 입력 타입
 export interface GenerationRequest {
+  editableLesson?: boolean
+  lessonBrief?: Omit<LessonDocument, 'blocks'>
   mode?: CreatorMode // 기본값: 'interest'
   language: Language
   renderMode?: RenderMode // 선택 사항, 미지정 시 3d

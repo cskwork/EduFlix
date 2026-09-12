@@ -1,0 +1,69 @@
+{
+  "id": "quadratic-graph",
+  "title": "이차함수 그래프",
+  "family": "classic",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": "y = −x² + 4의 x절편의 x좌표는?",
+      "selected": "−2, 2",
+      "feedback": "정답입니다. y=0을 대입하면 x²=4이므로 x=−2 또는 2입니다. x축과 만나는 점은 (−2,0), (2,0)입니다."
+    },
+    {
+      "question": "y=(x−2)²−1의 꼭짓점은?",
+      "selected": "(2,−1)",
+      "feedback": "정답입니다. 제곱 항이 0이 되는 x=2에서 y=−1입니다. 제곱의 계수가 양수이므로 이 값은 최솟값입니다."
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#scene-hook button"
+    },
+    {
+      "click": "#scene-story button"
+    },
+    {
+      "range": "#slider-a",
+      "key": "Home"
+    },
+    {
+      "range": "#slider-c",
+      "key": "ArrowRight"
+    },
+    {
+      "click": "#check-quad-btn"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(1)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#scene-wrap button:first-child"
+    }
+  ],
+  "errors": [],
+  "activityObservation": {
+    "scene": "core",
+    "text": "파라볼라 실험실\na=1, b=−4, c=3으로 설정하고 꼭짓점을 확인하세요. b와 c를 그대로 두고 a의 부호를 바꾸어 열린 방향을 비교하세요. a=0도 시험하고 이차항이 사라지는 이유를 설명하세요.\ny = -5x² + 0x + 1\na\n-5\nb\n0\nc\n1\n완료\na < 0 이므로 위로 볼록하군요!\n다음",
+    "errors": []
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "🎉 완료!\n\n오늘 배운 내용\n\n이차함수 그래프 탐구\n\nc만 2만큼 늘리면 모든 점의 y좌표는 어떻게 바뀔까요? 식에 같은 x를 넣어 비교하고 그래프의 이동으로 설명하세요.\n\n다시하기\n홈으로",
+    "errors": []
+  }
+}

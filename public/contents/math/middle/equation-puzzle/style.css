@@ -656,3 +656,15 @@ button {
     font-size: 14px;
   }
 }
+
+/* Preserve native quiz styling for keyboard-operable choices. */
+button.quiz-option { font: inherit; color: inherit; text-align: inherit; }
+button.quiz-option:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+#quiz-explanation { width: 100%; flex-basis: 100%; line-height: 1.65; }
+
+/* Long learning scenes must keep their final action reachable. Auto margins
+   center short scenes and collapse to zero when the content needs scrolling. */
+.scene.active { overflow-y: auto; justify-content: flex-start; }
+.scene.active > * { flex-shrink: 0; }
+.scene.active > :first-child { margin-top: auto; }
+.scene.active > :last-child { margin-bottom: auto; }

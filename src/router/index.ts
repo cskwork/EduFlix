@@ -6,6 +6,7 @@ import { t, useI18n, type MessageKey } from '../i18n'
 
 // 라우트 정의 - 타이틀은 번역 키로 두고 언어 전환 시 다시 계산한다
 const routes: RouteRecordRaw[] = [
+  { path: '/studio', name: 'studio', component: () => import('../views/StudioView.vue'), meta: { titleKey: 'routes.studio', showTabs: false } },
   {
     path: '/',
     name: 'home',

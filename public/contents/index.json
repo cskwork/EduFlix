@@ -1530,7 +1530,7 @@
       "grade": "middle-2",
       "type": "simulation",
       "language": "ko",
-      "description": "IRP의 세 가지 마법(의무 이전, 세액공제, 과세이연)을 3D 시간 여행 시뮬레이션으로 직접 조작하며 체험하는 발견 학습 콘텐츠입니다.",
+      "description": "같은 가상 원금·수익률·기간에서 공제 시점에 따른 복리 계산 결과를 비교하는 수학 활동입니다. 실제 IRP 수익이나 세금 계산을 제공하지 않습니다.",
       "path": "/contents/math/middle/irp-future-wealth-simulator/index.html",
       "thumbnail": "/contents/backgrounds/bg-geometric-shapes-pastel-20260125.png",
       "createdAt": "2026-07-18T09:12:47.410Z",
@@ -1546,7 +1546,7 @@
       "translations": {
         "en": {
           "title": "Time Travel Wealth Simulator: What's in My Wallet in 30 Years?",
-          "description": "A discovery lesson where you operate a 3D time-travel simulation of the three IRP effects: mandatory transfer, tax credits and tax deferral."
+          "description": "A mathematics activity comparing compound-growth results with the same fictional principal, return rate and period but different deduction timing. It does not calculate actual IRP returns or taxes."
         }
       }
     },

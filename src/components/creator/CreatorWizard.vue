@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import type { Subject, Difficulty } from '../../types/content'
 import type { RenderMode, CreatorMode } from '../../types/generation'
-import { gradeForDifficulty } from '../../types/content'
+import LessonSettings, { type LessonSettingsValue } from './LessonSettings.vue'
 import ModeSelect from './ModeSelect.vue'
 import InterestInput from './InterestInput.vue'
 import SubjectSelect from './SubjectSelect.vue'
@@ -19,6 +19,21 @@ const { t, contentLanguage } = useI18n()
 
 // Router
 const router = useRouter()
+const route = useRoute()
+let studioBrief: { subject?: string; difficulty?: Difficulty; title?: string } | null = null
+const lessonSettings = ref<LessonSettingsValue>({ grade: 'elementary-5', audience: 'teacher', objectives: '', minutes: 40, context: '', contentType: '' })
+if (typeof route.query.brief === 'string') {
+  try {
+    const brief = JSON.parse(window.sessionStorage.getItem('eduflix-studio-brief') || 'null')
+    if (brief && typeof brief.context === 'string') { lessonSettings.value = { ...lessonSettings.value, ...brief }; studioBrief = brief }
+  } catch { /* The creator remains usable when session storage is unavailable. */ }
+}
+const teachingContext = computed(() => [
+  `사용 목적: ${lessonSettings.value.audience === 'teacher' ? '교사 수업용. 수업 진행 안내를 제공한다.' : '학생 자습용. 단계별 설명과 스스로 확인할 피드백을 제공한다.'}`,
+  `활동 시간: ${lessonSettings.value.minutes}분`,
+  `학습 목표: ${lessonSettings.value.objectives}`,
+  lessonSettings.value.context,
+].join('\n'))
 
 // Generation Store
 const generationStore = useGenerationStore()
@@ -42,20 +57,20 @@ type WizardStep =
   | 'generating'
 
 // 현재 단계
-const currentStep = ref<WizardStep>('mode-select')
+const currentStep = ref<WizardStep>(studioBrief ? 'mode' : 'mode-select')
 
 // 폼 데이터
-const creatorMode = ref<CreatorMode | null>(null)
-const interests = ref<string[]>([])
+const creatorMode = ref<CreatorMode | null>(studioBrief ? 'problem' : null)
+const interests = ref<string[]>(route.query.brief === 'studio' && lessonSettings.value.objectives ? [lessonSettings.value.objectives.slice(0, 100)] : [])
 const subject = ref<Subject | null>(null)
 const difficulty = ref<Difficulty | null>(null)
 const renderMode = ref<RenderMode>('3d')
 
 // Option 2 (problem mode) 통합 상태
 const problemState = ref<ProblemInputValue>({
-  problem: '',
-  subject: null,
-  difficulty: 'medium',
+  problem: studioBrief ? `${studioBrief.title ?? ''}\n${lessonSettings.value.objectives}` : '',
+  subject: studioBrief?.subject ?? null,
+  difficulty: studioBrief?.difficulty ?? 'medium',
 })
 
 // 생성된 콘텐츠 ID
@@ -114,7 +129,7 @@ const canProceed = computed(() => {
       return problemState.value.problem.trim().length >= 5 &&
         problemState.value.difficulty !== null
     case 'mode':
-      return renderMode.value !== null
+      return renderMode.value !== null && Number.isFinite(lessonSettings.value.minutes) && lessonSettings.value.minutes >= 5 && lessonSettings.value.minutes <= 120
     default:
       return false
   }
@@ -194,6 +209,9 @@ async function startGeneration() {
         // 생성 언어는 현재 UI 언어를 따른다
         language: contentLanguage.value,
         renderMode: renderMode.value,
+        grade: lessonSettings.value.grade,
+        contentType: lessonSettings.value.contentType || undefined,
+        additionalContext: teachingContext.value,
         problem: problemState.value.problem,
         subject: problemState.value.subject ?? undefined,
         difficulty: problemState.value.difficulty,
@@ -205,15 +223,17 @@ async function startGeneration() {
     } else {
       // Option 1: interest mode
       if (!subject.value || !difficulty.value) return
-      const grade = gradeForDifficulty(difficulty.value)
       result = await generationStore.startGeneration({
         mode: 'interest',
         interests: interests.value,
         subject: subject.value,
-        grade,
+        difficulty: difficulty.value,
         // 영어 과목은 언제나 영어로, 그 외에는 현재 UI 언어를 따른다
         language: subject.value === 'english' ? 'en' : contentLanguage.value,
         renderMode: renderMode.value,
+        grade: lessonSettings.value.grade,
+        contentType: lessonSettings.value.contentType || undefined,
+        additionalContext: teachingContext.value,
       })
       if (result.success && result.contentId) {
         generatedContentId.value = result.contentId
@@ -311,6 +331,7 @@ function resetWizard() {
         </div>
 
         <div v-else-if="currentStep === 'mode'" key="mode" class="step-content">
+          <LessonSettings v-model="lessonSettings" />
           <RenderModeSelect v-model="renderMode" />
         </div>
 

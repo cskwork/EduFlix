@@ -6,6 +6,7 @@
 // localStorage가 아니라 IndexedDB를 쓰는 이유: 콘텐츠 3파일 합계가 5MB 한도를 넘길 수 있다.
 import type { ContentManifest, ContentType, GradeLevel, Subject } from '../../types/content'
 import { t } from '../../i18n'
+import type { LessonDocument } from '../../types/lesson'
 import type { SaveContentRequest } from '../../types/editor'
 import { embedEditorOverrides } from '../editor/overrides'
 
@@ -29,6 +30,7 @@ export interface LocalContent {
   css: string
   js: string
   createdAt: string
+  lesson?: LessonDocument
   editorOverrides?: SaveContentRequest
 }
 

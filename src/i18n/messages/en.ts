@@ -58,6 +58,7 @@ export const en = {
   },
 
   routes: {
+    studio: 'Lesson studio',
     home: 'Home',
     learningMap: 'Learning map',
     myLearning: 'My learning',
@@ -357,6 +358,7 @@ export const en = {
       math: 'Math',
       science: 'Science',
       english: 'English',
+      art: 'Art',
       'world-history': 'World history',
       coding: 'Coding',
       'korean-history': 'Korean history',

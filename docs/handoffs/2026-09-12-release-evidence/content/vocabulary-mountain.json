@@ -1,0 +1,88 @@
+{
+  "id": "vocabulary-mountain",
+  "family": "custom",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "mode": "default",
+      "index": 0,
+      "question": {
+        "word": "benevolent",
+        "definition": "Characterized by expressing goodwill; kind and charitable",
+        "example": "The benevolent teacher always stayed after class to help struggling students.",
+        "options": [
+          "generous",
+          "angry",
+          "selfish",
+          "cruel"
+        ],
+        "correct": 0,
+        "difficulty": "easy",
+        "hint": "Think about someone who does good deeds for others",
+        "positionsBalanced": true
+      },
+      "answer": "generous",
+      "feedback": "⛰️ Altitude: 0m\n⭐ Score: 100\n💡 Hints: 3\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\nEASY\nbenevolent\nCharacterized by expressing goodwill; kind and charitable\n\"The benevolent teacher always stayed after class to help struggling students.\"\ngenerous\nangry\nselfish\ncruel\n💡 Get Hint\n🧗\nCorrect. benevolent: Characterized by expressing goodwill; kind and charitable. Think about someone who does good deeds for others"
+    }
+  ],
+  "modes": [
+    {
+      "mode": "default",
+      "count": 15,
+      "completion": false,
+      "reset": false
+    }
+  ],
+  "completion": false,
+  "reset": false,
+  "method": "Native DOM clicks; read-only question oracle; normal feedback timers and native result dialog/reload.",
+  "failure": "Error: Correct answer not accepted",
+  "lastObservation": {
+    "i": 2,
+    "count": 15,
+    "q": {
+      "word": "eloquent",
+      "definition": "Fluent or persuasive in speaking or writing",
+      "example": "The eloquent speaker captivated the audience with his powerful words.",
+      "options": [
+        "confused",
+        "quiet",
+        "persuasive",
+        "boring"
+      ],
+      "correct": 2,
+      "difficulty": "easy",
+      "hint": "Someone who speaks very well and convincingly",
+      "positionsBalanced": true
+    },
+    "text": "⛰️ Altitude: 1180m\n⭐ Score: 206\n💡 Hints: 3\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\nEASY\neloquent\nFluent or persuasive in speaking or writing\n\"The eloquent speaker captivated the audience with his powerful words.\"\nconfused\nquiet\npersuasive\nboring\n💡 Get Hint\n🧗\nCorrect. diligent: Having or showing care and conscientiousness in one's work or duties. Opposite of lazy",
+    "celebration": false,
+    "buttons": [
+      {
+        "i": 0,
+        "text": "confused",
+        "disabled": false,
+        "correct": false
+      },
+      {
+        "i": 1,
+        "text": "quiet",
+        "disabled": false,
+        "correct": false
+      },
+      {
+        "i": 2,
+        "text": "persuasive",
+        "disabled": false,
+        "correct": false
+      },
+      {
+        "i": 3,
+        "text": "boring",
+        "disabled": false,
+        "correct": false
+      }
+    ]
+  }
+}

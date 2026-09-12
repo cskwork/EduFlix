@@ -83,7 +83,7 @@ const ContentApp = {
                     {
                         text: "Yes, I go to the zoo tomorrow.",
                         isCorrect: false,
-                        feedback: '❌ 단순 현재형은 미래 계획을 나타내기에 충분하지 않아요.'
+                        feedback: '이 상황은 이미 세운 개인 계획이므로 be going to가 자연스럽습니다. 단순 현재형도 정해진 시간표에는 미래 의미로 쓰일 수 있습니다.'
                     }
                 ],
                 hint: '언제 티켓을 샀나요? 이미 계획된 일이에요!'
@@ -128,7 +128,7 @@ const ContentApp = {
                     {
                         text: "We have lunch at the zoo restaurant.",
                         isCorrect: false,
-                        feedback: '❌ 미래 계획이므로 미래 시제가 필요해요.'
+                        feedback: '이 상황에서는 미리 예약한 계획을 나타내는 be going to가 가장 알맞습니다. 영어의 미래 표현은 한 가지 시제로만 결정되지 않습니다.'
                     },
                     {
                         text: "We're going to have lunch at the zoo restaurant.",

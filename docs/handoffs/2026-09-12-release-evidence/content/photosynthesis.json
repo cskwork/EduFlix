@@ -1,0 +1,81 @@
+{
+  "id": "photosynthesis",
+  "title": "광합성: 식물의 비밀 공장",
+  "family": "ScienceApp",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "feedback": "\n                        \n                            🎉\n                            정답! 빛이 있는 조건에서 식물은 물과 이산화탄소를 이용해 유기물을 합성하고 산소를 방출합니다. 식물도 낮과 밤 모두 호흡하며, 숲의 상쾌함을 산소 농도만으로 설명할 수는 없습니다.\n                        \n                        다시 풀기\n                    ",
+      "question": "식물이 빛을 이용해 물과 이산화탄소로 유기물을 만드는 과정과 생성물은?"
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": ".scene.active button[onclick=\"ScienceApp.nextScene()\"]"
+    },
+    {
+      "click": ".scene.active button[onclick=\"ScienceApp.nextScene()\"]"
+    },
+    {
+      "click": ".scene.active button[onclick=\"ScienceApp.nextScene()\"]"
+    },
+    {
+      "range": "#light-slider",
+      "key": "Home"
+    },
+    {
+      "range": "#light-slider",
+      "key": "End"
+    },
+    {
+      "range": "#water-slider",
+      "key": "Home"
+    },
+    {
+      "range": "#water-slider",
+      "key": "End"
+    },
+    {
+      "range": "#co2-slider",
+      "key": "End"
+    },
+    {
+      "click": ".scene.active button[onclick=\"ScienceApp.nextScene()\"]"
+    },
+    {
+      "click": ".scene.active button[onclick=\"ScienceApp.nextScene()\"]"
+    },
+    {
+      "click": ".quiz-option[data-correct=\"true\"]"
+    },
+    {
+      "click": ".scene.active button[onclick=\"ScienceApp.nextScene()\"]"
+    },
+    {
+      "click": "#wrap-scene button[onclick=\"ScienceApp.showScene(0)\"]"
+    }
+  ],
+  "start": {
+    "scene": "hook",
+    "text": "CO₂\nCO₂\nH₂O\n식물은 뭘 먹고 살까?\n\n밥도 안 먹는데 어떻게 쑥쑥 자라는 걸까?\n\n알아보기"
+  },
+  "noLight": {
+    "scene": "core",
+    "text": "광합성 실험실\n\n재료를 조절해서 식물이 어떻게 음식을 만드는지 관찰해봐!\n\n엽록체\n☀️ 빛\nH₂O\nCO₂\n포도당\nO₂\n빛의 양\n 0%\n물의 양\n 50%\nCO₂\n이산화탄소\n 50%\n광합성 결과 (상대 지수 모형)\n포도당 생성\n0\n산소 방출\n0\n\n🌱 발견! 빛, 물, 이산화탄소가 모두 있어야 광합성이 잘 일어나!\n\n원리 정리하기"
+  },
+  "noWater": {
+    "scene": "core",
+    "text": "광합성 실험실\n\n재료를 조절해서 식물이 어떻게 음식을 만드는지 관찰해봐!\n\n엽록체\n☀️ 빛\nH₂O\nCO₂\n포도당\nO₂\n빛의 양\n 100%\n물의 양\n 0%\nCO₂\n이산화탄소\n 50%\n광합성 결과 (상대 지수 모형)\n포도당 생성\n0\n산소 방출\n0\n\n🌱 발견! 빛, 물, 이산화탄소가 모두 있어야 광합성이 잘 일어나!\n\n원리 정리하기"
+  },
+  "activityObservation": {
+    "scene": "core",
+    "text": "광합성 실험실\n\n재료를 조절해서 식물이 어떻게 음식을 만드는지 관찰해봐!\n\n엽록체\n☀️ 빛\nH₂O\nCO₂\n포도당\nO₂\n빛의 양\n 100%\n물의 양\n 100%\nCO₂\n이산화탄소\n 100%\n광합성 결과 (상대 지수 모형)\n포도당 생성\n100\n산소 방출\n100\n\n🌱 발견! 빛, 물, 이산화탄소가 모두 있어야 광합성이 잘 일어나!\n\n원리 정리하기"
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "오늘 발견한 것\n1\n\n식물은 스스로 음식(포도당)을 만든다\n\n2\n\n빛, 물, 이산화탄소가 광합성의 재료다\n\n3\n\n광합성 결과 (상대 지수 모형) 산소가 나온다\n\n🌍 광합성이 중요한 이유\n\n육상 식물뿐 아니라 바다의 조류와 광합성 미생물도 산소를 생산해요. 생물의 호흡과 분해 과정에서는 산소가 소비됩니다.\n\n다음에 배울 것\n\n식물의 호흡, 광합성과 호흡의 관계\n\n다시 실험하기\n처음으로"
+  }
+}

@@ -37,9 +37,9 @@ const SOLIDS_DATA = {
 
 // 퀴즈 데이터
 const QUIZ_DATA = [
-    { question: '정팔면체의 면은 몇 개일까요?', answer: 8, options: [6, 8, 12] },
-    { question: '정육면체의 꼭짓점은 몇 개일까요?', answer: 8, options: [6, 8, 12] },
-    { question: '정이십면체의 면은 몇 개일까요?', answer: 20, options: [12, 16, 20] },
+    { question: '정팔면체의 면은 몇 개일까요?', answer: 8, options: [6, 8, 12], explain: "정삼각형 면이 위쪽 4개, 아래쪽 4개로 모두 8개입니다." },
+    { question: '정육면체의 꼭짓점은 몇 개일까요?', answer: 8, options: [6, 8, 12], explain: "위쪽 4개와 아래쪽 4개를 더하면 꼭짓점은 8개입니다." },
+    { question: '정이십면체의 면은 몇 개일까요?', answer: 20, options: [12, 16, 20], explain: "합동인 정삼각형 면 20개로 이루어집니다. 면 20, 모서리 30, 꼭짓점 12에서 12−30+20=2도 확인하세요." },
 ];
 
 class PlatonicSolidsApp {
@@ -334,6 +334,7 @@ class PlatonicSolidsApp {
             m.visible = false;
         });
         
+        this.currentQuiz = 0;
         this.loadQuiz(this.currentQuiz);
         this.camera.position.set(0, 2, 8);
         this.controls.autoRotate = true;
@@ -380,7 +381,7 @@ class PlatonicSolidsApp {
     }
 
     toggleUnfold() {
-        // 간단한 스케일 애니메이션으로 "펼치기" 표현
+        // 도형을 확대하거나 원래 크기로 되돌린다. 전개도를 생성하지 않는다.
         const mesh = this.solidMeshes[this.currentSolid];
         const startScale = mesh.scale.x;
         const targetScale = startScale > 1 ? 1 : 1.5;
@@ -427,6 +428,7 @@ class PlatonicSolidsApp {
     }
 
     checkQuizAnswer(e) {
+        if (e.target.disabled) return;
         const selected = parseInt(e.target.dataset.answer);
         const correct = QUIZ_DATA[this.currentQuiz].answer;
         const feedback = document.getElementById('quiz-feedback');
@@ -441,25 +443,28 @@ class PlatonicSolidsApp {
         
         if (selected === correct) {
             e.target.classList.add('correct');
-            feedback.textContent = '정답입니다!';
+            feedback.textContent = `정답입니다. ${QUIZ_DATA[this.currentQuiz].explain}`;
             feedback.className = 'quiz-feedback success';
         } else {
             e.target.classList.add('wrong');
-            feedback.textContent = `오답입니다. 정답은 ${correct}개예요.`;
+            feedback.textContent = `정답은 ${correct}개입니다. ${QUIZ_DATA[this.currentQuiz].explain}`;
             feedback.className = 'quiz-feedback error';
         }
         
         feedback.classList.remove('hidden');
         
         // 다음 퀴즈로
-        setTimeout(() => {
+        const next = document.createElement('button');
+        next.className = 'action-btn';
+        next.textContent = '해설을 읽었어요 · 다음';
+        next.onclick = () => {
+            next.remove();
             this.currentQuiz++;
-            if (this.currentQuiz < QUIZ_DATA.length) {
-                this.loadQuiz(this.currentQuiz);
-            } else {
-                this.nextScene();
-            }
-        }, 2000);
+            if (this.currentQuiz < QUIZ_DATA.length) this.loadQuiz(this.currentQuiz);
+            else this.nextScene();
+        };
+        feedback.appendChild(document.createElement('br'));
+        feedback.appendChild(next);
     }
 
     enterFreeExplore() {

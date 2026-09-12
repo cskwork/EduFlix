@@ -1,0 +1,144 @@
+{
+  "id": "data-visualization-hub",
+  "family": "continuous-custom",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": {
+        "answer": "1반",
+        "data": {
+          "title": "반별 운동회 점수",
+          "labels": [
+            "1반",
+            "2반",
+            "3반",
+            "4반"
+          ],
+          "type": "comparison",
+          "values": [
+            33,
+            31,
+            16,
+            30
+          ]
+        },
+        "question": "이 그래프에서 가장 큰 값을 가진 항목 중 하나는?"
+      },
+      "previousCorrect": 0,
+      "result": {
+        "text": "📊\n레벨\n1\n⭐\n점수\n120\n✅\n정답\n1\n📈 차트 유형\n📊\n막대 그래프\n🥧\n원 그래프\n📈\n꺾은선 그래프\n반별 운동회 점수 (가상 자료)\n33\n1반\n31\n2반\n16\n3반\n30\n4반\n이 그래프에서 가장 큰 값을 가진 항목 중 하나는?\n1반\n2반\n3반\n4반\n📋 데이터 정보\n총합\n110\n평균\n27.5\n최댓값\n33\n최솟값\n16\n항목\t값\n1반\t33\n2반\t31\n3반\t16\n4반\t30\n🎉 정답!",
+        "correct": 1,
+        "score": "120",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": "25.0",
+        "data": {
+          "title": "학생들의 좋아하는 과일",
+          "labels": [
+            "사과",
+            "바나나",
+            "딸기",
+            "포도",
+            "오렌지"
+          ],
+          "type": "category",
+          "values": [
+            33,
+            19,
+            20,
+            38,
+            15
+          ]
+        },
+        "question": "평균값(소수점 첫째 자리)은 얼마일까요?"
+      },
+      "previousCorrect": 1,
+      "result": {
+        "text": "📊\n레벨\n1\n⭐\n점수\n240\n✅\n정답\n2\n📈 차트 유형\n📊\n막대 그래프\n🥧\n원 그래프\n📈\n꺾은선 그래프\n학생들의 좋아하는 과일 (가상 자료)\n사과 (26%)\n바나나 (15%)\n딸기 (16%)\n포도 (30%)\n오렌지 (12%)\n평균값(소수점 첫째 자리)은 얼마일까요?\n25.0\n27.5\n27.0\n23.5\n📋 데이터 정보\n총합\n125\n평균\n25.0\n최댓값\n38\n최솟값\n15\n항목\t값\n사과\t33\n바나나\t19\n딸기\t20\n포도\t38\n오렌지\t15\n🎉 정답!",
+        "correct": 2,
+        "score": "240",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 159,
+        "data": {
+          "title": "학생들의 좋아하는 과일",
+          "labels": [
+            "사과",
+            "바나나",
+            "딸기",
+            "포도",
+            "오렌지"
+          ],
+          "type": "category",
+          "values": [
+            20,
+            33,
+            36,
+            37,
+            33
+          ]
+        },
+        "question": "모든 값의 합은 얼마일까요?"
+      },
+      "previousCorrect": 2,
+      "result": {
+        "text": "📊\n레벨\n1\n⭐\n점수\n360\n✅\n정답\n3\n📈 차트 유형\n📊\n막대 그래프\n🥧\n원 그래프\n📈\n꺾은선 그래프\n학생들의 좋아하는 과일 (가상 자료)\n20\n사과\n33\n바나나\n36\n딸기\n37\n포도\n33\n오렌지\n모든 값의 합은 얼마일까요?\n169\n154\n159\n191\n📋 데이터 정보\n총합\n159\n평균\n31.8\n최댓값\n37\n최솟값\n20\n항목\t값\n사과\t20\n바나나\t33\n딸기\t36\n포도\t37\n오렌지\t33\n🎉 정답!",
+        "correct": 3,
+        "score": "360",
+        "start": "none"
+      }
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#start-btn"
+    },
+    {
+      "click": ".chart-btn[data-chart=\"bar\"]"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": ".chart-btn[data-chart=\"pie\"]"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": ".chart-btn[data-chart=\"line\"]"
+    },
+    {
+      "click": "#answer-options > :nth-child(3)"
+    }
+  ],
+  "completionModel": "Continuous practice: no terminal completion state exists; complete means verified bounded activity cycle, not every possible generated question.",
+  "coverage": [
+    "bar",
+    "pie",
+    "line"
+  ],
+  "title": "데이터 시각화 허브",
+  "finiteCompletion": false,
+  "completionObservation": {
+    "text": "📊\n레벨\n1\n⭐\n점수\n360\n✅\n정답\n3\n📈 차트 유형\n📊\n막대 그래프\n🥧\n원 그래프\n📈\n꺾은선 그래프\n학생들의 좋아하는 과일 (가상 자료)\n37\n사과\n22\n바나나\n16\n딸기\n14\n포도\n10\n오렌지\n모든 값의 합은 얼마일까요?\n94\n109\n119\n99\n📋 데이터 정보\n총합\n99\n평균\n19.8\n최댓값\n37\n최솟값\n10\n항목\t값\n사과\t37\n바나나\t22\n딸기\t16\n포도\t14\n오렌지\t10\n🎉 정답!",
+    "correct": 3,
+    "score": "360",
+    "start": "none"
+  },
+  "resetObservation": {
+    "text": "📊\n레벨\n1\n⭐\n점수\n0\n✅\n정답\n0\n📈 차트 유형\n📊\n막대 그래프\n🥧\n원 그래프\n📈\n꺾은선 그래프\n학생들의 좋아하는 과일\n이 그래프에서 가장 인기 있는 과일은 무엇일까요?\n📋 데이터 정보\n총합\n0\n평균\n0\n최댓값\n0\n최솟값\n0\n항목\t값\n📊 데이터 시각화 허브\n\n연습용 가상 자료의 합과 평균을 계산해요. 10, 20, 30의 평균은 60 ÷ 3 = 20이에요. 같은 자료를 여러 그래프로 보고, 시간의 변화는 꺾은선으로 읽기 좋은 이유를 말해 보세요.\n\n분석 시작! 🚀",
+    "correct": 0,
+    "score": "0",
+    "start": "flex"
+  }
+}

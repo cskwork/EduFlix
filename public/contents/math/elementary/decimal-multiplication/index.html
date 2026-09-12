@@ -110,8 +110,8 @@
     <!-- 4. Core Scene -->
     <section id="core-scene" class="scene">
       <div class="content-wrapper">
-        <h2>연료 배분 시뮬레이터</h2>
-        <p>소수점을 없애고 자연수처럼 곱한 뒤, 뒤에서부터 소수점을 찍으세요!</p>
+        <h2>소수 곱셈 시뮬레이터</h2>
+        <p>목표: 두 수를 각각 10배 한 결과를 100으로 나누어 소수 곱셈을 설명해요. 값을 바꾼 뒤 결과를 먼저 예상하세요.</p>
 
         <div class="gauge-container">
             <div class="tank-visual">
@@ -120,22 +120,18 @@
                     <div class="marker"></div><div class="marker"></div><div class="marker"></div><div class="marker"></div>
                 </div>
             </div>
-            <h3 style="margin:0; text-align:center;">엔진 효율 계산기</h3>
+            <h3 style="margin:0; text-align:center;">곱셈 결과 비교하기</h3>
         </div>
 
         <div class="controls-grid">
             <div class="input-group" style="text-align:center;">
-                <label style="color:var(--secondary);">연료 계수 (Num 1)</label>
-                <div style="font-size: 2rem; color:white; font-family:monospace; margin-top:10px;">
-                    1.5
-                </div>
+                <label style="color:var(--secondary);">첫째 수</label>
+                <input id="factor-1" aria-label="1번째 수" type="number" min="0.1" max="9.9" step="0.1" value="1.5" style="font-size:1.5rem;width:6rem;">
             </div>
             
             <div class="input-group" style="text-align:center;">
-                <label style="color:var(--accent);">출력 목표 (Num 2)</label>
-                <div style="font-size: 2rem; color:white; font-family:monospace; margin-top:10px;">
-                    2.4
-                </div>
+                <label style="color:var(--accent);">둘째 수</label>
+                <input id="factor-2" aria-label="2번째 수" type="number" min="0.1" max="9.9" step="0.1" value="2.4" style="font-size:1.5rem;width:6rem;">
             </div>
         </div>
 
@@ -236,13 +232,13 @@
             <ul>
                 <li>소수점 생각 없이 자연수처럼 곱한다.</li>
                 <li>원래 두 수의 소수점 아래 자릿수를 합친다.</li>
-                <li>결과값의 뒤에서부터 그만큼 소수점을 콕 찍는다!</li>
+                <li>결과를 100으로 나누어 원래 곱을 구한다. 0.5×2와 0.5×0.2를 비교하며 곱하면 언제나 커지는지 설명해 보자.</li>
             </ul>
         </div>
         
         <div style="background:rgba(255,255,255,0.1); padding:20px; border-radius:15px; margin-top:15px; text-align:center;">
             <p style="margin:0; font-size:1.3rem;">처음 문제 정답</p>
-            <strong style="font-size:1.6rem; color:var(--success);">1.5kg x 2,400원 = 3,600원</strong>
+            <strong style="font-size:1.6rem; color:var(--success);">1.5kg x 2,400원/kg = 3,600원</strong>
         </div>
 
         <div style="display:flex; gap:15px; margin-top:20px;">

@@ -1,0 +1,16 @@
+{
+  "id": "prepositions-place",
+  "browser": "Chrome CUA tab1815027663",
+  "frontDoor": true,
+  "activity": "Clicked all five prepositions and observed each sentence",
+  "answers": [
+    "in",
+    "on",
+    "under",
+    "next to"
+  ],
+  "completion": true,
+  "reset": true,
+  "method": "Real clicks; DOM feedback and terminal screen observed",
+  "toolLimit": null
+}

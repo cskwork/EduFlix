@@ -117,12 +117,13 @@ class EduFlixEngine {
     }
 
     startQuiz() {
-        const q = this.data.quiz[0];
+        this.quizIndex = this.quizIndex || 0;
+        const q = this.data.quiz[this.quizIndex];
         document.getElementById('quiz-question').textContent = q.question;
         const optsContainer = document.getElementById('quiz-options');
         optsContainer.innerHTML = '';
         q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
+            const btn = document.createElement('button');
             btn.className = 'quiz-option';
             btn.textContent = opt;
             btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
@@ -132,16 +133,21 @@ class EduFlixEngine {
 
     checkQuiz(selectedIdx, correctIdx, btnElement) {
         const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+        opts.forEach(o => { o.disabled = true; });
+        btnElement.classList.add(selectedIdx === correctIdx ? 'correct' : 'incorrect');
+        opts[correctIdx].classList.add('correct');
+        const q = this.data.quiz[this.quizIndex];
+        const feedback = document.createElement('p');
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        feedback.textContent = (selectedIdx === correctIdx ? '정답입니다. ' : '정답을 확인하세요. ') + q.explanation;
+        const next = document.createElement('button');
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '다음 문항' : '학습 정리';
+        next.onclick = () => { this.quizIndex++; feedback.remove(); next.remove(); if (this.quizIndex < this.data.quiz.length) this.startQuiz(); else this.nextScene(); };
+        document.getElementById('quiz-options').after(feedback, next);
     }
+
 }
 
 window.Engine = new EduFlixEngine();
@@ -164,7 +170,7 @@ const contentData = {
     },
     interaction: {
         title: "세포 관찰하기",
-        instruction: "세포 소기관을 클릭하여 이름과 하는 일을 알아보세요.",
+        instruction: "동물 세포의 핵·미토콘드리아·리보솜을 찾아 기능을 비교해 보세요. 그림은 크기와 개수를 단순화한 모형입니다. 식물 세포에도 이 소기관이 있습니다.",
         onInit: (container, engine) => {
              container.innerHTML = `
                 <div class="cell-container">
@@ -192,7 +198,7 @@ const contentData = {
              
              const infoData = {
                  nucleus: { name: "핵 (Nucleus)", desc: "세포의 생명 활동을 조절하는 사령탑입니다. DNA가 들어있어요." },
-                 mitochondria: { name: "미토콘드리아 (Mitochondria)", desc: "세포의 발전소입니다. 에너지를 만들어요." },
+                 mitochondria: { name: "미토콘드리아 (Mitochondria)", desc: "세포 호흡을 통해 양분의 화학 에너지를 세포가 쓰기 쉬운 ATP 형태로 전환해요." },
                  ribosome: { name: "리보솜 (Ribosome)", desc: "단백질을 만드는 작은 공장입니다." }
              };
              
@@ -228,12 +234,12 @@ const contentData = {
         {
             question: "세포의 생명 활동을 조절하는 곳은?",
             options: ["미토콘드리아", "핵", "리보솜", "세포막"],
-            answer: 1
+            answer: 1, explanation: "핵에는 DNA가 있으며 유전 정보의 발현을 통해 세포 활동을 조절합니다. 리보솜은 단백질을 합성합니다."
         },
         {
-            question: "에너지를 만드는 세포 소기관은?",
+            question: "세포 호흡으로 ATP를 주로 생성하는 소기관은?",
             options: ["핵", "엽록체", "미토콘드리아", "액포"],
-            answer: 2
+            answer: 2, explanation: "미토콘드리아는 양분의 에너지를 ATP로 전환합니다. 에너지를 무에서 만드는 것은 아닙니다."
         }
     ]
 };

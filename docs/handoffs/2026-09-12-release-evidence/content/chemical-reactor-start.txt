@@ -1,0 +1,6 @@
+[p1 "화학 반응 시뮬레이터" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "화학 반응 시뮬레이터"]
+root
+  heading
+    text "같은 양의 산과 염기를 섞으면 pH가 어떻게 달라질까요?"
+  button [ref=1]
+    text "시작하기"

@@ -1,0 +1,13 @@
+{
+  "id": "fraction-addition",
+  "browser": "Chrome CUA tab1815027663",
+  "url": "http://127.0.0.1:5173",
+  "frontDoor": true,
+  "activity": "transform1/2+1/3 into3/6+2/6; merge5/6",
+  "quiz": "5/10 correct",
+  "completion": true,
+  "reset": true,
+  "method": "Documented Playwright user clicks and keys, DOM snapshots. No state setters.",
+  "errors": "not separately collected",
+  "fix": "Added visible core next button"
+}

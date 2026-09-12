@@ -4,6 +4,7 @@ const ScienceApp = {
     scenes: ['hook', 'anchor', 'story', 'core', 'visualize', 'quiz', 'wrap'],
     boundaryType: 'convergent',
     discoveryMade: false,
+    exploredBoundaries: new Set(),
 
     contentData: {
         title: '지진과 판구조론',
@@ -29,7 +30,7 @@ const ScienceApp = {
         transform: {
             icon: '⚡',
             title: '변환형 경계',
-            description: '두 판이 서로 스쳐 지나가면서 지진이 발생해요.',
+            description: '두 판이 수평으로 어긋나 이동하며 쌓인 변형이 갑자기 풀릴 때 지진이 발생할 수 있어요. 이 경계에서는 보통 지각이 생성되거나 소멸하지 않습니다.',
             example: '산안드레아스 단층 (미국)'
         }
     },
@@ -92,7 +93,8 @@ const ScienceApp = {
         this.animatePlates(type);
         
         // 발견 체크
-        if (!this.discoveryMade) {
+        this.exploredBoundaries.add(type);
+        if (!this.discoveryMade && this.exploredBoundaries.size === 3) {
             this.discoveryMade = true;
             setTimeout(() => {
                 const discoveryMsg = document.getElementById('discovery-message');
@@ -149,7 +151,7 @@ const ScienceApp = {
             feedback.classList.remove('hidden', 'error');
             feedback.classList.add('success');
             feedbackIcon.textContent = '🎉';
-            feedbackText.textContent = '정답! 태평양 주변은 여러 판의 경계가 모여있어서 "불의 고리(Ring of Fire)"라고 불려요. 전 세계 지진의 90%가 이 지역에서 발생해요!';
+            feedbackText.textContent = '정답! 태평양 주변에는 섭입대를 비롯한 판 경계가 많습니다. 지진과 화산은 판의 움직임과 관련되지만, 모든 지진에 화산이 동반되는 것은 아닙니다.';
             nextBtn.classList.remove('hidden');
             retryBtn.classList.add('hidden');
         } else {

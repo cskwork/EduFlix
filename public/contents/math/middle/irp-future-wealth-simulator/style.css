@@ -114,7 +114,8 @@ html, body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: safe center;
+  overflow-y: auto;
   align-items: center;
   opacity: 0;
   pointer-events: none;
@@ -550,3 +551,6 @@ button {
         transition: none !important;
     }
 }
+/* Keep model assumptions and controls reachable in short viewports. */
+.scene > * { flex-shrink: 0; }
+#model-result { max-width: 600px; line-height: 1.6; overflow-wrap: anywhere; }

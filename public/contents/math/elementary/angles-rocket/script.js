@@ -58,7 +58,7 @@ class HookScene extends CyberScene {
         this.add.text(300, 60, 'LAUNCH VECTOR', { fontFamily:'Orbitron', fontSize:'42px', color:'#0ea5e9', fontStyle:'900' }).setOrigin(0.5);
         this.add.text(300, 100, 'ANGLE TRAJECTORY SYSTEM', { fontFamily:'Orbitron', fontSize:'14px', color:'#94a3b8', letterSpacing:3 }).setOrigin(0.5);
 
-        this.add.text(300, 160, '로켓이 똑바로만 가면\n행성에 도착할 수 있을까?', {
+        this.add.text(300, 160, '목표: 각도를 조절하여 예각, 직각,\n둔각의 경계를 구별해요.', {
             fontFamily:'Noto Sans KR', fontSize:'22px', color:'#ffffff', align:'center', lineSpacing:8
         }).setOrigin(0.5);
 
@@ -148,7 +148,7 @@ class AnchorScene extends CyberScene {
         // 정보 박스
         const box = this.add.graphics();
         UI.drawCyberBox(box, 50, 420, 500, 80, COLORS.bgSecondary, 0.8, COLORS.success);
-        this.add.text(300, 450, '두 직선이 만나는 점을 "꼭짓점"이라 하고,', { fontFamily:'Noto Sans KR', fontSize:'16px', color:'#ffffff' }).setOrigin(0.5);
+        this.add.text(300, 450, '한 점에서 시작하는 두 반직선이 각을 만들고,', { fontFamily:'Noto Sans KR', fontSize:'16px', color:'#ffffff' }).setOrigin(0.5);
         this.add.text(300, 475, '벌어진 정도를 "각도(°)"라고 합니다.', { fontFamily:'Noto Sans KR', fontSize:'16px', color:'#10b981', fontStyle:'bold' }).setOrigin(0.5);
 
         this.createButton(300, 550, '다음 [데이터 접속]', 220, 50, () => {
@@ -197,7 +197,7 @@ class CoreScene extends CyberScene {
     create() {
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
         this.createHeader('ANGLE CONTROL SYSTEM');
-        this.add.text(300, 90, '+/- 버튼으로 각도를 조절해 보세요.', { fontFamily:'Noto Sans KR', fontSize:'16px', color:'#94a3b8' }).setOrigin(0.5);
+        this.add.text(300, 90, '89°, 90°, 91°을 만들고 각의 종류를 비교하세요.', { fontFamily:'Noto Sans KR', fontSize:'16px', color:'#94a3b8' }).setOrigin(0.5);
 
         this.currentAngle = 45; // 기본 45도
         this.cx = 250;
@@ -226,9 +226,9 @@ class CoreScene extends CyberScene {
         // 유형 안내
         const infoBox = this.add.graphics();
         UI.drawCyberBox(infoBox, 380, 230, 190, 180, COLORS.bgSecondary, 0.7, COLORS.primary);
-        this.add.text(475, 260, '예각: 0°~90°', { fontFamily:'Noto Sans KR', fontSize:'14px', color:'#38bdf8' }).setOrigin(0.5);
+        this.add.text(475, 260, '예각: 0° < 각 < 90°', { fontFamily:'Noto Sans KR', fontSize:'14px', color:'#38bdf8' }).setOrigin(0.5);
         this.add.text(475, 300, '직각: 90°', { fontFamily:'Noto Sans KR', fontSize:'14px', color:'#10b981' }).setOrigin(0.5);
-        this.add.text(475, 340, '둔각: 90°~180°', { fontFamily:'Noto Sans KR', fontSize:'14px', color:'#e879f9' }).setOrigin(0.5);
+        this.add.text(475, 340, '둔각: 90° < 각 < 180°', { fontFamily:'Noto Sans KR', fontSize:'14px', color:'#e879f9' }).setOrigin(0.5);
         this.add.text(475, 380, '평각: 180°', { fontFamily:'Noto Sans KR', fontSize:'14px', color:'#f43f5e' }).setOrigin(0.5);
 
         this.createButton(300, 560, '퀴즈 도전', 200, 50, () => {
@@ -292,6 +292,7 @@ class CoreScene extends CyberScene {
 class QuizScene extends CyberScene {
     constructor() { super('QuizScene'); }
     create() {
+        this.answerComplete = false;
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
         this.createHeader('TARGET DECRYPTION');
         
@@ -324,21 +325,23 @@ class QuizScene extends CyberScene {
         ];
         Phaser.Utils.Array.Shuffle(options);
         options.forEach((o, idx) => {
-            this.createButton(300, 430 + idx*60, o.text, 280, 50, () => this.checkAnswer(o.val, 300, 430+idx*60));
+            this.createButton(300, 395 + idx*55, o.text, 280, 50, () => this.checkAnswer(o.val, 300, 395+idx*55));
         });
 
-        this.feedback = this.add.text(300, 570, '', { fontFamily:'Noto Sans KR', fontSize:'20px', fontStyle:'bold' }).setOrigin(0.5);
+        this.feedback = this.add.text(300, 540, '', { fontFamily:'Noto Sans KR', fontSize: '16px', wordWrap: { width: 550 }, align: 'center', fontStyle:'bold' }).setOrigin(0.5);
         this.cameras.main.fadeIn(500,0,0,0);
     }
 
     checkAnswer(ok, x, y) {
+        if (this.answerComplete) return;
         if(ok) {
-            this.feedback.setText('DECRYPTION SUCCESS!').setColor('#10b981');
+            this.answerComplete = true;
+            this.feedback.setText('정답! 90° < 135° < 180°이므로 둔각').setColor('#10b981');
             this.cameras.main.flash(500,16,185,129);
             for(let i=0;i<20;i++) { const p=this.add.rectangle(x,y,6,6,COLORS.success); this.tweens.add({targets:p,x:x+Phaser.Math.Between(-100,100),y:y+Phaser.Math.Between(-100,100),alpha:0,rotation:Phaser.Math.FloatBetween(0,6),duration:1000,ease:'Power2'}); }
-            this.time.delayedCall(1500, () => { this.cameras.main.fadeOut(300,0,0,0); this.time.delayedCall(300, () => this.scene.start('WrapScene')); });
+            this.createButton(300, 580, '해설 확인 · 정리', 240, 38, () => this.scene.start('WrapScene'));
         } else {
-            this.feedback.setText('ACCESS DENIED. 90°<135°<180° → 둔각').setColor('#f43f5e');
+            this.feedback.setText('135°는 90°보다 크고 180°보다 작은 둔각').setColor('#f43f5e');
             this.cameras.main.shake(200, 0.01);
         }
     }
@@ -352,10 +355,11 @@ class WrapScene extends CyberScene {
     create() {
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
         this.createHeader('MISSION COMPLETE');
+        this.add.text(300, 465, '두 변을 길게 그려도 각도가 같을까요? 이유를 말하세요.', { fontFamily:'Noto Sans KR', fontSize:'15px', color:'#ffffff' }).setOrigin(0.5);
         const box = this.add.graphics();
         UI.drawCyberBox(box, 50, 100, 500, 200, COLORS.bgSecondary, 0.8, COLORS.primary);
         this.add.text(300, 130, '[ SYSTEM LOG: 각도 분석 완료 ]', { fontFamily:'Noto Sans KR', fontSize:'18px', color:'#0ea5e9', fontStyle:'bold' }).setOrigin(0.5);
-        this.add.text(100, 170, '▶ 두 직선이 벌어진 정도를 각도(°)라 한다.\n▶ 예각: 0° < 각 < 90°\n▶ 직각: 각 = 90° (ㄱ자 표시)\n▶ 둔각: 90° < 각 < 180°\n▶ 평각: 각 = 180° (일직선)', {
+        this.add.text(100, 170, '▶ 두 반직선이 벌어진 정도를 각도(°)라 한다.\n▶ 예각: 0° < 각 < 90°\n▶ 직각: 각 = 90° (ㄱ자 표시)\n▶ 둔각: 90° < 각 < 180°\n▶ 평각: 각 = 180° (일직선)', {
             fontFamily:'Noto Sans KR', fontSize:'15px', color:'#ffffff', lineSpacing:10
         });
 

@@ -1,0 +1,14 @@
+[p1 "부피 탐험가" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "부피 탐험가"]
+root
+  container
+    heading
+      text "택배 상자 안에 물건을 가득 채우려면, 상자 크기를 어떻게 알 수 있을까요?"
+    paragraph
+      text "상자 안에 작은 큐브를 쌓아볼까요?"
+    paragraph
+      text "학습 목표: 단위 정육면체의 개수로 직육면체의 부피를 구해요."
+  svg_root "가로 x 세로 x 높이 = 부피"
+    text "가로 x 세로 x 높이"
+    text "= 부피"
+  button [ref=1]
+    text "시작하기"

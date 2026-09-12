@@ -16,6 +16,10 @@ test('live catalog and edited lessons override stale dist while application asse
     }
     expect(await (await serveStaticFile('/contents/index.json',directories))?.text()).toBe('current catalog')
     expect(await (await serveStaticFile('/contents/math/elementary/lesson/index.html',directories))?.text()).toBe('saved lesson')
+    const revised = await serveStaticFile('/content-revisions/0123456789abcdef/math/elementary/lesson/index.html',directories)
+    expect(await revised?.text()).toBe('saved lesson')
+    expect(revised?.headers.get('cache-control')).toBe('public, max-age=0, must-revalidate')
+    expect(await (await serveStaticFile('/content-revisions/0123456789abcdef/index.json',directories))?.text()).toBe('current catalog')
     expect(await (await serveStaticFile('/app.js',directories))?.text()).toBe('built app')
     await writeFile(join(root,'private.txt'),'private')
     expect(await serveStaticFile('/../private.txt',directories)).toBeNull()

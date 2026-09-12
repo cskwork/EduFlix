@@ -219,10 +219,10 @@ const ContentApp = {
         
         if (selected === quiz.answer) {
             this.quizScore++;
-            feedback.textContent = `정답! "${quiz.answer}" = ${prep.meaning}`;
+            feedback.textContent = `정답! ${prep.example} ${quiz.answer === "on" ? "on은 표면에 닿아 있는 관계입니다." : quiz.answer === "in" ? "in은 경계 안에 있는 관계입니다." : quiz.answer === "under" ? "under는 기준 물체보다 아래에 있음을 나타냅니다." : "next to는 바로 옆의 위치입니다."}`;
             feedback.className = 'quiz-feedback show correct';
         } else {
-            feedback.textContent = `정답은 "${quiz.answer}" (${prep.meaning})이에요.`;
+            feedback.textContent = `정답은 "${quiz.answer}" (${prep.meaning})이에요. 완전한 문장: ${prep.example}`;
             feedback.className = 'quiz-feedback show incorrect';
         }
         

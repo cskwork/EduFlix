@@ -19,8 +19,8 @@
                         <circle cx="100" cy="100" r="10" fill="#D0021B"/>
                     </svg>
                 </div>
-                <p class="question-text">0.33... 말고 정확히 1/3을 말할 수 있나요?</p>
-                <button class="cta-button" onclick="ContentApp.nextScene">탐험 시작</button>
+                <p class="question-text">0.33은 1/3과 같을까요? 0.333…이 끝없이 이어지면 1/3과 같아요.</p>
+                <button class="cta-button" onclick="ContentApp.nextScene()">탐험 시작</button>
             </div>
         </section>
 
@@ -36,11 +36,11 @@
                     <div class="arrow-divider">→</div>
                     <div class="concept-item highlight">
                         <h3>분수</h3>
-                        <p>1과 2 사이의 정확한 값?</p>
+                        <p>전체를 똑같이 나눈 조각의 수. 1/2는 0과 1 사이예요.</p>
                     </div>
                 </div>
                 <p class="bridge-text">자르고 쪼개서 더 정확하게 표현해보자!</p>
-                <button class="cta-button" onclick="ContentApp.nextScene">계속하기</button>
+                <button class="cta-button" onclick="ContentApp.nextScene()">계속하기</button>
             </div>
         </section>
 
@@ -54,7 +54,7 @@
                 </svg>
                 <div class="speech-bubble">
                     <p><strong>사이버 궁수 '제로':</strong><br>
-                    "연료 게이지가 고장 났어! 우주선에 연료를 정확히 50%만 채워야 안전해. 0.5라는 소수 말고, '분수'로 정확히 맞춰줘!"</p>
+                    "연료 게이지가 고장 났어! 우주선 연료를 화면에 표시된 목표 분수만큼 채워줘! 1/2는 0.5와 같듯, 같은 양을 여러 분수로 나타낼 수 있어."</p>
                 </div>
             </div>
             <div class="game-intro">
@@ -64,7 +64,7 @@
                 </div>
                 <p>도와줘!</p>
             </div>
-            <button class="cta-button" onclick="ContentApp.nextScene">미션 시작</button>
+            <button class="cta-button" onclick="ContentApp.nextScene()">미션 시작</button>
         </section>
 
         <!-- Scene 4: Core Interaction -->
@@ -121,7 +121,7 @@
                 <p class="insight">1/2 = 2/4 = 3/6 ... 다른 모양 같은 값!</p>
                 <p class="principle">분수는 '얼마만큼 나누었는지(분모)'와 '그중 몇 개인지(분자)'로 정확함을 표현합니다.</p>
             </div>
-            <button class="cta-button" onclick="ContentApp.nextScene">다음</button>
+            <button class="cta-button" onclick="ContentApp.nextScene()">다음</button>
         </section>
 
         <!-- Scene 6: Quiz -->
@@ -147,7 +147,7 @@
                 </div>
                 <div id="quiz-feedback" class="feedback-msg"></div>
             </div>
-            <button class="cta-button" id="next-quiz-btn" style="display:none;" onclick="ContentApp.nextScene">결과 보기</button>
+            <button class="cta-button" id="next-quiz-btn" style="display:none;" onclick="ContentApp.nextScene()">결과 보기</button>
         </section>
 
         <!-- Scene 7: Wrap -->
@@ -155,7 +155,7 @@
             <div class="summary-box">
                 <h2>오늘의 발견</h2>
                 <ul>
-                    <li>✨ 분수는 소수보다 더 정확할 수 있어요.</li>
+                    <li>분수 1/2와 소수 0.5는 정확히 같아요. 1/3을 0.33으로 줄여 쓰면 근삿값이에요.</li>
                     <li>📏 분모로 얼마나 쪼갤지 정하고, 분자로 얼마나 채울지 정해요.</li>
                     <li>🎯 다른 모양도 같은 값을 가질 수 있어요 (동치분수).</li>
                 </ul>

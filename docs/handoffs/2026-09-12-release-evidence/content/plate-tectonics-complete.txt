@@ -1,0 +1,46 @@
+[p1 "지진과 판구조론 - 움직이는 대륙" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "지진과 판구조론 - 움직이는 대륙"]
+root
+  container
+    heading
+      text "오늘 발견한 것"
+    container
+      container
+        text "1"
+        paragraph
+          text "지각은 여러 개의"
+          text "판"
+          text "으로 이루어져 있다"
+      container
+        text "2"
+        paragraph
+          text "맨틀 대류"
+          text "가 판을 움직이게 한다"
+      container
+        text "3"
+        paragraph
+          text "판 경계에서"
+          text "지진과 화산"
+          text "이 일어난다"
+    container
+      heading
+        text "🚨 지진 대비 안전 수칙"
+      unordered_list
+        list_item
+          text "•"
+          text "테이블 아래로 대피하기"
+        list_item
+          text "•"
+          text "머리 보호하기"
+        list_item
+          text "•"
+          text "흔들림 멈출 때까지 기다리기"
+    container
+      heading
+        text "다음에 배울 것"
+      paragraph
+        text "화산의 종류, 지진파와 지진계"
+    container
+      button [ref=1]
+        text "다시 탐험하기"
+      button [ref=2]
+        text "처음으로"

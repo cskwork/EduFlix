@@ -1,0 +1,103 @@
+[
+  {
+    "id": "prepositions-3d",
+    "title": "3D 위치 전치사 - Where is it?",
+    "buttons": [
+      "위치 단어 배우기"
+    ],
+    "beforeText": "Where is the ball?\n\n3D 공간에서 위치를 찾아보세요!\n\nin?\non?\nunder?\nnext to?\n\n마우스로 드래그하여 3D 뷰를 회전해보세요!\n\n위치 단어 배우기",
+    "changed": false,
+    "afterText": "Where is the ball?\n\n3D 공간에서 위치를 찾아보세요!\n\nin?\non?\nunder?\nnext to?\n\n마우스로 드래그하여 3D 뷰를 회전해보세요!\n\n위치 단어 배우기",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "3d-vocabulary-adventure",
+    "title": "3D Vocabulary Adventure - Dong-A Elementary English",
+    "buttons": [],
+    "beforeText": "Loading Adventure...\n\n⭐\nScore:\n0\n🔥\nStreak:\n0\n❤️\nLives:\n3\n📚\nWord:\n1\n/\n20\nADJECTIVE\nLoading...\n🏆 First Word!\n🚀 3D Vocabulary Adventure\n\nExplore Space & Learn Words!\n\nJourney through the cosmos while mastering new vocabulary! Read the definition and select the word that matches. Collect stars, build streaks, and unlock achievements!\n\n⌨️ Keyboard: Press 1-4 to select answers, Space to hear pronunciation\n\n🌟 Easy\n⭐ Medium\n💫 Hard\nStart Adventure",
+    "changed": false,
+    "afterText": "Loading Adventure...\n\n⭐\nScore:\n0\n🔥\nStreak:\n0\n❤️\nLives:\n3\n📚\nWord:\n1\n/\n20\nADJECTIVE\nLoading...\n🏆 First Word!\n🚀 3D Vocabulary Adventure\n\nExplore Space & Learn Words!\n\nJourney through the cosmos while mastering new vocabulary! Read the definition and select the word that matches. Collect stars, build streaks, and unlock achievements!\n\n⌨️ Keyboard: Press 1-4 to select answers, Space to hear pronunciation\n\n🌟 Easy\n⭐ Medium\n💫 Hard\nStart Adventure",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "story-word-builder",
+    "title": "Story Word Builder - Dong-A Elementary English",
+    "buttons": [],
+    "beforeText": "📚\n\nOpening Storybook...\n\n⭐\nScore:\n0\n📖\nStory:\n1\n/\n5\n💡\nHints:\n3\n🔥 Combo x3!\nStory Title\nTHEME: ADVENTURE\n\n💡 Hint (3)\n0 / 5 blanks filled\n📚✨📖\nStory Word Builder\n\nRebuild a model story and compare descriptive words. More than one story can be grammatical; the game checks the model wording and gives it as feedback. Click a word from the bank, then click the blank space where it belongs!\n\n🏰\nFantasy\n🗺️\nAdventure\n🌿\nNature\nStart Building",
+    "changed": false,
+    "afterText": "📚\n\nOpening Storybook...\n\n⭐\nScore:\n0\n📖\nStory:\n1\n/\n5\n💡\nHints:\n3\n🔥 Combo x3!\nStory Title\nTHEME: ADVENTURE\n\n💡 Hint (3)\n0 / 5 blanks filled\n📚✨📖\nStory Word Builder\n\nRebuild a model story and compare descriptive words. More than one story can be grammatical; the game checks the model wording and gives it as feedback. Click a word from the bank, then click the blank space where it belongs!\n\n🏰\nFantasy\n🗺️\nAdventure\n🌿\nNature\nStart Building",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "phonics-3d-playground",
+    "title": "Phonics 3D Playground - Dong-A Elementary English",
+    "buttons": [],
+    "beforeText": "🔤\n\nLoading Playground...\n\n📊\nProgress:\n1\n/26\n🔊\nSounds:\n0\n⭐\nScore:\n0\n📖 Learn 🎯 Quiz\nCONSONANT\nA\n/æ/ as in \"cat\"\n🔊\nPlay Sound\n← Previous\nNext →\n🅰️ 🅱️ 🔤\nPhonics 3D Playground\n\nLearn letter sounds with fun 3D animations! The audio says the letter name and an example word, not an isolated phoneme. A letter can represent different sounds in different words. Click the audio button to compare them, explore example words, and test yourself with quizzes!\n\nStart Learning",
+    "changed": false,
+    "afterText": "🔤\n\nLoading Playground...\n\n📊\nProgress:\n1\n/26\n🔊\nSounds:\n0\n⭐\nScore:\n0\n📖 Learn 🎯 Quiz\nCONSONANT\nA\n/æ/ as in \"cat\"\n🔊\nPlay Sound\n← Previous\nNext →\n🅰️ 🅱️ 🔤\nPhonics 3D Playground\n\nLearn letter sounds with fun 3D animations! The audio says the letter name and an example word, not an isolated phoneme. A letter can represent different sounds in different words. Click the audio button to compare them, explore example words, and test yourself with quizzes!\n\nStart Learning",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "grammar-galaxy",
+    "title": "Grammar Galaxy - Dong-A Elementary English",
+    "buttons": [],
+    "beforeText": "Launching Grammar Galaxy...\n\n⭐\nScore:\n0\n❤️\nLives:\n3\n🎯\nLevel:\n1\n📝\nQuestion:\n1\n/\n20\nXP: 0 / 100\n🌟 Nouns & Verbs 🌟\n🔥 Streak: 0\nGRAMMAR TOPIC\n🌌\nGrammar Galaxy\n\nTravel through space and master grammar! Learn about nouns, verbs, adjectives, pronouns, and more as you explore different planets!\n\n🌟\nExplorer\n⭐\nVoyager\n💫\nCommander\nStart Adventure",
+    "changed": false,
+    "afterText": "Launching Grammar Galaxy...\n\n⭐\nScore:\n0\n❤️\nLives:\n3\n🎯\nLevel:\n1\n📝\nQuestion:\n1\n/\n20\nXP: 0 / 100\n🌟 Nouns & Verbs 🌟\n🔥 Streak: 0\nGRAMMAR TOPIC\n🌌\nGrammar Galaxy\n\nTravel through space and master grammar! Learn about nouns, verbs, adjectives, pronouns, and more as you explore different planets!\n\n🌟\nExplorer\n⭐\nVoyager\n💫\nCommander\nStart Adventure",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "spelling-bee-arena",
+    "title": "Spelling Bee Arena - Dong-A Elementary English",
+    "buttons": [],
+    "beforeText": "🐝\n\nPreparing the Arena...\n\n🐝\n🐝\n🏆\nScore:\n0\n❤️\nLives:\n3\n🔥\nStreak:\n0\n📝\nWord:\n1\n/\n15\n30\nNOUN\nLoading definition...\n🔊 Play Sound\n🐝\nSpelling Bee Arena\n\nWelcome to the ultimate spelling competition! Listen to the word, read the definition, and spell it correctly. Can you become the spelling champion?\n\n📝\nClassic\n⏱️\nTimed\n🏆\nChallenge\nStart Competition",
+    "changed": false,
+    "afterText": "🐝\n\nPreparing the Arena...\n\n🐝\n🐝\n🏆\nScore:\n0\n❤️\nLives:\n3\n🔥\nStreak:\n0\n📝\nWord:\n1\n/\n15\n30\nNOUN\nLoading definition...\n🔊 Play Sound\n🐝\nSpelling Bee Arena\n\nWelcome to the ultimate spelling competition! Listen to the word, read the definition, and spell it correctly. Can you become the spelling champion?\n\n📝\nClassic\n⏱️\nTimed\n🏆\nChallenge\nStart Competition",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "literature-3d-theater",
+    "title": "Literature 3D Theater - Dong-A Middle School English",
+    "buttons": [],
+    "beforeText": "Opening the Curtains...\n\n📚 Score:\n0\n⭐ Scene:\n1\n/\n12\n❤️ Lives:\n3\n🔥 Streak:\n0\nWILLIAM SHAKESPEARE\n🎭 Characters loading...\n🎭\nLiterature 3D Theater\n\nExperience classic literature scenes in an immersive 3D theater! Watch iconic characters come to life, use words in the dialogue as evidence, and compare supported interpretations of literary themes from Shakespeare to modern classics.\n\n🏰\nShakespeare\n📖\nClassic Novels\n🌟\nModern Classics\nEnter Theater",
+    "changed": false,
+    "afterText": "Opening the Curtains...\n\n📚 Score:\n0\n⭐ Scene:\n1\n/\n12\n❤️ Lives:\n3\n🔥 Streak:\n0\nWILLIAM SHAKESPEARE\n🎭 Characters loading...\n🎭\nLiterature 3D Theater\n\nExperience classic literature scenes in an immersive 3D theater! Watch iconic characters come to life, use words in the dialogue as evidence, and compare supported interpretations of literary themes from Shakespeare to modern classics.\n\n🏰\nShakespeare\n📖\nClassic Novels\n🌟\nModern Classics\nEnter Theater",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "word-detective-3d",
+    "title": "Word Detective 3D - Middle School English",
+    "start": "Start Investigation!",
+    "buttons": [
+      "Start Investigation!"
+    ],
+    "beforeText": "🔎 Case: 1/10\n⭐ Score: 0\n💡 Hints: 3\n📋 Detective Case #1\n🔍 Context Clues:\n💡 Get Hint\n🕵️ Word Detective 3D\n\nWelcome, Detective! Your mission is to solve vocabulary mysteries using context clues. Read each sentence carefully, examine the clues, and determine the meaning of the mystery word. Good luck!\n\nStart Investigation!",
+    "changed": true,
+    "afterText": "🔎 Case: 1/10\n⭐ Score: 0\n💡 Hints: 3\n📋 Detective Case #1: The Mysterious Journey\nThe arduous journey through the mountains took three days, requiring hikers to climb steep cliffs and cross dangerous rivers.\n🔍 Context Clues:\nThe journey 'took three days' - suggesting it wasn't quick or easy\nHikers had to 'climb steep cliffs' and 'cross dangerous rivers' - challenging activities\nThe physical demands imply difficulty and hardship\ndifficult\nshort\nbeautiful\nenjoyable\n💡 Get Hint",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  }
+]

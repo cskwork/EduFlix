@@ -1,0 +1,38 @@
+[p1 "도리와 대칭 박물관 복원 작전" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "도리와 대칭 박물관 복원 작전"]
+root
+  container "대칭 박물관 학습 활동"
+    container "접기와 반 바퀴 돌리기로 대칭 박물관을 복원해요."
+      image
+      text "접기와 반 바퀴 돌리기로 대칭 박물관을 복원해요."
+    container
+      progressindicator "학습 진행도"
+      paragraph
+        text "1 / 5 · 궁금증 열기"
+    container [ref=1]
+      paragraph
+        text "복원 임무 01"
+      heading [ref=2]
+        text "나비와 바람개비는 각각 어떻게 움직여야 완전히 겹칠까요?"
+      paragraph
+        text "오늘의 목표"
+        text "접거나 반 바퀴 돌렸을 때 겹치는 성질인 대칭을 구별하고, 움직인 뒤 서로 겹치는 두 점인 대응점을 찾아 도형을 완성해요."
+      paragraph
+        text "두 물건을 직접 움직여 완전히 겹치는 방법을 찾아보세요."
+      container
+        container
+          container
+            heading
+              text "나비"
+            image "가운데 점선 양쪽에 같은 무늬의 날개가 있는 나비"
+            button [ref=3]
+              text "가운데 선으로 접기"
+          container
+            heading
+              text "바람개비"
+            image "가운데 점을 중심으로 마주 보는 날개가 같은 바람개비"
+            button [ref=4]
+              text "가운데 점에서 반 바퀴"
+        status
+          text "나비와 바람개비를 하나씩 움직여 보세요."
+        button [ref=5]
+          text "박물관 안으로"

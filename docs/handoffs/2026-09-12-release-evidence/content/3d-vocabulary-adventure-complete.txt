@@ -1,0 +1,41 @@
+[p1 "3D Vocabulary Adventure - Dong-A Elementary English" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "3D Vocabulary Adventure - Dong-A Elementary English"]
+root
+  canvas
+  container
+    container
+      text "⭐"
+      text "Score:"
+      text "1550"
+    container
+      text "🔥"
+      text "Streak:"
+      text "10"
+    container
+      text "❤️"
+      text "Lives:"
+      text "3"
+    container
+      text "📚"
+      text "Word:"
+      text "10"
+      text "/"
+      text "10"
+  container
+    text "VERB"
+    text "create"
+    text "To make something new; to bring into existence"
+    text ""Artists create beautiful paintings from their imagination.""
+  container
+    button [ref=1]
+      text "ignore"
+    button [ref=2]
+      text "make new"
+    button [ref=3]
+      text "lose"
+    button [ref=4]
+      text "destroy"
+  text "Correct: create means make new. Artists create beautiful paintings from their imagination."
+  heading
+    text "🎉 Amazing! 🎉"
+  paragraph
+    text "You completed the vocabulary adventure!"

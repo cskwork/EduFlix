@@ -154,6 +154,7 @@ function toggleFullscreen() {
 
 // 편집 모드 토글
 function toggleEditMode() {
+  if (props.id.startsWith('local-studio-')) { router.push({ path: '/studio', query: { id: props.id } }); return }
   if (isEditing.value) editorRef.value?.requestClose()
   else isEditing.value = true
 }

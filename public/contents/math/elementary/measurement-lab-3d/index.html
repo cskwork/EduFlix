@@ -792,7 +792,7 @@
                 <div class="tool" style="bottom: 30%; left: 20%; animation-delay: 8s;">🔬</div>
             </div>
             <h1>🔬 측정 연구소 3D</h1>
-            <p class="subtitle">측정 연구소에 오신 것을 환영합니다! 3D 물체를 관찰하고 길이, 무게, 부피를 측정하는 방법을 배워보세요!</p>
+            <p class="subtitle">길이·무게·들이의 단위를 고르고 어림해요. 물체의 값은 연습용이며 실제 크기는 다를 수 있어요. 이 활동은 기준값의 ±10%까지 인정해요. 단위 변환 예: 1.5 L = 1500 mL.</p>
             <button id="start-btn">
                 <span>연구 시작!</span>
                 <span>🚀</span>
@@ -1177,6 +1177,8 @@
         }
 
         function generateQuestion() {
+            document.getElementById("answer-input").disabled = false;
+            hintsUsed = 0;
             const objects = objectsData[currentCategory][currentDifficulty];
             currentObject = objects[Math.floor(Math.random() * objects.length)];
             
@@ -1231,6 +1233,7 @@
         }
 
         function submitAnswer() {
+            if (document.getElementById("answer-input").disabled) return;
             const userValue = parseFloat(document.getElementById('answer-input').value);
             const userUnit = document.getElementById('unit-selector').value;
 
@@ -1258,8 +1261,9 @@
         }
 
         function handleCorrectAnswer() {
+            document.getElementById("answer-input").disabled = true;
             correctCount++;
-            categoryProgress[currentCategory]++;
+            categoryProgress[currentCategory] = Math.min(5, categoryProgress[currentCategory] + 1);
 
             // Calculate score
             const difficultyBonus = { easy: 50, medium: 75, hard: 100 }[currentDifficulty];

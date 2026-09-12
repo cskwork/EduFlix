@@ -1,0 +1,26 @@
+[p1 "Vocabulary Mountain - Middle School English" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "Vocabulary Mountain - Middle School English"]
+root
+  container
+    container
+      text "⛰️ Altitude:"
+      text "0m"
+    container
+      text "⭐ Score:"
+      text "0"
+    container
+      text "💡 Hints:"
+      text "3"
+  container
+    text "MEDIUM"
+    text "Summit"
+    text "The highest point of a mountain or hill"
+  button [ref=1]
+    text "💡 Get Hint"
+  text "🧗"
+  container
+    heading
+      text "🏔️ Vocabulary Mountain"
+    paragraph
+      text "Climb the Vocabulary Mountain by mastering advanced words! Each level brings you higher up the mountain with increasingly challenging vocabulary. Use context clues, word parts, and your knowledge to r..."
+    button [ref=2]
+      text "Start Climbing!"

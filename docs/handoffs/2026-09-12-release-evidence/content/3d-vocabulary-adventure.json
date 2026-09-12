@@ -1,0 +1,625 @@
+{
+  "id": "3d-vocabulary-adventure",
+  "family": "custom",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "mode": "easy",
+      "index": 0,
+      "question": {
+        "word": "brilliant",
+        "type": "Adjective",
+        "options": [
+          "dull",
+          "very bright",
+          "quiet",
+          "slow"
+        ],
+        "correct": 1,
+        "definition": "Very bright, impressive, or intelligent",
+        "example": "The brilliant stars lit up the night sky."
+      },
+      "answer": "very bright",
+      "feedback": "⭐\nScore:\n110\n🔥\nStreak:\n1\n❤️\nLives:\n3\n📚\nWord:\n1\n/\n10\nADJECTIVE\nbrilliant\nVery bright, impressive, or intelligent\n\"The brilliant stars lit up the night sky.\"\nvery bright\nquiet\nslow\ndull\nCorrect: brilliant means very bright. The brilliant stars lit up the night sky.\n🏆 🎯 First Step!"
+    },
+    {
+      "mode": "easy",
+      "index": 1,
+      "question": {
+        "word": "curious",
+        "type": "Adjective",
+        "options": [
+          "scared",
+          "eager to learn",
+          "angry",
+          "tired"
+        ],
+        "correct": 1,
+        "definition": "Wanting to learn or know more about something",
+        "example": "The curious kitten explored every corner of the room."
+      },
+      "answer": "eager to learn",
+      "feedback": "⭐\nScore:\n230\n🔥\nStreak:\n2\n❤️\nLives:\n3\n📚\nWord:\n2\n/\n10\nADJECTIVE\ncurious\nWanting to learn or know more about something\n\"The curious kitten explored every corner of the room.\"\ntired\nangry\neager to learn\nscared\nCorrect: curious means eager to learn. The curious kitten explored every corner of the room.\n🏆 🎯 First Step!"
+    },
+    {
+      "mode": "easy",
+      "index": 2,
+      "question": {
+        "word": "gentle",
+        "type": "Adjective",
+        "options": [
+          "rough",
+          "soft and kind",
+          "loud",
+          "fast"
+        ],
+        "correct": 1,
+        "definition": "Mild, kind, or careful in manner",
+        "example": "The gentle breeze felt refreshing on a hot day."
+      },
+      "answer": "soft and kind",
+      "feedback": "⭐\nScore:\n360\n🔥\nStreak:\n3\n❤️\nLives:\n3\n📚\nWord:\n3\n/\n10\nADJECTIVE\ngentle\nMild, kind, or careful in manner\n\"The gentle breeze felt refreshing on a hot day.\"\nsoft and kind\nfast\nloud\nrough\nCorrect: gentle means soft and kind. The gentle breeze felt refreshing on a hot day.\n🏆 🎯 First Step!"
+    },
+    {
+      "mode": "easy",
+      "index": 3,
+      "question": {
+        "word": "delicious",
+        "type": "Adjective",
+        "options": [
+          "tasty",
+          "bad",
+          "ugly",
+          "noisy"
+        ],
+        "correct": 0,
+        "definition": "Having a very pleasant taste",
+        "example": "Mom made the most delicious chocolate cake for my birthday."
+      },
+      "answer": "tasty",
+      "feedback": "⭐\nScore:\n500\n🔥\nStreak:\n4\n❤️\nLives:\n3\n📚\nWord:\n4\n/\n10\nADJECTIVE\ndelicious\nHaving a very pleasant taste\n\"Mom made the most delicious chocolate cake for my birthday.\"\nbad\nugly\nnoisy\ntasty\nCorrect: delicious means tasty. Mom made the most delicious chocolate cake for my birthday.\n🏆 🎯 First Step!"
+    },
+    {
+      "mode": "easy",
+      "index": 4,
+      "question": {
+        "word": "treasure",
+        "type": "Noun",
+        "options": [
+          "trash",
+          "valuable things",
+          "food",
+          "water"
+        ],
+        "correct": 1,
+        "definition": "Valuable things like gold, jewels, or money",
+        "example": "The pirates searched for buried treasure on the island."
+      },
+      "answer": "valuable things",
+      "feedback": "⭐\nScore:\n650\n🔥\nStreak:\n5\n❤️\nLives:\n3\n📚\nWord:\n5\n/\n10\nNOUN\ntreasure\nValuable things like gold, jewels, or money\n\"The pirates searched for buried treasure on the island.\"\ntrash\nwater\nvaluable things\nfood\nCorrect: treasure means valuable things. The pirates searched for buried treasure on the island.\n🏆 🔥 On Fire! 5 Streak"
+    },
+    {
+      "mode": "easy",
+      "index": 5,
+      "question": {
+        "word": "enormous",
+        "type": "Adjective",
+        "options": [
+          "huge",
+          "tiny",
+          "fast",
+          "slow"
+        ],
+        "correct": 0,
+        "definition": "Very large in size; much bigger than usual",
+        "example": "The enormous elephant was the biggest animal at the zoo."
+      },
+      "answer": "huge",
+      "feedback": "⭐\nScore:\n810\n🔥\nStreak:\n6\n❤️\nLives:\n3\n📚\nWord:\n6\n/\n10\nADJECTIVE\nenormous\nVery large in size; much bigger than usual\n\"The enormous elephant was the biggest animal at the zoo.\"\nhuge\ntiny\nfast\nslow\nCorrect: enormous means huge. The enormous elephant was the biggest animal at the zoo.\n🏆 🌟 Halfway There!"
+    },
+    {
+      "mode": "easy",
+      "index": 6,
+      "question": {
+        "word": "ancient",
+        "type": "Adjective",
+        "options": [
+          "new",
+          "bright",
+          "very old",
+          "broken"
+        ],
+        "correct": 2,
+        "definition": "Very old; from a long time ago",
+        "example": "The ancient castle had stood for a thousand years."
+      },
+      "answer": "very old",
+      "feedback": "⭐\nScore:\n980\n🔥\nStreak:\n7\n❤️\nLives:\n3\n📚\nWord:\n7\n/\n10\nADJECTIVE\nancient\nVery old; from a long time ago\n\"The ancient castle had stood for a thousand years.\"\nbroken\nbright\nnew\nvery old\nCorrect: ancient means very old. The ancient castle had stood for a thousand years.\n🏆 🌟 Halfway There!"
+    },
+    {
+      "mode": "easy",
+      "index": 7,
+      "question": {
+        "word": "discover",
+        "type": "Verb",
+        "options": [
+          "lose",
+          "hide",
+          "find",
+          "break"
+        ],
+        "correct": 2,
+        "definition": "To find something for the first time",
+        "example": "Scientists discover new species in the rainforest every year."
+      },
+      "answer": "find",
+      "feedback": "⭐\nScore:\n1160\n🔥\nStreak:\n8\n❤️\nLives:\n3\n📚\nWord:\n8\n/\n10\nVERB\ndiscover\nTo find something for the first time\n\"Scientists discover new species in the rainforest every year.\"\nhide\nlose\nbreak\nfind\nCorrect: discover means find. Scientists discover new species in the rainforest every year.\n🏆 🌟 Halfway There!"
+    },
+    {
+      "mode": "easy",
+      "index": 8,
+      "question": {
+        "word": "brave",
+        "type": "Adjective",
+        "options": [
+          "scared",
+          "worried",
+          "courageous",
+          "sad"
+        ],
+        "correct": 2,
+        "definition": "Showing courage when facing danger, even when afraid",
+        "example": "The brave firefighter saved everyone from the burning building."
+      },
+      "answer": "courageous",
+      "feedback": "⭐\nScore:\n1350\n🔥\nStreak:\n9\n❤️\nLives:\n3\n📚\nWord:\n9\n/\n10\nADJECTIVE\nbrave\nShowing courage when facing danger, even when afraid\n\"The brave firefighter saved everyone from the burning building.\"\nsad\nscared\nworried\ncourageous\nCorrect: brave means courageous. The brave firefighter saved everyone from the burning building.\n🏆 🌟 Halfway There!"
+    },
+    {
+      "mode": "easy",
+      "index": 9,
+      "question": {
+        "word": "adventure",
+        "type": "Noun",
+        "options": [
+          "boring time",
+          "exciting journey",
+          "quiet day",
+          "sleep"
+        ],
+        "correct": 1,
+        "definition": "An exciting and unusual experience",
+        "example": "Our camping trip turned into a real adventure!"
+      },
+      "answer": "exciting journey",
+      "feedback": "⭐\nScore:\n1550\n🔥\nStreak:\n10\n❤️\nLives:\n3\n📚\nWord:\n10\n/\n10\nNOUN\nadventure\nAn exciting and unusual experience\n\"Our camping trip turned into a real adventure!\"\nquiet day\nsleep\nboring time\nexciting journey\nCorrect: adventure means exciting journey. Our camping trip turned into a real adventure!\n🏆 💥 Unstoppable! 10 Streak"
+    },
+    {
+      "mode": "medium",
+      "index": 0,
+      "question": {
+        "word": "extraordinary",
+        "type": "Adjective",
+        "options": [
+          "normal",
+          "boring",
+          "remarkable",
+          "common"
+        ],
+        "correct": 2,
+        "definition": "Very unusual, remarkable, or impressive",
+        "example": "Her extraordinary talent amazed everyone."
+      },
+      "answer": "remarkable",
+      "feedback": "⭐\nScore:\n110\n🔥\nStreak:\n1\n❤️\nLives:\n3\n📚\nWord:\n1\n/\n10\nADJECTIVE\nextraordinary\nVery unusual, remarkable, or impressive\n\"Her extraordinary talent amazed everyone.\"\nboring\nnormal\ncommon\nremarkable\nCorrect: extraordinary means remarkable. Her extraordinary talent amazed everyone.\n🏆 First Word!"
+    },
+    {
+      "mode": "medium",
+      "index": 1,
+      "question": {
+        "word": "mysterious",
+        "type": "Adjective",
+        "options": [
+          "clear",
+          "strange and unknown",
+          "bright",
+          "loud"
+        ],
+        "correct": 1,
+        "definition": "Hard to explain or understand; full of secrets",
+        "example": "The mysterious sound came from deep within the cave."
+      },
+      "answer": "strange and unknown",
+      "feedback": "⭐\nScore:\n230\n🔥\nStreak:\n2\n❤️\nLives:\n3\n📚\nWord:\n2\n/\n10\nADJECTIVE\nmysterious\nHard to explain or understand; full of secrets\n\"The mysterious sound came from deep within the cave.\"\nloud\nbright\nclear\nstrange and unknown\nCorrect: mysterious means strange and unknown. The mysterious sound came from deep within the cave.\n🏆 First Word!"
+    },
+    {
+      "mode": "medium",
+      "index": 2,
+      "question": {
+        "word": "flourish",
+        "type": "Verb",
+        "options": [
+          "die",
+          "grow well",
+          "hide",
+          "stop"
+        ],
+        "correct": 1,
+        "definition": "To grow or develop in a healthy way",
+        "example": "Plants flourish when they get enough sunlight and water."
+      },
+      "answer": "grow well",
+      "feedback": "⭐\nScore:\n360\n🔥\nStreak:\n3\n❤️\nLives:\n3\n📚\nWord:\n3\n/\n10\nVERB\nflourish\nTo grow or develop in a healthy way\n\"Plants flourish when they get enough sunlight and water.\"\ngrow well\nstop\ndie\nhide\nCorrect: flourish means grow well. Plants flourish when they get enough sunlight and water.\n🏆 First Word!"
+    },
+    {
+      "mode": "medium",
+      "index": 3,
+      "question": {
+        "word": "courageous",
+        "type": "Adjective",
+        "options": [
+          "afraid",
+          "nervous",
+          "brave",
+          "weak"
+        ],
+        "correct": 2,
+        "definition": "Having or showing courage; brave",
+        "example": "The courageous hero faced the dragon without fear."
+      },
+      "answer": "brave",
+      "feedback": "⭐\nScore:\n500\n🔥\nStreak:\n4\n❤️\nLives:\n3\n📚\nWord:\n4\n/\n10\nADJECTIVE\ncourageous\nHaving or showing courage; brave\n\"The courageous hero faced the dragon without fear.\"\nnervous\nafraid\nbrave\nweak\nCorrect: courageous means brave. The courageous hero faced the dragon without fear.\n🏆 First Word!"
+    },
+    {
+      "mode": "medium",
+      "index": 4,
+      "question": {
+        "word": "magnificent",
+        "type": "Adjective",
+        "options": [
+          "ugly",
+          "plain",
+          "extremely beautiful",
+          "small"
+        ],
+        "correct": 2,
+        "definition": "Extremely beautiful, impressive, or extraordinary",
+        "example": "The magnificent palace took our breath away."
+      },
+      "answer": "extremely beautiful",
+      "feedback": "⭐\nScore:\n650\n🔥\nStreak:\n5\n❤️\nLives:\n3\n📚\nWord:\n5\n/\n10\nADJECTIVE\nmagnificent\nExtremely beautiful, impressive, or extraordinary\n\"The magnificent palace took our breath away.\"\nplain\nextremely beautiful\nsmall\nugly\nCorrect: magnificent means extremely beautiful. The magnificent palace took our breath away.\n🏆 First Word!"
+    },
+    {
+      "mode": "medium",
+      "index": 5,
+      "question": {
+        "word": "transform",
+        "type": "Verb",
+        "options": [
+          "keep same",
+          "completely change",
+          "lose",
+          "break"
+        ],
+        "correct": 1,
+        "definition": "To change completely in form or character",
+        "example": "The caterpillar will transform into a butterfly."
+      },
+      "answer": "completely change",
+      "feedback": "⭐\nScore:\n810\n🔥\nStreak:\n6\n❤️\nLives:\n3\n📚\nWord:\n6\n/\n10\nVERB\ntransform\nTo change completely in form or character\n\"The caterpillar will transform into a butterfly.\"\ncompletely change\nkeep same\nlose\nbreak\nCorrect: transform means completely change. The caterpillar will transform into a butterfly.\n🏆 First Word!"
+    },
+    {
+      "mode": "medium",
+      "index": 6,
+      "question": {
+        "word": "graceful",
+        "type": "Adjective",
+        "options": [
+          "clumsy",
+          "quick",
+          "elegant",
+          "heavy"
+        ],
+        "correct": 2,
+        "definition": "Moving in a smooth, beautiful way",
+        "example": "The graceful dancer floated across the stage."
+      },
+      "answer": "elegant",
+      "feedback": "⭐\nScore:\n980\n🔥\nStreak:\n7\n❤️\nLives:\n3\n📚\nWord:\n7\n/\n10\nADJECTIVE\ngraceful\nMoving in a smooth, beautiful way\n\"The graceful dancer floated across the stage.\"\nclumsy\nheavy\nquick\nelegant\nCorrect: graceful means elegant. The graceful dancer floated across the stage.\n🏆 First Word!"
+    },
+    {
+      "mode": "medium",
+      "index": 7,
+      "question": {
+        "word": "swift",
+        "type": "Adjective",
+        "options": [
+          "slow",
+          "very fast",
+          "gentle",
+          "loud"
+        ],
+        "correct": 1,
+        "definition": "Moving or capable of moving with great speed",
+        "example": "The swift falcon is one of the fastest birds."
+      },
+      "answer": "very fast",
+      "feedback": "⭐\nScore:\n1160\n🔥\nStreak:\n8\n❤️\nLives:\n3\n📚\nWord:\n8\n/\n10\nADJECTIVE\nswift\nMoving or capable of moving with great speed\n\"The swift falcon is one of the fastest birds.\"\nloud\ngentle\nslow\nvery fast\nCorrect: swift means very fast. The swift falcon is one of the fastest birds.\n🏆 First Word!"
+    },
+    {
+      "mode": "medium",
+      "index": 8,
+      "question": {
+        "word": "precious",
+        "type": "Adjective",
+        "options": [
+          "worthless",
+          "very valuable",
+          "ugly",
+          "common"
+        ],
+        "correct": 1,
+        "definition": "Of great value; not to be wasted",
+        "example": "Time with family is precious and should be cherished."
+      },
+      "answer": "very valuable",
+      "feedback": "⭐\nScore:\n1350\n🔥\nStreak:\n9\n❤️\nLives:\n3\n📚\nWord:\n9\n/\n10\nADJECTIVE\nprecious\nOf great value; not to be wasted\n\"Time with family is precious and should be cherished.\"\nworthless\nvery valuable\nugly\ncommon\nCorrect: precious means very valuable. Time with family is precious and should be cherished.\n🏆 First Word!"
+    },
+    {
+      "mode": "medium",
+      "index": 9,
+      "question": {
+        "word": "create",
+        "type": "Verb",
+        "options": [
+          "destroy",
+          "ignore",
+          "make new",
+          "lose"
+        ],
+        "correct": 2,
+        "definition": "To make something new; to bring into existence",
+        "example": "Artists create beautiful paintings from their imagination."
+      },
+      "answer": "make new",
+      "feedback": "⭐\nScore:\n1550\n🔥\nStreak:\n10\n❤️\nLives:\n3\n📚\nWord:\n10\n/\n10\nVERB\ncreate\nTo make something new; to bring into existence\n\"Artists create beautiful paintings from their imagination.\"\nignore\nmake new\nlose\ndestroy\nCorrect: create means make new. Artists create beautiful paintings from their imagination.\n🏆 First Word!"
+    },
+    {
+      "mode": "hard",
+      "index": 0,
+      "question": {
+        "word": "perseverance",
+        "type": "Noun",
+        "options": [
+          "laziness",
+          "giving up",
+          "continuing effort",
+          "rest"
+        ],
+        "correct": 2,
+        "definition": "Continued effort despite difficulties",
+        "example": "Her perseverance helped her win the marathon after years of training."
+      },
+      "answer": "continuing effort",
+      "feedback": "⭐\nScore:\n110\n🔥\nStreak:\n1\n❤️\nLives:\n3\n📚\nWord:\n1\n/\n10\nNOUN\nperseverance\nContinued effort despite difficulties\n\"Her perseverance helped her win the marathon after years of training.\"\nrest\ncontinuing effort\nlaziness\ngiving up\nCorrect: perseverance means continuing effort. Her perseverance helped her win the marathon after years of training.\n🏆 First Word!"
+    },
+    {
+      "mode": "hard",
+      "index": 1,
+      "question": {
+        "word": "resilient",
+        "type": "Adjective",
+        "options": [
+          "weak",
+          "fragile",
+          "able to recover",
+          "delicate"
+        ],
+        "correct": 2,
+        "definition": "Able to recover quickly from difficulties",
+        "example": "Resilient plants can survive even the harshest winters."
+      },
+      "answer": "able to recover",
+      "feedback": "⭐\nScore:\n230\n🔥\nStreak:\n2\n❤️\nLives:\n3\n📚\nWord:\n2\n/\n10\nADJECTIVE\nresilient\nAble to recover quickly from difficulties\n\"Resilient plants can survive even the harshest winters.\"\nfragile\nweak\ndelicate\nable to recover\nCorrect: resilient means able to recover. Resilient plants can survive even the harshest winters.\n🏆 First Word!"
+    },
+    {
+      "mode": "hard",
+      "index": 2,
+      "question": {
+        "word": "harmonious",
+        "type": "Adjective",
+        "options": [
+          "chaotic",
+          "fighting",
+          "peaceful together",
+          "noisy"
+        ],
+        "correct": 2,
+        "definition": "Working or living together in peace",
+        "example": "The harmonious choir sounded like angels singing."
+      },
+      "answer": "peaceful together",
+      "feedback": "⭐\nScore:\n360\n🔥\nStreak:\n3\n❤️\nLives:\n3\n📚\nWord:\n3\n/\n10\nADJECTIVE\nharmonious\nWorking or living together in peace\n\"The harmonious choir sounded like angels singing.\"\npeaceful together\nnoisy\nchaotic\nfighting\nCorrect: harmonious means peaceful together. The harmonious choir sounded like angels singing.\n🏆 First Word!"
+    },
+    {
+      "mode": "hard",
+      "index": 3,
+      "question": {
+        "word": "eloquent",
+        "type": "Adjective",
+        "options": [
+          "silent",
+          "confused",
+          "expressing clearly",
+          "mumbling"
+        ],
+        "correct": 2,
+        "definition": "Fluent and persuasive in speaking or writing",
+        "example": "Her eloquent speech moved the audience to tears."
+      },
+      "answer": "expressing clearly",
+      "feedback": "⭐\nScore:\n500\n🔥\nStreak:\n4\n❤️\nLives:\n3\n📚\nWord:\n4\n/\n10\nADJECTIVE\neloquent\nFluent and persuasive in speaking or writing\n\"Her eloquent speech moved the audience to tears.\"\nsilent\nexpressing clearly\nmumbling\nconfused\nCorrect: eloquent means expressing clearly. Her eloquent speech moved the audience to tears.\n🏆 First Word!"
+    },
+    {
+      "mode": "hard",
+      "index": 4,
+      "question": {
+        "word": "meticulous",
+        "type": "Adjective",
+        "options": [
+          "careless",
+          "sloppy",
+          "very careful",
+          "messy"
+        ],
+        "correct": 2,
+        "definition": "Showing great attention to detail",
+        "example": "The meticulous artist spent hours on every tiny detail."
+      },
+      "answer": "very careful",
+      "feedback": "⭐\nScore:\n650\n🔥\nStreak:\n5\n❤️\nLives:\n3\n📚\nWord:\n5\n/\n10\nADJECTIVE\nmeticulous\nShowing great attention to detail\n\"The meticulous artist spent hours on every tiny detail.\"\nsloppy\ncareless\nmessy\nvery careful\nCorrect: meticulous means very careful. The meticulous artist spent hours on every tiny detail.\n🏆 First Word!"
+    },
+    {
+      "mode": "hard",
+      "index": 5,
+      "question": {
+        "word": "spectacular",
+        "type": "Adjective",
+        "options": [
+          "boring",
+          "ordinary",
+          "amazing to see",
+          "plain"
+        ],
+        "correct": 2,
+        "definition": "Beautiful or impressive in a dramatic way",
+        "example": "The spectacular fireworks display lit up the entire sky."
+      },
+      "answer": "amazing to see",
+      "feedback": "⭐\nScore:\n810\n🔥\nStreak:\n6\n❤️\nLives:\n3\n📚\nWord:\n6\n/\n10\nADJECTIVE\nspectacular\nBeautiful or impressive in a dramatic way\n\"The spectacular fireworks display lit up the entire sky.\"\nboring\namazing to see\nplain\nordinary\nCorrect: spectacular means amazing to see. The spectacular fireworks display lit up the entire sky.\n🏆 First Word!"
+    },
+    {
+      "mode": "hard",
+      "index": 6,
+      "question": {
+        "word": "illuminate",
+        "type": "Verb",
+        "options": [
+          "darken",
+          "confuse",
+          "light up",
+          "hide"
+        ],
+        "correct": 2,
+        "definition": "To supply with light; to make clear",
+        "example": "The full moon will illuminate the path through the forest."
+      },
+      "answer": "light up",
+      "feedback": "⭐\nScore:\n980\n🔥\nStreak:\n7\n❤️\nLives:\n3\n📚\nWord:\n7\n/\n10\nVERB\nilluminate\nTo supply with light; to make clear\n\"The full moon will illuminate the path through the forest.\"\nhide\nlight up\ndarken\nconfuse\nCorrect: illuminate means light up. The full moon will illuminate the path through the forest.\n🏆 First Word!"
+    },
+    {
+      "mode": "hard",
+      "index": 7,
+      "question": {
+        "word": "tenacious",
+        "type": "Adjective",
+        "options": [
+          "lazy",
+          "giving up easily",
+          "determined",
+          "weak"
+        ],
+        "correct": 2,
+        "definition": "Holding firmly to something; persistent",
+        "example": "The tenacious climber never gave up despite the storm."
+      },
+      "answer": "determined",
+      "feedback": "⭐\nScore:\n1160\n🔥\nStreak:\n8\n❤️\nLives:\n3\n📚\nWord:\n8\n/\n10\nADJECTIVE\ntenacious\nHolding firmly to something; persistent\n\"The tenacious climber never gave up despite the storm.\"\ngiving up easily\nweak\ndetermined\nlazy\nCorrect: tenacious means determined. The tenacious climber never gave up despite the storm.\n🏆 First Word!"
+    }
+  ],
+  "modes": [
+    {
+      "mode": "easy",
+      "count": 10,
+      "completion": true,
+      "reset": true,
+      "dialog": {
+        "url": "http://127.0.0.1:5173/contents/english/elementary/3d-vocabulary-adventure/index.html",
+        "frameId": "7448BECA8A6A800D7907BE7EC5CF4EF2",
+        "message": "🎉 Congratulations! 🎉\nFinal Score: 1550\nMax Streak: 10\n\nYou're a vocabulary champion!",
+        "type": "alert",
+        "hasBrowserHandler": true,
+        "defaultPrompt": ""
+      }
+    },
+    {
+      "mode": "medium",
+      "count": 10,
+      "completion": true,
+      "reset": true,
+      "dialog": {
+        "url": "http://127.0.0.1:5173/contents/english/elementary/3d-vocabulary-adventure/index.html",
+        "frameId": "7448BECA8A6A800D7907BE7EC5CF4EF2",
+        "message": "🎉 Congratulations! 🎉\nFinal Score: 1550\nMax Streak: 10\n\nYou're a vocabulary champion!",
+        "type": "alert",
+        "hasBrowserHandler": true,
+        "defaultPrompt": ""
+      }
+    },
+    {
+      "mode": "hard",
+      "count": 10,
+      "completion": false,
+      "reset": false
+    }
+  ],
+  "completion": false,
+  "reset": false,
+  "method": "Native DOM clicks; read-only question oracle; normal feedback timers and native result dialog/reload.",
+  "failure": "CdpRequestTimeoutError: CDP request timed out: Input.dispatchMouseEvent",
+  "lastObservation": {
+    "i": 8,
+    "count": 10,
+    "q": {
+      "word": "endeavor",
+      "type": "Noun/Verb",
+      "options": [
+        "laziness",
+        "serious attempt",
+        "failure",
+        "rest"
+      ],
+      "correct": 1,
+      "definition": "A serious effort or attempt to achieve something",
+      "example": "Learning a new language is a worthwhile endeavor."
+    },
+    "text": "⭐\nScore:\n1160\n🔥\nStreak:\n8\n❤️\nLives:\n3\n📚\nWord:\n9\n/\n10\nNOUN/VERB\nendeavor\nA serious effort or attempt to achieve something\n\"Learning a new language is a worthwhile endeavor.\"\nfailure\nrest\nlaziness\nserious attempt\nCorrect: tenacious means determined. The tenacious climber never gave up despite the storm.\n🏆 First Word!",
+    "celebration": false,
+    "buttons": [
+      {
+        "i": 0,
+        "text": "failure",
+        "disabled": false,
+        "correct": false
+      },
+      {
+        "i": 1,
+        "text": "rest",
+        "disabled": false,
+        "correct": false
+      },
+      {
+        "i": 2,
+        "text": "laziness",
+        "disabled": false,
+        "correct": false
+      },
+      {
+        "i": 3,
+        "text": "serious attempt",
+        "disabled": false,
+        "correct": false
+      }
+    ]
+  }
+}

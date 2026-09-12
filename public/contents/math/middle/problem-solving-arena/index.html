@@ -244,7 +244,7 @@
             </div>
 
             <div id="rank-display">
-                <h3>🏆 리더보드</h3>
+                <h3>🏆 예시 기록 (다른 학생의 실제 기록 아님)</h3>
                 <div class="rank-item"><span class="rank-num">1</span><span class="rank-name">수학천재</span><span class="rank-score">9,500</span></div>
                 <div class="rank-item"><span class="rank-num">2</span><span class="rank-name">문제왕</span><span class="rank-score">8,200</span></div>
                 <div class="rank-item"><span class="rank-num">3</span><span class="rank-name">계산마스터</span><span class="rank-score">7,800</span></div>
@@ -256,7 +256,7 @@
 
         <div id="start-screen">
             <h1>⚔️ 문제 해결 아레나</h1>
-            <p class="subtitle">제한 시간 안에 최대한 많은 문제를 풀어보세요! 연속 정답으로 콤보 보너스를 획득하세요!</p>
+            <p class="subtitle">먼저 무한 모드에서 식을 세우고 풀이를 설명해 보세요. 예: 사탕을 4명에게 6개씩 주면 4 × 6 = 24개예요. 정확히 풀 수 있다면 시간 제한 모드에 도전하세요.</p>
             <div class="mode-selector">
                 <div class="mode-btn active" data-mode="timed">
                     <div class="mode-icon">⏱️</div>
@@ -384,8 +384,10 @@
         }
 
         function submitAnswer() {
+            if (currentProblem.answered) return;
             const userAnswer = parseFloat(document.getElementById('answer-input').value);
-            if (isNaN(userAnswer)) return;
+            if (!Number.isFinite(userAnswer)) return;
+            currentProblem.answered = true;
             total++;
 
             if (Math.abs(userAnswer - currentProblem.a) < 0.01) {
@@ -399,7 +401,7 @@
             } else {
                 streak = 0;
                 score = Math.max(0, score - 20);
-                showFeedback('❌', '#ef4444');
+                showFeedback(`답: ${currentProblem.a}. 식을 다시 세워 검산해요.`, '#ef4444');
             }
             updateStats();
             setTimeout(generateProblem, 500);

@@ -650,7 +650,7 @@
                 { word: "curious", type: "Adjective", options: ["scared", "eager to learn", "angry", "tired"], correct: 1, definition: "Wanting to learn or know more about something", example: "The curious kitten explored every corner of the room." },
                 { word: "ancient", type: "Adjective", options: ["new", "bright", "very old", "broken"], correct: 2, definition: "Very old; from a long time ago", example: "The ancient castle had stood for a thousand years." },
                 { word: "delicious", type: "Adjective", options: ["tasty", "bad", "ugly", "noisy"], correct: 0, definition: "Having a very pleasant taste", example: "Mom made the most delicious chocolate cake for my birthday." },
-                { word: "brave", type: "Adjective", options: ["scared", "worried", "courageous", "sad"], correct: 2, definition: "Showing courage; not afraid of danger", example: "The brave firefighter saved everyone from the burning building." },
+                { word: "brave", type: "Adjective", options: ["scared", "worried", "courageous", "sad"], correct: 2, definition: "Showing courage when facing danger, even when afraid", example: "The brave firefighter saved everyone from the burning building." },
                 { word: "discover", type: "Verb", options: ["lose", "hide", "find", "break"], correct: 2, definition: "To find something for the first time", example: "Scientists discover new species in the rainforest every year." },
                 { word: "adventure", type: "Noun", options: ["boring time", "exciting journey", "quiet day", "sleep"], correct: 1, definition: "An exciting and unusual experience", example: "Our camping trip turned into a real adventure!" },
                 { word: "brilliant", type: "Adjective", options: ["dull", "very bright", "quiet", "slow"], correct: 1, definition: "Very bright, impressive, or intelligent", example: "The brilliant stars lit up the night sky." },
@@ -1145,7 +1145,7 @@
 
             if (isCorrect) {
                 buttons[selectedIndex].classList.add('correct');
-                feedback.textContent = getPositiveFeedback();
+                feedback.textContent = `Correct: ${currentWords[currentWordIndex].word} means ${currentWords[currentWordIndex].options[currentWords[currentWordIndex].correct]}. ${currentWords[currentWordIndex].example}`;
                 feedback.style.color = '#38ef7d';
                 
                 streak++;
@@ -1166,7 +1166,7 @@
             } else {
                 buttons[selectedIndex].classList.add('wrong');
                 buttons[correctIndex].classList.add('correct');
-                feedback.textContent = getEncouragingFeedback();
+                feedback.textContent = `${currentWords[currentWordIndex].word}: ${currentWords[currentWordIndex].definition}. Example: ${currentWords[currentWordIndex].example}`;
                 feedback.style.color = '#f45c43';
                 
                 streak = 0;
@@ -1193,7 +1193,7 @@
                 feedback.classList.remove('show');
                 currentWordIndex++;
                 showWord();
-            }, 1500);
+            }, 6000);
         }
 
         function getPositiveFeedback() {

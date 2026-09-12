@@ -562,7 +562,7 @@
         <div id="start-screen">
             <div class="theater-icon">🎭</div>
             <h1>Literature 3D Theater</h1>
-            <p>Experience classic literature scenes in an immersive 3D theater! Watch iconic characters come to life, understand their dialogue, and explore timeless literary themes from Shakespeare to modern classics.</p>
+            <p>Experience classic literature scenes in an immersive 3D theater! Watch iconic characters come to life, use words in the dialogue as evidence, and compare supported interpretations of literary themes from Shakespeare to modern classics.</p>
             
             <div id="era-selection">
                 <div class="era-card active" data-era="shakespeare">
@@ -616,10 +616,10 @@
                     dialogue: "Is this a dagger which I see before me, The handle toward my hand? Come, let me clutch thee. I have thee not, and yet I see thee still.",
                     speaker: "Macbeth",
                     characters: ["Macbeth"],
-                    question: "What does the floating dagger symbolize?",
+                    question: "Which interpretation of the floating dagger is best supported here?",
                     options: ["A real weapon from the king", "His ambition and guilt driving him to murder", "A gift from Lady Macbeth", "Protection from enemies"],
                     correct: 1,
-                    explanation: "The dagger represents Macbeth's inner conflict - his ambition pulling him toward murder while his conscience makes him question his actions."
+                    explanation: "One supported interpretation is that the dagger represents Macbeth's inner conflict - his ambition pulling him toward murder while his conscience makes him question his actions."
                 },
                 {
                     work: "A Midsummer Night's Dream",
@@ -640,7 +640,7 @@
                     dialogue: "Gatsby believed in the green light, the orgastic future that year by year recedes before us. It eluded us then, but that's no matter—tomorrow we will run faster, stretch out our arms farther...",
                     speaker: "Nick Carraway",
                     characters: ["Nick", "Gatsby"],
-                    question: "What does the green light symbolize?",
+                    question: "Which interpretation of the green light is best supported here?",
                     options: ["Gatsby's wealth", "Gatsby's dreams and the elusive future", "The American flag", "Daisy's love for Tom"],
                     correct: 1,
                     explanation: "The green light across the bay symbolizes Gatsby's hopes, dreams, and the elusive nature of the American Dream that always seems just out of reach."
@@ -900,6 +900,13 @@
             characters = [];
 
             const sceneData = currentScenes[currentSceneIndex];
+            if (!sceneData.positionsBalanced) {
+                const answerText = sceneData.options[sceneData.correct];
+                const offset = (currentSceneIndex + 1) % sceneData.options.length;
+                sceneData.options = sceneData.options.slice(offset).concat(sceneData.options.slice(0, offset));
+                sceneData.correct = sceneData.options.indexOf(answerText);
+                sceneData.positionsBalanced = true;
+            }
             const characterColors = [0x4169E1, 0xFF69B4, 0x32CD32, 0xFFD700, 0x9370DB];
 
             sceneData.characters.forEach((charName, index) => {

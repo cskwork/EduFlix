@@ -84,7 +84,7 @@
         <section id="core-scene" class="scene">
             <div class="content-wrapper">
                 <h2 class="scene-title">엡실론(Epsilon) 조절하기</h2>
-                <p class="instruction">허용 오차(ε)를 조절해서 맞춰보세요!</p>
+                <p class="instruction">같은 결과 0.55를 ε = 0.01과 0.05로 판정해 보세요. 이 게임은 경계도 적중으로 인정해요. 던지는 값은 무작위이므로 결과가 조준 실력을 뜻하지는 않아요.</p>
                 
                 <div class="game-area">
                     <div class="target-info">
@@ -117,7 +117,7 @@
                 <div class="principle-box">
                     <p>우리가 조절한 그 마법의 숫자, <strong>엡실론(ε)</strong>은 뭘까요?</p>
                     <div class="formula">
-                        |목표값 - 결과값| < ε (보다 작으면 성공!)
+                        |목표값 - 결과값| ≤ ε (작거나 같으면 성공!)
                     </div>
                 </div>
                 
@@ -144,7 +144,7 @@
                     </svg>
                     <p>ε를 크게 하면 초록색 구간이 넓어져서 맞추기 쉬워지지만,<br>정확도는 떨어져요.</p>
                 </div>
-                <button class="action-btn" onclick="ContentApp.nextScene">다음</button>
+                <button class="action-btn" onclick="ContentApp.nextScene()">다음</button>
             </div>
         </section>
 

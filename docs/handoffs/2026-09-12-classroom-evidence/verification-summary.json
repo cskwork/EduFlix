@@ -1,0 +1,23 @@
+{
+  "date": "2026-09-12",
+  "baseCommit": "bbe09c75c3bb8ecb78c1f7adcd98d0acadb66df2",
+  "delivery": "local only; not committed or deployed",
+  "catalogLessonsReviewedAndChanged": 84,
+  "newStarters": 10,
+  "vitest": {
+    "files": 38,
+    "tests": 395,
+    "passed": true
+  },
+  "bun": {
+    "files": 17,
+    "tests": 93,
+    "assertions": 837,
+    "passed": true
+  },
+  "contentQualityExecutionGroups": 40,
+  "productionBuild": "passed",
+  "lint": "passed",
+  "serverTypes": "passed",
+  "diffCheck": "passed"
+}

@@ -26,7 +26,7 @@ const ContentApp = {
         },
         {
             context: '앱 리뷰 작성',
-            sentence: 'This game needs better ______ (explain) of the rules.',
+            sentence: 'This game needs a clearer ______ (explain) of the rules.',
             answer: 'explanation',
             options: ['explain', 'explanation', 'explainer', 'explaining']
         },
@@ -176,11 +176,11 @@ const ContentApp = {
         
         if (selected === quiz.answer) {
             this.quizScore++;
-            feedback.textContent = '정답! ' + quiz.answer + '는 명사형이에요.';
+            feedback.textContent = '정답! ' + quiz.answer + '는 이 문장에서 사물·개념을 나타내는 명사입니다. 동사형과 철자를 나란히 비교해 보세요.';
             feedback.className = 'quiz-feedback show correct';
             this.playAudio(quiz.answer);
         } else {
-            feedback.textContent = '정답은 ' + quiz.answer + '이에요. 동사에서 명사로 바뀌었어요.';
+            feedback.textContent = '정답은 ' + quiz.answer + '입니다. 설명이 필요한 문장 자리에는 행동을 서술하는 동사보다 개념을 나타내는 명사가 들어갑니다.';
             feedback.className = 'quiz-feedback show incorrect';
         }
         

@@ -76,7 +76,7 @@ class EduFlixEngine {
                 '<div class="hook-content">' +
                     '<div class="learning-objectives" role="region" aria-label="오늘의 학습 목표">' +
                         '<p class="lo-label">[오늘의 학습 목표]</p>' +
-                        '<p class="lo-text">IRP 계좌의 핵심 특징 3가지(퇴직금 의무 이전, 세액공제, 과세이연)를 찾고, 세금을 미루는 것이 장기적으로 자산에 미치는 마법(복리 효과)을 설명할 수 있습니다.</p>' +
+                        '<p class="lo-text">같은 가상 원금과 수익률에서 공제 시점이 복리 결과에 미치는 차이를 식으로 설명할 수 있습니다. 이 모형의 수치는 실제 IRP 세율·한도나 미래 수익을 뜻하지 않습니다.</p>' +
                     '</div>' +
                     '<div class="question-box">' +
                         '<h1 class="hook-question">' + question + '</h1>' +
@@ -145,7 +145,7 @@ class EduFlixEngine {
         this.createScene('core', (scene) => {
             scene.innerHTML =
                 '<h2 class="scene-title">IRP 시간 여행 시뮬레이터</h2>' +
-                '<div class="scene-text">퇴직금을 넣고, 추가 납입으로 세액공제를 받은 뒤, 30년 뒤의 자산 탑을 비교해보세요!</div>' +
+                '<div class="scene-text">가상 원금 1,000만 원에 시작 시 한 번 추가한 금액을 두 모형에 똑같이 넣어요. 연 5%가 30년간 일정하고 이익의 10%를 공제한다고 가정합니다. 수수료·물가·손실은 반영하지 않으며 실제 수익은 보장되지 않아요.</div>' +
                 '<div class="interactive-area" id="core-interactive-area"></div>';
         }, () => { if (this.data.interaction.onInit) this.data.interaction.onInit(document.getElementById('core-interactive-area'), this); },
         () => {
@@ -163,9 +163,9 @@ class EduFlixEngine {
                 '<h1 class="scene-title">은퇴 설계도 완성!</h1>' +
                 '<div class="wrap-summary">' +
                     '<span class="wrap-badge">★ IRP 마스터 ★</span>' +
-                    '<p class="scene-text">IRP의 3가지 마법(의무 이전, 세액공제, 과세이연)을 마스터했습니다!</p>' +
+                    '<p class="scene-text">같은 원금·수익률·기간에서 공제 시점만 바꾸어 비교했습니다.</p>' +
                     '<h3>오늘의 학습</h3>' +
-                    '<p>미뤄둔 세금이 복리로 굴러가 장기적으로 엄청난 자산을 만듭니다.</p>' +
+                    '<p>이 모형은 매년 공제하면 P × (1 + 0.05 × 0.9)³⁰, 마지막에 이익을 공제하면 P + (P × 1.05³⁰ − P) × 0.9로 계산해요. 수익률이 0%라면 두 결과가 왜 같은지 설명해 보세요.</p>' +
                 '</div>' +
                 '<div style="display:flex; gap:15px;">' +
                     '<button class="btn btn-secondary-large" id="wrap-restart-btn" tabindex="0">다시하기</button>' +
@@ -324,27 +324,38 @@ window.Engine = new EduFlixEngine();
    Content Code
    ======================================== */
 
+function calculateModelComparison(principal, rate, years, deductionRate) {
+    if (![principal, rate, years, deductionRate].every(Number.isFinite) || principal < 0 || rate < 0 || !Number.isInteger(years) || years < 0 || deductionRate < 0 || deductionRate > 1) {
+        throw new RangeError('Invalid model assumptions');
+    }
+    return {
+        principal,
+        annual: principal * Math.pow(1 + rate * (1 - deductionRate), years),
+        deferred: principal + (principal * Math.pow(1 + rate, years) - principal) * (1 - deductionRate)
+    };
+}
+
 const irpData = {
     title: "시간 여행 자산 시뮬레이터",
     hook: {
         question: "30년 뒤 미래의 나의 지갑은 어떤 모습일까요?",
         subText: "두 지갑을 클릭하여 안을 확인해 보세요!",
         onInit: (scene) => {
-            let checked = 0;
+            const checked = new Set();
             const checkCompletion = () => {
-                if(checked === 2) Engine.enableNext('hook');
+                if(checked.size === 2) Engine.enableNext('hook');
             };
 
             const emptyWallet = document.getElementById('btn-empty-wallet');
             const richWallet = document.getElementById('btn-rich-wallet');
 
             emptyWallet.onclick = () => {
-                Engine.showFeedback("아차, 텅 비어 있네요! 어떤 선택이 이런 결과를 만들었을까요?", "neutral");
-                checked++; checkCompletion();
+                Engine.showFeedback("이 지갑은 이야기 속 그림이에요. 실제 자산은 여러 조건에 따라 달라져요.", "neutral");
+                checked.add("empty"); checkCompletion();
             };
             richWallet.onclick = () => {
-                Engine.showFeedback("와, 엄청난 자산입니다! 이 지갑의 비밀을 알아보러 가요.", "positive");
-                checked++; checkCompletion();
+                Engine.showFeedback("이번에는 같은 가상 원금을 두 모형에 넣어 계산 조건의 영향을 살펴봐요.", "positive");
+                checked.add("rich"); checkCompletion();
             };
 
             /* Q21: tabindex 요소에 대한 키보드 이벤트 핸들러 */
@@ -359,7 +370,7 @@ const irpData = {
         }
     },
     story: {
-        situation: "안녕하세요! 시간 여행 가이드 로봇 포인터입니다.<br>제 옆에 있는 이 거대한 기계가 바로 IRP(개인형 퇴직연금) 머신입니다.<br>이 기계는 퇴직금을 모아 세금 혜택이라는 마법을 부여해 장기적으로 자산을 키워준답니다.<br><br><strong>IRP 머신을 작동시켜 볼까요?</strong>",
+        situation: "안녕하세요! 시간 여행 가이드 로봇 포인터입니다.<br>제 옆에 있는 이 거대한 기계가 바로 IRP(개인형 퇴직연금) 머신입니다.<br>IRP에서 다루는 과세 시점을 계기로, 공제를 미루면 계산 결과가 어떻게 달라지는지 가상 모형으로 비교해요. 세액공제는 낼 세액을 줄이는 개념이고, 과세이연은 과세 시점을 미루는 개념이므로 서로 달라요. 실제 제도의 적용 조건은 이 모형에서 다루지 않아요.<br><br><strong>IRP 머신을 작동시켜 볼까요?</strong>",
         onInit: (scene) => {
             const btn = document.getElementById('story-next-btn');
             btn.onclick = () => Engine.nextScene();
@@ -379,10 +390,11 @@ const irpData = {
             container.innerHTML =
                 '<div class="three-container" id="three-canvas"></div>' +
                 '<div class="control-panel">' +
+                    '<p id="model-result" role="status">같은 가상 원금을 넣고 결과를 비교해 보세요.</p>' +
                     '<div class="status-grid">' +
-                        '<button class="action-btn" id="btn-move-coin" tabindex="0">1. 퇴직금 IRP로 이동하기</button>' +
+                        '<button class="action-btn" id="btn-move-coin" tabindex="0">1. 두 모형에 가상 원금 넣기</button>' +
                         '<div class="slider-group">' +
-                            '<label for="slider-contribution">2. 추가 납입액 (세액공제)</label>' +
+                            '<label for="slider-contribution">2. 시작 시 한 번 추가 (두 모형 동일)</label>' +
                             '<input type="range" id="slider-contribution" min="0" max="900" value="0" step="100" disabled tabindex="0" aria-label="추가 납입액 슬라이더">' +
                             '<span class="slider-value" id="val-contribution">0만 원</span>' +
                         '</div>' +
@@ -455,22 +467,22 @@ const irpData = {
                 return sprite;
             };
 
-            const genLabel = createTextSprite('일반 계좌', '#2196f3');
+            const genLabel = createTextSprite('매년 공제 모형', '#2196f3');
             genLabel.position.set(-3, 4.5, 0);
             tScene.add(genLabel);
 
-            const irpLabel = createTextSprite('IRP 계좌', '#7C4DFF');
+            const irpLabel = createTextSprite('마지막 공제 모형', '#7C4DFF');
             irpLabel.position.set(3, 4.5, 0);
             tScene.add(irpLabel);
 
             // Assets (Coins Stacks)
             const assetMat = new THREE.MeshStandardMaterial({ color: 0xffc107, metalness: 0.5, roughness: 0.3 });
-            const generalAsset = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 0.1, 32), assetMat);
+            const generalAsset = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 1, 32), assetMat);
             generalAsset.position.set(-3, 0.05, 0);
             generalAsset.scale.y = 0.1;
             tScene.add(generalAsset);
 
-            const irpAsset = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 0.1, 32), assetMat);
+            const irpAsset = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 1, 32), assetMat);
             irpAsset.position.set(3, 0.05, 0);
             irpAsset.scale.y = 0.1;
             tScene.add(irpAsset);
@@ -531,8 +543,9 @@ const irpData = {
                 targetGenH = 1.0;
 
                 setTimeout(() => {
-                    Engine.showFeedback("퇴직금을 IRP로 의무 이전했습니다! (일반 계좌에도 가상으로 설정했습니다)", "positive");
+                    Engine.showFeedback("두 모형에 같은 가상 원금 1,000만 원을 넣었어요. 추가 금액이 0이어도 비교할 수 있어요.", "positive");
                     slider.disabled = false;
+                    btnTime.disabled = false;
                 }, 1000);
             };
 
@@ -540,17 +553,17 @@ const irpData = {
                 const val = parseInt(e.target.value);
                 document.getElementById('val-contribution').textContent = val + '만 원';
 
-                targetIrpH = 1.0 + (val / 900) * 0.5;
+                targetIrpH = targetGenH = (1000 + val) / 1000;
 
                 if(val === 900) {
-                    Engine.showFeedback("최대 한도(900만 원) 납입! 세금 환급(세액공제) 코인을 받았습니다.", "positive");
+                    Engine.showFeedback("연습용 슬라이더의 최대값 900만 원을 두 모형에 더했어요. 법정 한도를 뜻하지 않아요.", "positive");
                     btnTime.disabled = false;
                 } else if (val > 0) {
-                    Engine.showFeedback("세금을 돌려받는 '세액공제' 혜택이 적용되고 있습니다.", "neutral");
+                    Engine.showFeedback("추가한 가상 금액도 두 모형에서 같은 기간 동안 계산해요.", "neutral");
                     btnTime.disabled = false;
                 } else {
-                    Engine.showFeedback("슬라이더를 움직여 IRP에 추가 납입을 해보세요.", "neutral");
-                    btnTime.disabled = true;
+                    Engine.showFeedback("추가 납입 없이 가상 원금 1,000만 원으로 비교해요.", "neutral");
+                    btnTime.disabled = false;
                 }
             };
 
@@ -560,13 +573,15 @@ const irpData = {
                 btnTime.disabled = true;
                 slider.disabled = true;
 
-                Engine.showFeedback("30년 시간 경과 중... 세금을 미뤄둔 IRP의 복리 마법!", "neutral");
+                Engine.showFeedback("같은 조건으로 30년 복리 계산 중입니다. 결과는 가정에 따라 달라져요.", "neutral");
 
-                targetGenH = 2.5;
-                targetIrpH = 7.5;
+                const result = calculateModelComparison(1000 + Number(slider.value), 0.05, 30, 0.1);
+                targetGenH = result.annual / 1000;
+                targetIrpH = result.deferred / 1000;
+                document.getElementById("model-result").textContent = `원금 ${result.principal.toLocaleString()}만 원 · 매년 공제 ${result.annual.toFixed(1)}만 원 · 마지막 공제 ${result.deferred.toFixed(1)}만 원 · 차이 ${(result.deferred - result.annual).toFixed(1)}만 원`;
 
                 setTimeout(() => {
-                    Engine.showFeedback("와! IRP 계좌의 자산이 일반 계좌보다 훨씬 크게 자랐어요!", "positive");
+                    Engine.showFeedback("가상 계산이 끝났어요. 두 모형의 차이를 확인하고, 공제 시점이 달라지면 재투자되는 이익이 어떻게 달라지는지 설명해 보세요.", "positive");
                     Engine.enableNext('core');
                 }, 2000);
             };
@@ -622,40 +637,28 @@ const irpData = {
     },
     quiz: [
         {
-            prompt: "IRP 계좌는 세금 혜택을 주는데, 세액공제를 받으면 세금을 어떻게 되는 것일까요?",
-            choices: [
-                { id: "A", text: "평생 세금을 완전히 면제받는다." },
-                { id: "B", text: "세금의 일부를 영원히 국가가 부담해 준다." },
-                { id: "C", text: "세금을 나중(연금 수령 시)으로 미뤄두는 것이다." }
-            ],
-            correctChoiceId: "C",
-            correctFeedback: "IRP는 세금을 면제해주는 것이 아니라, 나중으로 미뤄주는 과세이연 효과를 줍니다.",
-            incorrectFeedback: "세금이 완전히 사라지는 것은 아니랍니다.",
-            hint: "30년 뒤 시뮬레이션에서 자산 탑이 커졌던 이유(복리)를 떠올려 보세요."
-        },
-        {
-            prompt: "퇴직금을 받았을 때, IRP 계좌로 이전하지 않고 전액 현금으로 당장 빼서 쓰면 어떻게 될까요?",
-            choices: [
-                { id: "A", text: "퇴직소득세가 즉시 부과되어 세금 폭탄을 맞는다." },
-                { id: "B", text: "국가에서 세금을 더 많이 돌려준다." },
-                { id: "C", text: "아무런 세금도 내지 않는다." }
-            ],
-            correctChoiceId: "A",
-            correctFeedback: "퇴직금을 바로 현금으로 받으면 거대한 퇴직소득세 벽돌을 즉시 맞게 됩니다.",
-            incorrectFeedback: "아닙니다. 당장 빼면 오히려 세금이 더 많이 나갈 수 있어요.",
-            hint: "IRP 머신을 이용하지 않으면, 거대한 세금 벽돌이 코인을 깎아먹게 됩니다."
-        },
-        {
-            prompt: "IRP 계좌에 돈을 넣어 연말정산 때 세금을 돌려받고 싶습니다. 한도에 대해 올바른 설명은?",
-            choices: [
-                { id: "A", text: "무한히 넣는 대로 전액 세금을 돌려받는다." },
-                { id: "B", text: "매년 정해진 한도(예: 900만 원)까지만 세액공제 혜택을 받을 수 있다." },
-                { id: "C", text: "돈을 넣을수록 나중에 세금을 전혀 내지 않아도 된다." }
-            ],
+            prompt: "가상 원금 100만 원이 연 5%로 2년간 복리 증가하면 공제 전 금액은?",
+            choices: [{ id: "A", text: "110만 원" }, { id: "B", text: "110.25만 원" }, { id: "C", text: "105만 원" }],
             correctChoiceId: "B",
-            correctFeedback: "정확합니다! IRP 추가 납입에 따른 세액공제 한도는 연 900만 원입니다.",
-            incorrectFeedback: "틀렸어요. 한도는 존재합니다.",
-            hint: "슬라이더를 끝까지 올리려 하면 삐빅 소리가 나며 멈추던 게이지를 기억하나요?"
+            correctFeedback: "100 × 1.05 × 1.05 = 110.25만 원입니다. 둘째 해에는 첫해 이익도 함께 증가해요.",
+            incorrectFeedback: "복리는 두 번째 해에 원금과 첫해 이익을 함께 계산해요.",
+            hint: "첫해 105만 원에 다시 1.05를 곱해 보세요."
+        },
+        {
+            prompt: "공제 시점의 영향만 비교하려면 무엇을 같게 해야 할까요?",
+            choices: [{ id: "A", text: "원금, 납입 시점, 수익률, 기간, 공제율" }, { id: "B", text: "탑의 색깔만" }, { id: "C", text: "한쪽에 넣는 돈을 더 크게" }],
+            correctChoiceId: "A",
+            correctFeedback: "다른 조건을 같게 해야 공제 시점 때문에 생긴 차이를 비교할 수 있어요.",
+            incorrectFeedback: "원금이나 수익률도 바꾸면 무엇 때문에 차이가 났는지 알기 어려워요.",
+            hint: "비교하려는 조건 하나만 다르게 두세요."
+        },
+        {
+            prompt: "이 가상 계산으로 알 수 있는 것은 무엇인가요?",
+            choices: [{ id: "A", text: "실제 IRP의 30년 뒤 수익을 보장한다." }, { id: "B", text: "정해 둔 가정 아래 복리 결과의 차이를 계산한다." }, { id: "C", text: "실제 세금과 수수료가 모두 반영되어 있다." }],
+            correctChoiceId: "B",
+            correctFeedback: "수익률·수수료·제도 조건은 실제와 다를 수 있어요. 이 결과는 가정에 따른 수학 모형입니다.",
+            incorrectFeedback: "이 활동의 5%와 10%는 가상 수치이며 실제 수익이나 세율을 뜻하지 않아요.",
+            hint: "모형의 가정과 현실을 구분하세요."
         }
     ]
 };

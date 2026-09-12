@@ -1,0 +1,27 @@
+[p1 "시간 여행 자산 시뮬레이터: 30년 뒤 나의 지갑은?" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "시간 여행 자산 시뮬레이터: 30년 뒤 나의 지갑은?"]
+root
+  progressindicator "학습 진행도"
+    container
+      text "1"
+      text "2"
+      text "3"
+      text "4"
+      text "5"
+  container
+    heading
+      text "IRP 시간 여행 시뮬레이터"
+    text "가상 원금 1,000만 원에 시작 시 한 번 추가한 금액을 두 모형에 똑같이 넣어요. 연 5%가 30년간 일정하고 이익의 10%를 공제한다고 가정합니다. 수수료·물..."
+    container
+      canvas
+      container
+        status
+          text "같은 가상 원금을 넣고 결과를 비교해 보세요."
+        container
+          button [ref=1]
+            text "1. 두 모형에 가상 원금 넣기"
+          container
+            text "2. 시작 시 한 번 추가 (두 모형 동일)"
+            spinbutton "추가 납입액 슬라이더" [ref=2, loc=css:input[aria-label="추가 납입액 슬라이더"]]
+            text "0만 원"
+          button [ref=3]
+            text "3. 30년 후로 시간 이동!"

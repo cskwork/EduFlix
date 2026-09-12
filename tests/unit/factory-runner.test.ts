@@ -49,6 +49,17 @@ async function fixture() {
 }
 
 describe('웹 팩토리 runner', () => {
+  it('passes actual grade, independent difficulty and requested content type into planning', async () => {
+    const { rootDir, releasePlan, stages } = await fixture()
+    let received: FactoryContext | undefined
+    const plan = stages.plan
+    stages.plan = async context => { received = { ...context }; await plan(context) }
+    const runner = new FactoryRunner({ rootDir, stages })
+    const job = runner.startGeneration({ mode: 'problem', problem: '분수를 함께 비교해 보자', subject: 'math', grade: 'elementary-1', difficulty: 'hard', contentType: 'quiz', language: 'ko' })
+    releasePlan()
+    await runner.waitForJob(job.jobId)
+    expect(received).toMatchObject({ grade: 'elementary-1', difficulty: 'hard', type: 'quiz' })
+  })
   it('임시 run 뒤 plan slug를 안전한 중복 접미사 ID로 확정하고 preview/manifest를 제공한다', async () => {
     const { rootDir, releasePlan, stages, getTemporaryId, setObserver } = await fixture()
     const runner = new FactoryRunner({ rootDir, stages })

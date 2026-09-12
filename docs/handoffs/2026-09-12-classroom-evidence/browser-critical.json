@@ -1,0 +1,162 @@
+[
+  {
+    "id": "fraction-division",
+    "scope": "actual drag full distribution, reset, reentry drag",
+    "balanced": {
+      "p1": "3/8",
+      "p2": "3/8",
+      "feedback": "각자 1/8 조각 3개를 받았으므로 한 판의 3/8씩입니다.3/8 + 3/8 = 6/8 = 3/4로 처음 양과 같은지도 확인하세요.",
+      "nextHidden": false
+    },
+    "reset": {
+      "p1": "0/8",
+      "p2": "0/8",
+      "placed": 0
+    },
+    "reentry": {
+      "p2": "1/8",
+      "placed": 1
+    },
+    "screenshot": "/tmp/eduflix-content-audit/fraction-balanced.png"
+  },
+  {
+    "id": "chemical-reactor",
+    "scope": "real reagent clicks and neutralization guard",
+    "alone": {
+      "ph": "7.0",
+      "nextDisplay": "none",
+      "feedback": ""
+    },
+    "mixed": {
+      "ph": "7.0",
+      "nextDisplay": "block",
+      "feedback": "같은 몰수의 HCl과 NaOH가 중화되었습니다. 이 강산·강염기 모형은 25°C에서 pH 7입니다. 약산·약염기는 같지 않을 수 있습니다.",
+      "bubbles": "none"
+    },
+    "screenshot": "/tmp/eduflix-content-audit/chemical-neutral.png"
+  },
+  {
+    "id": "chemical-reactor-classic-quiz",
+    "scope": "two-question wrong/correct and manual final progression",
+    "first": {
+      "text": "정답을 확인하세요. 25°C에서 중성인 물의 pH는 7이며, 산성 수용액의 pH는 7보다 작습니다. pH는 수소 이온 농도의 로그 척도입니다.",
+      "disabled": true,
+      "scene": "scene-quiz"
+    },
+    "second": {
+      "question": "산성과 염기성이 만나 물과 염이 생성되는 반응은?",
+      "feedback": "정답입니다. HCl과 NaOH의 중화에서는 물과 염이 생깁니다. 두 시약만의 반응으로 기체가 발생하지 않습니다."
+    },
+    "wrap": "scene-wrap",
+    "screenshot": "/tmp/eduflix-content-audit/classic-quiz-feedback.png"
+  },
+  {
+    "id": "python-list-comprehension-factory",
+    "scope": "actual rejected2 first, then0/1/2 lever runs",
+    "rejected": {
+      "feedback": "range(3)는 순서대로 0, 1, 2를 만듭니다. 지금은 0을(를) 넣으세요.",
+      "leverDisabled": true,
+      "used": 0,
+      "result": []
+    },
+    "result": {
+      "cards": [
+        "0",
+        "2",
+        "4"
+      ],
+      "feedback": "멋지게 리스트 [0, 2, 4]가 완성되었어요! 대괄호 상자 안에 잘 모였네요."
+    },
+    "screenshot": "/tmp/eduflix-content-audit/python-list-complete.png"
+  },
+  {
+    "id": "angles-rocket-mobile",
+    "scope": "390px render and real touch Hook→Anchor→Story",
+    "observed": "Touch input transitioned scenes; mouse input did not. Story typing progressed slowly in this browser. No quiz completion claim.",
+    "limit": "Quiz feedback/next at390px not yet verified; no public skip control.",
+    "screenshots": [
+      "/tmp/eduflix-content-audit/angles-touch.png",
+      "/tmp/eduflix-content-audit/angles-story-button.png"
+    ]
+  },
+  {
+    "id": "angles-rocket-mobile-quiz",
+    "scope": "focused setup to existing QuizScene, not natural full-flow",
+    "viewport": 390,
+    "actions": [
+      "CDP query existing scene instance; scene.start QuizScene",
+      "real touch observed 둔각 option",
+      "wait camera fade/flash complete",
+      "real touch 해설 확인·정리"
+    ],
+    "observed": "Korean explanation and continue button fully visible inside390px screenshot; touch reached WrapScene",
+    "scene": [
+      "WrapScene"
+    ],
+    "screenshot": "/tmp/eduflix-content-audit/angles-mobile-feedback-ready.png"
+  },
+  {
+    "id": "phonics-3d-playground",
+    "scope": "retest actual start overlay button",
+    "classification": "batch selected underlying Learn control; actual Start Learning succeeds",
+    "state": {
+      "startDisplay": "none",
+      "text": "📊\nProgress:\n1\n/26\n🔊\nSounds:\n0\n⭐\nScore:\n0\n📖 Learn 🎯 Quiz\nVOWEL\nA\n/æ/ as in \"cat\"\n🔊\nPlay Sound\n🍎\napple\n🐜\nant\n🐊\nalligator\n← Previous\nNext →",
+      "canvas": 1
+    }
+  },
+  {
+    "id": "spelling-bee-arena",
+    "scope": "actual start overlay button",
+    "classification": "batch selected underlying Play Sound; actual Start Competition succeeds",
+    "state": {
+      "startDisplay": "none",
+      "text": "🐝\n🐝\n🏆\nScore:\n0\n❤️\nLives:\n3\n🔥\nStreak:\n0\n📝\nWord:\n1\n/\n15\nNOUN\nA person who lives near you\nQ\nW\nE\nR\nT\nY\nU\nI\nO\nP\nA\nS\nD\nF\nG\nH\nJ\nK\nL\nZ\nX\nC\nV\nB\nN\nM\n⌫\n🔊 Play Sound\n💡 Hint (3)"
+    }
+  },
+  {
+    "id": "mario-country-quiz",
+    "scope": "actual screenshot-grounded mouse start after selector failure",
+    "classification": "DOM selector path repeatedly detached; direct observed pointer starts lesson",
+    "state": {
+      "text": "MARIO\n000000\nWORLD\n1-1\nTIME\n120\n♥ 3\n🪙 x 00\n\nQUESTION 1/10\n\n튤립과 풍차의 나라로\n불리는 곳은?\n\n?\n1\n독일\n?\n2\n벨기에\n?\n3\n덴마크\n?\n4\n네덜란드\n\n이동: ← → | 점프: 스페이스바/↑ | 파이프 입장: 파이프 위로 점프!\n\n정답 블럭을 머리로 치세요! 오답이면 굼바가 나타납니다."
+    },
+    "screenshot": "/tmp/eduflix-content-audit/mario-start.png"
+  },
+  {
+    "id": "world-quiz-battle",
+    "scope": "empty src fix, real reload/start/select attempt",
+    "classification": "fresh batch errors=[] after four empty src removed; image readiness10s timed out",
+    "observed": {
+      "text": "TANJIRO\n0\nGOJO\nROUND 1 / 10\n프랑스의 수도는 어디일까요?\n\n정답: 파리. 파리는 프랑스의 수도이며 런던은 영국의 수도입니다.\n\n해설을 읽었어요. 다음 문제",
+      "images": [
+        {
+          "id": "p1-portrait",
+          "src": "https://i.imgur.com/f5A8RgG.png",
+          "width": 0,
+          "complete": true
+        },
+        {
+          "id": "p2-portrait",
+          "src": "https://i.imgur.com/0hYV1Mj.png",
+          "width": 0,
+          "complete": true
+        },
+        {
+          "id": "p1-hp-bg",
+          "src": "https://i.imgur.com/f5A8RgG.png",
+          "width": 0,
+          "complete": true
+        },
+        {
+          "id": "p2-hp-bg",
+          "src": "https://i.imgur.com/0hYV1Mj.png",
+          "width": 0,
+          "complete": true
+        }
+      ],
+      "screen": "screen-battle"
+    },
+    "limit": "portrait readiness only as observed, no all-four-ready claim"
+  }
+]

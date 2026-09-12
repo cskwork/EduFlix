@@ -1,0 +1,17 @@
+[p1 "도형 탐험가" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "도형 탐험가"]
+root
+  container
+    heading
+      text "네모, 세모, 동그라미... 이름이 뭘까요?"
+    paragraph
+      text "주변에서 찾을 수 있는 모양들이에요!"
+    paragraph
+      text "학습 목표: 변과 꼭짓점의 수로 다각형을 분류하고 원과 구별해요."
+  svg_root "3 4 5 0 변의 개수가 이름이 돼요!"
+    text "3"
+    text "4"
+    text "5"
+    text "0"
+    text "변의 개수가 이름이 돼요!"
+  button [ref=1]
+    text "시작하기"

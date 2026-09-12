@@ -1,0 +1,28 @@
+[p1 "피타고라스의 정리" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "피타고라스의 정리"]
+root
+  heading
+    text "직각삼각형 탐구"
+  text "파란 점을 움직여 두 직각변의 길이를 바꾸세요. a², b², c²를 세 번 기록하고 합을 비교하세요. 그림을 관찰한 결과와 모든 직각삼각형에 대한 증명은 ..."
+  container
+    svg_root "a=3 b=4 c=5.0"
+      text "a=3"
+      text "b=4"
+      text "c=5.0"
+    container
+      container
+        text "a² ="
+        text "9"
+      container
+        text "b² ="
+        text "16"
+      container
+        text "c² ="
+        text "25"
+    container
+      text "9"
+      text "+"
+      text "16"
+      text "="
+      text "25"
+    button [ref=1]
+      text "확인했습니다!"

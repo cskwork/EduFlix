@@ -1,0 +1,10 @@
+[p1 "세포 탐험" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "세포 탐험"]
+root
+  heading
+    text "세포 관찰하기"
+  text "동물 세포의 핵·미토콘드리아·리보솜을 찾아 기능을 비교해 보세요. 그림은 크기와 개수를 단순화한 모형입니다. 식물 세포에도 이 소기관이 있습니�..."
+  container
+    heading
+      text "미토콘드리아 (Mitochondria)"
+    paragraph
+      text "세포 호흡을 통해 양분의 화학 에너지를 세포가 쓰기 쉬운 ATP 형태로 전환해요."

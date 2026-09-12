@@ -815,13 +815,13 @@
                 { word: "adventure", type: "Noun", definition: "An exciting and unusual experience", hint: "It starts with 'A' and has 9 letters" },
                 { word: "beautiful", type: "Adjective", definition: "Having qualities that delight the senses", hint: "Describes something pretty, ends with '-ful'" },
                 { word: "chocolate", type: "Noun", definition: "A sweet brown food made from cocoa beans", hint: "A yummy treat that's brown" },
-                { word: "dinosaur", type: "Noun", definition: "A large reptile that lived millions of years ago", hint: "T-Rex was one of these!" },
+                { word: "dinosaur", type: "Noun", definition: "A member of the dinosaur group; many extinct kinds lived millions of years ago", hint: "T-Rex was one of these!" },
                 { word: "elephant", type: "Noun", definition: "A very large mammal with a trunk", hint: "Biggest land animal, starts with 'E'" },
                 { word: "fantastic", type: "Adjective", definition: "Extraordinarily good or attractive", hint: "Another word for amazing" },
                 { word: "giraffe", type: "Noun", definition: "A tall African animal with a very long neck", hint: "Tallest animal, has two 'f's" },
                 { word: "happiness", type: "Noun", definition: "The state of being happy", hint: "How you feel when smiling, ends with '-ness'" },
                 { word: "imagine", type: "Verb", definition: "To form a mental picture of something", hint: "To dream or picture something" },
-                { word: "jungle", type: "Noun", definition: "A forest in a tropical area with lots of trees", hint: "Where Tarzan lives" },
+                { word: "jungle", type: "Noun", definition: "A forest in a tropical area with lots of trees", hint: "A dense tropical forest" },
                 { word: "knowledge", type: "Noun", definition: "Facts and information learned through experience", hint: "Silent 'k' at the start" },
                 { word: "library", type: "Noun", definition: "A place where books are kept for reading", hint: "Where you borrow books" },
                 { word: "mountain", type: "Noun", definition: "A large natural elevation of the earth", hint: "Tall landform you can climb" },
@@ -848,7 +848,7 @@
                 { word: "extraordinary", type: "Adjective", definition: "Very unusual or remarkable", hint: "Extra + ordinary" },
                 { word: "fascinating", type: "Adjective", definition: "Extremely interesting", hint: "Super interesting" },
                 { word: "government", type: "Noun", definition: "The group that rules a country", hint: "Who makes the laws" },
-                { word: "independent", type: "Adjective", definition: "Not depending on others", hint: "Does things alone" },
+                { word: "independent", type: "Adjective", definition: "Able to act or decide without being controlled by others", hint: "Can make their own decisions" },
                 { word: "mysterious", type: "Adjective", definition: "Difficult to understand or explain", hint: "Full of mystery" },
                 { word: "responsible", type: "Adjective", definition: "Having a duty to do something", hint: "You can be counted on" }
             ]
@@ -1319,6 +1319,8 @@
         }
 
         function checkSpelling(timeout = false) {
+            if (document.getElementById('next-btn').style.display === 'block') return;
+            if (document.getElementById('next-btn').style.display === 'block') return;
             clearInterval(timerInterval);
 
             const wordData = currentWords[currentWordIndex];
@@ -1367,6 +1369,10 @@
             document.getElementById('score').textContent = score;
             document.getElementById('lives').textContent = lives;
             document.getElementById('streak').textContent = streak;
+
+            feedback.textContent += ` ${wordData.word}: ${wordData.definition}. Spelling clue: ${wordData.hint}`;
+
+            feedback.textContent += ` ${wordData.word}: ${wordData.definition}. Spelling clue: ${wordData.hint}`;
 
             // Show correct word
             document.getElementById('word-to-spell').textContent = wordData.word;

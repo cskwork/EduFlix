@@ -64,7 +64,7 @@ class EduFlixEngine {
                 <div class="hook-content">
                     <div class="question-box">
                         <h1 class="hook-question">${question}</h1>
-                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}<p class="scene-text">학습 목표: ${this.data.objective}</p>
                     </div>
                     ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
                     <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
@@ -75,7 +75,7 @@ class EduFlixEngine {
 
         this.createScene('story', (scene) => {
             const { character, situation } = this.data.story;
-            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
+            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}<br><br>${this.data.workedExample}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
         });
 
         this.createScene('core', (scene) => {
@@ -89,7 +89,7 @@ class EduFlixEngine {
         }
 
         this.createScene('wrap', (scene) => {
-            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
+            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3><p class="scene-text">${this.data.reflection}</p></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
         });
     }
 
@@ -127,31 +127,46 @@ class EduFlixEngine {
         if(btn) { btn.style.display = 'inline-block'; btn.classList.add('animate-fade-in'); }
     }
 
-    startQuiz() {
-        const q = this.data.quiz[0];
-        document.getElementById('quiz-question').textContent = q.question;
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = '';
-        q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
-            optsContainer.appendChild(btn);
+    startQuiz(index = 0) {
+        this.quizIndex = index;
+        const q = this.data.quiz[index];
+        const question = document.getElementById('quiz-question');
+        question.textContent = `${index + 1} / ${this.data.quiz.length} · ${q.question}`;
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        q.options.forEach((option, selected) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quiz-option';
+            button.textContent = option;
+            button.onclick = () => this.checkQuiz(selected, q.answer, button);
+            container.appendChild(button);
         });
+        const feedback = document.createElement('p');
+        feedback.id = 'quiz-explanation';
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        container.appendChild(feedback);
     }
 
-    checkQuiz(selectedIdx, correctIdx, btnElement) {
-        const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+    checkQuiz(selected, answer, button) {
+        const container = document.getElementById('quiz-options');
+        const options = container.querySelectorAll('.quiz-option');
+        if (button.disabled) return;
+        options.forEach(option => { option.disabled = true; });
+        button.classList.add(selected === answer ? 'correct' : 'incorrect');
+        options[answer].classList.add('correct');
+        document.getElementById('quiz-explanation').textContent =
+            (selected === answer ? '정답입니다. ' : '답을 비교해 보세요. ') + this.data.quiz[this.quizIndex].explanation;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '해설을 읽었어요 · 다음 문항' : '해설을 읽었어요 · 정리하기';
+        next.onclick = () => {
+            if (this.quizIndex + 1 < this.data.quiz.length) this.startQuiz(this.quizIndex + 1);
+            else this.nextScene();
+        };
+        container.appendChild(next);
     }
 }
 
@@ -166,9 +181,12 @@ window.Engine = new EduFlixEngine();
  */
 
 const vectorData = {
+    objective: "벡터의 같은 성분끼리 더해 합력을 구하고 힘과 속도를 구별해요.",
+    workedExample: "A=(2,3,1), B=(1,−1,2)이면 A+B=(3,2,3)입니다. y성분은 3+(−1)=2로 서로 일부 상쇄됩니다. 합력은 가속도 방향을 정하며, 이미 움직이는 물체의 순간 속도 방향과 반드시 같지는 않습니다.",
+    reflection: "합력이 0이면 우주선은 반드시 멈출까요? 외력이 모두 상쇄되면 속도가 변하지 않는다는 조건으로 정지와 등속 운동을 함께 설명하세요.",
     title: "3D 벡터: 힘의 합성",
     hook: {
-        question: "우주에서 로켓에 여러 방향으로 힘이 가해지면, 로켓은 어느 방향으로 움직일까요?",
+        question: "우주에서 로켓에 여러 방향으로 힘이 가해지면, 로켓의 가속도는 어느 방향일까요?",
         subText: "두 힘을 합치면 어떤 방향이 될까요?",
         visual: {
             type: "svg",
@@ -205,11 +223,11 @@ const vectorData = {
     },
     story: {
         character: { image: "assets/character.svg" },
-        situation: "안녕하세요! 저는 물리학자 '뉴턴 박사'입니다.<br><br>오늘 우주선에 작용하는 두 힘을 합성해야 합니다!<br>3D 공간에서 벡터의 덧셈은 각 성분을 따로 더하면 된다는 것을 함께 발견해봅시다!"
+        situation: "안녕하세요! 저는 창작 안내자 '뉴턴 박사'입니다.<br><br>오늘 우주선에 작용하는 두 힘을 합성해야 합니다!<br>3D 공간에서 벡터의 덧셈은 각 성분을 따로 더하면 된다는 것을 함께 발견해봅시다!"
     },
     interaction: {
         title: "3D 벡터 합성",
-        instruction: "두 벡터 A와 B의 성분을 조절하고 합력 벡터를 관찰하세요!",
+        instruction: "A와 B의 각 성분을 바꿔 합벡터를 관찰하세요. B를 A의 반대벡터로 만들고 합이 영벡터가 되는지 확인하세요. 두 벡터의 크기만 더하는 방법과 성분을 더하는 방법을 비교하세요.",
         onInit: (container, engine) => {
             // 벡터 초기값
             let vecA = { x: 2, y: 1, z: 3 };
@@ -484,11 +502,27 @@ const vectorData = {
     },
     quiz: [
         {
-            question: "벡터 A = (2, 3, 1)과 B = (1, -1, 2)의 합 A + B는?",
-            options: ["(3, 2, 3)", "(1, 4, -1)", "(2, 2, 2)", "(3, 4, 3)"],
-            answer: 0
+                "question": "A=(2,3,1), B=(1,−1,2)의 합은?",
+                "options": [
+                        "(3,2,3)",
+                        "(1,4,−1)",
+                        "(2,2,2)",
+                        "(3,4,3)"
+                ],
+                "answer": 0,
+                "explanation": "같은 성분끼리 더하면 (2+1,3−1,1+2)=(3,2,3)입니다."
+        },
+        {
+                "question": "A=(2,−1,3)과 합쳐 영벡터가 되는 B는?",
+                "options": [
+                        "(2,1,3)",
+                        "(−2,1,−3)",
+                        "(−2,−1,3)"
+                ],
+                "answer": 1,
+                "explanation": "각 성분의 합이 0이어야 하므로 B는 A의 모든 성분 부호를 바꾼 (−2,1,−3)입니다."
         }
-    ]
+]
 };
 
 Engine.init(vectorData);

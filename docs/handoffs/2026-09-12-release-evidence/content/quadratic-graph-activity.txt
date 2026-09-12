@@ -1,0 +1,30 @@
+[p1 "이차함수 그래프" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "이차함수 그래프"]
+root
+  container [ref=1]
+    heading
+      text "파라볼라 실험실"
+    text "a=1, b=−4, c=3으로 설정하고 꼭짓점을 확인하세요. b와 c를 그대로 두고 a의 부호를 바꾸어 열린 방향을 비교하세요. a=0도 시험하고 이차항이 사라지는 �..."
+    container
+      container
+        text "y ="
+        text "1"
+        text "x²"
+        text "+ 0"
+        text "x"
+        text "+ 0"
+      svg_root
+      container
+        container
+          text "a"
+          spinbutton [ref=2]
+          text "1"
+        container
+          text "b"
+          spinbutton [ref=3]
+          text "0"
+        container
+          text "c"
+          spinbutton [ref=4]
+          text "0"
+      button [ref=5]
+        text "완료"

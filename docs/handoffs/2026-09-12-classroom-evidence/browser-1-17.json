@@ -1,0 +1,118 @@
+[
+  {
+    "id": "fraction-division",
+    "title": "분수의 나눗셈: 똑같이 나누기",
+    "buttons": [],
+    "beforeText": "",
+    "changed": false,
+    "afterText": "",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "ratio-proportion",
+    "title": "사이버 에이전트: 배합 해독 - 비와 비율",
+    "buttons": [],
+    "beforeText": "",
+    "changed": false,
+    "afterText": "",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "fraction-addition",
+    "title": "분수의 덧셈 - 서로 다른 분모 더하기",
+    "buttons": [
+      "알아보기"
+    ],
+    "beforeText": "사과 1개에 오렌지 1개를 더하면?\n🍎\n+\n🍊\n= ?\n\n그럼 1/2에 1/3을 더하면 그냥 2/5일까요?\n\n알아보기",
+    "changed": false,
+    "afterText": "사과 1개에 오렌지 1개를 더하면?\n🍎\n+\n🍊\n= ?\n\n그럼 1/2에 1/3을 더하면 그냥 2/5일까요?\n\n알아보기",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "platonic-solids",
+    "title": "정다면체 탐구: 5가지 완벽한 입체",
+    "start": "다음",
+    "buttons": [
+      "다음"
+    ],
+    "beforeText": "완벽한 입체는 몇 개일까?\n\n목표: 합동인 정다각형 면과 꼭짓점의 배열로 볼록 정다면체를 구별해요.\n\n이전\n다음\n\n3D 콘텐츠 로딩 중...",
+    "changed": true,
+    "afterText": "이미 알고 있는 정다각형\n\n정삼각형, 정사각형, 정오각형... 모든 변과 각이 같은 도형이지?\n\n이 도형들로만 입체를 만들면 어떨까?\n\n이전\n다음",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "volume-solids",
+    "title": "입체도형의 부피: 원기둥, 원뿔, 구",
+    "start": "다음",
+    "buttons": [
+      "다음"
+    ],
+    "beforeText": "같은 밑면·높이에서 부피는 몇 배일까?\n\n목표: 같은 반지름과 높이를 기준으로 원기둥과 원뿔의 부피를 비교해요.\n\n이전\n다음\n\n3D 콘텐츠 로딩 중...",
+    "changed": true,
+    "afterText": "이미 알고 있는 원의 넓이\nS = πr²\n\n이 원을 쌓아올리면 어떤 입체가 될까?\n\n이전\n다음",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "3d-coordinates",
+    "title": "공간좌표계: 3D 세계의 주소",
+    "start": "다음",
+    "buttons": [
+      "다음"
+    ],
+    "beforeText": "친구를 어디서 만날까?\n\n목표: 좌표의 순서를 지켜 위치를 지정하고 두 점의 거리를 구해요.\n\n이전\n다음\n\n3D 콘텐츠 로딩 중...",
+    "changed": true,
+    "afterText": "이미 알고 있는 평면좌표\n(x, y)\n\n이 화면은 x=가로, y=높이, z=깊이로 정합니다. 평면에서 공간으로 한 축을 더하면?\n\n(x, y, z)\n이전\n다음",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "angles-rocket",
+    "title": "사이버 에이전트: 로켓 발사각 - 각도의 이해",
+    "buttons": [],
+    "beforeText": "",
+    "changed": false,
+    "afterText": "",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "3d-geometry-explorer-donga",
+    "title": "3D 도형 탐험가 | 동아출판 수학",
+    "start": "탐험 시작!\n                🚀",
+    "buttons": [
+      "↺",
+      "↻",
+      "❓",
+      "💥",
+      "↻",
+      "탐험 시작!\n                🚀",
+      "출발하기!"
+    ],
+    "beforeText": "📐\n도형\n0/10\n⭐\n점수\n0\n🏆\n마스터\n0\n📐 도형 선택\n기본 도형\n플라톤 입체\n도형 이름\n면\n0\n모서리\n0\n꼭짓점\n0\n\n곡면 도형의 표에는 굽은 면과 원형 경계도 포함합니다. 다면체의 평평한 면·곧은 모서리와 구별하세요. 색이나 보는 방향을 바꾸어도 개수는 같을까요?\n\n오일러 공식\nV - E + F = 2\n↺\n↻\n❓\n💥\n↻\n🏆\n업적 달성!\n\n설명\n\n◼\n●\n⬡\n◆\n⬢\n⬡\n▲\n●\n▲\n⬢\n◆\n⬡\n▲\n⬢\n▲\n🎮 3D 도형 탐험가\n\n3차원 도형의 신비로운 세계를 탐험하세요! 면, 모서리, 꼭짓점을 배우고 퀴즈로 실력을 테스트해 보세요.\n\n탐험 시작!\n🚀\n🔄\n360° 회전\n모든 각도에서 도형을 관찰하세요\n🎨\n색상 변경\n다양한 색상으로 꾸며보세요\n📝\n퀴즈 도전\n배운 것을 테스트하세요\n도형의 조각들을 찾아줘!\n\n안녕! 난 우주 탐험가 고양이 '보라'야. 🐾\n\n우주선이 고장 났는데, 수리하려면 입체 도형의 면, 모서리, 꼭짓점 구조를 완벽하게 알아야 해!\n목표는 도형을 돌려 숨은 면까지 세는 것입니다. 정육면체는 위아래·앞뒤·좌우 6면입니다. 정육면체와 직육면체를 비교해 개수가 같은데 모양은 어떻게 다른지 말해 주세요.\n\n출발하기!",
+    "changed": true,
+    "afterText": "📐\n도형\n0/10\n⭐\n점수\n0\n🏆\n마스터\n0\n📐 도형 선택\n기본 도형\n플라톤 입체\n도형 이름\n면\n0\n모서리\n0\n꼭짓점\n0\n\n곡면 도형의 표에는 굽은 면과 원형 경계도 포함합니다. 다면체의 평평한 면·곧은 모서리와 구별하세요. 색이나 보는 방향을 바꾸어도 개수는 같을까요?\n\n오일러 공식\nV - E + F = 2\n↺\n↻\n❓\n💥\n↻\n🏆\n업적 달성!\n\n설명\n\n도형의 조각들을 찾아줘!\n\n안녕! 난 우주 탐험가 고양이 '보라'야. 🐾\n\n우주선이 고장 났는데, 수리하려면 입체 도형의 면, 모서리, 꼭짓점 구조를 완벽하게 알아야 해!\n목표는 도형을 돌려 숨은 면까지 세는 것입니다. 정육면체는 위아래·앞뒤·좌우 6면입니다. 정육면체와 직육면체를 비교해 개수가 같은데 모양은 어떻게 다른지 말해 주세요.\n\n출발하기!",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  }
+]

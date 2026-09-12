@@ -1,0 +1,131 @@
+[
+  {
+    "id": "cell-explorer",
+    "title": "세포 탐험",
+    "start": "시작하기",
+    "buttons": [
+      "시작하기"
+    ],
+    "beforeText": "우리 몸은 무엇으로 이루어져 있을까요?\n시작하기",
+    "changed": true,
+    "afterText": "현미경으로 마이크로 세계를 들여다보세요.\n세포 친구들이 각자의 역할을 소개하고 싶어 해요!\n다음",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "chemical-reactor",
+    "title": "화학 반응 시뮬레이터",
+    "start": "시작하기",
+    "buttons": [
+      "시작하기"
+    ],
+    "beforeText": "같은 양의 산과 염기를 섞으면 pH가 어떻게 달라질까요?\n시작하기",
+    "changed": true,
+    "afterText": "화학자는 미지의 용액을 연구하고 있습니다.\n안전하게 실험하여 용액의 성질을 밝혀내세요!\n다음",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "20260127-topic-105b382d",
+    "title": "영어 인사의 마법",
+    "start": "탐험 시작하기",
+    "buttons": [
+      "탐험 시작하기"
+    ],
+    "beforeText": "왜 우리는 시간마다 다르게 인사할까요?\n탐험 시작하기",
+    "changed": true,
+    "afterText": "우리는 무엇이라고 하나요?\n\n\"안녕하세요?\"\n\n언제든지 쓸 수 있는 마법의 말이죠!\n\n↓\n영어는 어떨까요?\n\n아침, 점심, 저녁에 따라\n사용하는 말이 달라요!\n\n어떻게 다를까요?",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "comparative-adjectives",
+    "title": "Who is Taller? Comparing with Adjectives",
+    "buttons": [
+      "비밀 알아보기"
+    ],
+    "beforeText": "bigger vs more beautiful\n\n\"bigger\"라고 하면서 왜 \"more beautifuler\"라고 하지 않을까요?\n\nsmall\nbigger!\nbig\n+\ner\n=\nbigger\nbeautiful\n+\ner\nX\n비밀 알아보기",
+    "changed": false,
+    "afterText": "bigger vs more beautiful\n\n\"bigger\"라고 하면서 왜 \"more beautifuler\"라고 하지 않을까요?\n\nsmall\nbigger!\nbig\n+\ner\n=\nbigger\nbeautiful\n+\ner\nX\n비밀 알아보기",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "modal-can",
+    "title": "I Can Do It! Talking About Abilities",
+    "buttons": [
+      "능력 표현 배우기"
+    ],
+    "beforeText": "What's Your Superpower?\n\n수퍼히어로들은 자기 능력을 어떻게 말할까요?\n\"I can fly!\" vs \"I can't swim.\"\n\nI can fly!\nI can't swim!\n능력 표현 배우기",
+    "changed": false,
+    "afterText": "What's Your Superpower?\n\n수퍼히어로들은 자기 능력을 어떻게 말할까요?\n\"I can fly!\" vs \"I can't swim.\"\n\nI can fly!\nI can't swim!\n능력 표현 배우기",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "present-tenses",
+    "title": "I play vs I'm playing: What's the Difference?",
+    "buttons": [
+      "차이점 알아보기"
+    ],
+    "beforeText": "언제 \"play\"하고 언제 \"playing\"할까?\n\n\"I play soccer\" vs \"I'm playing soccer\"\n둘 다 '축구한다'인데... 뭐가 다를까요?\n\nPast\nNOW\nFuture\n\"I play soccer\"\n항상, 매일, 습관적으로\n\"I'm playing soccer\"\n바로 지금 이 순간!\n차이점 알아보기",
+    "changed": false,
+    "afterText": "언제 \"play\"하고 언제 \"playing\"할까?\n\n\"I play soccer\" vs \"I'm playing soccer\"\n둘 다 '축구한다'인데... 뭐가 다를까요?\n\nPast\nNOW\nFuture\n\"I play soccer\"\n항상, 매일, 습관적으로\n\"I'm playing soccer\"\n바로 지금 이 순간!\n차이점 알아보기",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "will-vs-going-to-library",
+    "title": "도서관 가는 계획: will과 going to의 비밀",
+    "buttons": [
+      "알아보기 →"
+    ],
+    "beforeText": "🤔 같은 미래인데 왜 다르게 말할까?\n\n\"I'm going to visit the library tomorrow.\"\n\n친구 A\nVS\n\n\"Oh! I'll help you find books!\"\n\n친구 B\n?\n\n둘 다 미래를 말하는데 왜 표현이 다를까요?\n\n알아보기 →",
+    "changed": false,
+    "afterText": "🤔 같은 미래인데 왜 다르게 말할까?\n\n\"I'm going to visit the library tomorrow.\"\n\n친구 A\nVS\n\n\"Oh! I'll help you find books!\"\n\n친구 B\n?\n\n둘 다 미래를 말하는데 왜 표현이 다를까요?\n\n알아보기 →",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "will-vs-going-to-zoo",
+    "title": "Travel Plans: will vs going to - Zoo Visit Adventure",
+    "buttons": [
+      "알아보기"
+    ],
+    "beforeText": " 같은 미래인데 왜 다르게 말할까?\nI'm going to go to the zoo tomorrow!\n?\nI will go to the zoo too!\n\n둘 다 내일 동물원에 간다는 뜻인데, 왜 다르게 표현할까?\n\n알아보기 ",
+    "changed": false,
+    "afterText": " 같은 미래인데 왜 다르게 말할까?\nI'm going to go to the zoo tomorrow!\n?\nI will go to the zoo too!\n\n둘 다 내일 동물원에 간다는 뜻인데, 왜 다르게 표현할까?\n\n알아보기 ",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "moon-phases",
+    "title": "달의 위상 변화 - 변하는 달의 비밀",
+    "buttons": [
+      "알아보기"
+    ],
+    "beforeText": "달은 왜 모양이 변할까?\n\n어제는 동그랬는데 오늘은 반달이야...\n\n알아보기",
+    "changed": false,
+    "afterText": "달은 왜 모양이 변할까?\n\n어제는 동그랬는데 오늘은 반달이야...\n\n알아보기",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  }
+]

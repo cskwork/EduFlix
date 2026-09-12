@@ -1,0 +1,12 @@
+[p1 "동물 마을의 비밀: 환경 적응 대작전" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "동물 마을의 비밀: 환경 적응 대작전"]
+root
+  container
+    text "학습 목표: 동물의 환경 적응 특징 알아보기"
+    heading
+      text "날씨가 뒤죽박죽! 동물 친구들을 구할 수 있을까요?"
+    paragraph
+      text "사막에 펭귄이, 북극에 사막여우가?! 동물들이 원래 살던 곳으로 돌아가도록 도와줍시다."
+    svg_root "날씨가 이상해요!"
+      text "날씨가 이상해요!"
+    button [ref=1]
+      text "탐험 시작하기"

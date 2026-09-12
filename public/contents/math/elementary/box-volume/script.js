@@ -182,7 +182,7 @@ class HookScene extends CyberScene {
             fontFamily: 'Orbitron', fontSize: '16px', color: '#94a3b8', letterSpacing: 3
         }).setOrigin(0.5);
 
-        this.add.text(300, 170, '이 저장장치에\n데이터 큐브를 몇 개 넣을 수 있을까?', {
+        this.add.text(300, 170, '목표: 단위 큐브의 층을 세어\n직육면체의 부피를 설명해요.', {
             fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#ffffff', align: 'center', lineSpacing: 8
         }).setOrigin(0.5);
 
@@ -292,7 +292,7 @@ class AnchorScene extends CyberScene {
         this.add.text(300, 430, '가로 × 세로 = 넓이', { fontFamily: 'Noto Sans KR', fontSize: '22px', color: '#38bdf8', fontStyle: 'bold' }).setOrigin(0.5);
         this.add.text(300, 465, '4 × 3 = 12 (cm²)', { fontFamily: 'Noto Sans KR', fontSize: '20px', color: '#ffffff' }).setOrigin(0.5);
 
-        this.add.text(300, 380, '여기에 높이가 더해지면...?', {
+        this.add.text(300, 380, '이 바닥을 같은 크기로 두 층 쌓으면...?', {
             fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#10b981', fontStyle: 'bold'
         }).setOrigin(0.5);
 
@@ -364,7 +364,7 @@ class CoreScene extends CyberScene {
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
         this.createHeader('PACKING SIMULATOR');
 
-        this.add.text(300, 90, '버튼을 눌러 한 층씩 데이터 큐브를 쌓아보세요.', {
+        this.add.text(300, 90, '한 층은 4×3=12개. 두 층의 개수를 예상하고 쌓으세요.', {
             fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#94a3b8'
         }).setOrigin(0.5);
 
@@ -554,6 +554,7 @@ class VisualizeScene extends CyberScene {
 class QuizScene extends CyberScene {
     constructor() { super('QuizScene'); }
     create() {
+        this.answerComplete = false;
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
         this.createHeader('TARGET DECRYPTION');
 
@@ -611,13 +612,15 @@ class QuizScene extends CyberScene {
             this.createButton(120 + idx * 180, 450, opt.text, 140, 50, () => this.checkAnswer(opt.val, 120 + idx * 180, 450));
         });
 
-        this.feedback = this.add.text(300, 530, '', { fontFamily: 'Noto Sans KR', fontSize: '22px', fontStyle: 'bold' }).setOrigin(0.5);
+        this.feedback = this.add.text(300, 530, '', { fontFamily: 'Noto Sans KR', fontSize: '16px', wordWrap: { width: 550 }, align: 'center', fontStyle: 'bold' }).setOrigin(0.5);
         this.cameras.main.fadeIn(500, 0, 0, 0);
     }
 
     checkAnswer(isCorrect, x, y) {
+        if (this.answerComplete) return;
         if (isCorrect) {
-            this.feedback.setText('DECRYPTION SUCCESS!').setColor('#10b981');
+            this.answerComplete = true;
+            this.feedback.setText('정답! 한 층 15개 × 4층 = 60cm³').setColor('#10b981');
             this.cameras.main.flash(500, 16, 185, 129);
             for (let i = 0; i < 20; i++) {
                 const p = this.add.rectangle(x, y, 6, 6, COLORS.success);
@@ -626,12 +629,9 @@ class QuizScene extends CyberScene {
                     alpha: 0, rotation: Phaser.Math.FloatBetween(0, 6), duration: 1000, ease: 'Power2'
                 });
             }
-            this.time.delayedCall(1500, () => {
-                this.cameras.main.fadeOut(300, 0, 0, 0);
-                this.time.delayedCall(300, () => this.scene.start('WrapScene'));
-            });
+            this.createButton(300, 575, '해설 확인 · 정리', 240, 38, () => this.scene.start('WrapScene'));
         } else {
-            this.feedback.setText('ACCESS DENIED. V = 가로 × 세로 × 높이').setColor('#f43f5e');
+            this.feedback.setText('한 층 5×3=15개, 4층이면 15×4=60cm³').setColor('#f43f5e');
             this.cameras.main.shake(200, 0.01);
         }
     }
@@ -665,7 +665,7 @@ class WrapScene extends CyberScene {
             fontFamily: 'Orbitron', fontSize: '28px', color: '#10b981', fontStyle: 'bold'
         }).setOrigin(0.5);
 
-        this.add.text(300, 440, '단위: cm³ (세제곱센티미터)', {
+        this.add.text(300, 440, '높이만 2배라면 부피는? 층의 수로 설명하세요.', {
             fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#94a3b8'
         }).setOrigin(0.5);
 

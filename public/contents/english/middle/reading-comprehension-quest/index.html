@@ -392,6 +392,7 @@
     <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
     <script>
         // Story data for middle school level
+        const readingEvidence = [["The door is explicitly described behind the roses.", "The passage describes a paradise and glowing flowers.", "The magical, delicate light supports this contextual meaning."], ["The latest project is described as a walking-assistance device.", "Their initial concern is the time Alex spends alone.", "The ending links progress to dedication and perseverance."], ["His own explanation mentions keeping the light on for sailors.", "Emma is introduced as a meteorologist.", "The revised ending explicitly calls for emergency-service planning."], ["The opening names the legendary City of Gold.", "The expedition follows a lead in the Amazon rainforest.", "Elena reflects on ordinary people and their stories."], ["The text names library books and a borrowed guitar.", "The producer offers a record deal after hearing him.", "The ending names the center and scholarship program."], ["Zara maintains the life-support systems.", "In this fictional future, the story says at least a week; this is not a present-day travel estimate.", "Her speech asks the colony to become self-reliant and innovative."], ["Sarah imagines these sounds; the passage uses personification.", "Her realization defines wisdom as accumulated experience.", "The closing contrast is learning rather than asking for answers."], ["The opening describes a car accident.", "The text explicitly names the Paralympics as the new goal.", "His closing quotation emphasizes responding to setbacks."], ["The special section contains unpublished ordinary people's writing.", "Mia values expression rather than publication alone.", "The last paragraph describes an empty shop and a note."], ["Luis suggests letters about hopes and fears.", "The passage calls the capsule a bridge across time.", "His closing words stress feelings and belief in tomorrow."]];
         const storiesData = [
             {
                 title: "The Secret Garden Discovery",
@@ -437,7 +438,7 @@
             },
             {
                 title: "The Storm's Lesson",
-                text: "The coastal village of Port Haven had never experienced a storm like the one approaching that evening. Hurricane warnings blared from every radio, but old Captain Miller refused to leave his lighthouse. 'This lighthouse has stood for a hundred years,' he grumbled, 'and it will stand tonight.' His daughter, a meteorologist named Emma, had pleaded with him to evacuate, but he was stubborn. As the storm's fury unleashed, Emma watched from the safety of her weather station, her heart pounding. She saw the waves crashing against the lighthouse, but the beam of light kept sweeping across the dark sea, guiding ships to safety. In the morning, Emma rushed to the lighthouse, fearing the worst. She found her father exhausted but alive, still keeping the light burning. 'Someone had to be here for the sailors,' he said with a tired smile. Emma hugged him tightly, understanding that sometimes duty calls louder than fear, and that true heroes are those who stay when others would run away.",
+                text: "The coastal village of Port Haven had never experienced a storm like the one approaching that evening. Hurricane warnings blared from every radio, but old Captain Miller refused to leave his lighthouse. 'This lighthouse has stood for a hundred years,' he grumbled, 'and it will stand tonight.' His daughter, a meteorologist named Emma, had pleaded with him to evacuate, but he was stubborn. As the storm's fury unleashed, Emma watched from the safety of her weather station, her heart pounding. She saw the waves crashing against the lighthouse, but the beam of light kept sweeping across the dark sea, guiding ships to safety. In the morning, Emma rushed to the lighthouse, fearing the worst. She found her father exhausted but alive, still keeping the light burning. 'Someone had to be here for the sailors,' he said with a tired smile. Emma hugged him tightly, relieved that he had survived. She explained that surviving did not make ignoring evacuation advice safe. They agreed to plan with emergency services so the light could be maintained without putting a life at unnecessary risk.",
                 questions: [
                     {
                         text: "Why did Captain Miller refuse to leave the lighthouse?",
@@ -450,8 +451,8 @@
                         correct: 2
                     },
                     {
-                        text: "What does the story suggest about true heroes?",
-                        options: ["They are never afraid", "They stay when others would run away because of duty", "They always receive medals", "They are young and strong"],
+                        text: "What do Emma and her father agree to do after the storm?",
+                        options: ["They are never afraid", "Plan with emergency services to protect people while maintaining the light", "They always receive medals", "They are young and strong"],
                         correct: 1
                     }
                 ]
@@ -479,7 +480,7 @@
             },
             {
                 title: "The Musician's Journey",
-                text: "Marcus had always dreamed of becoming a professional musician, but growing up in a small town with limited resources made that dream seem impossible. His family couldn't afford music lessons or instruments, so Marcus taught himself using old library books and a borrowed guitar. Every day after school, he practiced until his fingers bled, pouring his heart into every chord and melody. The townspeople would gather outside his window to listen, marveling at the raw emotion in his music. One day, a famous music producer passed through town and heard Marcus playing. The producer was so moved that he offered Marcus a record deal on the spot. Marcus couldn't believe it – years of hard work and sacrifice had finally paid off. His first album went platinum, and he performed in sold-out concerts around the world. But Marcus never forgot where he came from. He returned to his hometown, built a community music center, and started a scholarship program for other young musicians with big dreams but small wallets. 'Music belongs to everyone,' Marcus told the gathered crowd, 'and anyone with passion and dedication deserves a chance to share their song with the world.'",
+                text: "Marcus had always dreamed of becoming a professional musician, but growing up in a small town with limited resources made that dream seem impossible. His family couldn't afford music lessons or instruments, so Marcus taught himself using old library books and a borrowed guitar. Every day after school, he practiced regularly, taking breaks to rest his hands, pouring his heart into every chord and melody. The townspeople would gather outside his window to listen, marveling at the raw emotion in his music. One day, a famous music producer passed through town and heard Marcus playing. The producer was so moved that he offered Marcus a record deal on the spot. Marcus couldn't believe it – years of hard work and sacrifice had finally paid off. His first album went platinum, and he performed in sold-out concerts around the world. But Marcus never forgot where he came from. He returned to his hometown, built a community music center, and started a scholarship program for other young musicians with big dreams but small wallets. 'Music belongs to everyone,' Marcus told the gathered crowd, 'and anyone with passion and dedication deserves a chance to share their song with the world.'",
                 questions: [
                     {
                         text: "How did Marcus learn to play music?",
@@ -542,7 +543,7 @@
             },
             {
                 title: "The Athlete's Comeback",
-                text: "Olympic swimmer Jordan Chen had been training for the world championship for four years, but a devastating car accident two weeks before the competition left him with a broken leg. Doctors said he might never walk properly again, let alone compete. Jordan spent months in rehabilitation, fighting through pain and despair. 'This isn't the end of your story,' his coach told him, 'just a different chapter.' Inspired, Jordan began training again, even before his leg had fully healed. The world championship passed without him, but Jordan had a new goal: the Paralympics. His modified prosthetic leg was different from his natural one, requiring him to relearn swimming techniques. Jordan faced skepticism from some who thought he was aiming too high, but he ignored them. Two years later, Jordan stood on the Paralympic podium, a gold medal around his neck. His story inspired millions – not because he had won, but because he had refused to let his accident define him. 'Champions aren't made by what they achieve when everything goes right,' Jordan told reporters, 'but by how they respond when everything goes wrong.'",
+                text: "Olympic swimmer Jordan Chen had been training for the world championship for four years, but a devastating car accident two weeks before the competition left him with a broken leg. Doctors said he might never walk properly again, let alone compete. Jordan spent months in rehabilitation, fighting through pain and despair. 'This isn't the end of your story,' his coach told him, 'just a different chapter.' Inspired, Jordan followed a rehabilitation plan with his medical team and returned to training when they agreed it was safe. The world championship passed without him, but Jordan had a new goal: the Paralympics. He worked with qualified coaches to adapt his swimming techniques to his lasting impairment; eligibility and classification required specialist assessment. Jordan faced skepticism from some who thought he was aiming too high, but he ignored them. Two years later, Jordan stood on the Paralympic podium, a gold medal around his neck. His story inspired millions – not because he had won, but because he had refused to let his accident define him. 'Champions aren't made by what they achieve when everything goes right,' Jordan told reporters, 'but by how they respond when everything goes wrong.'",
                 questions: [
                     {
                         text: "What happened to Jordan before the world championship?",
@@ -776,6 +777,7 @@
 
             const story = storiesData[currentStoryIndex];
             answers = {};
+            submittedStory = false;
 
             document.getElementById('story-number').textContent = currentStoryIndex + 1;
             document.getElementById('story-title').textContent = story.title;
@@ -821,6 +823,7 @@
         }
 
         function selectOption(questionIndex, optionIndex, optionEl) {
+            if (submittedStory) return;
             answers[questionIndex] = optionIndex;
 
             // Update visual selection
@@ -830,11 +833,20 @@
             optionEl.classList.add('selected');
         }
 
+        let submittedStory = false;
         function submitAnswers() {
+            if (submittedStory) return;
             const story = storiesData[currentStoryIndex];
             let correctCount = 0;
             const totalQuestions = story.questions.length;
 
+            if (Object.keys(answers).length !== totalQuestions) {
+                document.getElementById('submit-btn').textContent = 'Answer every question before submitting';
+                return;
+            }
+            submittedStory = true;
+            document.getElementById('submit-btn').disabled = true;
+            document.querySelectorAll('.option').forEach(option => option.style.pointerEvents = 'none');
             // Check answers
             story.questions.forEach((question, qIndex) => {
                 if (answers[qIndex] === question.correct) {
@@ -861,6 +873,15 @@
                 'Perfect! You understood everything! 🌟' :
                 correctCount >= 2 ? 'Great job! Keep practicing! 👍' :
                 'Keep reading and try again! 📚';
+            const review = document.createElement('div');
+            review.className = 'answer-review';
+            story.questions.forEach((question, index) => {
+                const item = document.createElement('p');
+                item.textContent = `Q${index + 1}: ${question.options[question.correct]}. ${readingEvidence[currentStoryIndex][index]}`;
+                review.appendChild(item);
+            });
+            resultDisplay.querySelector('.answer-review')?.remove();
+            resultDisplay.appendChild(review);
             resultDisplay.style.display = 'block';
         }
 

@@ -1,0 +1,99 @@
+{
+  "id": "animal-adaptation-game",
+  "title": "동물 마을의 비밀: 환경 적응 대작전",
+  "family": "classic-special",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "scene": "quiz",
+      "text": "오염 괴물 물리치기 (1/3)\n눈이 많이 내리는 북극에서 북극곰이 사냥하기 좋은 털 색깔은 무엇일까요?\n하얀색\n초록색\n빨간색\n\n딩동댕! 하얗게 보이는 털은 눈과 얼음에 섞여 먹잇감에게 잘 드러나지 않는 보호색 역할을 합니다."
+    },
+    {
+      "scene": "quiz",
+      "text": "오염 괴물 물리치기 (2/3)\n독화살개구리는 몸에 화려한 무늬를 가지고 있어요. 왜 눈에 띄는 색을 띠고 있을까요?\n예뻐 보여서\n추위를 막으려고\n적에게 자신이 위험하다고 알리려고\n\n정답! 이것을 '경고색'이라고 해요. 나는 위험하니 공격하지 말라고 알리는 거예요."
+    },
+    {
+      "scene": "quiz",
+      "text": "오염 괴물 물리치기 (3/3)\n추운 겨울이 오면 새들이 먹이를 찾아 따뜻한 남쪽으로 날아가는 행동을 무엇이라고 할까요?\n동면\n이동\n보호색\n\n맞아요! 철새들은 환경이 변하면 살기 좋은 곳으로 '이동'을 한답니다."
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#scene-hook button"
+    },
+    {
+      "click": "#btn-desert"
+    },
+    {
+      "click": "#btn-forest"
+    },
+    {
+      "click": "#btn-polar"
+    },
+    {
+      "click": "#story-next-btn"
+    },
+    {
+      "click": "#card-bear"
+    },
+    {
+      "click": "#drop-hibernate"
+    },
+    {
+      "click": "#card-bird"
+    },
+    {
+      "click": "#drop-migrate"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": ".quiz-option:nth-child(1)"
+    },
+    {
+      "click": ".quiz-option:nth-child(3)"
+    },
+    {
+      "click": ".quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#polar-book-btn"
+    },
+    {
+      "book": {
+        "scene": "wrap",
+        "text": "환경 적응 대작전 완료!\n\n오늘 배운 동물들의 환경 적응 비밀을 도감에서 확인해 보세요!\n\n북극 도감 보기\n사막 도감 보기\n다시하기\n완료하기\n북극곰 도감\n\n북극곰의 털은 하얗게 보여 눈과 얼음에서 몸을 덜 드러내도록 돕습니다. 이런 유전되는 특징은 여러 세대에 걸쳐 환경과 관련해 나타난 것이며, 필요할 때 마음대로 털색을 바꾸는 것은 아닙니다.\n\n닫기"
+      }
+    },
+    {
+      "click": "button[onclick=\"Engine.closeDex()\"]"
+    },
+    {
+      "click": "#desert-book-btn"
+    },
+    {
+      "book": {
+        "scene": "wrap",
+        "text": "환경 적응 대작전 완료!\n\n오늘 배운 동물들의 환경 적응 비밀을 도감에서 확인해 보세요!\n\n북극 도감 보기\n사막 도감 보기\n다시하기\n완료하기\n사막여우 도감\n\n사막여우는 큰 귀로 몸의 열을 식혀요! 더운 사막에서 살아남는 멋진 비결이죠.\n\n닫기"
+      }
+    },
+    {
+      "click": "button[onclick=\"Engine.closeDex()\"]"
+    },
+    {
+      "click": "#scene-wrap button[onclick=\"location.reload()\"]"
+    }
+  ],
+  "activityObservation": {
+    "scene": "core",
+    "text": "동물 구조 작전\n\n이 모형의 불곰과 철새가 겨울을 나는 행동을 연결하세요. 모든 곰과 새가 같은 행동을 하지는 않습니다. (카드와 이동할 곳을 차례로 클릭하세요.)\n\n겨울잠 (동면)\n이동 (철새)\n정답! 철새는(은) 이동 (철새)으로/로 살아남아요!\n퀴즈 풀러 가기"
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "환경 적응 대작전 완료!\n\n오늘 배운 동물들의 환경 적응 비밀을 도감에서 확인해 보세요!\n\n북극 도감 보기\n사막 도감 보기\n다시하기\n완료하기"
+  }
+}

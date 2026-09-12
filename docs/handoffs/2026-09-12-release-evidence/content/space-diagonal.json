@@ -1,0 +1,75 @@
+{
+  "id": "space-diagonal",
+  "title": "공간 대각선",
+  "family": "classic",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": "가로 3, 세로 4, 높이 12인 직육면체의 공간 대각선은?",
+      "selected": "13",
+      "feedback": "정답입니다. √(3²+4²+12²)=√169=13입니다. 3+4+12=19는 모서리를 따라 이동한 길이입니다."
+    },
+    {
+      "question": "가로·세로·높이가 모두 2배가 되면 공간 대각선은?",
+      "selected": "2배",
+      "feedback": "정답입니다. √((2a)²+(2b)²+(2c)²)=2√(a²+b²+c²)이므로 길이는 2배입니다."
+    }
+  ],
+  "completion": true,
+  "reset": false,
+  "actions": [
+    {
+      "click": "#scene-hook button"
+    },
+    {
+      "click": "#scene-story button"
+    },
+    {
+      "range": "#slider-c",
+      "key": "ArrowRight"
+    },
+    {
+      "click": ".step-btn[data-step=\"1\"]"
+    },
+    {
+      "click": ".step-btn[data-step=\"2\"]"
+    },
+    {
+      "wheel": 265.78125,
+      "reason": "nested scene scroll; wrapper failed to find viewport target"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(1)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(1)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    }
+  ],
+  "errors": [],
+  "activityObservation": {
+    "scene": "core",
+    "text": "공간 대각선 탐구\n가로 3, 세로 4, 높이 2로 설정하세요. 밑면은 5, 공간 대각선은 √29≈5.39입니다. 높이 12인 예제는 종이에 계산하세요. 밑면 대각선을 먼저 표시하고 공간 대각선을 켜서 두 직각삼각형을 찾으세요. 각 단계의 제곱과 제곱근을 기록하세요.\n가로 (a)\n3\n세로 (b)\n4\n높이 (c)\n3\n직육면체\n바닥 대각선\n공간 대각선\n2단계: 공간 대각선 (d)\nd = sqrt(d1^2 + c^2) = sqrt(a^2 + b^2 + c^2)\nd = sqrt(9 + 16 + 9)\nd = 5.83\n\n드래그해서 직육면체를 여러 각도에서 관찰하세요!\n\n피타고라스를 두 번 적용하면 공간 대각선을 구할 수 있어요!\nd = sqrt(a^2 + b^2 + c^2)\n훌륭해요! 공간 대각선의 공식을 발견했어요!\n다음",
+    "errors": []
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "🎉 완료!\n\n오늘 배운 내용\n\n공간 대각선\n\n상자 모서리를 따라간 경로와 내부의 곧은 대각선 중 어느 것이 짧을까요? 3,4,12 예제로 계산하고 그림에서 설명하세요.\n\n다시하기\n홈으로",
+    "errors": []
+  },
+  "failure": "CdpRequestTimeoutError: CDP request timed out: Page.captureScreenshot",
+  "lastObservation": {
+    "scene": "wrap",
+    "text": "🎉 완료!\n\n오늘 배운 내용\n\n공간 대각선\n\n상자 모서리를 따라간 경로와 내부의 곧은 대각선 중 어느 것이 짧을까요? 3,4,12 예제로 계산하고 그림에서 설명하세요.\n\n다시하기\n홈으로",
+    "errors": []
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "id": "word-detective-3d",
+  "family": "custom",
+  "frontDoor": true,
+  "activity": false,
+  "quizzes": [],
+  "modes": [
+    {
+      "mode": "default",
+      "count": 10,
+      "completion": false,
+      "reset": false
+    }
+  ],
+  "completion": false,
+  "reset": false,
+  "method": "Native DOM clicks; read-only question oracle; normal feedback timers and native result dialog/reload.",
+  "failure": "Error: Correct answer not accepted",
+  "lastObservation": {
+    "i": 1,
+    "count": 10,
+    "q": {
+      "title": "The Ancient City",
+      "sentence": "The archaeologists were amazed by the <span id='mystery-word'>pristine</span> condition of the artifacts they found in the buried temple: their surfaces were unbroken and their original colors remained vivid.",
+      "mysteryWord": "pristine",
+      "options": [
+        "perfect",
+        "hidden",
+        "damaged",
+        "ancient"
+      ],
+      "correct": 0,
+      "clues": [
+        "Archaeologists were 'amazed' - suggesting something unusual or impressive",
+        "The artifacts were 'found' - not made recently",
+        "Being amazed suggests the condition was unexpectedly good"
+      ],
+      "hint": "Think about how archaeologists would feel about finding something in perfect condition",
+      "explanation": "Pristine means in its original condition; unspoiled or untouched. The archaeologists' amazement at the condition indicates the artifacts were remarkably well-preserved.",
+      "positionsBalanced": true
+    },
+    "text": "🔎 Case: 2/10\n⭐ Score: 150\n💡 Hints: 3\n📋 Detective Case #2: The Ancient City\nThe archaeologists were amazed by the pristine condition of the artifacts they found in the buried temple: their surfaces were unbroken and their original colors remained vivid.\n🔍 Context Clues:\nArchaeologists were 'amazed' - suggesting something unusual or impressive\nThe artifacts were 'found' - not made recently\nBeing amazed suggests the condition was unexpectedly good\nperfect\nhidden\ndamaged\nancient\n💡 Get Hint\nArduous means involving or requiring strenuous effort; difficult and tiring. The context clues about steep cliffs, dangerous rivers, and a three-day duration all point to something difficult.\n🎉 Case Solved!",
+    "celebration": false,
+    "buttons": [
+      {
+        "i": 0,
+        "text": "perfect",
+        "disabled": false,
+        "correct": false
+      },
+      {
+        "i": 1,
+        "text": "hidden",
+        "disabled": false,
+        "correct": false
+      },
+      {
+        "i": 2,
+        "text": "damaged",
+        "disabled": false,
+        "correct": false
+      },
+      {
+        "i": 3,
+        "text": "ancient",
+        "disabled": false,
+        "correct": false
+      }
+    ]
+  }
+}

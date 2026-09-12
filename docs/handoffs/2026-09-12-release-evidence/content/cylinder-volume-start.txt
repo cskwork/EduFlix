@@ -1,0 +1,18 @@
+[p1 "원기둥의 부피: 공간의 들이를 계산하자" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "원기둥의 부피: 공간의 들이를 계산하자"]
+root
+  progressindicator "학습 진행 상태"
+    text "1 / 5"
+  container
+    container
+      heading
+        text "어떤 물통에 더 많은 주스가 들어갈까요?"
+      paragraph
+        text "크기만 봐서는 알 수 없습니다! 공간의 들이(부피)를 계산해 봅시다."
+    status
+      text "학습 목표"
+      text "나는 원기둥의 부피를 계산할 수 있습니다."
+    image "A (가늘고 긴 통) B (굵고 짧은 통)"
+      text "A (가늘고 긴 통)"
+      text "B (굵고 짧은 통)"
+    button [ref=1]
+      text "탐험 시작하기"

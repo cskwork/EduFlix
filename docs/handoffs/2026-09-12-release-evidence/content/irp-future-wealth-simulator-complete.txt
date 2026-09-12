@@ -1,0 +1,25 @@
+[p1 "시간 여행 자산 시뮬레이터: 30년 뒤 나의 지갑은?" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "시간 여행 자산 시뮬레이터: 30년 뒤 나의 지갑은?"]
+root
+  progressindicator "학습 진행도"
+    container
+      text "1"
+      text "2"
+      text "3"
+      text "4"
+      text "5"
+  container
+    heading
+      text "은퇴 설계도 완성!"
+    container
+      text "★ IRP 마스터 ★"
+      paragraph
+        text "같은 원금·수익률·기간에서 공제 시점만 바꾸어 비교했습니다."
+      heading
+        text "오늘의 학습"
+      paragraph
+        text "이 모형은 매년 공제하면 P × (1 + 0.05 × 0.9)³⁰, 마지막에 이익을 공제하면 P + (P × 1.05³⁰ − P) × 0.9로 계산해요. 수익률이 0%라면 두 결과가 왜 같은지 ..."
+    container
+      button [ref=1]
+        text "다시하기"
+      button [ref=2]
+        text "홈으로"

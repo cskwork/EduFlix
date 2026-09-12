@@ -1,0 +1,16 @@
+[p1 "피자로 배우는 분수" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "피자로 배우는 분수"]
+root
+  container
+    heading
+      text "피자를 똑같이 나누려면 어떻게 해야 할까?"
+    paragraph
+      text "친구들과 사이좋게 나눠 먹으려면요!"
+    paragraph
+      text "학습 목표: 같은 크기로 나눈 피자 한 조각을 분수로 나타내고 전체의 크기를 확인해요."
+  svg_root "1/4 1/4 1/4 1/4"
+    text "1/4"
+    text "1/4"
+    text "1/4"
+    text "1/4"
+  button [ref=1]
+    text "시작하기"

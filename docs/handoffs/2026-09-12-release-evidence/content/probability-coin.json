@@ -1,0 +1,67 @@
+{
+  "id": "probability-coin",
+  "title": "확률의 세계: 동전 던지기",
+  "family": "classic",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": "공정한 동전을 독립적으로 4번 던지면 반드시 앞면이 2번 나올까요?",
+      "selected": "아니다",
+      "feedback": "정답입니다. 각 던지기의 확률이 1/2이라는 뜻이지 네 번의 결과를 미리 정한다는 뜻은 아닙니다. 네 번 모두 앞면일 수도 있습니다."
+    },
+    {
+      "question": "공정한 동전에서 앞면이 연속 5번 나왔습니다. 독립적인 다음 던지기의 앞면 확률은?",
+      "selected": "1/2",
+      "feedback": "정답입니다. 독립 시행에서는 이전 결과가 다음 확률을 바꾸지 않습니다. 뒷면이 나와 균형을 맞추어야 할 의무도 없습니다."
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#scene-hook button"
+    },
+    {
+      "click": "#scene-story button"
+    },
+    {
+      "click": "#flip-btn"
+    },
+    {
+      "click": "#flip-100-btn"
+    },
+    {
+      "click": "#finish-btn"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(1)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#scene-wrap button:first-child"
+    }
+  ],
+  "errors": [],
+  "activityObservation": {
+    "scene": "core",
+    "text": "동전 던지기 실험\n1번 던지기를 10회 한 뒤 앞면 비율을 기록하세요. 100번 던지기를 두 번 더 실행해 비율을 비교하세요. 이 모형은 각 던지기를 공정하고 독립적으로 생성합니다.\nH\n1번 던지기\n100번 던지기\n앞면 (Heads)\n49\n뒷면 (Tails)\n52\n앞면 비율: 48.5% (시도: 101회)\n실험 완료\n시행을 많이 반복하면 앞면 비율이 50% 근처에 있을 가능성이 커집니다. 하지만 매번 더 가까워지거나 정확히 50%가 된다는 보장은 없습니다.\n다음",
+    "errors": []
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "🎉 완료!\n\n오늘 배운 내용\n\n확률의 세계\n\n100회를 더 던졌는데 50%에서 오히려 멀어질 수도 있을까요? 장기적인 경향과 매번 보장되는 결과를 구별해 설명하세요.\n\n다시하기\n홈으로",
+    "errors": []
+  }
+}

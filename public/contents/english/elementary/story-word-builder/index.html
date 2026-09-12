@@ -668,7 +668,7 @@
         <div id="start-screen">
             <div class="book-icons">📚✨📖</div>
             <h1>Story Word Builder</h1>
-            <p>Become a master storyteller! Complete magical stories by filling in the missing words. Click a word from the bank, then click the blank space where it belongs!</p>
+            <p>Rebuild a model story and compare descriptive words. More than one story can be grammatical; the game checks the model wording and gives it as feedback. Click a word from the bank, then click the blank space where it belongs!</p>
             
             <div id="story-selector">
                 <div class="story-option active" data-category="fantasy">
@@ -1112,10 +1112,11 @@
         }
 
         function fillBlank(blank, event) {
-            if (!selectedWord || blank.classList.contains('filled')) return;
+            if (!selectedWord || blank.classList.contains('filled') || blank.classList.contains('incorrect')) return;
 
             const correctAnswer = blank.dataset.correct;
             const userAnswer = selectedWord.word;
+            const selectedButton = selectedWord.btn;
 
             blank.textContent = userAnswer;
             selectedWord.btn.classList.add('used');
@@ -1145,14 +1146,14 @@
                 }
             } else {
                 blank.classList.add('incorrect');
-                showFeedback('❌ Try again!', '#f44336');
+                showFeedback(`Model word: ${correctAnswer}. Other words may make a grammatical story; this task rebuilds the model version.`, '#a93420');
                 playSoundFeedback('wrong', event.clientX, event.clientY);
                 combo = 0;
 
                 setTimeout(() => {
                     blank.textContent = '';
                     blank.classList.remove('incorrect');
-                    selectedWord.btn.classList.remove('used', 'correct-used');
+                    selectedButton.classList.remove('used', 'correct-used');
                 }, 1000);
             }
 

@@ -1,0 +1,16 @@
+{
+  "id": "magic-e",
+  "browser": "Chrome CUA tab1815027663",
+  "frontDoor": true,
+  "activity": "Clicked Add Magic E, cap became cape",
+  "answers": [
+    "kite",
+    "cube",
+    "note",
+    "cape"
+  ],
+  "completion": true,
+  "reset": true,
+  "method": "Real clicks; DOM feedback and terminal screen observed",
+  "toolLimit": "waitFor sometimes times out despite subsequent normal transition"
+}

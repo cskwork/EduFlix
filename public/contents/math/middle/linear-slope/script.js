@@ -64,7 +64,7 @@ class EduFlixEngine {
                 <div class="hook-content">
                     <div class="question-box">
                         <h1 class="hook-question">${question}</h1>
-                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}<p class="scene-text">학습 목표: ${this.data.objective}</p>
                     </div>
                     ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
                     <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
@@ -75,7 +75,7 @@ class EduFlixEngine {
 
         this.createScene('story', (scene) => {
             const { character, situation } = this.data.story;
-            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
+            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}<br><br>${this.data.workedExample}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
         });
 
         this.createScene('core', (scene) => {
@@ -89,7 +89,7 @@ class EduFlixEngine {
         }
 
         this.createScene('wrap', (scene) => {
-            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
+            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3><p class="scene-text">${this.data.reflection}</p></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
         });
     }
 
@@ -127,31 +127,46 @@ class EduFlixEngine {
         if(btn) { btn.style.display = 'inline-block'; btn.classList.add('animate-fade-in'); }
     }
 
-    startQuiz() {
-        const q = this.data.quiz[0];
-        document.getElementById('quiz-question').textContent = q.question;
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = '';
-        q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
-            optsContainer.appendChild(btn);
+    startQuiz(index = 0) {
+        this.quizIndex = index;
+        const q = this.data.quiz[index];
+        const question = document.getElementById('quiz-question');
+        question.textContent = `${index + 1} / ${this.data.quiz.length} · ${q.question}`;
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        q.options.forEach((option, selected) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quiz-option';
+            button.textContent = option;
+            button.onclick = () => this.checkQuiz(selected, q.answer, button);
+            container.appendChild(button);
         });
+        const feedback = document.createElement('p');
+        feedback.id = 'quiz-explanation';
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        container.appendChild(feedback);
     }
 
-    checkQuiz(selectedIdx, correctIdx, btnElement) {
-        const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+    checkQuiz(selected, answer, button) {
+        const container = document.getElementById('quiz-options');
+        const options = container.querySelectorAll('.quiz-option');
+        if (button.disabled) return;
+        options.forEach(option => { option.disabled = true; });
+        button.classList.add(selected === answer ? 'correct' : 'incorrect');
+        options[answer].classList.add('correct');
+        document.getElementById('quiz-explanation').textContent =
+            (selected === answer ? '정답입니다. ' : '답을 비교해 보세요. ') + this.data.quiz[this.quizIndex].explanation;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '해설을 읽었어요 · 다음 문항' : '해설을 읽었어요 · 정리하기';
+        next.onclick = () => {
+            if (this.quizIndex + 1 < this.data.quiz.length) this.startQuiz(this.quizIndex + 1);
+            else this.nextScene();
+        };
+        container.appendChild(next);
     }
 }
 
@@ -165,6 +180,9 @@ window.Engine = new EduFlixEngine();
  */
 
 const slopeData = {
+    objective: "직선 위 두 점에서 x와 y의 변화량을 구하여 기울기를 설명해요.",
+    workedExample: "두 점 (0,1), (2,5)의 기울기는 (5−1)/(2−0)=2입니다. 오른쪽으로 1 갈 때 y는 2 증가합니다. y=2x+1에서 2는 기울기이고 1은 y절편입니다.",
+    reflection: "기울기가 같은 두 직선의 y절편만 다르면 어떤 관계일까요? y=2x+1과 y=2x−3에서 같은 x 두 개를 골라 비교하세요.",
     title: "일차함수와 기울기",
     hook: {
         question: "스키장의 가파른 정도를 숫자로 어떻게 나타낼까요?",
@@ -225,7 +243,7 @@ const slopeData = {
     },
     interaction: {
         title: "기울기 실험실",
-        instruction: "파란 점을 드래그하여 직선의 기울기를 바꿔보세요.",
+        instruction: "파란 점을 움직여 상승하는 직선과 하강하는 직선을 만드세요. 두 점의 가로 변화량과 세로 변화량을 기록해 비를 구하세요. 가로 변화량이 0인 수직선에서는 이 비를 정의할 수 없습니다.",
         onInit: (container, engine) => {
             // Config
             const w = 500;
@@ -295,7 +313,7 @@ const slopeData = {
                 
                 // Line from far left to far right
                 // y = ax => slope = p2.y / p2.x
-                const slope = p2.x === 0 ? 999 : p2.y / p2.x;
+                const slope = p2.x === 0 ? null : p2.y / p2.x;
                 
                 // Calculate endpoints for drawing line across screen
                 // y - 0 = m(x - 0) => y = mx
@@ -311,6 +329,11 @@ const slopeData = {
                 mainLine.setAttribute('x2', originX + farX2 * scale);
                 mainLine.setAttribute('y2', originY - farY2 * scale);
                 
+                if (slope === null) {
+                    mainLine.setAttribute('x1', originX); mainLine.setAttribute('x2', originX);
+                    mainLine.setAttribute('y1', 0); mainLine.setAttribute('y2', h);
+                }
+
                 // Control Point
                 controlPoint.setAttribute('cx', px);
                 controlPoint.setAttribute('cy', py);
@@ -330,7 +353,7 @@ const slopeData = {
                 riseText.textContent = p2.y;
                 
                 // Value
-                slopeVal.textContent = slope.toFixed(1);
+                slopeVal.textContent = slope === null ? '정의되지 않음' : `${p2.y}/${p2.x} ≈ ${slope.toFixed(2)}`;
             };
 
             // 드래그 인터랙션 (마우스 + 터치 지원)
@@ -395,11 +418,27 @@ const slopeData = {
     },
     quiz: [
         {
-            question: "일차함수 y = 2x + 1의 기울기는 얼마일까요?",
-            options: ["1", "2", "3", "4"],
-            answer: 1
+                "question": "y = 2x + 1의 기울기는?",
+                "options": [
+                        "1",
+                        "2",
+                        "3",
+                        "4"
+                ],
+                "answer": 1,
+                "explanation": "x가 1 증가할 때 y는 2 증가하므로 기울기는 2입니다. 상수항 1은 y절편입니다."
+        },
+        {
+                "question": "x가 2 증가할 때 y가 6 감소하는 직선의 기울기는?",
+                "options": [
+                        "3",
+                        "−3",
+                        "−6"
+                ],
+                "answer": 1,
+                "explanation": "기울기는 y의 변화량을 x의 변화량으로 나눈 값입니다. −6÷2=−3입니다."
         }
-    ]
+]
 };
 
 Engine.init(slopeData);

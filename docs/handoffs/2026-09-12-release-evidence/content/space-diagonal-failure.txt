@@ -1,0 +1,15 @@
+[p1 "공간 대각선" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "공간 대각선"]
+root
+  heading
+    text "🎉 완료!"
+  container
+    paragraph
+      text "오늘 배운 내용"
+    heading
+      text "공간 대각선"
+    paragraph
+      text "상자 모서리를 따라간 경로와 내부의 곧은 대각선 중 어느 것이 짧을까요? 3,4,12 예제로 계산하고 그림에서 설명하세요."
+  button [ref=1]
+    text "다시하기"
+  button [ref=2]
+    text "홈으로"

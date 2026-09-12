@@ -374,7 +374,7 @@ var cylinderVolumeData = {
     },
     interaction: {
         title: "원기둥 부피 탐구",
-        instruction: "마우스로 드래그하여 원기둥을 돌려보고, 슬라이더를 움직여 크기를 바꿔보세요! (키보드 방향키로도 회전할 수 있어요.)",
+        instruction: "먼저 r=2, h=3의 부피를 예상하고 계산해요. 높이만 6으로 바꾸면 2배, 반지름만 4로 바꾸면 4배가 되는지 비교해 보세요. 마우스 드래그나 방향키로 회전할 수 있어요.",
         onInit: function(container, engine) {
             var radius = 3;
             var height = 5;

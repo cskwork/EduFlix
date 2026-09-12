@@ -113,7 +113,7 @@
                     <h2>안녕! 나는 <span class="highlight">우주 탐험가 하늘</span>이야!</h2>
                     <p>어젯밤 친구가 사진을 보내왔어:</p>
                     <div class="question-card">
-                        <p>"하늘아, 이 달 사진 봐! 어제는 초승달이었는데 오늘은 반달이야. 달이 진짜로 줄어들었다가 커지는 거야?"</p>
+                        <p>"하늘아, 이 달 사진 봐! 며칠 전에는 초승달이었는데 오늘은 반달이야. 달이 진짜로 줄어들었다가 커지는 거야?"</p>
                     </div>
                     <p>아니야! 달은 그대로야. <strong>보이는 부분</strong>만 달라지는 거지!</p>
                     <p>우주에서 본 모습을 보여줄게!</p>
@@ -162,7 +162,7 @@
                                 <g transform="translate(300, 200)">
                                     <!-- 달 본체 (항상 반은 밝음) -->
                                     <circle r="15" fill="#333"/>
-                                    <path id="moon-lit" d="M0,-15 A15,15 0 0,1 0,15 A15,15 0 0,1 0,-15" fill="#F5F5DC"/>
+                                    <path id="moon-lit" d="M0,-15 A15,15 0 0,0 0,15 Z" fill="#F5F5DC"/>
                                 </g>
                             </g>
                             
@@ -220,7 +220,7 @@
                 </div>
                 
                 <div class="discovery-message hidden" id="discovery-message">
-                    <p>🌙 발견! 달이 지구 주위를 돌면서 태양빛을 받는 부분이 변해!</p>
+                    <p>🌙 발견! 달은 거의 항상 절반이 밝고, 지구에서 보이는 밝은 부분의 비율이 변해!</p>
                 </div>
                 
                 <button class="next-btn" onclick="ScienceApp.nextScene()">원리 정리하기</button>
@@ -263,7 +263,7 @@
                 
                 <div class="key-insight">
                     <div class="formula-box">
-                        <p class="formula">달의 공전 주기 = 약 29.5일</p>
+                        <p class="formula">달의 위상 변화 주기 = 약 29.5일</p>
                     </div>
                     <p class="insight-text">
                         달은 <strong>항상 절반이 밝지만</strong>,<br>
@@ -293,7 +293,7 @@
                         </button>
                         <button class="quiz-option" data-correct="true" onclick="ScienceApp.checkAnswer(this)">
                             <span class="option-letter">B</span>
-                            <span>태양-지구-달 순서로 일렬</span>
+                            <span>태양과 반대쪽 하늘에 달이 위치</span>
                         </button>
                         <button class="quiz-option" data-correct="false" onclick="ScienceApp.checkAnswer(this)">
                             <span class="option-letter">C</span>

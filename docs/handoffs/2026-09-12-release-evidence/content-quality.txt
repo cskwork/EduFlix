@@ -1,0 +1,28 @@
+npm notice run eduflix@0.4.0 test:content-quality
+npm notice run node scripts/verify-content-quality/group-1.mjs && node scripts/verify-content-quality/group-2.mjs && node scripts/verify-content-quality/group-3.mjs && node scripts/verify-content-quality/syntax.mjs
+PASS final 22 execution groups
+{
+  "passed": 11,
+  "checks": [
+    "alpha exact target/equivalence, approximate rejection, one-whole bounds",
+    "beta decimal answer not truncated",
+    "epsilon displayed boundary accepted, outside rejected",
+    "data maximum and minimum ties accepted once",
+    "algebra hard equations always have unique intended solution",
+    "geometry rejects near answer, credits correct answer once",
+    "function exact answer one credit",
+    "space stars distinct and stage click not repeated",
+    "isometric quiz credits one attempt until next question",
+    "racing and coordinate quiz repeated submit only counts once",
+    "IRP actual model equal-baseline, zero-return, zero-deduction, zero-year, one-year and growth cases"
+  ]
+}
+cell-explorer second question reachable
+chemistry: indicator-only rejected; balanced molar acid/base pH7; reset relocks
+chemical-reactor second question reachable
+Newton: force release keeps velocity constant without friction
+Python: out-of-order input rejected; sequence outputs 0,2,4
+Story builder: incorrect choice restores original button after selection cleared
+Reading: single submission scores once and exposes answer evidence
+PASS 7 science/language execution groups
+{"lessons":84,"javascriptFiles":59,"inlineScripts":25,"eventHandlers":366,"failures":0,"negativeHandlerFixture":"passed"}

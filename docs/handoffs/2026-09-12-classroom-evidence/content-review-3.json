@@ -1,0 +1,918 @@
+[
+  {
+    "id": "cell-explorer",
+    "title": "세포 탐험",
+    "subject": "science",
+    "grade": "middle-1",
+    "type": "exploration",
+    "directory": "public/contents/science/middle/cell-explorer",
+    "reviewedFiles": [
+      "public/contents/science/middle/cell-explorer/index.html",
+      "public/contents/science/middle/cell-explorer/script.js",
+      "public/contents/science/middle/cell-explorer/style.css",
+      "public/contents/science/middle/cell-explorer/manifest.json"
+    ],
+    "before": "두 문항 중 첫 문항만 실행하며 에너지를 만든다고만 설명함.",
+    "after": "두 문항을 순서대로 풀고 해설을 읽은 뒤 진행. 동물세포 모형 범위와 ATP 에너지 전환 설명.",
+    "verification": [
+      "전체 JS syntax, 두 문항 진행 DOM 검사",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "DOM에서두번째문항진입확인"
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/science/middle/cell-explorer/script.js"
+    ],
+    "sources": []
+  },
+  {
+    "id": "chemical-reactor",
+    "title": "화학 반응 시뮬레이터",
+    "subject": "science",
+    "grade": "high-1",
+    "type": "simulation",
+    "directory": "public/contents/science/high/chemical-reactor",
+    "reviewedFiles": [
+      "public/contents/science/high/chemical-reactor/index.html",
+      "public/contents/science/high/chemical-reactor/script.js",
+      "public/contents/science/high/chemical-reactor/style.css",
+      "public/contents/science/high/chemical-reactor/manifest.json"
+    ],
+    "before": "지시약만으로 성공, 선형 pH, 중화 시 가짜 기포, 두번째 문항 누락.",
+    "after": "강산/강염기 몰수와 Kw로 pH 계산. 양 시약 투입 및 같은 몰수에만 성공. 무기체 반응·25°C 범위·두 문항 해설.",
+    "verification": [
+      "pH 7/산성/염기성/역순 혼합 및 지시약만 투입 실패 결정적 검사",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "DOM에서지시약만투입실패/산성/동몰중화pH7/reset재잠금/두번째문항확인"
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/science/high/chemical-reactor/script.js"
+    ],
+    "sources": [
+      "https://openstax.org/books/chemistry-2e/pages/14-7-acid-base-titrations"
+    ]
+  },
+  {
+    "id": "20260127-topic-105b382d",
+    "title": "영어 인사의 마법",
+    "subject": "english",
+    "grade": "elementary-3",
+    "type": "simulation",
+    "directory": "public/contents/english/elementary/20260127-topic-105b382d",
+    "reviewedFiles": [
+      "public/contents/english/elementary/20260127-topic-105b382d/index.html",
+      "public/contents/english/elementary/20260127-topic-105b382d/script.js",
+      "public/contents/english/elementary/20260127-topic-105b382d/style.css",
+      "public/contents/english/elementary/20260127-topic-105b382d/manifest.json"
+    ],
+    "before": "해/달만으로 시간 인사를 판정, 점심시간의 오전/오후 모호.",
+    "after": "8시/13시/19시로 문항조건 명시, Hello와Good night 용법 비교.",
+    "verification": [
+      "3상황 정답과 문장 조건 대조",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/20260127-topic-105b382d/index.html",
+      "public/contents/english/elementary/20260127-topic-105b382d/script.js"
+    ],
+    "sources": []
+  },
+  {
+    "id": "comparative-adjectives",
+    "title": "Who is Taller? Comparing with Adjectives",
+    "subject": "english",
+    "grade": "elementary-4",
+    "type": "quiz",
+    "directory": "public/contents/english/elementary/comparative-adjectives",
+    "reviewedFiles": [
+      "public/contents/english/elementary/comparative-adjectives/index.html",
+      "public/contents/english/elementary/comparative-adjectives/script.js",
+      "public/contents/english/elementary/comparative-adjectives/style.css",
+      "public/contents/english/elementary/comparative-adjectives/manifest.json"
+    ],
+    "before": "2음절 이상 more 규칙과happy 충돌, than항상필수 오기, 답만 피드백.",
+    "after": "일부2음절 예외/비교대상있을때than 설명, 문항별 형태 이유 추가.",
+    "verification": [
+      "taller/more beautiful/better 정답 및 이유 대조",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/comparative-adjectives/index.html",
+      "public/contents/english/elementary/comparative-adjectives/script.js"
+    ],
+    "sources": [
+      "https://learnenglish.britishcouncil.org/free-resources/grammar/english-grammar-reference/comparative-superlative-adjectives?page=1"
+    ]
+  },
+  {
+    "id": "modal-can",
+    "title": "I Can Do It! Talking About Abilities",
+    "subject": "english",
+    "grade": "elementary-3",
+    "type": "quiz",
+    "directory": "public/contents/english/elementary/modal-can",
+    "reviewedFiles": [
+      "public/contents/english/elementary/modal-can/index.html",
+      "public/contents/english/elementary/modal-can/script.js",
+      "public/contents/english/elementary/modal-can/style.css",
+      "public/contents/english/elementary/modal-can/manifest.json"
+    ],
+    "before": "국적/월령으로 능력 단정, 오답에 형태 이유 없음.",
+    "after": "개별 학습상태로 조건 명시, 오답에도 can+원형 설명 재사용.",
+    "verification": [
+      "각 ability/quiz 정답표와 설명 대조",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/modal-can/index.html",
+      "public/contents/english/elementary/modal-can/script.js"
+    ],
+    "sources": []
+  },
+  {
+    "id": "present-tenses",
+    "title": "I play vs I'm playing: What's the Difference?",
+    "subject": "english",
+    "grade": "elementary-5",
+    "type": "quiz",
+    "directory": "public/contents/english/elementary/present-tenses",
+    "reviewedFiles": [
+      "public/contents/english/elementary/present-tenses/index.html",
+      "public/contents/english/elementary/present-tenses/script.js",
+      "public/contents/english/elementary/present-tenses/style.css",
+      "public/contents/english/elementary/present-tenses/manifest.json"
+    ],
+    "before": "키워드만으로 시제를 무조건 결정하는 규칙,100°C 압력조건없음.",
+    "after": "문장뜻/상태동사 예외와 물끓는 압력조건 명시. 오답에도 문항별 이유.",
+    "verification": [
+      "습관/진행/지구공전 문항 정답 설명 확인",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/present-tenses/index.html",
+      "public/contents/english/elementary/present-tenses/script.js"
+    ],
+    "sources": []
+  },
+  {
+    "id": "will-vs-going-to-library",
+    "title": "도서관 가는 계획: will과 going to의 비밀",
+    "subject": "english",
+    "grade": "middle-1",
+    "type": "simulation",
+    "directory": "public/contents/english/middle/will-vs-going-to-library",
+    "reviewedFiles": [
+      "public/contents/english/middle/will-vs-going-to-library/index.html",
+      "public/contents/english/middle/will-vs-going-to-library/script.js",
+      "public/contents/english/middle/will-vs-going-to-library/style.css",
+      "public/contents/english/middle/will-vs-going-to-library/manifest.json"
+    ],
+    "before": "미래 표현을 둘로 제한하고 결정시점 규칙을 절대화.",
+    "after": "기존 정리 영역에서 활동 범위와예측/현재진행미래 확장 명시.",
+    "verification": [
+      "6상황 및3문항의 맥락/정답표 검토, HTML syntax",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/middle/will-vs-going-to-library/index.html"
+    ],
+    "sources": [
+      "https://learnenglishteens.britishcouncil.org/grammar/b1-b2-grammar/future-forms"
+    ]
+  },
+  {
+    "id": "will-vs-going-to-zoo",
+    "title": "Travel Plans: will vs going to - Zoo Visit Adventure",
+    "subject": "english",
+    "grade": "middle-1",
+    "type": "simulation",
+    "directory": "public/contents/english/middle/will-vs-going-to-zoo",
+    "reviewedFiles": [
+      "public/contents/english/middle/will-vs-going-to-zoo/index.html",
+      "public/contents/english/middle/will-vs-going-to-zoo/script.js",
+      "public/contents/english/middle/will-vs-going-to-zoo/style.css",
+      "public/contents/english/middle/will-vs-going-to-zoo/manifest.json"
+    ],
+    "before": "과거 단어있으면going to라는 오답 힌트와현재형미래 전면부정.",
+    "after": "결정된행동 맥락을 힌트로 교체, 시간표 현재형과개인계획 구별.",
+    "verification": [
+      "6카드/3문항의 모범답 맥락 확인",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/middle/will-vs-going-to-zoo/index.html",
+      "public/contents/english/middle/will-vs-going-to-zoo/script.js"
+    ],
+    "sources": [
+      "https://learnenglishteens.britishcouncil.org/grammar/b1-b2-grammar/future-forms"
+    ]
+  },
+  {
+    "id": "moon-phases",
+    "title": "달의 위상 변화: 변하는 달의 비밀",
+    "subject": "science",
+    "grade": "elementary-5",
+    "type": "simulation",
+    "directory": "public/contents/science/elementary/moon-phases",
+    "reviewedFiles": [
+      "public/contents/science/elementary/moon-phases/index.html",
+      "public/contents/science/elementary/moon-phases/script.js",
+      "public/contents/science/elementary/moon-phases/style.css"
+    ],
+    "before": "29.5일을 공전 주기로 오기, 매 보름 일렬/하루만에 초승→반달 서술.",
+    "after": "위상 주기와 관측 방향을 구분하고 월식·지구 그림자 오개념 교정. 궤도0일위치를태양쪽으로수정하고밝은반구는항상태양방향을유지하도록역회전.",
+    "verification": [
+      "29.5주기/보름 피드백 문자열 및 JS syntax",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/science/elementary/moon-phases/index.html",
+      "public/contents/science/elementary/moon-phases/script.js"
+    ],
+    "sources": [
+      "https://science.nasa.gov/moon/moon-phases/"
+    ]
+  },
+  {
+    "id": "states-of-matter",
+    "title": "물질의 상태 변화: 분자의 비밀",
+    "subject": "science",
+    "grade": "elementary-5",
+    "type": "simulation",
+    "directory": "public/contents/science/elementary/states-of-matter",
+    "reviewedFiles": [
+      "public/contents/science/elementary/states-of-matter/index.html",
+      "public/contents/science/elementary/states-of-matter/script.js",
+      "public/contents/science/elementary/states-of-matter/style.css"
+    ],
+    "before": "얼음 분자 간격이 물보다 좁다고 표시하고 고체 입자가 바닥 한 줄로 모임.",
+    "after": "얼음의 열린 배열과 물의 이동 가능한 가까운 배열을 구분, 고체를 격자로 복원. 뚜껑 열손실 설명 정정.",
+    "verification": [
+      "고체 간격/분자 격자/온도 조건 JS 검사",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/science/elementary/states-of-matter/script.js"
+    ],
+    "sources": [
+      "https://openstax.org/books/biology-2e/pages/2-2-water"
+    ]
+  },
+  {
+    "id": "newtons-laws",
+    "title": "뉴턴의 운동 법칙: 힘과 운동의 비밀",
+    "subject": "science",
+    "grade": "middle-2",
+    "type": "simulation",
+    "directory": "public/contents/science/middle/newtons-laws",
+    "reviewedFiles": [
+      "public/contents/science/middle/newtons-laws/index.html",
+      "public/contents/science/middle/newtons-laws/script.js",
+      "public/contents/science/middle/newtons-laws/style.css"
+    ],
+    "before": "힘을0으로 바꿔도 캡처된 가속도가 계속 적용되어 관성 실험이 틀림.",
+    "after": "매 프레임 현재 힘으로 가속도를 계산. 합력0/서로 다른 물체의 작용반작용을 명시.",
+    "verification": [
+      "힘0 전환 후 속도 유지 결정적 검사",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "힘0전환후다음프레임속도일정확인"
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/science/middle/newtons-laws/index.html",
+      "public/contents/science/middle/newtons-laws/script.js"
+    ],
+    "sources": []
+  },
+  {
+    "id": "photosynthesis",
+    "title": "광합성: 식물의 비밀 공장",
+    "subject": "science",
+    "grade": "middle-1",
+    "type": "simulation",
+    "directory": "public/contents/science/middle/photosynthesis",
+    "reviewedFiles": [
+      "public/contents/science/middle/photosynthesis/index.html",
+      "public/contents/science/middle/photosynthesis/script.js",
+      "public/contents/science/middle/photosynthesis/style.css"
+    ],
+    "before": "임의로 산소량을포도당의0.9배 표시, 상쾌함을산소로 단정.",
+    "after": "동일한 상대 생성 지수 및 실측량 아님 명시. 광합성 재료/에너지와 낮밤 호흡 설명. 실제HTML퀴즈의상쾌함질문을광합성과생성물로교체. 모든산소가육상식물에서온다는오류를조류·미생물과소비과정으로정정.",
+    "verification": [
+      "입력 최솟값0일때 양출력0, 제한요인 동일 지수 검사",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/science/middle/photosynthesis/index.html",
+      "public/contents/science/middle/photosynthesis/script.js"
+    ],
+    "sources": [
+      "https://oceanservice.noaa.gov/facts/ocean-oxygen.html"
+    ]
+  },
+  {
+    "id": "plate-tectonics",
+    "title": "지진과 판구조론: 움직이는 대륙",
+    "subject": "science",
+    "grade": "middle-2",
+    "type": "simulation",
+    "directory": "public/contents/science/middle/plate-tectonics",
+    "reviewedFiles": [
+      "public/contents/science/middle/plate-tectonics/index.html",
+      "public/contents/science/middle/plate-tectonics/script.js",
+      "public/contents/science/middle/plate-tectonics/style.css"
+    ],
+    "before": "첫 경계 진입만으로 발견 완료, 변환 경계가 반드시 지진처럼 설명.",
+    "after": "세 경계를 모두 비교해야 발견. 변환경계의 변형·급격한 해방 및 지각 생성소멸 차이 설명.",
+    "verification": [
+      "경계3종 Set 누적조건 및 개별 설명 syntax",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/science/middle/plate-tectonics/script.js"
+    ],
+    "sources": [
+      "https://pubs.usgs.gov/gip/dynamic/understanding.html"
+    ]
+  },
+  {
+    "id": "countable-uncountable",
+    "title": "셀 수 있을까? - Countable vs Uncountable",
+    "subject": "english",
+    "grade": "elementary-5",
+    "type": "quiz",
+    "directory": "public/contents/english/elementary/countable-uncountable",
+    "reviewedFiles": [
+      "public/contents/english/elementary/countable-uncountable/index.html",
+      "public/contents/english/elementary/countable-uncountable/script.js",
+      "public/contents/english/elementary/countable-uncountable/style.css"
+    ],
+    "before": "불가산명사 some필수라는잘못된 표, 글자로a/an판정.",
+    "after": "some선택성과단위표현, 모음소리 기준 명시.",
+    "verification": [
+      "water/apples/an/some rice 선택지와해설검토",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/countable-uncountable/index.html",
+      "public/contents/english/elementary/countable-uncountable/script.js"
+    ],
+    "sources": [
+      "https://learnenglishteens.britishcouncil.org/sites/teens/files/gs_countable_and_uncountable_nouns.pdf"
+    ]
+  },
+  {
+    "id": "magic-e",
+    "title": "Magic E - 마법의 E",
+    "subject": "english",
+    "grade": "elementary-2",
+    "type": "quiz",
+    "directory": "public/contents/english/elementary/magic-e",
+    "reviewedFiles": [
+      "public/contents/english/elementary/magic-e/index.html",
+      "public/contents/english/elementary/magic-e/script.js",
+      "public/contents/english/elementary/magic-e/style.css"
+    ],
+    "before": "모음글자/소리 혼동 및magic e무조건적용, 퀴즈 색만피드백.",
+    "after": "글자/소리 구분과have/give예외, 정답단어·소리규칙 해설 및읽을시간.",
+    "verification": [
+      "4문항 정답단어/CVCe 대조",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/magic-e/index.html",
+      "public/contents/english/elementary/magic-e/script.js"
+    ],
+    "sources": []
+  },
+  {
+    "id": "prepositions-place",
+    "title": "위치 전치사 - Where is it?",
+    "subject": "english",
+    "grade": "elementary-3",
+    "type": "quiz",
+    "directory": "public/contents/english/elementary/prepositions-place",
+    "reviewedFiles": [
+      "public/contents/english/elementary/prepositions-place/index.html",
+      "public/contents/english/elementary/prepositions-place/script.js",
+      "public/contents/english/elementary/prepositions-place/style.css"
+    ],
+    "before": "위치퀴즈에서단어번역만피드백.",
+    "after": "사물관계를완전한문장과접촉/내부/아래/옆 이유로설명.",
+    "verification": [
+      "4그림SVG/문장정답매핑대조",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/prepositions-place/script.js"
+    ],
+    "sources": []
+  },
+  {
+    "id": "present-perfect",
+    "title": "현재완료시제 - Have You Ever...?",
+    "subject": "english",
+    "grade": "middle-1",
+    "type": "quiz",
+    "directory": "public/contents/english/middle/present-perfect",
+    "reviewedFiles": [
+      "public/contents/english/middle/present-perfect/index.html",
+      "public/contents/english/middle/present-perfect/script.js",
+      "public/contents/english/middle/present-perfect/style.css"
+    ],
+    "before": "완료부사와현재완료만결합하는듯설명, 끝난과거와대조부족.",
+    "after": "yesterday/lastyear 단순과거와대조, just미국영어용법한계명시.",
+    "verification": [
+      "have been/have lived/have finished 정답표검토",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/middle/present-perfect/index.html",
+      "public/contents/english/middle/present-perfect/script.js"
+    ],
+    "sources": []
+  },
+  {
+    "id": "word-families",
+    "title": "Word Families - 명사 만들기 마법",
+    "subject": "english",
+    "grade": "elementary-5",
+    "type": "quiz",
+    "directory": "public/contents/english/elementary/word-families",
+    "reviewedFiles": [
+      "public/contents/english/elementary/word-families/index.html",
+      "public/contents/english/elementary/word-families/script.js",
+      "public/contents/english/elementary/word-families/style.css"
+    ],
+    "before": "education value 오문장, a없는단수가산explanation, suffix범용변환오개념.",
+    "after": "명사자리맞는원본문장으로수정, a clearer explanation, 단어묶음별철자학습범위.",
+    "verification": [
+      "4정답을완성문장에대입검토",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/word-families/index.html",
+      "public/contents/english/elementary/word-families/script.js"
+    ],
+    "sources": []
+  },
+  {
+    "id": "prepositions-3d",
+    "title": "3D 위치 전치사 - Where is it?",
+    "subject": "english",
+    "grade": "elementary-3",
+    "type": "simulation",
+    "directory": "public/contents/english/elementary/prepositions-3d",
+    "reviewedFiles": [
+      "public/contents/english/elementary/prepositions-3d/index.html",
+      "public/contents/english/elementary/prepositions-3d/script.js",
+      "public/contents/english/elementary/prepositions-3d/style.css",
+      "public/contents/english/elementary/prepositions-3d/manifest.json"
+    ],
+    "before": "between정답버튼없음. book/cat/lamp문장과ball그림불일치, under상자앞그림.",
+    "after": "5번째정답선택가능. 공/상자/테이블로문장과그림일치, under테이블밑위치.",
+    "verification": [
+      "5정답버튼존재 및문장/3D분기대조",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/prepositions-3d/index.html",
+      "public/contents/english/elementary/prepositions-3d/script.js"
+    ],
+    "sources": []
+  },
+  {
+    "id": "3d-vocabulary-adventure",
+    "title": "3D Vocabulary Adventure",
+    "subject": "english",
+    "grade": "elementary-3",
+    "type": "game",
+    "directory": "public/contents/english/elementary/3d-vocabulary-adventure",
+    "reviewedFiles": [
+      "public/contents/english/elementary/3d-vocabulary-adventure/index.html"
+    ],
+    "before": "정오답칭찬만표시, brave를두려움없음으로정의.",
+    "after": "현재단어 뜻과예문을정오답모두표시하고6초제공, 용기는두려움속에서도행동.",
+    "verification": [
+      "30단어선택지정답범위/예문검토, JSsyntax",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. Three.js/WebGL와음성합성의개별브라우저가용성은실기기검증이필요합니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/3d-vocabulary-adventure/index.html"
+    ],
+    "sources": []
+  },
+  {
+    "id": "story-word-builder",
+    "title": "Story Word Builder",
+    "subject": "english",
+    "grade": "elementary-4",
+    "type": "game",
+    "directory": "public/contents/english/elementary/story-word-builder",
+    "reviewedFiles": [
+      "public/contents/english/elementary/story-word-builder/index.html"
+    ],
+    "before": "오답타이머가null이된selectedWord를읽어예외/카드잠금. 창작형빈칸을유일문법정답처럼판정.",
+    "after": "선택버튼을캡처해정상복원, 연속오답경쟁방지. 모범문장복원활동임을명시하고모범단어안내.",
+    "verification": [
+      "오답후타이머실행시카드재사용DOM검사",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "오답후타이머에서null예외없이선택카드복원확인"
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/story-word-builder/index.html"
+    ],
+    "sources": []
+  },
+  {
+    "id": "phonics-3d-playground",
+    "title": "Phonics 3D Playground",
+    "subject": "english",
+    "grade": "elementary-2",
+    "type": "game",
+    "directory": "public/contents/english/elementary/phonics-3d-playground",
+    "reviewedFiles": [
+      "public/contents/english/elementary/phonics-3d-playground/index.html"
+    ],
+    "before": "단모음단어목록에earth/icecream/owl/unicorn혼합, C/K동일음중하나오답, 음성은글자이름인데음소라고표시.",
+    "after": "대상음에맞는예시로교체,C/K동음보기제외및예문맥락제시. 이름/단어음성범위명시, 반복재생점수누적제거.",
+    "verification": [
+      "26글자예문음검토, 동일음보기제외조건",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. Three.js/WebGL와음성합성의개별브라우저가용성은실기기검증이필요합니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/phonics-3d-playground/index.html"
+    ],
+    "sources": [
+      "https://www.britishcouncil.org/voices-magazine/how-phonics-can-give-children-head-start-reading-english"
+    ]
+  },
+  {
+    "id": "grammar-galaxy",
+    "title": "Grammar Galaxy",
+    "subject": "english",
+    "grade": "elementary-5",
+    "type": "exploration",
+    "directory": "public/contents/english/elementary/grammar-galaxy",
+    "reviewedFiles": [
+      "public/contents/english/elementary/grammar-galaxy/index.html"
+    ],
+    "before": "품사문항에cooking명사가능선택지혼합, 단어만품사규칙.",
+    "after": "동사형cooks로명확화, 문장내역할과추상명사및완성문장피드백.",
+    "verification": [
+      "문항별sentence/options/correct 대조",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. Three.js/WebGL와음성합성의개별브라우저가용성은실기기검증이필요합니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/grammar-galaxy/index.html"
+    ],
+    "sources": []
+  },
+  {
+    "id": "spelling-bee-arena",
+    "title": "Spelling Bee Arena",
+    "subject": "english",
+    "grade": "elementary-4",
+    "type": "quiz",
+    "directory": "public/contents/english/elementary/spelling-bee-arena",
+    "reviewedFiles": [
+      "public/contents/english/elementary/spelling-bee-arena/index.html"
+    ],
+    "before": "철자중복제출점수가능, 공룡모두큰동물/독립=혼자서오개념.",
+    "after": "제출잠금, 정답철자·뜻·철자힌트함께표시, 정의범위교정.",
+    "verification": [
+      "동일문항재제출guard/wordletters 확인",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. Three.js/WebGL와음성합성의개별브라우저가용성은실기기검증이필요합니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/spelling-bee-arena/index.html"
+    ],
+    "sources": []
+  },
+  {
+    "id": "literature-3d-theater",
+    "title": "Literature 3D Theater",
+    "subject": "english",
+    "grade": "middle-1",
+    "type": "exploration",
+    "directory": "public/contents/english/middle/literature-3d-theater",
+    "reviewedFiles": [
+      "public/contents/english/middle/literature-3d-theater/index.html"
+    ],
+    "before": "전체12문항정답B고정, 문학상징유일해석처럼제시.",
+    "after": "정답문자열보존하며보기위치분산, 근거있는해석선택으로질문/설명수정.",
+    "verification": [
+      "12문항정답문자열회전전후일치검사",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "중1영어보다높은어휘와고전의죽음/폭력주제는교사선별필요. 저작권상태개별법률검토는범위밖. Three.js/WebGL와음성합성의개별브라우저가용성은실기기검증이필요합니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/middle/literature-3d-theater/index.html"
+    ],
+    "sources": []
+  },
+  {
+    "id": "word-detective-3d",
+    "title": "Word Detective 3D",
+    "subject": "english",
+    "grade": "middle-1",
+    "type": "game",
+    "directory": "public/contents/english/middle/word-detective-3d",
+    "reviewedFiles": [
+      "public/contents/english/middle/word-detective-3d/index.html"
+    ],
+    "before": "놀람만으로pristine추론/시간만으로heated추론, 거의모든정답B.",
+    "after": "실제상태와정서행동단서를추가하고보기위치분산.",
+    "verification": [
+      "10문항단서/정답보존검사",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. Three.js/WebGL와음성합성의개별브라우저가용성은실기기검증이필요합니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/middle/word-detective-3d/index.html"
+    ],
+    "sources": []
+  },
+  {
+    "id": "grammar-builder-3d",
+    "title": "Grammar Builder 3D",
+    "subject": "english",
+    "grade": "middle-2",
+    "type": "simulation",
+    "directory": "public/contents/english/middle/grammar-builder-3d",
+    "reviewedFiles": [
+      "public/contents/english/middle/grammar-builder-3d/index.html"
+    ],
+    "before": "compoundpredicate를compound sentence로오분류, 모든과거분사-ed, 반복점수및같은단어정체성오채점.",
+    "after": "개념교정/불규칙분사예시, 제출잠금/단어값비교, 정오답구조피드백.",
+    "verification": [
+      "10완성문장과개념검토, 중복검사guard",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. Three.js/WebGL와음성합성의개별브라우저가용성은실기기검증이필요합니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/middle/grammar-builder-3d/index.html"
+    ],
+    "sources": []
+  },
+  {
+    "id": "reading-comprehension-quest",
+    "title": "Reading Comprehension Quest",
+    "subject": "english",
+    "grade": "middle-2",
+    "type": "quiz",
+    "directory": "public/contents/english/middle/reading-comprehension-quest",
+    "reviewedFiles": [
+      "public/contents/english/middle/reading-comprehension-quest/index.html"
+    ],
+    "before": "빈답/반복제출로점수변경가능, 답해설없음, 대피거부와부상회복전훈련을찬양.",
+    "after": "답필수/1회채점/30문항별본문근거. 안전계획·의료팀재활로서사수정, 의족갑작스런등장제거.",
+    "verification": [
+      "30답-본문근거대조, 반복submit점수고정DOM검사",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "반복제출점수100유지/문항별근거출력확인"
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/middle/reading-comprehension-quest/index.html"
+    ],
+    "sources": []
+  },
+  {
+    "id": "vocabulary-mountain",
+    "title": "Vocabulary Mountain",
+    "subject": "english",
+    "grade": "middle-3",
+    "type": "game",
+    "directory": "public/contents/english/middle/vocabulary-mountain",
+    "reviewedFiles": [
+      "public/contents/english/middle/vocabulary-mountain/index.html"
+    ],
+    "before": "대부분의 정답이 B에 집중되고 해설 없이 진행하며 힌트로 음수점수가 가능함.",
+    "after": "정답문자열을 보존하며 보기 위치 분산. 정오답 모두 단어뜻·힌트를 5초간 표시하고 힌트 점수 하한을 0으로 제한.",
+    "verification": [
+      "15단어품사/정답값회전일치",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. Three.js/WebGL와음성합성의개별브라우저가용성은실기기검증이필요합니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/middle/vocabulary-mountain/index.html"
+    ],
+    "sources": []
+  },
+  {
+    "id": "action-verbs-game",
+    "title": "동작 동사 분류 게임",
+    "subject": "english",
+    "grade": "elementary-3",
+    "type": "game",
+    "directory": "public/contents/english/elementary/action-verbs-game",
+    "reviewedFiles": [
+      "public/contents/english/elementary/action-verbs-game/index.html",
+      "public/contents/english/elementary/action-verbs-game/manifest.json"
+    ],
+    "before": "love/like/want도동작동사로명명, want=감정만, 정답칭찬만.",
+    "after": "동사의의미분류로표현하고상태동사구별,5문항별의미이유.",
+    "verification": [
+      "15카테고리/5답표대조, inlineJSsyntax",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다. 기존자동다음문항타이머는일부남아있습니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/english/elementary/action-verbs-game/index.html"
+    ],
+    "sources": []
+  },
+  {
+    "id": "mario-country-quiz",
+    "title": "슈퍼마리오 나라이름 퀴즈",
+    "subject": "world-history",
+    "grade": "elementary-4",
+    "type": "game",
+    "directory": "public/contents/world-history/elementary/mario-country-quiz",
+    "reviewedFiles": [
+      "public/contents/world-history/elementary/mario-country-quiz/index.html",
+      "public/contents/world-history/elementary/mario-country-quiz/script.js",
+      "public/contents/world-history/elementary/mario-country-quiz/style.css"
+    ],
+    "before": "나라별문화고정관념표현과정답명만피드백.",
+    "after": "수도/유적위치단서및10나라별설명. 호주/오스트리아·피라미드다른지역구별.",
+    "verification": [
+      "10정답셔플역매핑/해설누락검사",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/world-history/elementary/mario-country-quiz/script.js"
+    ],
+    "sources": [
+      "https://www.nps.gov/stli/learn/statue-of-liberty-facts.htm"
+    ]
+  },
+  {
+    "id": "world-quiz-battle",
+    "title": "WORLD QUIZ BATTLE - 세계 상식 대전",
+    "subject": "world-history",
+    "grade": "middle-1",
+    "type": "game",
+    "directory": "public/contents/world-history/middle/world-quiz-battle",
+    "reviewedFiles": [
+      "public/contents/world-history/middle/world-quiz-battle/index.html",
+      "public/contents/world-history/middle/world-quiz-battle/script.js",
+      "public/contents/world-history/middle/world-quiz-battle/style.css"
+    ],
+    "before": "정오답전투만있고해설없이500ms후진행. 유적/문화상징혼동.",
+    "after": "20문항각해설과기준연도/추계/식민지역사맥락. 전투후해설읽고직접다음문항.",
+    "verification": [
+      "20해설셔플보존검사/직접next분기syntax",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/world-history/middle/world-quiz-battle/script.js"
+    ],
+    "sources": [
+      "https://whc.unesco.org/en/list/252",
+      "https://www.un.org/en/desa/india-overtake-china-world-most-populous-country-april-2023-united-nations-projects"
+    ]
+  },
+  {
+    "id": "animal-adaptation-game",
+    "title": "동물 마을의 비밀: 환경 적응 대작전",
+    "subject": "science",
+    "grade": "elementary-4",
+    "type": "game",
+    "directory": "public/contents/science/elementary/animal-adaptation-game",
+    "reviewedFiles": [
+      "public/contents/science/elementary/animal-adaptation-game/index.html",
+      "public/contents/science/elementary/animal-adaptation-game/script.js",
+      "public/contents/science/elementary/animal-adaptation-game/style.css",
+      "public/contents/science/elementary/animal-adaptation-game/manifest.json"
+    ],
+    "before": "모든곰동면처럼표시, 사냥보호색을적으로부터숨기만설명, 적응시간척도없음.",
+    "after": "불곰사례한정/먹잇감위장/유전특징세대변화와개체의지구분.",
+    "verification": [
+      "동면·이동카드및3퀴즈답대조",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "단어/문항/상호작용분기정적검토. 데이터형콘텐츠는정답인덱스·중복보기·회전정답보존검사."
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/science/elementary/animal-adaptation-game/script.js"
+    ],
+    "sources": [
+      "https://home.nps.gov/whsa/learn/nature/white-animals-at-white-sands.htm"
+    ]
+  },
+  {
+    "id": "python-list-comprehension-factory",
+    "title": "파이썬 복제 기계: 리스트 컴프리헨션 공장",
+    "subject": "coding",
+    "grade": "middle-2",
+    "type": "simulation",
+    "directory": "public/contents/coding/middle/python-list-comprehension-factory",
+    "reviewedFiles": [
+      "public/contents/coding/middle/python-list-comprehension-factory/index.html",
+      "public/contents/coding/middle/python-list-comprehension-factory/script.js",
+      "public/contents/coding/middle/python-list-comprehension-factory/style.css",
+      "public/contents/coding/middle/python-list-comprehension-factory/manifest.json"
+    ],
+    "before": "카드역순입력해도결과[0,2,4]라고주장, 사용카드중복클릭, Python모든수세기0단정.",
+    "after": "range반복순서를강제하고사용카드중복차단, 생략시작값/끝값제외설명.",
+    "verification": [
+      "2선택먼저거부/0→1→2결과[0,2,4]/카드중복검사",
+      "node:vm Script 문법검사 통과. 해당디렉터리 manifest JSON이있으면파싱통과.",
+      "역순입력거부및0→1→2출력[0,2,4]확인"
+    ],
+    "remainingLimits": "개별 브라우저 동작과 화면은 coordinator QA 대상입니다.",
+    "status": "improved",
+    "changedFiles": [
+      "public/contents/coding/middle/python-list-comprehension-factory/script.js"
+    ],
+    "sources": [
+      "https://docs.python.org/3/tutorial/controlflow.html"
+    ]
+  }
+]

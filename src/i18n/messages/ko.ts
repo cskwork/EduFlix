@@ -55,6 +55,7 @@ export const ko: MessageSchema = {
   },
 
   routes: {
+    studio: '수업 작업실',
     home: '홈',
     learningMap: '학습맵',
     myLearning: '내 학습',
@@ -354,6 +355,7 @@ export const ko: MessageSchema = {
       math: '수학',
       science: '과학',
       english: '영어',
+      art: '미술',
       'world-history': '세계사',
       coding: '코딩',
       'korean-history': '한국사',

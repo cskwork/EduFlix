@@ -1,0 +1,13 @@
+[p1 "광합성 - 식물의 비밀 공장" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "광합성 - 식물의 비밀 공장"]
+root
+  container
+    svg_root "CO₂ CO₂ H₂O"
+      text "CO₂"
+      text "CO₂"
+      text "H₂O"
+    heading
+      text "식물은 뭘 먹고 살까?"
+    paragraph
+      text "밥도 안 먹는데 어떻게 쑥쑥 자라는 걸까?"
+    button [ref=1]
+      text "알아보기"

@@ -137,7 +137,7 @@ describe('content-loader fetch functions', () => {
 
       const result = await loadContentManifest('/test/path')
       expect(result).toEqual(mockManifest)
-      expect(mockFetch).toHaveBeenCalledWith('/test/path/manifest.json')
+      expect(mockFetch).toHaveBeenCalledWith('/test/path/manifest.json', { cache: 'no-cache' })
     })
 
     it('실패 시 에러를 던진다', async () => {

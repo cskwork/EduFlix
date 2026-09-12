@@ -65,7 +65,7 @@ class HookScene extends CyberScene {
         this.add.text(300, 70, 'FORMULA DECODE', { fontFamily:'Orbitron', fontSize:'38px', color:'#0ea5e9', fontStyle:'900' }).setOrigin(0.5);
         this.add.text(300, 110, 'RATIO & PROPORTION ANALYSIS', { fontFamily:'Orbitron', fontSize:'14px', color:'#94a3b8', letterSpacing:3 }).setOrigin(0.5);
 
-        this.add.text(300, 170, '4인분 레시피를 6명이 먹으려면\n재료를 얼마나 넣어야 할까?', {
+        this.add.text(300, 170, '목표: 인원과 재료의 비를 유지하며\n4인분을 6인분으로 바꾸어요.', {
             fontFamily:'Noto Sans KR', fontSize:'20px', color:'#ffffff', align:'center', lineSpacing:8
         }).setOrigin(0.5);
 
@@ -181,7 +181,7 @@ class CoreScene extends CyberScene {
     create() {
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
         this.createHeader('RATIO SIMULATOR');
-        this.add.text(300, 90, '인원수를 변경하면 재료량이 자동 계산됩니다.', { fontFamily:'Noto Sans KR', fontSize:'16px', color:'#94a3b8' }).setOrigin(0.5);
+        this.add.text(300, 90, '4명→6명으로 바꾸기 전 재료량을 예상하세요.', { fontFamily:'Noto Sans KR', fontSize:'16px', color:'#94a3b8' }).setOrigin(0.5);
 
         // 기준: 떡 400g, 고추장 3큰술, 설탕 2큰술, 어묵 200g (4인분)
         this.base = { people: 4, items: [
@@ -264,7 +264,7 @@ class CoreScene extends CyberScene {
         });
         if(this.multiplierText) {
             const ratio = this.currentPeople / this.base.people;
-            this.multiplierText.setText(`배수: ×${ratio.toFixed(1)}`);
+            this.multiplierText.setText(`배수: ×${Number(ratio.toFixed(2))}`);
         }
     }
 }
@@ -320,6 +320,7 @@ class VisualizeScene extends CyberScene {
 class QuizScene extends CyberScene {
     constructor() { super('QuizScene'); }
     create() {
+        this.answerComplete = false;
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
         this.createHeader('TARGET DECRYPTION');
         this.add.text(300, 100, '비례식을 이용해 미지수를 구하라.', { fontFamily:'Noto Sans KR', fontSize:'18px', color:'#ffffff' }).setOrigin(0.5);
@@ -366,17 +367,19 @@ class QuizScene extends CyberScene {
         options.forEach((o, idx) => {
             this.createButton(120 + idx*180, 430, o.text, 140, 50, () => this.checkAnswer(o.val, 120+idx*180, 430));
         });
-        this.feedback = this.add.text(300, 530, '', { fontFamily:'Noto Sans KR', fontSize:'22px', fontStyle:'bold' }).setOrigin(0.5);
+        this.feedback = this.add.text(300, 530, '', { fontFamily:'Noto Sans KR', fontSize: '16px', wordWrap: { width: 550 }, align: 'center', fontStyle:'bold' }).setOrigin(0.5);
         this.cameras.main.fadeIn(500,0,0,0);
     }
     checkAnswer(ok, x, y) {
+        if (this.answerComplete) return;
         if(ok) {
-            this.feedback.setText('DECRYPTION SUCCESS!').setColor('#10b981');
+            this.answerComplete = true;
+            this.feedback.setText('정답! 450÷300=1.5, 100×1.5=150g').setColor('#10b981');
             this.cameras.main.flash(500,16,185,129);
             for(let i=0;i<20;i++){const p=this.add.rectangle(x,y,6,6,COLORS.success);this.tweens.add({targets:p,x:x+Phaser.Math.Between(-100,100),y:y+Phaser.Math.Between(-100,100),alpha:0,rotation:Phaser.Math.FloatBetween(0,6),duration:1000,ease:'Power2'});}
             this.time.delayedCall(1500,()=>{this.cameras.main.fadeOut(300,0,0,0);this.time.delayedCall(300,()=>this.scene.start('WrapScene'));});
         } else {
-            this.feedback.setText('ACCESS DENIED. 300×?=100×450').setColor('#f43f5e');
+            this.feedback.setText('같은 비를 유지해요. 100×450÷300=150g').setColor('#f43f5e');
             this.cameras.main.shake(200, 0.01);
         }
     }
@@ -393,14 +396,14 @@ class WrapScene extends CyberScene {
         const box = this.add.graphics();
         UI.drawCyberBox(box, 50, 100, 500, 220, COLORS.bgSecondary, 0.8, COLORS.primary);
         this.add.text(300, 130, '[ SYSTEM LOG: 비례식 해독 완료 ]', { fontFamily:'Noto Sans KR', fontSize:'18px', color:'#0ea5e9', fontStyle:'bold' }).setOrigin(0.5);
-        this.add.text(100, 170, '▶ 비(ratio): 두 수의 관계를 a:b로 표현한다.\n▶ 비율: 비를 분수나 소수로 나타낸 것.\n▶ 비례식: a:b = c:d 일 때, a×d = b×c\n▶ 비례식을 이용하면 미지수를 구할 수 있다.', {
+        this.add.text(100, 170, '▶ 비(ratio): 두 수의 관계를 a:b로 표현한다.\n▶ a:b에서 b를 기준으로 한 비율은 a÷b (b≠0).\n▶ 비례식: a:b = c:d 일 때, a×d = b×c\n▶ 비례식을 이용하면 미지수를 구할 수 있다.', {
             fontFamily:'Noto Sans KR', fontSize:'15px', color:'#ffffff', lineSpacing:10
         });
 
         // 실생활 예시
         const exBox = this.add.graphics();
         UI.drawCyberBox(exBox, 80, 350, 440, 100, COLORS.bgCard, 0.9, COLORS.success);
-        this.add.text(300, 380, '실생활 속 비와 비율', { fontFamily:'Noto Sans KR', fontSize:'16px', color:'#10b981', fontStyle:'bold' }).setOrigin(0.5);
+        this.add.text(300, 380, '재료마다 2g씩 더하면 같은 맛일까요?', { fontFamily:'Noto Sans KR', fontSize:'16px', color:'#10b981', fontStyle:'bold' }).setOrigin(0.5);
         this.add.text(200, 420, 'RECIPE', { fontFamily:'Orbitron', fontSize:'14px', color:'#38bdf8' }).setOrigin(0.5);
         this.add.text(300, 420, 'MAP SCALE', { fontFamily:'Orbitron', fontSize:'14px', color:'#e879f9' }).setOrigin(0.5);
         this.add.text(400, 420, 'EXCHANGE', { fontFamily:'Orbitron', fontSize:'14px', color:'#fcd34d' }).setOrigin(0.5);

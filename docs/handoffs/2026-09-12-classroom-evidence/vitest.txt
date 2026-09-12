@@ -1,0 +1,91 @@
+npm notice run eduflix@0.4.0 test
+npm notice run vitest run
+
+ RUN  v4.0.18 /Users/danny/Documents/PARA/Resource/EduFlix
+
+ ✓ tests/e2e/browser-compatibility.spec.ts (53 tests) 6ms
+stdout | tests/unit/editor-overrides.test.ts > durable editor changes > extracts explicit editable paragraphs once and skips nested markup
+[EduFlix Editor Bridge] 초기화 완료
+[EduFlix Editor Bridge] 자동 EDITOR_READY 전송
+
+stdout | tests/unit/editor-overrides.test.ts > durable editor changes > replays changes and selects the actual same-tag sibling index
+[EduFlix Editor Bridge] 초기화 완료
+[EduFlix Editor Bridge] 자동 EDITOR_READY 전송
+
+stdout | tests/unit/editor-overrides.test.ts > durable editor changes > applies delayed matching targets without changing unrelated markup
+[EduFlix Editor Bridge] 초기화 완료
+[EduFlix Editor Bridge] 자동 EDITOR_READY 전송
+
+stdout | tests/unit/editor-overrides.test.ts > durable editor changes > allows restoring original text while editing instead of replaying the old save
+[EduFlix Editor Bridge] 초기화 완료
+[EduFlix Editor Bridge] 자동 EDITOR_READY 전송
+[Bridge] 메시지 수신: EDITOR_INIT
+[Bridge] EDITOR_INIT 수신 - EDITOR_READY 응답
+
+ ✓ tests/unit/editor-overrides.test.ts (7 tests) 117ms
+ ✓ agents/content-factory/pipeline/lib/zai.vitest.test.ts (15 tests) 76ms
+ ✓ tests/unit/recommendations-api.test.ts (4 tests) 1777ms
+     ✓ 기본 추천 스코프는 shared다  1768ms
+ ✓ tests/unit/claude-api.test.ts (5 tests) 2820ms
+     ✓ 헬스 체크가 HTML이면 생성 요청을 중단한다  2815ms
+ ✓ tests/unit/keyboard-navigation-select.test.ts (1 test) 25ms
+ ✓ tests/unit/subject-select.test.ts (5 tests) 177ms
+stdout | tests/unit/editor-panel-save.test.ts > editor saves changed fields > persists changed colors and excludes untouched text markup
+[Editor] 메시지 리스너 등록 완료 (setup 단계)
+[Editor] iframeRef 감지 - readyState: interactive
+[Editor] 메시지 수신: CONTENT_EXTRACTED
+[Editor] CONTENT_EXTRACTED 수신 - 분석 완료
+
+ ✓ tests/unit/app-layout.test.ts (2 tests) 90ms
+ ✓ tests/unit/generation.test.ts (31 tests) 92ms
+stdout | tests/unit/editor-panel-save.test.ts > editor saves changed fields > persists changed colors and excludes untouched text markup
+[Editor] 메시지 리스너 제거
+
+ ✓ tests/unit/editor-panel-save.test.ts (1 test) 222ms
+ ✓ tests/unit/factory-runner.test.ts (16 tests) 605ms
+ ✓ tests/unit/live-preview.test.ts (3 tests) 140ms
+ ✓ tests/unit/content-asset-paths.test.ts (2 tests) 69ms
+ ✓ tests/unit/api-url.test.ts (2 tests) 4ms
+ ✓ tests/unit/content-performance.test.ts (4 tests) 435ms
+     ✓ loads thumbnails lazily without running lesson iframes and falls back on image error  395ms
+ ✓ tests/unit/creator-lesson-contract.test.ts (2 tests) 25ms
+ ✓ tests/unit/mobile-css.test.ts (4 tests) 83ms
+ ✓ tests/unit/content-catalog.test.ts (144 tests) 358ms
+ ✓ tests/unit/serverless-generation-quality.test.ts (8 tests) 317ms
+stderr | tests/unit/lesson-studio.test.ts > structured lesson contract > renders human text as text and uses the edited answer for real quiz feedback
+
+Warning! Happy DOM has JavaScript evaluation enabled and is running in an insecure environment.
+
+A VM Context is not an isolated environment, and if you run untrusted code you are at risk of RCE (Remote Code Execution) attacks. The attacker can escape the VM and run code at process level.
+
+It is recommended to disable code generation and freeze all builtins at process level by running node with the flags "--disallow-code-generation-from-strings" and "--frozen-intrinsics". You can suppress this warning by setting "suppressInsecureJavaScriptEnvironmentWarning" to "true" at your own risk.
+
+For more information, see https://github.com/capricorn86/happy-dom/wiki/JavaScript-Evaluation-Warning
+
+
+
+ ✓ tests/unit/lesson-studio.test.ts (3 tests) 377ms
+     ✓ renders human text as text and uses the edited answer for real quiz feedback  364ms
+ ✓ tests/unit/viewport-height.test.ts (2 tests) 7ms
+ ✓ tests/engine.story.test.ts (1 test) 17ms
+ ✓ tests/unit/editable-lesson-generation.test.ts (9 tests) 170ms
+ ✓ tests/unit/server-security.test.ts (11 tests) 93ms
+ ✓ tests/unit/generate-route-local.test.ts (14 tests) 101ms
+ ✓ tests/unit/content-view-height.test.ts (4 tests) 76ms
+ ✓ tests/unit/content-loader.test.ts (17 tests) 121ms
+ ✓ tests/unit/local-content.test.ts (6 tests) 7ms
+ ✓ tests/unit/local-content-transaction.test.ts (1 test) 6ms
+ ✓ agents/content-factory/pipeline/lib/engine.vitest.test.ts (3 tests) 5ms
+ ✓ tests/unit/learning-progress.test.ts (2 tests) 18ms
+ ✓ tests/unit/server-health.test.ts (2 tests) 3ms
+ ✓ tests/unit/preview-route-local.test.ts (2 tests) 3ms
+ ✓ tests/unit/server-config.test.ts (3 tests) 8ms
+ ✓ tests/unit/mobile-viewer-layout.test.ts (2 tests) 4ms
+ ✓ agents/content-factory/pipeline/stages/assets.vitest.test.ts (1 test) 5ms
+ ✓ tests/unit/decimal-multiplication-assets.test.ts (2 tests) 3ms
+ ✓ tests/unit/vercel-config.test.ts (1 test) 3ms
+
+ Test Files  38 passed (38)
+      Tests  395 passed (395)
+   Start at  13:52:30
+   Duration  11.91s (transform 15.66s, setup 0ms, import 24.88s, tests 8.46s, environment 53.52s)

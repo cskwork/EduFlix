@@ -58,11 +58,12 @@ const ContentApp = {
     resetCoreGame() {
         // Randomize target between 0.1 and 0.9
         // Using simple fractions for educational clarity: 1/2, 1/3, 1/4, 2/3, 3/4
-        const targets = [0.5, 0.333, 0.25, 0.666, 0.75];
-        this.targetValue = targets[Math.floor(Math.random() * targets.length)];
+        const targets = [[1, 2], [1, 3], [1, 4], [2, 3], [3, 4]];
+        [this.targetNumerator, this.targetDenominator] = targets[Math.floor(Math.random() * targets.length)];
+        this.targetValue = this.targetNumerator / this.targetDenominator;
         
         // Update UI
-        document.getElementById('target-decimal').innerText = this.targetValue.toFixed(2);
+        document.getElementById('target-decimal').innerText = `${this.targetNumerator}/${this.targetDenominator}`;
         document.getElementById('target-marker').style.bottom = `${this.targetValue * 100}%`;
         
         // Reset inputs
@@ -84,8 +85,9 @@ const ContentApp = {
         // Logic constraint: Numerator shouldn't exceed Denominator for simplicity in this level (visuals)
         // But we allow improper fractions if selected, just clamp max of input
         const numerInput = document.getElementById('numerator');
-        if (numer > denom * 2) {
-            numer = denom * 2; 
+        numerInput.max = denom;
+        if (numer > denom) {
+            numer = denom;
             numerInput.value = numer;
         }
 
@@ -122,7 +124,7 @@ const ContentApp = {
 
         const feedbackEl = document.getElementById('core-feedback');
 
-        if (diff < 0.01) { // Perfect match (or very close due to float math)
+        if (numer * this.targetDenominator === denom * this.targetNumerator) {
             feedbackEl.innerHTML = '<p class="success-text">🎯 완벽해! 정확히 명중했습니다!</p>';
             feedbackEl.classList.add('success');
             document.getElementById('check-btn').disabled = true;

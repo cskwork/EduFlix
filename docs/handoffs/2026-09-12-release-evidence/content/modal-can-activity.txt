@@ -1,0 +1,47 @@
+[p1 "I Can Do It! Talking About Abilities" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "I Can Do It! Talking About Abilities"]
+root
+  container
+    heading
+      text "Can / Can't 사용하기"
+    paragraph
+      text "그림을 보고 알맞은 버튼을 누르세요!"
+    container
+      container
+        text "CAN (할 수 있다)"
+        container
+          text "주어 +"
+          text "can"
+          text "+ 동사원형"
+        text ""I can swim.""
+      container
+        text "CAN'T (할 수 없다)"
+        container
+          text "주어 +"
+          text "can't"
+          text "+ 동사원형"
+        text ""I can't cook.""
+      container
+        text "CAN ~? (할 수 있니?)"
+        container
+          text "Can"
+          text "+ 주어 + 동사원형?"
+        text ""Can you dance?""
+    container
+      svg_root "♪ ♫"
+        text "♪"
+        text "♫"
+      paragraph
+        text "She"
+        text "______"
+        text "play the piano."
+      paragraph
+        text "(그녀는 피아노를 잘 쳐요!)"
+      container
+        button [ref=1]
+          text "can"
+        button [ref=2]
+          text "can't"
+    container
+      text "진행:"
+      text "1"
+      text "/ 4"

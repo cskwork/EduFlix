@@ -516,7 +516,7 @@
         <div id="start-screen">
             <div class="stars" id="stars"></div>
             <h1>🪐 패턴 행성 3D</h1>
-            <p class="subtitle">우주를 여행하며 신비로운 패턴을 발견하세요! 숫자, 도형, 색상 패턴을 찾아 우주 탐험가가 되어보세요!</p>
+            <p class="subtitle">수와 도형에서 반복되는 단위를 찾아 다음 항을 예측해요. 2, 5, 8은 3씩 커지므로 다음 수는 11이에요. 답을 고르기 전에 규칙을 말하고, 그다음 항까지 예측해 보세요.</p>
             <button id="start-btn">
                 <span>탐험 시작!</span>
                 <span>🚀</span>
@@ -911,7 +911,7 @@
                 streak = 0;
                 score = Math.max(0, score - 20);
 
-                showFeedback('❌ 다시 해봐요!', '#ef4444');
+                showFeedback(`규칙: ${currentPattern.name}. 다음 항은 ${correctAnswer}입니다.`, '#ef4444');
 
                 document.getElementById('score').textContent = score;
                 document.getElementById('streak').textContent = streak;

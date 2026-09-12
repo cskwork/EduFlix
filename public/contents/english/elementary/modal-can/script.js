@@ -192,7 +192,7 @@ const ContentApp = {
             this.playSound('correct');
         } else {
             feedback.classList.add('incorrect');
-            feedback.innerHTML = `<strong>Try again!</strong> 정답은 "${correct}"예요.`;
+            feedback.innerHTML = `<strong>Try again!</strong> 정답은 "${correct}"예요. ${this.getExplanation(quizNum)}`;
             this.playSound('incorrect');
         }
 

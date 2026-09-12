@@ -1,3 +1,4 @@
+import { revisionedContentUrl } from '../services/content/revision'
 // Pinia 콘텐츠 상태 관리 스토어
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
@@ -135,7 +136,7 @@ export const useContentStore = defineStore('content', () => {
     const recommendedContents: ContentCardData[] = []
 
     for (const rec of recommendations.value) {
-      const content = contents.value.find((c) => c.id === rec.contentId)
+      const content = filteredContents.value.find((c) => c.id === rec.contentId)
       if (content) {
         recommendedContents.push({
           id: content.id,
@@ -176,7 +177,7 @@ export const useContentStore = defineStore('content', () => {
       // 캐시된 index.json이 새로 생성된 콘텐츠를 놓칠 수 있어 no-cache로 항상 검증.
       // 생성 직후에 addContent()로 메모리에 넣더라도, 새로고침 시 캐시된 옛날 카탈로그가
       // 돌아와 "콘텐츠를 찾을 수 없습니다" 404를 만드는 원천을 차단한다.
-      const response = await fetch(`/contents/index.json${force ? `?_=${Date.now()}` : ''}`, {
+      const response = await fetch(revisionedContentUrl(`/contents/index.json${force ? `?_=${Date.now()}` : ''}`), {
         cache: 'no-cache',
       })
       if (!response.ok) {

@@ -1,0 +1,28 @@
+{
+  "aiDurationMs": 108604.1,
+  "preview": {
+    "wrong": true,
+    "correct": true,
+    "sandbox": "allow-scripts allow-popups",
+    "parentCannotAccess": true
+  },
+  "standalone": {
+    "wrong": "다시 생각해 보세요. 공기 속 수증기가 충분히 차가운 표면에서 식어 액체인 물로 바뀌는 응결 현상입니다. 물이 새지 않는 컵을 사용하고, 관찰 전에 두 컵의 바깥면을 마른 수건으로 닦아야 합니다. 관찰 중에는 바깥면을 손으로 만지지 않습니다. 이렇게 조건을 맞추면 컵 안의 물이나 손에 묻은 물 때문에 생긴 물방울과 구분하는 데 도움이 됩니다.",
+    "correct": "정답입니다. 공기 속 수증기가 충분히 차가운 표면에서 식어 액체인 물로 바뀌는 응결 현상입니다. 물이 새지 않는 컵을 사용하고, 관찰 전에 두 컵의 바깥면을 마른 수건으로 닦아야 합니다. 관찰 중에는 바깥면을 손으로 만지지 않습니다. 이렇게 조건을 맞추면 컵 안의 물이나 손에 묻은 물 때문에 생긴 물방울과 구분하는 데 도움이 됩니다.",
+    "externalResources": 0,
+    "pageOverflow": false
+  },
+  "mobile": {
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "overflow": false
+  },
+  "desktop": {
+    "width": 1440,
+    "height": 1000
+  },
+  "savedLessonId": "local-studio-f251be11-4d38-4fbc-99d2-7497a23c22b7",
+  "savedQuizAnswerBefore": 1,
+  "savedQuizAnswerAfter": 0
+}

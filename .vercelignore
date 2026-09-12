@@ -1,0 +1,43 @@
+# Keep build-time public flags and examples; credentials belong in Vercel settings.
+.env*
+**/.env*
+!.env.production
+!.env.example
+
+# Local databases and sidecars are never deployment inputs.
+**/*.db
+**/*.db-wal
+**/*.db-shm
+**/*.sqlite
+**/*.sqlite3
+
+# Agent/editor state and local run artifacts.
+**/.claude/**
+**/.codex/**
+**/.agents/**
+**/.do-work/**
+**/.playwright-cli/**
+**/.vscode/**
+**/.idea/**
+**/settings.local.json
+agents/content-factory/runs/**
+**/auto-memory/**
+
+# Local evidence, scratch files and credentials.
+docs/handoffs/**
+temp-vite/**
+tmp/**
+private/**
+**/*.log
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/credentials.json
+**/.DS_Store
+
+# Build on Vercel from source, not local output or installed packages.
+node_modules/**
+dist/**
+.git/**
+.vercel/**

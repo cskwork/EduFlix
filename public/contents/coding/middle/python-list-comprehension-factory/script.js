@@ -285,7 +285,7 @@ const listCompData = {
     },
     interaction: {
         title: "리스트 컴프리헨션 공장",
-        instruction: "range(3) 창고에서 숫자 카드를 끌어다 놓거나 클릭하여 변환 슬롯에 넣고, 레버를 당겨보세요!",
+        instruction: "range(3)가 만드는 순서 0 → 1 → 2대로 카드를 슬롯에 넣고 레버를 당겨보세요. 3번 카드는 끝값을 포함하는지 확인하는 오답 카드입니다.",
         onInit: (container, engine) => {
             let processedCount = 0;
             let currentSlotValue = null;
@@ -324,7 +324,7 @@ const listCompData = {
             availableNumbers.forEach(num => {
                 const card = document.createElement('div');
                 card.className = 'num-card';
-                card.textContent = num;
+                card.textContent = String(num);
                 card.tabIndex = 0; // 키보드 접근성
                 card.dataset.value = num;
                 
@@ -366,7 +366,7 @@ const listCompData = {
             });
 
             function handleCardInput(num, cardElement) {
-                if (currentSlotValue !== null) return; // 이미 슬롯에 값이 있음
+                if (currentSlotValue !== null || cardElement.classList.contains('used')) return; // Ignore duplicate card input.
                 
                 // 오개념 교정: 3을 넣었을 때
                 if (num === 3) {
@@ -375,6 +375,11 @@ const listCompData = {
                     // 튕겨나가는 애니메이션
                     cardElement.style.animation = "shake 0.4s ease";
                     setTimeout(() => { cardElement.style.animation = ""; }, 400);
+                    return;
+                }
+
+                if (num !== processedCount) {
+                    engine.showFeedback(`range(3)는 순서대로 0, 1, 2를 만듭니다. 지금은 ${processedCount}을(를) 넣으세요.`, "negative");
                     return;
                 }
 
@@ -404,7 +409,7 @@ const listCompData = {
                     // 리스트에 결과 추가
                     const resultCard = document.createElement('div');
                     resultCard.className = 'result-card';
-                    resultCard.textContent = transformedVal;
+                    resultCard.textContent = String(transformedVal);
                     listContent.appendChild(resultCard);
 
                     // 슬롯 초기화
@@ -437,7 +442,7 @@ const listCompData = {
             correctChoiceId: "B",
             correctFeedback: "정답입니다! range(3)는 0부터 3직전까지(0, 1, 2)를 만들어내요.",
             incorrectFeedback: "앗, 틀렸어요! range(3)의 범위를 다시 생각해 보세요.",
-            hint: "파이썬에서 숫자를 셀 때는 0부터 시작합니다."
+            hint: "시작값을 생략한 range(3)는 0부터 시작하며 끝값 3은 포함하지 않습니다. range(1, 4)는 1, 2, 3입니다."
         },
         {
             id: "Q2",

@@ -462,6 +462,7 @@ class CoordinatesApp {
         this.distanceLine.visible = false;
         this.projectionLines.visible = false;
         
+        this.currentQuiz = 0;
         this.loadQuiz(this.currentQuiz);
         this.camera.position.set(8, 6, 8);
         
@@ -584,6 +585,7 @@ class CoordinatesApp {
     }
 
     checkQuizAnswer(e) {
+        if (e.target.disabled) return;
         const selected = e.target.dataset.answer;
         const quiz = QUIZ_DATA[this.currentQuiz];
         const feedback = document.getElementById('quiz-feedback');
@@ -607,14 +609,17 @@ class CoordinatesApp {
         
         feedback.classList.remove('hidden');
         
-        setTimeout(() => {
+        const next = document.createElement('button');
+        next.className = 'action-btn';
+        next.textContent = '해설을 읽었어요 · 다음';
+        next.onclick = () => {
+            next.remove();
             this.currentQuiz++;
-            if (this.currentQuiz < QUIZ_DATA.length) {
-                this.loadQuiz(this.currentQuiz);
-            } else {
-                this.nextScene();
-            }
-        }, 2500);
+            if (this.currentQuiz < QUIZ_DATA.length) this.loadQuiz(this.currentQuiz);
+            else this.nextScene();
+        };
+        feedback.appendChild(document.createElement('br'));
+        feedback.appendChild(next);
     }
 
     enterFreeExplore() {

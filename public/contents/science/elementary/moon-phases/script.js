@@ -74,10 +74,11 @@ const ScienceApp = {
         document.getElementById('day-value').textContent = `${day}일`;
         
         // 궤도 회전 (0~360도)
-        const angle = (day / 29.5) * 360;
+        const angle = (day / 29.5) * 360 + 180;
         const moonOrbit = document.getElementById('moon-orbit');
         if (moonOrbit) {
             moonOrbit.setAttribute('transform', `rotate(${angle}, 200, 200)`);
+            document.getElementById('moon-lit')?.setAttribute('transform', `rotate(${-angle})`);
         }
         
         // 달의 밝은 부분 계산 및 표시
@@ -159,7 +160,7 @@ const ScienceApp = {
             feedback.classList.remove('hidden', 'error');
             feedback.classList.add('success');
             feedbackIcon.textContent = '🎉';
-            feedbackText.textContent = '정답! 보름달일 때는 태양-지구-달 순서로 일렬이 되어서, 태양빛이 달의 지구 쪽 면 전체를 비추게 돼요!';
+            feedbackText.textContent = '정답! 보름달은 태양의 반대쪽에 있어 밝은 면을 거의 모두 볼 수 있어요. 궤도가 기울어져 있어 보통 정확히 일렬은 아니며, 지구 그림자에 들어갈 때만 월식이 일어납니다.';
             nextBtn.classList.remove('hidden');
             retryBtn.classList.add('hidden');
         } else {
@@ -172,7 +173,7 @@ const ScienceApp = {
             feedback.classList.remove('hidden', 'success');
             feedback.classList.add('error');
             feedbackIcon.textContent = '🤔';
-            feedbackText.textContent = '아쉬워요! 보름달이 되려면 달이 지구 반대편에 있어야 해요. 다시 생각해볼까요?';
+            feedbackText.textContent = '달이 태양과 같은 방향이면 삭, 반대 방향이면 보름달입니다. 매달의 위상 변화는 지구 그림자 때문이 아닙니다.';
             retryBtn.classList.remove('hidden');
             nextBtn.classList.remove('hidden');
         }

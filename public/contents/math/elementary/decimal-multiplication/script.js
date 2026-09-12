@@ -69,7 +69,7 @@ const ContentApp = {
     },
 
     initStoryScene() {
-        const text = "\"이번 탐험을 위해 특별한 우주 사과 1.5kg이 필요해.\\nkg당 2,400원이라는데...\\n소수점이 있는 계산, 자연수처럼 할 수 없을까?\"";
+        const text = "\"이번 탐험을 위해 특별한 우주 사과 1.5kg이 필요해.\nkg당 2,400원이라는데...\n소수점이 있는 계산, 자연수처럼 할 수 없을까?\"";
         const el = document.getElementById('typewriter-text');
         if (!el) return;
 
@@ -99,6 +99,15 @@ const ContentApp = {
 
     runCoreSimulation() {
         if (this.simState.isAnimating) return;
+        const first = Number(document.getElementById('factor-1').value);
+        const second = Number(document.getElementById('factor-2').value);
+        if (![first, second].every(n => Number.isFinite(n) && n >= 0.1 && n <= 9.9 && Math.abs(n * 10 - Math.round(n * 10)) < 1e-8)) {
+            document.getElementById('calc-display').textContent = '0.1부터 9.9까지 소수 첫째 자리 수를 입력하세요.';
+            return;
+        }
+        const left = Math.round(first * 10), right = Math.round(second * 10);
+        const integerProduct = left * right;
+        const product = integerProduct / 100;
         this.simState.isAnimating = true;
         
         const btn = document.getElementById('core-start-btn');
@@ -109,31 +118,32 @@ const ContentApp = {
         const feedback = document.getElementById('feedback-area');
         
         // Step 1
-        display.innerHTML = `자연수 변환: 15 x 24...`;
+        display.innerHTML = `${first}와 ${second}를 각각 10배: ${left} × ${right}`;
         fuel.style.width = '30%';
         
         setTimeout(() => {
             // Step 2
-            display.innerHTML = `자연수 계산: 15 x 24 = <span class="calc-highlight" style="color:#0ea5e9;">360</span>`;
+            display.innerHTML = `자연수 계산: ${left} × ${right} = <span class="calc-highlight" style="color:#0ea5e9;">${integerProduct}</span>`;
             fuel.style.width = '60%';
             
             setTimeout(() => {
                 // Step 3
-                display.innerHTML = `소수점 이동: 1자리 + 1자리 = 2자리 뒤로!`;
+                display.innerHTML = `각 수를 10배 했으므로 곱은 100배. 이제 100으로 나눕니다.`;
                 fuel.style.width = '85%';
                 
                 setTimeout(() => {
                     // Final
-                    display.innerHTML = `최종 엔진 출력: <span class="calc-highlight">3.6</span>`;
+                    display.innerHTML = `${integerProduct} ÷ 100 = <span class="calc-highlight">${product}</span>`;
                     fuel.style.width = '100%';
                     fuel.style.boxShadow = 'inset 0 2px 5px rgba(255,255,255,0.3), 0 0 20px #f43f5e';
                     
-                    feedback.innerHTML = '시뮬레이션 완료! 원리를 확인하러 갈까요?';
+                    feedback.innerHTML = `${first} × ${second} = ${product}. 한 수만 바꾸고 결과를 비교하세요. 처음 식량 문제의 2,400원/kg은 2.4천 원/kg이므로 3.6천 원=3,600원입니다.`;
                     feedback.classList.add('active');
                     document.getElementById('core-next-btn').classList.remove('hidden');
                     
                     this.createStarConfetti(30);
                     this.simState.isAnimating = false;
+                    btn.disabled = false;
                 }, 1500);
             }, 1500);
         }, 1500);
@@ -173,10 +183,12 @@ const ContentApp = {
             feedbackEl.className = 'quiz-feedback success';
             feedbackEl.innerHTML = '🚀 완벽해요! 0.8 x 1.2 = 0.96 (총 2자리 이동) 🚀';
             this.createStarConfetti(50);
-            setTimeout(() => this.nextScene(), 2500);
+            const next = document.createElement('button');
+            next.className = 'btn-primary'; next.textContent = '해설을 읽었어요 · 정리하기';
+            next.onclick = () => this.nextScene(); feedbackEl.appendChild(next);
         } else {
             feedbackEl.className = 'quiz-feedback error';
-            feedbackEl.innerHTML = '💡 아쉬워요! 0.8(1자리) + 1.2(1자리) = 2자리 이동해야 해요!';
+            feedbackEl.innerHTML = '8×12=96이고 두 수를 각각 10배 했으므로 96÷100=0.96입니다. 1.2의 0.8배는 1.2보다 작아야 한다는 점으로도 확인하세요.';
             setTimeout(() => {
                 this.initQuizScene(); 
             }, 3000);
@@ -213,6 +225,7 @@ const ContentApp = {
 
     bindEvents() {
         document.addEventListener('keydown', (e) => {
+            if (e.target instanceof window.HTMLElement && e.target.matches('input, textarea, select')) return;
             if (e.key === 'ArrowRight') this.nextScene();
             if (e.key === 'ArrowLeft') this.prevScene();
         });

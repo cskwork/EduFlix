@@ -209,15 +209,16 @@ const ContentApp = {
 
         // 피드백
         const feedback = document.getElementById('quiz-feedback');
+        const reason = { 1: 'tall은 보통 -er를 붙여 taller로 만듭니다.', 2: 'beautiful은 more beautiful로 비교합니다. more와 -er를 함께 쓰지 않습니다.', 3: 'good의 비교급은 불규칙형 better입니다.' }[quizNum];
         feedback.classList.remove('hidden', 'correct', 'incorrect');
 
         if (isCorrect) {
             feedback.classList.add('correct');
-            feedback.innerHTML = `<strong>Excellent!</strong> "${correct}"가 정답이에요!`;
+            feedback.innerHTML = `<strong>Excellent!</strong> "${correct}"가 정답이에요! ${reason}`;
             this.speak(`Correct! ${correct}`);
         } else {
             feedback.classList.add('incorrect');
-            feedback.innerHTML = `<strong>Try again!</strong> 정답은 "${correct}"예요.`;
+            feedback.innerHTML = `<strong>Try again!</strong> 정답은 "${correct}"예요. ${reason}`;
         }
 
         // 다음 퀴즈로 이동

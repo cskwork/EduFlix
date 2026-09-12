@@ -1,0 +1,52 @@
+[p1 "3D 대수 도시 | 동아출판 중학 수학" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "3D 대수 도시 | 동아출판 중학 수학"]
+root
+  canvas
+  container
+    container
+      text "🏙️"
+      text "빌딩"
+      text "14"
+    container
+      text "⭐"
+      text "점수"
+      text "2450"
+    container
+      text "✅"
+      text "정답"
+      text "14"
+  container
+    heading
+      text "🏗️ 대수 주제"
+    button [ref=1]
+      text "📐"
+      text "일차방정식"
+    button [ref=2]
+      text "🔄"
+      text "대입"
+    button [ref=3]
+      text "✂️"
+      text "식의 간단화"
+    button [ref=4]
+      text "⚖️"
+      text "부등식"
+  container
+    text "🏗️"
+    heading
+      text "공사중"
+    paragraph
+      text "다음 레벨을 향해!"
+  container
+    container
+      text "x의 값을 구하세요"
+      text "2x < 10의 가장 큰 정수 x = ?"
+      container
+        text "x ="
+        spinbutton [ref=5, loc=css:input[placeholder="?"]]
+          text "?"
+    container
+      button [ref=6]
+        text "💡 힌트"
+      button [ref=7]
+        text "✓ 제출"
+  text "도시 건설 진행률: 70%"
+  text "🎉 정답!"

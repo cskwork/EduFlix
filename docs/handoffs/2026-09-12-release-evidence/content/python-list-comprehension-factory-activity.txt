@@ -1,0 +1,27 @@
+[p1 "파이썬 복제 기계: 리스트 컴프리헨션 공장" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "파이썬 복제 기계: 리스트 컴프리헨션 공장"]
+root
+  container
+    heading
+      text "리스트 컴프리헨션 공장"
+    paragraph
+      text "range(3)가 만드는 순서 0 → 1 → 2대로 카드를 슬롯에 넣고 레버를 당겨보세요. 3번 카드는 끝값을 포함하는지 확인하는 오답 카드입니다."
+    container
+      container
+        text "RANGE(3) 창고"
+        container
+          container [ref=1]
+            text "0"
+          container [ref=2]
+            text "1"
+          container [ref=3]
+            text "2"
+          container [ref=4]
+            text "3"
+      text "X*2 변환 슬롯"
+      button [ref=5]
+        text "기계 가동 (레버 당기기)"
+      container
+        text "["
+        text "]"
+    button [ref=6]
+      text "결과 확인하러 가기"

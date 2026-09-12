@@ -750,3 +750,10 @@ button {
   color: var(--text-color);
   line-height: 1.6;
 }
+
+/* Long learning scenes must keep their final action reachable. Auto margins
+   center short scenes and collapse to zero when the content needs scrolling. */
+.scene.active { overflow-y: auto; justify-content: flex-start; }
+.scene.active > * { flex-shrink: 0; }
+.scene.active > :first-child { margin-top: auto; }
+.scene.active > :last-child { margin-bottom: auto; }

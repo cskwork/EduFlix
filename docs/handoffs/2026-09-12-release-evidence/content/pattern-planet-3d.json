@@ -1,0 +1,623 @@
+{
+  "id": "pattern-planet-3d",
+  "family": "continuous-custom",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": {
+        "answer": 10,
+        "pattern": "+2 규칙",
+        "level": 1
+      },
+      "previousCorrect": 0,
+      "result": {
+        "text": "🪐\n행성\n1\n⭐\n점수\n120\n✅\n정답\n1\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌍\n지구\n\n기초 패턴을 배워요!\n\n패턴: +2 규칙 - 빈칸에 들어갈 것은?\n2\n4\n6\n8\n?\n7\n6\n10\n8\n연속 정답\n🔥 1\n레벨\n🚀 1\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 1,
+        "score": "120",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 12,
+        "pattern": "+2 규칙",
+        "level": 1
+      },
+      "previousCorrect": 1,
+      "result": {
+        "text": "🪐\n행성\n1\n⭐\n점수\n260\n✅\n정답\n2\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌍\n지구\n\n기초 패턴을 배워요!\n\n패턴: +2 규칙 - 빈칸에 들어갈 것은?\n2\n4\n6\n8\n10\n?\n12\n7\n15\n14\n연속 정답\n🔥 2\n레벨\n🚀 1\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 2,
+        "score": "260",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 25,
+        "pattern": "+5 규칙",
+        "level": 1
+      },
+      "previousCorrect": 2,
+      "result": {
+        "text": "🪐\n행성\n1\n⭐\n점수\n420\n✅\n정답\n3\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌍\n지구\n\n기초 패턴을 배워요!\n\n패턴: +5 규칙 - 빈칸에 들어갈 것은?\n5\n10\n15\n20\n?\n23\n21\n28\n25\n연속 정답\n🔥 3\n레벨\n🚀 1\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 3,
+        "score": "420",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 25,
+        "pattern": "+5 규칙",
+        "level": 1
+      },
+      "previousCorrect": 3,
+      "result": {
+        "text": "🪐\n행성\n1\n⭐\n점수\n600\n✅\n정답\n4\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌍\n지구\n\n기초 패턴을 배워요!\n\n패턴: +5 규칙 - 빈칸에 들어갈 것은?\n5\n10\n15\n20\n?\n26\n25\n28\n24\n연속 정답\n🔥 4\n레벨\n🚀 1\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 4,
+        "score": "600",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 30,
+        "pattern": "+5 규칙",
+        "level": 1
+      },
+      "previousCorrect": 4,
+      "result": {
+        "text": "🪐\n행성\n1\n⭐\n점수\n800\n✅\n정답\n5\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌍\n지구\n\n기초 패턴을 배워요!\n\n패턴: +5 규칙 - 빈칸에 들어갈 것은?\n5\n10\n15\n20\n25\n?\n25\n27\n32\n30\n연속 정답\n🔥 5\n레벨\n🚀 2\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 5,
+        "score": "800",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 25,
+        "pattern": "+5 규칙",
+        "level": 2
+      },
+      "previousCorrect": 5,
+      "result": {
+        "text": "🪐\n행성\n1\n⭐\n점수\n1020\n✅\n정답\n6\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌍\n지구\n\n기초 패턴을 배워요!\n\n패턴: +5 규칙 - 빈칸에 들어갈 것은?\n5\n10\n15\n20\n?\n21\n28\n25\n24\n연속 정답\n🔥 6\n레벨\n🚀 2\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 6,
+        "score": "1020",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 10,
+        "pattern": "+2 규칙",
+        "level": 2
+      },
+      "previousCorrect": 6,
+      "result": {
+        "text": "🪐\n행성\n1\n⭐\n점수\n1260\n✅\n정답\n7\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌍\n지구\n\n기초 패턴을 배워요!\n\n패턴: +2 규칙 - 빈칸에 들어갈 것은?\n2\n4\n6\n8\n?\n10\n7\n11\n13\n연속 정답\n🔥 7\n레벨\n🚀 2\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 7,
+        "score": "1260",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 18,
+        "pattern": "+3 규칙",
+        "level": 2
+      },
+      "previousCorrect": 7,
+      "result": {
+        "text": "🪐\n행성\n1\n⭐\n점수\n1520\n✅\n정답\n8\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌍\n지구\n\n기초 패턴을 배워요!\n\n패턴: +3 규칙 - 빈칸에 들어갈 것은?\n3\n6\n9\n12\n15\n?\n18\n19\n15\n20\n연속 정답\n🔥 8\n레벨\n🚀 2\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 8,
+        "score": "1520",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 30,
+        "pattern": "+5 규칙",
+        "level": 2
+      },
+      "previousCorrect": 8,
+      "result": {
+        "text": "🪐\n행성\n1\n⭐\n점수\n1800\n✅\n정답\n9\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌍\n지구\n\n기초 패턴을 배워요!\n\n패턴: +5 규칙 - 빈칸에 들어갈 것은?\n5\n10\n15\n20\n25\n?\n30\n34\n27\n32\n연속 정답\n🔥 9\n레벨\n🚀 2\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 9,
+        "score": "1800",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 18,
+        "pattern": "+3 규칙",
+        "level": 2
+      },
+      "previousCorrect": 9,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n2100\n✅\n정답\n10\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: +3 규칙 - 빈칸에 들어갈 것은?\n3\n6\n9\n12\n15\n?\n16\n18\n21\n20\n연속 정답\n🔥 10\n레벨\n🚀 3\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 10,
+        "score": "2100",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 25,
+        "pattern": "+5 규칙",
+        "level": 3
+      },
+      "previousCorrect": 10,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n2420\n✅\n정답\n11\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: +5 규칙 - 빈칸에 들어갈 것은?\n5\n10\n15\n20\n?\n26\n27\n25\n24\n연속 정답\n🔥 11\n레벨\n🚀 3\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 11,
+        "score": "2420",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 10,
+        "pattern": "+2 규칙",
+        "level": 3
+      },
+      "previousCorrect": 11,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n2760\n✅\n정답\n12\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: +2 규칙 - 빈칸에 들어갈 것은?\n2\n4\n6\n8\n?\n5\n8\n10\n12\n연속 정답\n🔥 12\n레벨\n🚀 3\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 12,
+        "score": "2760",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 25,
+        "pattern": "+5 규칙",
+        "level": 3
+      },
+      "previousCorrect": 12,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n3120\n✅\n정답\n13\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: +5 규칙 - 빈칸에 들어갈 것은?\n5\n10\n15\n20\n?\n26\n25\n22\n24\n연속 정답\n🔥 13\n레벨\n🚀 3\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 13,
+        "score": "3120",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 10,
+        "pattern": "+2 규칙",
+        "level": 3
+      },
+      "previousCorrect": 13,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n3500\n✅\n정답\n14\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: +2 규칙 - 빈칸에 들어갈 것은?\n2\n4\n6\n8\n?\n8\n9\n10\n12\n연속 정답\n🔥 14\n레벨\n🚀 3\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 14,
+        "score": "3500",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 10,
+        "pattern": "+2 규칙",
+        "level": 3
+      },
+      "previousCorrect": 14,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n3900\n✅\n정답\n15\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: +2 규칙 - 빈칸에 들어갈 것은?\n2\n4\n6\n8\n?\n7\n10\n9\n13\n연속 정답\n🔥 15\n레벨\n🚀 4\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 15,
+        "score": "3900",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 8,
+        "pattern": "피보나치",
+        "level": 4
+      },
+      "previousCorrect": 15,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n4320\n✅\n정답\n16\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: 피보나치 - 빈칸에 들어갈 것은?\n1\n2\n3\n5\n?\n8\n5\n3\n12\n연속 정답\n🔥 16\n레벨\n🚀 4\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 16,
+        "score": "4320",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 25,
+        "pattern": "제곱수",
+        "level": 4
+      },
+      "previousCorrect": 16,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n4760\n✅\n정답\n17\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: 제곱수 - 빈칸에 들어갈 것은?\n1\n4\n9\n16\n?\n25\n27\n21\n28\n연속 정답\n🔥 17\n레벨\n🚀 4\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 17,
+        "score": "4760",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 25,
+        "pattern": "제곱수",
+        "level": 4
+      },
+      "previousCorrect": 17,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n5220\n✅\n정답\n18\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: 제곱수 - 빈칸에 들어갈 것은?\n1\n4\n9\n16\n?\n29\n25\n21\n26\n연속 정답\n🔥 18\n레벨\n🚀 4\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 18,
+        "score": "5220",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 13,
+        "pattern": "피보나치",
+        "level": 4
+      },
+      "previousCorrect": 18,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n5700\n✅\n정답\n19\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: 피보나치 - 빈칸에 들어갈 것은?\n1\n2\n3\n5\n8\n?\n10\n14\n13\n9\n연속 정답\n🔥 19\n레벨\n🚀 4\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 19,
+        "score": "5700",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 36,
+        "pattern": "제곱수",
+        "level": 4
+      },
+      "previousCorrect": 19,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n6200\n✅\n정답\n20\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: 제곱수 - 빈칸에 들어갈 것은?\n1\n4\n9\n16\n25\n?\n32\n34\n40\n36\n연속 정답\n🔥 20\n레벨\n🚀 5\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 20,
+        "score": "6200",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 64,
+        "pattern": "×2 규칙",
+        "level": 5
+      },
+      "previousCorrect": 20,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n6720\n✅\n정답\n21\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: ×2 규칙 - 빈칸에 들어갈 것은?\n2\n4\n8\n16\n32\n?\n60\n64\n62\n66\n연속 정답\n🔥 21\n레벨\n🚀 5\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 21,
+        "score": "6720",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 64,
+        "pattern": "×2 규칙",
+        "level": 5
+      },
+      "previousCorrect": 21,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n7260\n✅\n정답\n22\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: ×2 규칙 - 빈칸에 들어갈 것은?\n2\n4\n8\n16\n32\n?\n61\n64\n60\n59\n연속 정답\n🔥 22\n레벨\n🚀 5\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 22,
+        "score": "7260",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 25,
+        "pattern": "제곱수",
+        "level": 5
+      },
+      "previousCorrect": 22,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n7820\n✅\n정답\n23\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: 제곱수 - 빈칸에 들어갈 것은?\n1\n4\n9\n16\n?\n27\n24\n20\n25\n연속 정답\n🔥 23\n레벨\n🚀 5\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 23,
+        "score": "7820",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 64,
+        "pattern": "×2 규칙",
+        "level": 5
+      },
+      "previousCorrect": 23,
+      "result": {
+        "text": "🪐\n행성\n2\n⭐\n점수\n8400\n✅\n정답\n24\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🌙\n달\n\n조금 더 어려운 패턴!\n\n패턴: ×2 규칙 - 빈칸에 들어갈 것은?\n2\n4\n8\n16\n32\n?\n64\n65\n60\n59\n연속 정답\n🔥 24\n레벨\n🚀 5\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 24,
+        "score": "8400",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 64,
+        "pattern": "×2 규칙",
+        "level": 5
+      },
+      "previousCorrect": 24,
+      "result": {
+        "text": "🪐\n행성\n3\n⭐\n점수\n9000\n✅\n정답\n25\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🔴\n화성\n\n도전적인 패턴!\n\n패턴: ×2 규칙 - 빈칸에 들어갈 것은?\n2\n4\n8\n16\n32\n?\n63\n64\n65\n66\n연속 정답\n🔥 25\n레벨\n🚀 6\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 25,
+        "score": "9000",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 64,
+        "pattern": "×2 규칙",
+        "level": 6
+      },
+      "previousCorrect": 25,
+      "result": {
+        "text": "🪐\n행성\n3\n⭐\n점수\n9620\n✅\n정답\n26\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🔴\n화성\n\n도전적인 패턴!\n\n패턴: ×2 규칙 - 빈칸에 들어갈 것은?\n2\n4\n8\n16\n32\n?\n64\n60\n68\n63\n연속 정답\n🔥 26\n레벨\n🚀 6\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 26,
+        "score": "9620",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 13,
+        "pattern": "피보나치",
+        "level": 6
+      },
+      "previousCorrect": 26,
+      "result": {
+        "text": "🪐\n행성\n3\n⭐\n점수\n10260\n✅\n정답\n27\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🔴\n화성\n\n도전적인 패턴!\n\n패턴: 피보나치 - 빈칸에 들어갈 것은?\n1\n2\n3\n5\n8\n?\n13\n15\n8\n9\n연속 정답\n🔥 27\n레벨\n🚀 6\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 27,
+        "score": "10260",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 36,
+        "pattern": "제곱수",
+        "level": 6
+      },
+      "previousCorrect": 27,
+      "result": {
+        "text": "🪐\n행성\n3\n⭐\n점수\n10920\n✅\n정답\n28\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🔴\n화성\n\n도전적인 패턴!\n\n패턴: 제곱수 - 빈칸에 들어갈 것은?\n1\n4\n9\n16\n25\n?\n34\n36\n38\n31\n연속 정답\n🔥 28\n레벨\n🚀 6\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 28,
+        "score": "10920",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 36,
+        "pattern": "제곱수",
+        "level": 6
+      },
+      "previousCorrect": 28,
+      "result": {
+        "text": "🪐\n행성\n3\n⭐\n점수\n11600\n✅\n정답\n29\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🔴\n화성\n\n도전적인 패턴!\n\n패턴: 제곱수 - 빈칸에 들어갈 것은?\n1\n4\n9\n16\n25\n?\n39\n40\n31\n36\n연속 정답\n🔥 29\n레벨\n🚀 6\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 29,
+        "score": "11600",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 36,
+        "pattern": "제곱수",
+        "level": 6
+      },
+      "previousCorrect": 29,
+      "result": {
+        "text": "🪐\n행성\n3\n⭐\n점수\n12300\n✅\n정답\n30\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🔴\n화성\n\n도전적인 패턴!\n\n패턴: 제곱수 - 빈칸에 들어갈 것은?\n1\n4\n9\n16\n25\n?\n32\n36\n34\n31\n연속 정답\n🔥 30\n레벨\n🚀 7\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 30,
+        "score": "12300",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": 81,
+        "pattern": "×3 규칙",
+        "level": 7
+      },
+      "previousCorrect": 30,
+      "result": {
+        "text": "🪐\n행성\n3\n⭐\n점수\n13020\n✅\n정답\n31\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🔴\n화성\n\n도전적인 패턴!\n\n패턴: ×3 규칙 - 빈칸에 들어갈 것은?\n1\n3\n9\n27\n?\n81\n84\n83\n85\n연속 정답\n🔥 31\n레벨\n🚀 7\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 31,
+        "score": "13020",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": "🔴",
+        "pattern": "복합 반복",
+        "level": 7
+      },
+      "previousCorrect": 31,
+      "result": {
+        "text": "🪐\n행성\n3\n⭐\n점수\n13760\n✅\n정답\n32\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🔴\n화성\n\n도전적인 패턴!\n\n패턴: 복합 반복 - 빈칸에 들어갈 것은?\n🔵\n🔵\n🔴\n🔵\n🔵\n?\n🔴\n🔵\n🔷\n🟣\n연속 정답\n🔥 32\n레벨\n🚀 7\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 32,
+        "score": "13760",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": "🟢",
+        "pattern": "복합 색상",
+        "level": 7
+      },
+      "previousCorrect": 32,
+      "result": {
+        "text": "🪐\n행성\n3\n⭐\n점수\n14520\n✅\n정답\n33\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🔴\n화성\n\n도전적인 패턴!\n\n패턴: 복합 색상 - 빈칸에 들어갈 것은?\n🔴\n🔴\n🟢\n🟢\n?\n🟣\n⭐\n🔷\n🟢\n연속 정답\n🔥 33\n레벨\n🚀 7\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 33,
+        "score": "14520",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "answer": "🌙",
+        "pattern": "공식 패턴",
+        "level": 7
+      },
+      "previousCorrect": 33,
+      "result": {
+        "text": "🪐\n행성\n3\n⭐\n점수\n15300\n✅\n정답\n34\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🔴\n화성\n\n도전적인 패턴!\n\n패턴: 공식 패턴 - 빈칸에 들어갈 것은?\n🌟\n4\n🌙\n🌟\n10\n?\n🌙\n⬡\n🔵\n🟣\n연속 정답\n🔥 34\n레벨\n🚀 7\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+        "correct": 34,
+        "score": "15300",
+        "start": "none"
+      }
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#start-btn"
+    },
+    {
+      "click": "#answer-options > :nth-child(3)"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": "#answer-options > :nth-child(4)"
+    },
+    {
+      "click": "#answer-options > :nth-child(2)"
+    },
+    {
+      "click": "#answer-options > :nth-child(4)"
+    },
+    {
+      "click": "#answer-options > :nth-child(3)"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": "#answer-options > :nth-child(2)"
+    },
+    {
+      "click": "#answer-options > :nth-child(3)"
+    },
+    {
+      "click": "#answer-options > :nth-child(3)"
+    },
+    {
+      "click": "#answer-options > :nth-child(2)"
+    },
+    {
+      "click": "#answer-options > :nth-child(3)"
+    },
+    {
+      "click": "#answer-options > :nth-child(2)"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": "#answer-options > :nth-child(2)"
+    },
+    {
+      "click": "#answer-options > :nth-child(3)"
+    },
+    {
+      "click": "#answer-options > :nth-child(4)"
+    },
+    {
+      "click": "#answer-options > :nth-child(2)"
+    },
+    {
+      "click": "#answer-options > :nth-child(2)"
+    },
+    {
+      "click": "#answer-options > :nth-child(4)"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": "#answer-options > :nth-child(2)"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": "#answer-options > :nth-child(2)"
+    },
+    {
+      "click": "#answer-options > :nth-child(4)"
+    },
+    {
+      "click": "#answer-options > :nth-child(2)"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": ".pattern-btn[data-type=\"shape\"]"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    },
+    {
+      "click": ".pattern-btn[data-type=\"color\"]"
+    },
+    {
+      "click": "#answer-options > :nth-child(4)"
+    },
+    {
+      "click": ".pattern-btn[data-type=\"mixed\"]"
+    },
+    {
+      "click": "#answer-options > :nth-child(1)"
+    }
+  ],
+  "completionModel": "Continuous practice: no terminal completion state exists; complete means verified bounded activity cycle, not every possible generated question.",
+  "coverage": [
+    "shape at hard",
+    "color at hard",
+    "mixed at hard",
+    "number easy→medium→hard via31 real answers"
+  ],
+  "title": "패턴 행성 3D",
+  "finiteCompletion": false,
+  "completionObservation": {
+    "text": "🪐\n행성\n3\n⭐\n점수\n15300\n✅\n정답\n34\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🔴\n화성\n\n도전적인 패턴!\n\n패턴: 공식 패턴 - 빈칸에 들어갈 것은?\n🌟\n4\n🌙\n🌟\n10\n?\n🔶\n🌙\n🟡\n🔵\n연속 정답\n🔥 34\n레벨\n🚀 7\n🎉 정답!\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐\n⭐",
+    "correct": 34,
+    "score": "15300",
+    "start": "none"
+  },
+  "resetObservation": {
+    "text": "🪐\n행성\n1\n⭐\n점수\n0\n✅\n정답\n0\n🌟 패턴 유형\n🔢\n숫자 패턴\n🔷\n도형 패턴\n🎨\n색상 패턴\n🌈\n혼합 패턴\n🪐\n패턴 행성\n\n패턴을 찾아 빈칸을 채우세요!\n\n다음에 올 것은 무엇일까요?\n연속 정답\n🔥 0\n레벨\n🚀 1\n🪐 패턴 행성 3D\n\n수와 도형에서 반복되는 단위를 찾아 다음 항을 예측해요. 2, 5, 8은 3씩 커지므로 다음 수는 11이에요. 답을 고르기 전에 규칙을 말하고, 그다음 항까지 예측해 보세요.\n\n탐험 시작!\n🚀\n🔢\n숫자 패턴\n덧셈, 뺄셈, 곱셈 규칙\n🔷\n도형 패턴\n반복되는 도형 찾기\n🌈\n혼합 패턴\n복합 규칙 발견하기",
+    "correct": 0,
+    "score": "0",
+    "start": "flex"
+  }
+}

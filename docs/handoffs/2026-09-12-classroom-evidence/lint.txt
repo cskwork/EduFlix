@@ -1,0 +1,2 @@
+npm notice run eduflix@0.4.0 lint
+npm notice run eslint .

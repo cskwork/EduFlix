@@ -1,0 +1,76 @@
+{
+  "id": "circle-area",
+  "family": "phaser",
+  "frontDoor": true,
+  "activity": false,
+  "quizzes": [],
+  "completion": false,
+  "reset": false,
+  "actions": [],
+  "reached": [],
+  "title": "원의 넓이: 피자의 비밀",
+  "observer": "CDP queryObjects reads live game UI only; no scene/state setters",
+  "environment": {
+    "focusEmulation": true,
+    "bringPageToFront": true
+  },
+  "start": {
+    "scene": "HookScene",
+    "texts": [
+      "ENERGY CORE ANALYSIS",
+      "목표: 원의 넓이를 구해 두 원의 양을 비교해요.",
+      "지름 30cm (1개)",
+      "VS",
+      "지름 20cm (2개)",
+      "스캔 시작"
+    ],
+    "buttons": [
+      {
+        "text": "스캔 시작",
+        "x": 300,
+        "y": 540
+      }
+    ],
+    "canvas": {
+      "x": 337.5,
+      "y": 196.75,
+      "w": 608,
+      "h": 608
+    },
+    "logical": {
+      "w": 600,
+      "h": 600
+    },
+    "errors": []
+  },
+  "failure": "Error: page.waitForFunction timed out after 15000ms on page p1; last URL was \"http://127.0.0.1:5173/contents/math/elementary/circle-area/index.html\"; last title was \"사이버 에이전트: 코어 분석 - 원의 넓이\".",
+  "lastObservation": {
+    "scene": "HookScene",
+    "texts": [
+      "ENERGY CORE ANALYSIS",
+      "목표: 원의 넓이를 구해 두 원의 양을 비교해요.",
+      "지름 30cm (1개)",
+      "VS",
+      "지름 20cm (2개)",
+      "스캔 시작"
+    ],
+    "buttons": [
+      {
+        "text": "스캔 시작",
+        "x": 300,
+        "y": 540
+      }
+    ],
+    "canvas": {
+      "x": 337.5,
+      "y": 196.75,
+      "w": 608,
+      "h": 608
+    },
+    "logical": {
+      "w": 600,
+      "h": 600
+    },
+    "errors": []
+  }
+}

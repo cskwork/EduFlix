@@ -1,0 +1,74 @@
+{
+  "id": "angles-rocket",
+  "family": "phaser",
+  "frontDoor": true,
+  "activity": false,
+  "quizzes": [],
+  "completion": false,
+  "reset": false,
+  "actions": [],
+  "reached": [],
+  "title": "로켓을 쏘아 올려라! 각도의 이해",
+  "observer": "CDP queryObjects reads live game UI only; no scene/state setters",
+  "environment": {
+    "focusEmulation": true,
+    "bringPageToFront": true
+  },
+  "start": {
+    "scene": "HookScene",
+    "texts": [
+      "LAUNCH VECTOR",
+      "ANGLE TRAJECTORY SYSTEM",
+      "목표: 각도를 조절하여 예각, 직각,\n둔각의 경계를 구별해요.",
+      "TARGET",
+      "스캔 시작"
+    ],
+    "buttons": [
+      {
+        "text": "스캔 시작",
+        "x": 300,
+        "y": 530
+      }
+    ],
+    "canvas": {
+      "x": 337.5,
+      "y": 196.75,
+      "w": 608,
+      "h": 608
+    },
+    "logical": {
+      "w": 600,
+      "h": 600
+    },
+    "errors": []
+  },
+  "failure": "Error: page.waitForFunction timed out after 15000ms on page p1; last URL was \"http://127.0.0.1:5173/contents/math/elementary/angles-rocket/index.html\"; last title was \"사이버 에이전트: 로켓 발사각 - 각도의 이해\".",
+  "lastObservation": {
+    "scene": "HookScene",
+    "texts": [
+      "LAUNCH VECTOR",
+      "ANGLE TRAJECTORY SYSTEM",
+      "목표: 각도를 조절하여 예각, 직각,\n둔각의 경계를 구별해요.",
+      "TARGET",
+      "스캔 시작"
+    ],
+    "buttons": [
+      {
+        "text": "스캔 시작",
+        "x": 300,
+        "y": 530
+      }
+    ],
+    "canvas": {
+      "x": 337.5,
+      "y": 196.75,
+      "w": 608,
+      "h": 608
+    },
+    "logical": {
+      "w": 600,
+      "h": 600
+    },
+    "errors": []
+  }
+}

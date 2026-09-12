@@ -377,7 +377,7 @@
             },
             {
                 title: "The Ancient City",
-                sentence: "The archaeologists were amazed by the <span id='mystery-word'>pristine</span> condition of the artifacts they found in the buried temple.",
+                sentence: "The archaeologists were amazed by the <span id='mystery-word'>pristine</span> condition of the artifacts they found in the buried temple: their surfaces were unbroken and their original colors remained vivid.",
                 mysteryWord: "pristine",
                 options: ["damaged", "ancient", "perfect", "hidden"],
                 correct: 2,
@@ -419,7 +419,7 @@
             },
             {
                 title: "The Negotiation",
-                sentence: "After hours of <span id='mystery-word'>heated</span> discussion, the two companies finally reached an agreement.",
+                sentence: "After hours of <span id='mystery-word'>heated</span> discussion, with raised voices and passionate objections, the two companies finally reached an agreement.",
                 mysteryWord: "heated",
                 options: ["warm", "intense", "boring", "short"],
                 correct: 1,
@@ -429,7 +429,7 @@
                     "The context suggests strong emotions or opinions"
                 ],
                 hint: "Think about what kind of discussion goes on for hours before agreement",
-                explanation: "Heated in this context means full of anger, passion, or strong emotion. The long duration and difficulty reaching agreement point to an intense discussion."
+                explanation: "Heated in this context means full of anger, passion, or strong emotion. The raised voices and passionate objections provide evidence of an emotionally intense discussion; duration alone would not prove this."
             },
             {
                 title: "The Discovery",
@@ -680,6 +680,13 @@
             }
 
             const caseData = casesData[currentCaseIndex];
+            if (!caseData.positionsBalanced) {
+                const answerText = caseData.options[caseData.correct];
+                const offset = (currentCaseIndex + 1) % caseData.options.length;
+                caseData.options = caseData.options.slice(offset).concat(caseData.options.slice(0, offset));
+                caseData.correct = caseData.options.indexOf(answerText);
+                caseData.positionsBalanced = true;
+            }
             document.getElementById('case-number').textContent = currentCaseIndex + 1;
             document.getElementById('case-title').textContent = `📋 Detective Case #${currentCaseIndex + 1}: ${caseData.title}`;
             document.getElementById('sentence-context').innerHTML = caseData.sentence;

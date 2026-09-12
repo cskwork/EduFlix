@@ -1,0 +1,11 @@
+[p1 "뉴턴의 운동 법칙 - 힘과 운동의 비밀" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "뉴턴의 운동 법칙 - 힘과 운동의 비밀"]
+root
+  container
+    svg_root "관성"
+      text "관성"
+    heading
+      text "버스가 급정거하면 왜 앞으로 쏠릴까?"
+    paragraph
+      text "내가 움직이려고 한 게 아닌데... 왜 그럴까?"
+    button [ref=1]
+      text "알아보기"

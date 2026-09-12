@@ -80,7 +80,7 @@ class EduFlixEngine {
                 <div class="hook-content">
                     <div class="question-box">
                         <h1 class="hook-question">${question}</h1>
-                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}<p class="scene-text">학습 목표: ${this.data.objective}</p>
                     </div>
                     ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
                     <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
@@ -99,7 +99,7 @@ class EduFlixEngine {
                        ${characterMarkup}
                     </div>
                 </div>
-                <div class="scene-text typing-effect">${situation}</div>
+                <div class="scene-text typing-effect">${situation}<br><br>${this.data.workedExample}</div>
                 <button class="btn btn-primary-large animate-fade-in" style="opacity:0; animation-delay: 1s;" onclick="Engine.nextScene()">다음</button>
             `;
         });
@@ -138,7 +138,7 @@ class EduFlixEngine {
                 <h1 class="scene-title">🎉 완료!</h1>
                 <div class="wrap-summary">
                     <p class="scene-text">오늘 배운 내용</p>
-                    <h3>${this.data.title}</h3>
+                    <h3>${this.data.title}</h3><p class="scene-text">${this.data.reflection}</p>
                 </div>
                 <div style="display:flex; gap: 15px;">
                     <button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button>
@@ -203,34 +203,46 @@ class EduFlixEngine {
         }
     }
 
-    startQuiz() {
-        const q = this.data.quiz[0];
-        document.getElementById('quiz-question').textContent = q.question;
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = '';
-        
-        q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
-            optsContainer.appendChild(btn);
+    startQuiz(index = 0) {
+        this.quizIndex = index;
+        const q = this.data.quiz[index];
+        const question = document.getElementById('quiz-question');
+        question.textContent = `${index + 1} / ${this.data.quiz.length} · ${q.question}`;
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        q.options.forEach((option, selected) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quiz-option';
+            button.textContent = option;
+            button.onclick = () => this.checkQuiz(selected, q.answer, button);
+            container.appendChild(button);
         });
+        const feedback = document.createElement('p');
+        feedback.id = 'quiz-explanation';
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        container.appendChild(feedback);
     }
 
-    checkQuiz(selectedIdx, correctIdx, btnElement) {
-        const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            this.showFeedback("정답입니다!", 'positive');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+    checkQuiz(selected, answer, button) {
+        const container = document.getElementById('quiz-options');
+        const options = container.querySelectorAll('.quiz-option');
+        if (button.disabled) return;
+        options.forEach(option => { option.disabled = true; });
+        button.classList.add(selected === answer ? 'correct' : 'incorrect');
+        options[answer].classList.add('correct');
+        document.getElementById('quiz-explanation').textContent =
+            (selected === answer ? '정답입니다. ' : '답을 비교해 보세요. ') + this.data.quiz[this.quizIndex].explanation;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '해설을 읽었어요 · 다음 문항' : '해설을 읽었어요 · 정리하기';
+        next.onclick = () => {
+            if (this.quizIndex + 1 < this.data.quiz.length) this.startQuiz(this.quizIndex + 1);
+            else this.nextScene();
+        };
+        container.appendChild(next);
     }
 }
 
@@ -240,6 +252,9 @@ window.Engine = new EduFlixEngine();
    Content Data - 피자로 배우는 분수
    ======================================== */
 const pizzaContentData = {
+    objective: "같은 크기로 나눈 피자 한 조각을 분수로 나타내고 전체의 크기를 확인해요.",
+    workedExample: "피자 한 판이 전체입니다. 넓이가 같은 4조각 중 한 조각은 1/4입니다. 네 조각의 넓이가 서로 다르면 한 조각을 1/4이라고 부를 수 없습니다.",
+    reflection: "작은 피자의 1/2과 큰 피자의 1/2은 같은 양일까요? 비교하기 전에 전체의 크기를 확인해야 하는 이유를 말해 보세요.",
     title: "피자로 배우는 분수",
     hook: {
         question: "피자를 똑같이 나누려면 어떻게 해야 할까?",
@@ -276,7 +291,7 @@ const pizzaContentData = {
     },
     interaction: {
         title: "피자 나누기 연습",
-        instruction: "피자를 클릭해서 4조각으로 똑같이 나눠보세요!",
+        instruction: "피자를 4조각으로 나눈 뒤 확인하세요. 한 조각과 두 조각은 각각 전체의 얼마인지 말해 보세요. 화면은 누를 때마다 같은 넓이로 다시 나누는 모형입니다.",
         onInit: (container, engine) => {
             let currentSlices = 1;
             const targetSlices = 4;
@@ -340,6 +355,9 @@ const pizzaContentData = {
 
             resetBtn.onclick = () => {
                 currentSlices = 1;
+                checkBtn.disabled = false;
+                pizza.style.pointerEvents = 'auto';
+                document.getElementById('core-next-btn').style.display = 'none';
                 render();
                 engine.showFeedback("", "neutral");
             };
@@ -360,11 +378,27 @@ const pizzaContentData = {
     },
     quiz: [
         {
-            question: "친구가 2명 더 와서 총 8명이 되었습니다. 피자를 몇 조각으로 나눠야 할까요?",
-            options: ["4조각", "6조각", "8조각", "12조각"],
-            answer: 2
+                "question": "피자 한 판을 8명이 한 조각씩 똑같이 나누어 먹으려면 몇 조각으로 나누어야 할까요?",
+                "options": [
+                        "4조각",
+                        "6조각",
+                        "8조각",
+                        "12조각"
+                ],
+                "answer": 2,
+                "explanation": "8명이 한 조각씩 먹으므로 같은 넓이의 8조각이 필요합니다. 한 조각은 전체의 1/8입니다."
+        },
+        {
+                "question": "같은 크기의 피자에서 1/4조각 두 개를 모으면 얼마인가요?",
+                "options": [
+                        "1/8",
+                        "2/4",
+                        "2/8"
+                ],
+                "answer": 1,
+                "explanation": "같은 전체의 1/4을 두 개 모았으므로 2/4이고, 전체의 절반인 1/2과 같습니다."
         }
-    ]
+]
 };
 
 Engine.init(pizzaContentData);
