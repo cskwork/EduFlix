@@ -1,0 +1,116 @@
+[p1 "측정 연구소 3D | 동아출판 수학" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "측정 연구소 3D | 동아출판 수학"]
+root
+  container
+    container
+      text "🔬"
+      text "레벨"
+      text "1"
+    container
+      text "⭐"
+      text "점수"
+      text "0"
+    container
+      text "✅"
+      text "정답"
+      container
+        text "0"
+        text "/"
+        text "0"
+  container
+    heading
+      text "🔬 측정 영역"
+    container
+      button [ref=1]
+        text "📏"
+        container
+          text "길이"
+          text "cm, m로 길이 측정"
+        text "0/5"
+      button [ref=2]
+        text "⚖️"
+        container
+          text "무게"
+          text "g, kg으로 무게 측정"
+        text "0/5"
+      button [ref=3]
+        text "🧪"
+        container
+          text "부피"
+          text "mL, L로 부피 측정"
+        text "0/5"
+    container
+      button [ref=4]
+        text "쉬움"
+      button [ref=5]
+        text "보통"
+      button [ref=6]
+        text "어려움"
+  container
+    heading
+      text "📦"
+      text "물체"
+    container
+      text "📦"
+      text "물체 이름"
+    container
+      container
+        text "측정 항목"
+        text "길이"
+      container
+        text "힌트"
+        text "?"
+  container
+    container
+      text "이 물체의 길이는 얼마일까요?"
+      container
+        spinbutton [ref=7, loc=css:input[placeholder="?"]]
+          text "?"
+        combobox [ref=8]
+          text "cm"
+    container
+      button [ref=9]
+        text "💡 힌트"
+      button [ref=10]
+        text "✓ 제출하기"
+  container
+    heading
+      text "📐 단위 변환 참고"
+    container
+      text "1 m"
+      text "="
+      text "100 cm"
+    container
+      text "1 kg"
+      text "="
+      text "1000 g"
+    container
+      text "1 L"
+      text "="
+      text "1000 mL"
+  text "진행률: 0%"
+  container
+    text "📏"
+    text "⚖️"
+    text "🧪"
+    text "📐"
+    text "🔬"
+    heading
+      text "🔬 측정 연구소 3D"
+    paragraph
+      text "길이·무게·들이의 단위를 고르고 어림해요. 물체의 값은 연습용이며 실제 크기는 다를 수 있어요. 이 활동은 기준값의 ±10%까지 인정해요. 단위 변환 �..."
+    button [ref=11]
+      text "연구 시작!"
+      text "🚀"
+    container
+      container
+        text "📏"
+        text "길이 측정"
+        text "cm와 m로 길이를 측정해요"
+      container
+        text "⚖️"
+        text "무게 측정"
+        text "g과 kg으로 무게를 재요"
+      container
+        text "🧪"
+        text "부피 측정"
+        text "mL와 L로 부피를 측정해요"

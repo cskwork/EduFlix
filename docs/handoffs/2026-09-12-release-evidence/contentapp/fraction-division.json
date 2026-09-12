@@ -1,0 +1,11 @@
+{
+  "id": "fraction-division",
+  "frontDoor": true,
+  "activity": "Alternated two friend buttons3times; both3/8 and6/8 preserved",
+  "answers": [
+    "2/12"
+  ],
+  "completion": true,
+  "reset": true,
+  "method": "Chrome CUA actual input + DOM terminal and restart evidence"
+}

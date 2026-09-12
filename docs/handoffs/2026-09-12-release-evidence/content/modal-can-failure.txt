@@ -1,0 +1,30 @@
+[p1 "I Can Do It! Talking About Abilities" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "I Can Do It! Talking About Abilities"]
+root
+  container
+    container
+      svg_root "SUPER STAR"
+        text "SUPER"
+        text "STAR"
+      heading
+        text "Super Star!"
+    container
+      heading
+        text "Today's Key Points"
+      unordered_list
+        list_item
+          text "can"
+          text ": ~할 수 있다 (능력/허락)"
+          text ""I can swim.""
+        list_item
+          text "can't"
+          text ": ~할 수 없다"
+          text ""I can't dance.""
+        list_item
+          text "Can ~?"
+          text ": ~할 수 있니?"
+          text ""Can you help me?""
+        list_item
+          text "주의!"
+          text "can 뒤에는"
+          text "동사원형"
+          text "(to X, -s X)"

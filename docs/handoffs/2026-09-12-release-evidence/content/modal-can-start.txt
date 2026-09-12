@@ -1,0 +1,18 @@
+[p1 "I Can Do It! Talking About Abilities" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "I Can Do It! Talking About Abilities"]
+root
+  container
+    container
+      heading
+        text "What's Your Superpower?"
+      paragraph
+        text "수퍼히어로들은 자기 능력을 어떻게 말할까요?"
+        text ""I"
+        text "can"
+        text "fly!" vs "I"
+        text "can't"
+        text "swim.""
+    svg_root "I can fly! I can't swim!"
+      text "I can fly!"
+      text "I can't swim!"
+    button [ref=1]
+      text "능력 표현 배우기"

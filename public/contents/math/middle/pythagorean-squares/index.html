@@ -121,7 +121,7 @@
         <section id="core-scene" class="scene">
             <div class="content-wrapper">
                 <h2>비밀은 '정사각형'에 있어요!</h2>
-                <p class="instruction">슬라이더로 삼각형의 변을 조절하며 넓이의 관계를 발견하세요!</p>
+                <p class="instruction">목표: 직각을 끼는 두 변을 조절하고 a²+b²=c²를 넓이로 설명해요. a=3, b=4에서 9+16=25를 확인한 뒤 a=6, b=8로 바꾸어 길이와 넓이의 배율을 비교하세요.</p>
                 
                 <div class="core-interactive" id="core-interactive">
                     <div class="triangle-controls">
@@ -190,7 +190,7 @@
                 <div class="quiz-card">
                     <div class="quiz-header">
                         <span class="badge">Quiz</span>
-                        <h3>사다리의 길이는?</h3>
+                        <h3>수직인 벽과 수평인 바닥에 놓인 사다리의 길이는?</h3>
                     </div>
                     <div class="quiz-visual">
                         <svg viewBox="0 0 300 260">
@@ -221,7 +221,7 @@
                             <button class="opt-btn" data-value="13" onclick="ContentApp.checkAnswer(this, 13)">13m</button>
                             <button class="opt-btn" data-value="15" onclick="ContentApp.checkAnswer(this, 15)">15m</button>
                         </div>
-                        <div class="quiz-feedback" id="quiz-feedback"></div>
+                        <div class="quiz-feedback" id="quiz-feedback" role="status"></div><button class="btn-primary" id="quiz-continue" hidden onclick="ContentApp.nextScene()">해설을 읽었어요 · 정리하기</button>
                     </div>
                 </div>
             </div>
@@ -241,7 +241,7 @@
                         <li class="summary-item" data-delay="0">직각삼각형의 비밀을 발견했어요</li>
                         <li class="summary-item" data-delay="1">a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> 공식을 배웠어요</li>
                         <li class="summary-item" data-delay="2">슬라이더로 직접 확인했어요</li>
-                        <li class="summary-item" data-delay="3">실생활 문제를 해결했어요</li>
+                        <li class="summary-item" data-delay="3">직각변 6, 8이면 빗변은 10입니다. 길이가 2배일 때 각 정사각형의 넓이는 왜 4배일까요?</li>
                     </ul>
                 </div>
                 <div class="action-buttons">

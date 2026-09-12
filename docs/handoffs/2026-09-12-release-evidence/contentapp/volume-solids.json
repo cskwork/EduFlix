@@ -1,0 +1,12 @@
+{
+  "id": "volume-solids",
+  "frontDoor": true,
+  "activity": "Fill/drain buttons; cone andsphere selection changes formula; transparency input; screenshot reviewed",
+  "answers": [
+    "36π"
+  ],
+  "completion": true,
+  "reset": true,
+  "browser": "Chrome CUA",
+  "method": "actual button input and DOM terminal screen"
+}

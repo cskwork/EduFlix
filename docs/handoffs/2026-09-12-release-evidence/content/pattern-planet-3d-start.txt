@@ -1,0 +1,69 @@
+[p1 "패턴 행성 3D | 동아출판 수학" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "패턴 행성 3D | 동아출판 수학"]
+root
+  container
+    container
+      text "🪐"
+      text "행성"
+      text "1"
+    container
+      text "⭐"
+      text "점수"
+      text "0"
+    container
+      text "✅"
+      text "정답"
+      text "0"
+  container
+    heading
+      text "🌟 패턴 유형"
+    button [ref=1]
+      text "🔢"
+      text "숫자 패턴"
+    button [ref=2]
+      text "🔷"
+      text "도형 패턴"
+    button [ref=3]
+      text "🎨"
+      text "색상 패턴"
+    button [ref=4]
+      text "🌈"
+      text "혼합 패턴"
+  container
+    text "🪐"
+    heading
+      text "패턴 행성"
+    paragraph
+      text "패턴을 찾아 빈칸을 채우세요!"
+  text "다음에 올 것은 무엇일까요?"
+  container
+    container
+      text "연속 정답"
+      container
+        text "🔥"
+        text "0"
+    container
+      text "레벨"
+      container
+        text "🚀"
+        text "1"
+  container
+    heading
+      text "🪐 패턴 행성 3D"
+    paragraph
+      text "수와 도형에서 반복되는 단위를 찾아 다음 항을 예측해요. 2, 5, 8은 3씩 커지므로 다음 수는 11이에요. 답을 고르기 전에 규칙을 말하고, 그다음 항까지 �..."
+    button [ref=5]
+      text "탐험 시작!"
+      text "🚀"
+    container
+      container
+        text "🔢"
+        text "숫자 패턴"
+        text "덧셈, 뺄셈, 곱셈 규칙"
+      container
+        text "🔷"
+        text "도형 패턴"
+        text "반복되는 도형 찾기"
+      container
+        text "🌈"
+        text "혼합 패턴"
+        text "복합 규칙 발견하기"

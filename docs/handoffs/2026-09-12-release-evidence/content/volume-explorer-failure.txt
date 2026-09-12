@@ -1,0 +1,35 @@
+[p1 "부피 탐험가" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "부피 탐험가"]
+root
+  heading
+    text "상자 채우기"
+  text "가로 4, 세로 3, 높이 2로 맞춘 뒤 채우기를 누르세요. 한 층과 전체 큐브 수를 비교하세요. 높이만 4로 바꿀 때 전체 개수를 먼저 예상한 뒤 확인하세요."
+  container
+    canvas
+    container
+      container
+        container
+          text "가로"
+          spinbutton [ref=1]
+          text "4"
+        container
+          text "세로"
+          spinbutton [ref=2]
+          text "2"
+        container
+          text "높이"
+          spinbutton [ref=3]
+          text "3"
+      container
+        container
+          text "가로"
+          text "x"
+          text "세로"
+          text "x"
+          text "높이"
+          text "= 부피"
+        text "24"
+        text "cm³ (단위 큐브 개수)"
+    button [ref=4]
+      text "다시 채우기"
+    paragraph
+      text "드래그해서 상자를 돌려볼 수 있어요!"

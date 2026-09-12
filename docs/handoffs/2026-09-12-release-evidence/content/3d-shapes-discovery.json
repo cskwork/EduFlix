@@ -1,0 +1,70 @@
+{
+  "id": "3d-shapes-discovery",
+  "title": "입체도형 탐험대",
+  "family": "classic",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": "정육면체의 면, 모서리, 꼭짓점 수는?",
+      "selected": "6면, 12모서리, 8꼭짓점",
+      "feedback": "정답입니다. 면은 반대쪽끼리 3쌍으로 6개, 모서리는 위·아래·연결 부분 각 4개로 12개, 꼭짓점은 위아래 각 4개로 8개입니다."
+    },
+    {
+      "question": "정육면체를 돌리면 전체 꼭짓점 수는?",
+      "selected": "항상 8개이다",
+      "feedback": "정답입니다. 회전은 보이는 방향을 바꿀 뿐 도형 자체를 바꾸지 않습니다. 가려진 꼭짓점까지 모두 세면 8개입니다."
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#scene-hook button"
+    },
+    {
+      "click": "#scene-story button"
+    },
+    {
+      "click": ".shape-btn[data-shape=\"cube\"]"
+    },
+    {
+      "click": ".shape-btn[data-shape=\"sphere\"]"
+    },
+    {
+      "click": ".shape-btn[data-shape=\"cylinder\"]"
+    },
+    {
+      "click": ".shape-btn[data-shape=\"cone\"]"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(1)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#scene-wrap button:first-child"
+    }
+  ],
+  "errors": [],
+  "activityObservation": {
+    "scene": "core",
+    "text": "입체도형 관찰하기\n정육면체를 선택해 천천히 돌리며 면, 모서리, 꼭짓점을 세세요. 그다음 직육면체와 비교하세요. 곡면을 가진 도형은 평평한 면과 굽은 면을 구별해 설명하세요.\n정육면체\n구\n원기둥\n삼각뿔\n삼각뿔\n4\n면\n6\n모서리\n4\n꼭짓점\n\n도형을 드래그해서 여러 방향에서 관찰해보세요!\n\n발견한 도형: 4/4\n대단해요! 4가지 입체도형을 모두 탐험했어요!\n다음",
+    "errors": []
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "🎉 완료!\n\n오늘 배운 내용\n\n입체도형 탐험대\n\n정육면체와 직육면체는 면·모서리·꼭짓점 수가 같은데 무엇이 다를까요? 면의 모양과 변의 길이를 근거로 설명하세요.\n\n다시하기\n홈으로",
+    "errors": []
+  }
+}

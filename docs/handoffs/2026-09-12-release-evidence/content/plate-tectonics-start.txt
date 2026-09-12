@@ -1,0 +1,10 @@
+[p1 "지진과 판구조론 - 움직이는 대륙" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "지진과 판구조론 - 움직이는 대륙"]
+root
+  container
+    svg_root
+    heading
+      text "땅이 왜 흔들릴까?"
+    paragraph
+      text "단단해 보이는 땅이 갑자기 움직인다면..."
+    button [ref=1]
+      text "알아보기"

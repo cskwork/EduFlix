@@ -64,7 +64,7 @@ class EduFlixEngine {
                 <div class="hook-content">
                     <div class="question-box">
                         <h1 class="hook-question">${question}</h1>
-                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}<p class="scene-text">학습 목표: ${this.data.objective}</p>
                     </div>
                     ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
                     <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
@@ -75,7 +75,7 @@ class EduFlixEngine {
 
         this.createScene('story', (scene) => {
             const { character, situation } = this.data.story;
-            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
+            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}<br><br>${this.data.workedExample}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
         });
 
         this.createScene('core', (scene) => {
@@ -89,7 +89,7 @@ class EduFlixEngine {
         }
 
         this.createScene('wrap', (scene) => {
-            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
+            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3><p class="scene-text">${this.data.reflection}</p></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
         });
     }
 
@@ -127,31 +127,46 @@ class EduFlixEngine {
         if(btn) { btn.style.display = 'inline-block'; btn.classList.add('animate-fade-in'); }
     }
 
-    startQuiz() {
-        const q = this.data.quiz[0];
-        document.getElementById('quiz-question').textContent = q.question;
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = '';
-        q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
-            optsContainer.appendChild(btn);
+    startQuiz(index = 0) {
+        this.quizIndex = index;
+        const q = this.data.quiz[index];
+        const question = document.getElementById('quiz-question');
+        question.textContent = `${index + 1} / ${this.data.quiz.length} · ${q.question}`;
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        q.options.forEach((option, selected) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quiz-option';
+            button.textContent = option;
+            button.onclick = () => this.checkQuiz(selected, q.answer, button);
+            container.appendChild(button);
         });
+        const feedback = document.createElement('p');
+        feedback.id = 'quiz-explanation';
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        container.appendChild(feedback);
     }
 
-    checkQuiz(selectedIdx, correctIdx, btnElement) {
-        const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+    checkQuiz(selected, answer, button) {
+        const container = document.getElementById('quiz-options');
+        const options = container.querySelectorAll('.quiz-option');
+        if (button.disabled) return;
+        options.forEach(option => { option.disabled = true; });
+        button.classList.add(selected === answer ? 'correct' : 'incorrect');
+        options[answer].classList.add('correct');
+        document.getElementById('quiz-explanation').textContent =
+            (selected === answer ? '정답입니다. ' : '답을 비교해 보세요. ') + this.data.quiz[this.quizIndex].explanation;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '해설을 읽었어요 · 다음 문항' : '해설을 읽었어요 · 정리하기';
+        next.onclick = () => {
+            if (this.quizIndex + 1 < this.data.quiz.length) this.startQuiz(this.quizIndex + 1);
+            else this.nextScene();
+        };
+        container.appendChild(next);
     }
 }
 
@@ -166,6 +181,9 @@ window.Engine = new EduFlixEngine();
  */
 
 const diagonalData = {
+    objective: "피타고라스 정리를 두 번 써서 직육면체의 공간 대각선을 구해요.",
+    workedExample: "가로 3, 세로 4인 밑면의 대각선은 √(3²+4²)=5입니다. 이 대각선과 높이 12는 직각을 이루므로 공간 대각선은 √(5²+12²)=13입니다. 세 길이를 그대로 더한 19는 모서리를 따라간 거리입니다.",
+    reflection: "상자 모서리를 따라간 경로와 내부의 곧은 대각선 중 어느 것이 짧을까요? 3,4,12 예제로 계산하고 그림에서 설명하세요.",
     title: "공간 대각선",
     hook: {
         question: "방 한쪽 모서리에서 대각선 반대쪽 모서리까지 줄을 달면, 줄의 길이는 얼마일까요?",
@@ -208,7 +226,7 @@ const diagonalData = {
     },
     interaction: {
         title: "공간 대각선 탐구",
-        instruction: "직육면체의 크기를 조절하고, 단계별로 대각선을 확인해보세요!",
+        instruction: "가로 3, 세로 4, 높이 2로 설정하세요. 밑면은 5, 공간 대각선은 √29≈5.39입니다. 높이 12인 예제는 종이에 계산하세요. 밑면 대각선을 먼저 표시하고 공간 대각선을 켜서 두 직각삼각형을 찾으세요. 각 단계의 제곱과 제곱근을 기록하세요.",
         onInit: (container, engine) => {
             let a = 3, b = 4, c = 2;
             let currentStep = 0;
@@ -472,11 +490,27 @@ const diagonalData = {
     },
     quiz: [
         {
-            question: "가로 3, 세로 4, 높이 12인 직육면체의 공간 대각선 길이는?",
-            options: ["13", "15", "17", "19"],
-            answer: 0
+                "question": "가로 3, 세로 4, 높이 12인 직육면체의 공간 대각선은?",
+                "options": [
+                        "13",
+                        "15",
+                        "17",
+                        "19"
+                ],
+                "answer": 0,
+                "explanation": "√(3²+4²+12²)=√169=13입니다. 3+4+12=19는 모서리를 따라 이동한 길이입니다."
+        },
+        {
+                "question": "가로·세로·높이가 모두 2배가 되면 공간 대각선은?",
+                "options": [
+                        "2배",
+                        "4배",
+                        "8배"
+                ],
+                "answer": 0,
+                "explanation": "√((2a)²+(2b)²+(2c)²)=2√(a²+b²+c²)이므로 길이는 2배입니다."
         }
-    ]
+]
 };
 
 Engine.init(diagonalData);

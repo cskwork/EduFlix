@@ -545,7 +545,7 @@
                 <p id="rotation-result" style="margin-top: 16px; color: var(--text-muted);">슬라이더를 움직여 도형을 회전시켜보세요!</p>
             </div>
             <div class="info-panel">
-                <p>도형을 선택하고 슬라이더로 <strong>360°</strong>까지 회전시켜보세요. 어떤 입체가 만들어지나요?</p>
+                <p>축을 먼저 확인하고 도형을 <strong>360°</strong> 회전시켜 보세요. 180°에서 멈춘 모양과 비교하고, 축에서 가장 먼 점이 만드는 원의 반지름을 찾아보세요.</p>
             </div>
         </div>
 
@@ -877,7 +877,7 @@
             initStoryScene() {
                 this.createRotationSolid('rectangle', 360);
 
-                const story = "회전체는 평면도형을 한 직선을 축으로 하여 1회전시킬 때 생기는 입체도형이에요. 옛날 도공들은 물레를 돌려 아름다운 도자기를 만들었어요. 이것이 바로 회전체의 원리! 직사각형을 돌리면 원기둥, 삼각형을 돌리면 원뿔, 반원을 돌리면 구가 만들어져요!";
+                const story = "회전체는 평면도형을 한 직선을 축으로 하여 1회전시킬 때 생기는 입체도형이에요. 옛날 도공들은 물레를 돌려 아름다운 도자기를 만들었어요. 이것이 바로 회전체의 원리! 직사각형의 한 변을 축으로 돌리면 원기둥, 직각삼각형의 직각을 낀 한 변을 축으로 돌리면 원뿔, 반원의 지름을 축으로 돌리면 구가 만들어져요!";
                 const textEl = document.getElementById('story-text');
                 textEl.textContent = '';
                 let i = 0;

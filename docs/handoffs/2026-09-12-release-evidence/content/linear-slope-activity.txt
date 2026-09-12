@@ -1,0 +1,22 @@
+[p1 "일차함수와 기울기" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "일차함수와 기울기"]
+root
+  heading
+    text "기울기 실험실"
+  text "파란 점을 움직여 상승하는 직선과 하강하는 직선을 만드세요. 두 점의 가로 변화량과 세로 변화량을 기록해 비를 구하세요. 가로 변화량이 0인 수직선..."
+  container
+    container
+      svg_root "3 2"
+        text "3"
+        text "2"
+      container
+        text "m ="
+        text "기울기(a) ="
+        text "세로증가량"
+        text "/"
+        text "가로증가량"
+    container
+      text "y ="
+      text "3/2 ≈ 1.50"
+      text "x"
+    button [ref=1]
+      text "확인"

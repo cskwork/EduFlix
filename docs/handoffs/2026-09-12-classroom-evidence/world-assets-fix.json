@@ -1,0 +1,54 @@
+{
+  "changedFiles": [
+    "public/contents/world-history/middle/world-quiz-battle/script.js"
+  ],
+  "priorRelatedFix": "index.html: removed four empty image src attributes; IDs and later assignment preserved",
+  "substitution": [
+    {
+      "pose": "wave",
+      "source": "public/mascot/mascot-wave.webp",
+      "bytes": 16290,
+      "sha256": "112f0bfffcc448e2f13b2f9dbb14c02aed4e3e86368bd8a3b44ebfc670a720c6"
+    },
+    {
+      "pose": "think",
+      "source": "public/mascot/mascot-think.webp",
+      "bytes": 15728,
+      "sha256": "be9e52a3dbb4e6b315806b20351a61a79f248149186343beec97c47d2f9da3f5"
+    },
+    {
+      "pose": "cheer",
+      "source": "public/mascot/mascot-cheer.webp",
+      "bytes": 16282,
+      "sha256": "2f76212856a3aa541128638d2526c88fa0e73d5da6f5d22e64ed523b075a6607"
+    },
+    {
+      "pose": "rocket",
+      "source": "public/mascot/mascot-rocket.webp",
+      "bytes": 15062,
+      "sha256": "e485cfc0ed7ec193be1c96e6908d355af56f66b4d4d33478ce27e868264dca53"
+    }
+  ],
+  "mapping": {
+    "intro_tanjiro/tanjiro_idle": "wave",
+    "intro_gojo/gojo_idle": "think",
+    "tanjiro_attack": "cheer",
+    "gojo_attack": "rocket",
+    "bg": "existing #222 canvas background",
+    "effect_water/effect_red": "existing attack pose, trails and addExplosion particles"
+  },
+  "preserved": [
+    "character selection aliases/text",
+    "HP portrait assignments",
+    "preloader completion",
+    "quiz and battle flow",
+    "four-file archive layout"
+  ],
+  "verification": [
+    "node --check script.js passed",
+    "four decoded embedded WebP assets byte-identical to existing mascot files",
+    "six required source keys preserved; distinct intro portraits",
+    "no Imgur URL remains; existing background/particles and four HP/portrait assignments preserved"
+  ],
+  "browser": "root owns final real browser verification; no browser action performed by this agent"
+}

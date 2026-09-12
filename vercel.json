@@ -4,15 +4,38 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "functions": {
-    "api/generate.ts": { "maxDuration": 300 }
+    "api/generate.ts": {
+      "maxDuration": 300
+    }
   },
   "rewrites": [
-    { "source": "/((?!api|contents|assets).*)", "destination": "/index.html" }
+    {
+      "source": "/content-revisions/:revision/:path*",
+      "destination": "/contents/:path*"
+    },
+    {
+      "source": "/((?!api|contents|content-revisions|assets).*)",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {
       "source": "/contents/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/content-revisions/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     }
   ]
 }

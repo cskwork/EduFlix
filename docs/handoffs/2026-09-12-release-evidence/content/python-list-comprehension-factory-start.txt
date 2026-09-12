@@ -1,0 +1,19 @@
+[p1 "파이썬 복제 기계: 리스트 컴프리헨션 공장" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "파이썬 복제 기계: 리스트 컴프리헨션 공장"]
+root
+  container
+    container
+      text "학습 목표"
+      paragraph
+        text "리스트 컴프리헨션의 작동 원리와 range() 함수의 특징을 이해하고, 코드의 결과값을 예측할 수 있습니다."
+    container
+      image "잠긴 상자"
+      image "잠긴 상자"
+      image "잠긴 상자"
+    container
+      heading
+        text "미스터리 상자를 여는 암호는 무엇을 의미할까요?"
+      paragraph
+        text "공장에 도착한 상자 위에 기묘한 설계도가 놓여 있습니다."
+    text "[x*2 for x in range(3)]"
+    button [ref=1]
+      text "기계 조작법 배우기"

@@ -1,0 +1,17 @@
+[p1 "3D 좌표계: 드론 파일럿" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "3D 좌표계: 드론 파일럿"]
+root
+  container
+    heading
+      text "드론이 3D 공간을 자유롭게 날아다니려면 어떤 정보가 필요할까요?"
+    paragraph
+      text "가로, 세로... 그리고 뭐가 더 필요할까요?"
+    paragraph
+      text "학습 목표: 순서가 있는 세 좌표로 위치를 지정하고 한 성분 변화의 의미를 설명해요."
+  svg_root "x y z O (3, 4, 2)"
+    text "x"
+    text "y"
+    text "z"
+    text "O"
+    text "(3, 4, 2)"
+  button [ref=1]
+    text "시작하기"

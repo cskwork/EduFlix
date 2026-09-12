@@ -1,0 +1,74 @@
+{
+  "id": "chemical-reactor",
+  "title": "화학 반응 시뮬레이터",
+  "family": "classic",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": "25°C에서 산성 수용액의 pH는?",
+      "selected": "7보다 작다",
+      "feedback": "정답입니다. 25°C에서 중성인 물의 pH는 7이며, 산성 수용액의 pH는 7보다 작습니다. pH는 수소 이온 농도의 로그 척도입니다."
+    },
+    {
+      "question": "산성과 염기성이 만나 물과 염이 생성되는 반응은?",
+      "selected": "중화 반응",
+      "feedback": "정답입니다. HCl과 NaOH의 중화에서는 물과 염이 생깁니다. 두 시약만의 반응으로 기체가 발생하지 않습니다."
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#scene-hook button"
+    },
+    {
+      "click": "#scene-story button"
+    },
+    {
+      "click": ".reagent[data-type=\"indicator\"]"
+    },
+    {
+      "click": "#reset-btn"
+    },
+    {
+      "click": ".reagent[data-type=\"acid\"]"
+    },
+    {
+      "click": ".reagent[data-type=\"base\"]"
+    },
+    {
+      "click": ".reagent[data-type=\"indicator\"]"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(1)"
+    },
+    {
+      "click": "#scene-quiz > button"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#scene-quiz > button"
+    },
+    {
+      "click": "#scene-wrap button:first-child"
+    }
+  ],
+  "errors": [],
+  "guard": true,
+  "activityObservation": {
+    "scene": "core",
+    "text": "중화 반응 실험\n25°C 물 50mL에 0.1mol/L HCl과 NaOH를 10mL씩 넣는 모형입니다. 두 용액을 모두 넣어 몰수가 같아지는 때를 찾으세요. 실제 실험은 교사 지도하에 보안경을 착용합니다. H⁺ + OH⁻ → H₂O이며 기체는 생기지 않습니다.\npH: 7.0 (중성)\nHCl\nNaOH\n지시약\n비커 비우기\n같은 몰수의 HCl과 NaOH가 중화되었습니다. 이 강산·강염기 모형은 25°C에서 pH 7입니다. 약산·약염기는 같지 않을 수 있습니다.\n다음",
+    "errors": []
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "🎉 완료!\n\n오늘 배운 내용\n\n화학 반응 시뮬레이터\n다시하기\n홈으로",
+    "errors": []
+  }
+}

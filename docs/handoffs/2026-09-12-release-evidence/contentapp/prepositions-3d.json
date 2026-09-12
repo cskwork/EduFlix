@@ -1,0 +1,16 @@
+{
+  "id": "prepositions-3d",
+  "frontDoor": true,
+  "activity": "All5 preposition clicks updateEnglish Korean position feedback",
+  "answers": [
+    "in",
+    "on",
+    "under",
+    "next to",
+    "between"
+  ],
+  "completion": true,
+  "reset": true,
+  "browser": "Chrome CUA",
+  "method": "actual button input and DOM terminal screen"
+}

@@ -1,0 +1,112 @@
+[
+  {
+    "id": "volume-explorer",
+    "title": "부피 탐험가",
+    "start": "시작하기",
+    "buttons": [
+      "시작하기"
+    ],
+    "beforeText": "택배 상자 안에 물건을 가득 채우려면, 상자 크기를 어떻게 알 수 있을까요?\n\n상자 안에 작은 큐브를 쌓아볼까요?\n\n학습 목표: 단위 정육면체의 개수로 직육면체의 부피를 구해요.\n\n가로 x 세로 x 높이\n= 부피\n시작하기",
+    "changed": true,
+    "afterText": "안녕! 나는 택배기사 '배달이'야!\n\n오늘 특별한 미션이 있어. 상자 안에 단위 큐브(1cm x 1cm x 1cm)를 빈틈없이 채워야 해!\n가로, 세로, 높이를 조절하면서 부피의 비밀을 함께 찾아보자!\n\n가로 4cm, 세로 3cm인 한 층에는 1cm³ 큐브 12개가 들어갑니다. 높이 2cm이면 두 층이므로 12×2=24cm³입니다. 길이를 더하는 것이 아니라 각 층의 개수를 곱합니다.\n다음",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "3d-coordinate-system",
+    "title": "3D 좌표계: 드론 파일럿",
+    "start": "시작하기",
+    "buttons": [
+      "시작하기"
+    ],
+    "beforeText": "드론이 3D 공간을 자유롭게 날아다니려면 어떤 정보가 필요할까요?\n\n가로, 세로... 그리고 뭐가 더 필요할까요?\n\n학습 목표: 순서가 있는 세 좌표로 위치를 지정하고 한 성분 변화의 의미를 설명해요.\n\nx\ny\nz\nO\n(3, 4, 2)\n시작하기",
+    "changed": true,
+    "afterText": "안녕! 나는 드론 파일럿 '하늘이'야!\n\n오늘 특별한 배달 미션이 있어. 드론을 목표 지점까지 정확하게 보내야 해!\n3D 공간에서는 x, y, z 세 개의 좌표가 필요하다는 걸 함께 알아보자!\n\n좌표 (2,3,5)는 원점에서 정한 x, y, z 방향의 성분이 차례로 2,3,5라는 뜻입니다. (2,3,5)와 (3,2,5)는 서로 다른 위치입니다. 축의 양의 방향은 화면의 축 이름과 화살표로 확인하세요.\n다음",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "space-diagonal",
+    "title": "공간 대각선",
+    "start": "시작하기",
+    "buttons": [
+      "시작하기"
+    ],
+    "beforeText": "방 한쪽 모서리에서 대각선 반대쪽 모서리까지 줄을 달면, 줄의 길이는 얼마일까요?\n\n3D 공간에서 가장 긴 대각선을 찾아보세요!\n\n학습 목표: 피타고라스 정리를 두 번 써서 직육면체의 공간 대각선을 구해요.\n\n피타고라스를 두 번!\n시작하기",
+    "changed": true,
+    "afterText": "안녕! 나는 건축가 '민준'이야!\n\n오늘 특별한 프로젝트가 있어. 직육면체 모양의 건물에 대각선 조명을 설치해야 해!\n피타고라스의 정리를 두 번 적용하면 공간 대각선의 길이를 구할 수 있다는 걸 함께 발견해보자!\n\n가로 3, 세로 4인 밑면의 대각선은 √(3²+4²)=5입니다. 이 대각선과 높이 12는 직각을 이루므로 공간 대각선은 √(5²+12²)=13입니다. 세 길이를 그대로 더한 19는 모서리를 따라간 거리입니다.\n다음",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "3d-vectors",
+    "title": "3D 벡터: 힘의 합성",
+    "start": "시작하기",
+    "buttons": [
+      "시작하기"
+    ],
+    "beforeText": "우주에서 로켓에 여러 방향으로 힘이 가해지면, 로켓의 가속도는 어느 방향일까요?\n\n두 힘을 합치면 어떤 방향이 될까요?\n\n학습 목표: 벡터의 같은 성분끼리 더해 합력을 구하고 힘과 속도를 구별해요.\n\nO\nA\nB\nA + B\n벡터의 합: 각 성분을 더하면 돼요!\n시작하기",
+    "changed": true,
+    "afterText": "안녕하세요! 저는 창작 안내자 '뉴턴 박사'입니다.\n\n오늘 우주선에 작용하는 두 힘을 합성해야 합니다!\n3D 공간에서 벡터의 덧셈은 각 성분을 따로 더하면 된다는 것을 함께 발견해봅시다!\n\nA=(2,3,1), B=(1,−1,2)이면 A+B=(3,2,3)입니다. y성분은 3+(−1)=2로 서로 일부 상쇄됩니다. 합력은 가속도 방향을 정하며, 이미 움직이는 물체의 순간 속도 방향과 반드시 같지는 않습니다.\n다음",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "pythagorean-squares",
+    "title": "피타고라스 정리: 제곱의 비밀",
+    "buttons": [
+      "알아보러 가기"
+    ],
+    "beforeText": "지름길은 왜 더 빠를까요?\n\n학교 갈 때 운동장을 가로질러 본 적 있나요?\n\n100m\n100m\n???m\n🏃\n알아보러 가기",
+    "changed": false,
+    "afterText": "지름길은 왜 더 빠를까요?\n\n학교 갈 때 운동장을 가로질러 본 적 있나요?\n\n100m\n100m\n???m\n🏃\n알아보러 가기",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "box-volume",
+    "title": "사이버 에이전트: 데이터 매트릭스 - 직육면체의 부피",
+    "buttons": [],
+    "beforeText": "",
+    "changed": false,
+    "afterText": "",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "circle-area",
+    "title": "사이버 에이전트: 코어 분석 - 원의 넓이",
+    "buttons": [],
+    "beforeText": "",
+    "changed": false,
+    "afterText": "",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "decimal-multiplication",
+    "title": "소수의 곱셈 - 우주 식량 계산하기",
+    "buttons": [],
+    "beforeText": "",
+    "changed": false,
+    "afterText": "",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  }
+]

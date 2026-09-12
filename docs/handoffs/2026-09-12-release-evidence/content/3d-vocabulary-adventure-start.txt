@@ -1,0 +1,46 @@
+[p1 "3D Vocabulary Adventure - Dong-A Elementary English" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "3D Vocabulary Adventure - Dong-A Elementary English"]
+root
+  paragraph
+    text "Loading Adventure..."
+  container
+    container
+      container
+        text "⭐"
+        text "Score:"
+        text "0"
+      container
+        text "🔥"
+        text "Streak:"
+        text "0"
+      container
+        text "❤️"
+        text "Lives:"
+        text "3"
+      container
+        text "📚"
+        text "Word:"
+        text "1"
+        text "/"
+        text "20"
+    container
+      text "ADJECTIVE"
+      text "Loading..."
+    container
+      heading
+        text "🚀 3D Vocabulary Adventure"
+      paragraph
+        text "Explore Space & Learn Words!"
+      paragraph
+        text "Journey through the cosmos while mastering new vocabulary! Read the definition and select the word that matches. Collect stars, build streaks, and unlock achievements!"
+      paragraph
+        text "⌨️ Keyboard: Press 1-4 to select answers, Space to hear pronunciation"
+      container
+        button [ref=1]
+          text "🌟 Easy"
+        button [ref=2]
+          text "⭐ Medium"
+        button [ref=3]
+          text "💫 Hard"
+      button [ref=4]
+        text "Start Adventure"
+        text "🚀"

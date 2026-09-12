@@ -1,0 +1,15 @@
+{
+  "id": "word-families",
+  "frontDoor": true,
+  "activity": "Actual next word clicks: education,celebration,decision",
+  "answers": [
+    "education",
+    "explanation",
+    "pollution",
+    "discussion"
+  ],
+  "completion": true,
+  "reset": true,
+  "browser": "Chrome CUA",
+  "method": "real button input and rendered DOM observation"
+}

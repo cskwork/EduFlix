@@ -11,7 +11,7 @@ import type {
   CreatorMode,
   ReviewProgress,
 } from '../types/generation'
-import type { Subject, Grade, Language, Difficulty, ContentManifest } from '../types/content'
+import type { Subject, Grade, Language, Difficulty, ContentType, ContentManifest } from '../types/content'
 import { generateContent, reviewContent, type ProgressCallback, type ReviewProgressCallback } from '../services/api/claude'
 import { t } from '../i18n'
 import { useContentStore } from './content'
@@ -86,6 +86,7 @@ export const useGenerationStore = defineStore('generation', () => {
     language?: Language
     renderMode?: RenderMode
     additionalContext?: string
+    contentType?: ContentType
     // Option 2
     problem?: string
     difficulty?: Difficulty
@@ -106,6 +107,7 @@ export const useGenerationStore = defineStore('generation', () => {
       language: options.language || 'ko',
       renderMode: options.renderMode,
       additionalContext: options.additionalContext,
+      contentType: options.contentType,
       problem: options.problem,
       difficulty: options.difficulty,
     }
@@ -131,6 +133,7 @@ export const useGenerationStore = defineStore('generation', () => {
           language: options.language || 'ko',
           renderMode: options.renderMode,
           additionalContext: options.additionalContext,
+      contentType: options.contentType,
           problem: options.problem,
           difficulty: options.difficulty,
         },

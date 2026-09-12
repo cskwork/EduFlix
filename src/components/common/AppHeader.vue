@@ -43,6 +43,7 @@ const pageTitle = computed(() => {
 
 // 네비게이션 항목 (언어 전환에 반응하도록 computed)
 const navItems = computed(() => [
+  { name: t('routes.studio'), path: '/studio' },
   { name: t('nav.home'), path: '/' },
   { name: t('nav.math'), path: '/?subject=math' },
   { name: t('nav.science'), path: '/?subject=science' },
@@ -139,6 +140,8 @@ watch(
         <span class="logo-text">EduFlix</span>
       </router-link>
 
+      <router-link to="/studio" class="mobile-studio">{{ t('routes.studio') }}</router-link>
+
       <!-- 네비게이션 -->
       <nav class="main-nav">
         <ul class="nav-list">
@@ -195,13 +198,14 @@ watch(
         <LanguageSwitcher />
 
         <!-- 모드 토글 (정적 모드에서는 숨김) -->
-        <ModeToggle v-if="canGenerateContent" />
+        <ModeToggle v-if="canGenerateContent" class="header-mode-toggle" :class="{ 'on-studio': route.path === '/studio' }" />
       </div>
     </div>
   </header>
 </template>
 
 <style scoped>
+.mobile-studio { display:none; }
 .app-header {
   position: fixed;
   top: 0;
@@ -395,6 +399,8 @@ watch(
     gap: var(--spacing-md);
   }
   
+  .header-mode-toggle.on-studio { display:none; }
+  .mobile-studio { display:flex; align-items:center; min-height:44px; font-size:.8rem; font-weight:700; white-space:nowrap; }
   .main-nav {
     display: none;
   }

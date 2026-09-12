@@ -1,0 +1,170 @@
+[
+  {
+    "id": "pythagorean-squares",
+    "directory": "public/contents/math/middle/pythagorean-squares",
+    "status": "complete-reset-observed",
+    "receipt": "pythagorean-squares.json"
+  },
+  {
+    "id": "decimal-multiplication",
+    "directory": "public/contents/math/elementary/decimal-multiplication",
+    "status": "complete-reset-observed",
+    "receipt": "decimal-multiplication.json"
+  },
+  {
+    "id": "fraction-division",
+    "directory": "public/contents/math/elementary/fraction-division",
+    "status": "complete-reset-observed",
+    "receipt": "fraction-division.json"
+  },
+  {
+    "id": "fraction-addition",
+    "directory": "public/contents/math/elementary/fraction-addition",
+    "status": "complete-reset-observed",
+    "receipt": "fraction-addition.json"
+  },
+  {
+    "id": "platonic-solids",
+    "directory": "public/contents/math/middle/platonic-solids",
+    "status": "complete-reset-observed",
+    "receipt": "platonic-solids.json"
+  },
+  {
+    "id": "volume-solids",
+    "directory": "public/contents/math/middle/volume-solids",
+    "status": "complete-reset-observed",
+    "receipt": "volume-solids.json"
+  },
+  {
+    "id": "3d-coordinates",
+    "directory": "public/contents/math/middle/3d-coordinates",
+    "status": "tool-blocked",
+    "receipt": "3d-coordinates.json"
+  },
+  {
+    "id": "fraction-factory-3d",
+    "directory": "public/contents/math/elementary/fraction-factory-3d",
+    "status": "complete-reset-observed",
+    "receipt": "fraction-factory-3d.json"
+  },
+  {
+    "id": "pythagorean-3d",
+    "directory": "public/contents/math/middle/pythagorean-3d",
+    "status": "not-started",
+    "receipt": null
+  },
+  {
+    "id": "rotation-solid",
+    "directory": "public/contents/math/middle/rotation-solid",
+    "status": "not-started",
+    "receipt": null
+  },
+  {
+    "id": "space-numbers",
+    "directory": "public/contents/math/elementary/space-numbers",
+    "status": "not-started",
+    "receipt": null
+  },
+  {
+    "id": "8bit-math-quest",
+    "directory": "public/contents/math/elementary/8bit-math-quest",
+    "status": "not-started",
+    "receipt": null
+  },
+  {
+    "id": "fraction-precision-alpha",
+    "directory": "public/contents/math/elementary/fraction-precision-alpha",
+    "status": "not-started",
+    "receipt": null
+  },
+  {
+    "id": "fraction-precision-beta",
+    "directory": "public/contents/math/elementary/fraction-precision-beta",
+    "status": "not-started",
+    "receipt": null
+  },
+  {
+    "id": "fraction-precision-gamma",
+    "directory": "public/contents/math/elementary/fraction-precision-gamma",
+    "status": "not-started",
+    "receipt": null
+  },
+  {
+    "id": "fraction-precision-delta",
+    "directory": "public/contents/math/elementary/fraction-precision-delta",
+    "status": "not-started",
+    "receipt": null
+  },
+  {
+    "id": "fraction-precision-epsilon",
+    "directory": "public/contents/math/elementary/fraction-precision-epsilon",
+    "status": "not-started",
+    "receipt": null
+  },
+  {
+    "id": "20260127-topic-105b382d",
+    "directory": "public/contents/english/elementary/20260127-topic-105b382d",
+    "status": "complete-reset-observed",
+    "receipt": "20260127-topic-105b382d.json"
+  },
+  {
+    "id": "comparative-adjectives",
+    "directory": "public/contents/english/elementary/comparative-adjectives",
+    "status": "complete-reset-observed",
+    "receipt": "comparative-adjectives.json"
+  },
+  {
+    "id": "present-tenses",
+    "directory": "public/contents/english/elementary/present-tenses",
+    "status": "partial-user-stopped",
+    "receipt": "present-tenses.json"
+  },
+  {
+    "id": "will-vs-going-to-library",
+    "directory": "public/contents/english/middle/will-vs-going-to-library",
+    "status": "not-started",
+    "receipt": null
+  },
+  {
+    "id": "will-vs-going-to-zoo",
+    "directory": "public/contents/english/middle/will-vs-going-to-zoo",
+    "status": "not-started",
+    "receipt": null
+  },
+  {
+    "id": "countable-uncountable",
+    "directory": "public/contents/english/elementary/countable-uncountable",
+    "status": "not-started",
+    "receipt": null
+  },
+  {
+    "id": "magic-e",
+    "directory": "public/contents/english/elementary/magic-e",
+    "status": "complete-reset-observed",
+    "receipt": "magic-e.json"
+  },
+  {
+    "id": "prepositions-place",
+    "directory": "public/contents/english/elementary/prepositions-place",
+    "status": "complete-reset-observed",
+    "receipt": "prepositions-place.json"
+  },
+  {
+    "id": "present-perfect",
+    "directory": "public/contents/english/middle/present-perfect",
+    "status": "complete-reset-observed",
+    "receipt": "present-perfect.json"
+  },
+  {
+    "id": "word-families",
+    "directory": "public/contents/english/elementary/word-families",
+    "status": "complete-reset-observed",
+    "receipt": "word-families.json"
+  },
+  {
+    "id": "prepositions-3d",
+    "directory": "public/contents/english/elementary/prepositions-3d",
+    "status": "complete-reset-observed",
+    "receipt": "prepositions-3d.json"
+  }
+]

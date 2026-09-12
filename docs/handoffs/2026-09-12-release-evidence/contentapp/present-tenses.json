@@ -1,0 +1,18 @@
+{
+  "id": "present-tenses",
+  "frontDoor": true,
+  "activity": "Original drag attempts had no observed result. Added click/keyboard alternative; clicked six cards and matching targets; displayed6/6.",
+  "answers": [
+    "play",
+    "am doing",
+    "goes",
+    "am watching"
+  ],
+  "quizFeedback": "All4 correct feedback observed",
+  "completion": false,
+  "reset": false,
+  "status": "partial-user-stopped",
+  "fix": "click/keyboard card selection and target placement; used-card duplicate-count guard",
+  "mobile": "not run after this change",
+  "method": "Chrome CUA actual button input and DOM snapshots"
+}

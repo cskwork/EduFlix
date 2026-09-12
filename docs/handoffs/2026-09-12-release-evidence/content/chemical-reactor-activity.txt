@@ -1,0 +1,17 @@
+[p1 "화학 반응 시뮬레이터" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "화학 반응 시뮬레이터"]
+root
+  heading
+    text "중화 반응 실험"
+  text "25°C 물 50mL에 0.1mol/L HCl과 NaOH를 10mL씩 넣는 모형입니다. 두 용액을 모두 넣어 몰수가 같아지는 때를 찾으세요. 실제 실험은 교사 지도하에 보안경을 착�..."
+  container
+    container
+      container
+        text "pH:"
+        text "7.0"
+        text "(중성)"
+      container
+        text "HCl"
+        text "NaOH"
+        text "지시약"
+    button [ref=1]
+      text "비커 비우기"

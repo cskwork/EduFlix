@@ -1,0 +1,23 @@
+[p1 "확률의 세계: 동전 던지기" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "확률의 세계: 동전 던지기"]
+root
+  heading
+    text "동전 던지기 실험"
+  text "1번 던지기를 10회 한 뒤 앞면 비율을 기록하세요. 100번 던지기를 두 번 더 실행해 비율을 비교하세요. 이 모형은 각 던지기를 공정하고 독립적으로 생�..."
+  container
+    container
+      text "H"
+      container
+        button [ref=1]
+          text "1번 던지기"
+        button [ref=2]
+          text "100번 던지기"
+    container
+      container
+        text "앞면 (Heads)"
+        text "0"
+      container
+        text "뒷면 (Tails)"
+        text "0"
+      text "앞면 비율: 0%"
+    button [ref=3]
+      text "실험 완료"

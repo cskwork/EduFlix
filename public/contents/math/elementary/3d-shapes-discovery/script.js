@@ -64,7 +64,7 @@ class EduFlixEngine {
                 <div class="hook-content">
                     <div class="question-box">
                         <h1 class="hook-question">${question}</h1>
-                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}<p class="scene-text">학습 목표: ${this.data.objective}</p>
                     </div>
                     ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
                     <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
@@ -75,7 +75,7 @@ class EduFlixEngine {
 
         this.createScene('story', (scene) => {
             const { character, situation } = this.data.story;
-            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
+            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}<br><br>${this.data.workedExample}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
         });
 
         this.createScene('core', (scene) => {
@@ -89,7 +89,7 @@ class EduFlixEngine {
         }
 
         this.createScene('wrap', (scene) => {
-            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
+            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3><p class="scene-text">${this.data.reflection}</p></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
         });
     }
 
@@ -127,31 +127,46 @@ class EduFlixEngine {
         if(btn) { btn.style.display = 'inline-block'; btn.classList.add('animate-fade-in'); }
     }
 
-    startQuiz() {
-        const q = this.data.quiz[0];
-        document.getElementById('quiz-question').textContent = q.question;
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = '';
-        q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
-            optsContainer.appendChild(btn);
+    startQuiz(index = 0) {
+        this.quizIndex = index;
+        const q = this.data.quiz[index];
+        const question = document.getElementById('quiz-question');
+        question.textContent = `${index + 1} / ${this.data.quiz.length} · ${q.question}`;
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        q.options.forEach((option, selected) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quiz-option';
+            button.textContent = option;
+            button.onclick = () => this.checkQuiz(selected, q.answer, button);
+            container.appendChild(button);
         });
+        const feedback = document.createElement('p');
+        feedback.id = 'quiz-explanation';
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        container.appendChild(feedback);
     }
 
-    checkQuiz(selectedIdx, correctIdx, btnElement) {
-        const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+    checkQuiz(selected, answer, button) {
+        const container = document.getElementById('quiz-options');
+        const options = container.querySelectorAll('.quiz-option');
+        if (button.disabled) return;
+        options.forEach(option => { option.disabled = true; });
+        button.classList.add(selected === answer ? 'correct' : 'incorrect');
+        options[answer].classList.add('correct');
+        document.getElementById('quiz-explanation').textContent =
+            (selected === answer ? '정답입니다. ' : '답을 비교해 보세요. ') + this.data.quiz[this.quizIndex].explanation;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '해설을 읽었어요 · 다음 문항' : '해설을 읽었어요 · 정리하기';
+        next.onclick = () => {
+            if (this.quizIndex + 1 < this.data.quiz.length) this.startQuiz(this.quizIndex + 1);
+            else this.nextScene();
+        };
+        container.appendChild(next);
     }
 }
 
@@ -166,10 +181,13 @@ window.Engine = new EduFlixEngine();
  */
 
 const shapesData = {
+    objective: "입체도형을 돌려 보며 면, 모서리, 꼭짓점을 빠짐없이 세어요.",
+    workedExample: "정육면체의 면은 앞뒤, 좌우, 위아래로 6개입니다. 꼭짓점은 위 4개와 아래 4개로 8개이고, 모서리는 위 4개, 아래 4개, 연결하는 4개로 12개입니다. 보이지 않는 뒤쪽도 포함합니다.",
+    reflection: "정육면체와 직육면체는 면·모서리·꼭짓점 수가 같은데 무엇이 다를까요? 면의 모양과 변의 길이를 근거로 설명하세요.",
     title: "입체도형 탐험대",
     hook: {
         question: "상자, 공, 캔... 우리 주변의 물건들은 어떤 모양으로 이루어져 있을까요?",
-        subText: "우리가 살고 있는 우주도 입체 모양이에요!",
+        subText: "물건을 돌려 보며 숨은 면도 찾아봐요!",
         visual: {
             type: "svg",
             content: `
@@ -215,7 +233,7 @@ const shapesData = {
     },
     interaction: {
         title: "입체도형 관찰하기",
-        instruction: "도형을 선택하고 마우스로 드래그해서 360도 돌려보세요!",
+        instruction: "정육면체를 선택해 천천히 돌리며 면, 모서리, 꼭짓점을 세세요. 그다음 삼각뿔을 선택해 면과 꼭짓점 수를 비교하세요. 곡면을 가진 도형은 평평한 면과 굽은 면을 구별해 설명하세요.",
         onInit: (container, engine) => {
             // 도형 데이터
             const shapes = {
@@ -434,11 +452,26 @@ const shapesData = {
     },
     quiz: [
         {
-            question: "정육면체의 면, 모서리, 꼭짓점의 개수는 각각 몇 개일까요?",
-            options: ["6면, 12모서리, 8꼭짓점", "4면, 6모서리, 4꼭짓점", "8면, 12모서리, 6꼭짓점", "6면, 8모서리, 12꼭짓점"],
-            answer: 0
+                "question": "정육면체의 면, 모서리, 꼭짓점 수는?",
+                "options": [
+                        "6면, 12모서리, 8꼭짓점",
+                        "4면, 6모서리, 4꼭짓점",
+                        "8면, 12모서리, 6꼭짓점"
+                ],
+                "answer": 0,
+                "explanation": "면은 반대쪽끼리 3쌍으로 6개, 모서리는 위·아래·연결 부분 각 4개로 12개, 꼭짓점은 위아래 각 4개로 8개입니다."
+        },
+        {
+                "question": "정육면체를 돌리면 전체 꼭짓점 수는?",
+                "options": [
+                        "보이는 만큼 줄어든다",
+                        "항상 8개이다",
+                        "면 수와 같아진다"
+                ],
+                "answer": 1,
+                "explanation": "회전은 보이는 방향을 바꿀 뿐 도형 자체를 바꾸지 않습니다. 가려진 꼭짓점까지 모두 세면 8개입니다."
         }
-    ]
+]
 };
 
 Engine.init(shapesData);

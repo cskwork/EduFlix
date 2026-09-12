@@ -1,0 +1,33 @@
+npm notice run eduflix@0.4.0 build
+npm notice run vue-tsc -b && vite build
+vite v7.3.1 building client environment for production...
+transforming...
+✓ 171 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                             1.22 kB │ gzip:  0.67 kB
+dist/assets/NotFoundView-BFmm7o_z.css       1.51 kB │ gzip:  0.67 kB
+dist/assets/ErrorMessage-CZQCgMLV.css       3.18 kB │ gzip:  1.00 kB
+dist/assets/SubjectSelect-k5c8gJQ2.css      4.62 kB │ gzip:  1.01 kB
+dist/assets/LearningMapView-Bal520_z.css    6.22 kB │ gzip:  1.50 kB
+dist/assets/MyLearningView-D-ADlxF0.css     6.33 kB │ gzip:  1.40 kB
+dist/assets/StudioView-DsRnocFG.css         6.56 kB │ gzip:  1.63 kB
+dist/assets/HomeView-D0Svsbyt.css          15.89 kB │ gzip:  3.37 kB
+dist/assets/index-D_Q-zTUP.css             16.87 kB │ gzip:  4.11 kB
+dist/assets/ContentView-Dzw8y5Ol.css       18.99 kB │ gzip:  3.01 kB
+dist/assets/CreatorView-DtBwlkOv.css       24.60 kB │ gzip:  3.60 kB
+dist/assets/mascot-think-BAC-46tA.js        0.05 kB │ gzip:  0.07 kB
+dist/assets/labels-B4ZAILK4.js              0.56 kB │ gzip:  0.34 kB
+dist/assets/NotFoundView-BlFlw6Rx.js        0.76 kB │ gzip:  0.48 kB
+dist/assets/ErrorMessage-Bx1rDRBY.js        1.86 kB │ gzip:  0.92 kB
+dist/assets/learning-Ck1Ez-5r.js            3.93 kB │ gzip:  1.53 kB
+dist/assets/SubjectSelect-BFWkBVts.js       4.35 kB │ gzip:  1.77 kB
+dist/assets/MyLearningView-DI3TTqUE.js      4.55 kB │ gzip:  1.65 kB
+dist/assets/LearningMapView-C6jGlecA.js     5.86 kB │ gzip:  2.27 kB
+dist/assets/HomeView-DzREpFiy.js            9.65 kB │ gzip:  3.91 kB
+dist/assets/content-Bnyiq5xr.js            15.57 kB │ gzip:  5.54 kB
+dist/assets/ContentView-CbWehf08.js        30.74 kB │ gzip: 10.62 kB
+dist/assets/CreatorView-B5OhjlJr.js        40.61 kB │ gzip: 12.55 kB
+dist/assets/StudioView-XHSBpNKx.js         68.44 kB │ gzip: 24.78 kB
+dist/assets/index-C027xLAw.js             149.07 kB │ gzip: 56.44 kB
+✓ built in 1.83s

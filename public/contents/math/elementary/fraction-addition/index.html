@@ -74,13 +74,13 @@
                     </div>
                     <div class="bubble">
                         <h3 style="margin: 0 0 8px 0; color: #d97706; font-family: var(--font-heading); font-size: 1.5rem;">요리사 쿠키의 피자 레시피</h3>
-                        <p style="margin: 0;">"안녕! 난 최고의 피자 요리사 <strong>'쿠키'</strong>야! 👨‍🍳<br>오늘은 두 가지 맛을 한 판에 담는 '하프앤하프 피자'를 준비 중이지.<br>그런데 재료의 양을 합쳐보니 얼마나 되는지 헷갈리는걸? 나 좀 도와줄래?"</p>
+                        <p style="margin: 0;">"안녕! 난 최고의 피자 요리사 <strong>'쿠키'</strong>야! 👨‍🍳<br>오늘은 두 가지 맛을 한 판에 담는 '두 가지 맛 피자'를 준비 중이지.<br>그런데 재료의 양을 합쳐보니 얼마나 되는지 헷갈리는걸? 나 좀 도와줄래?"</p>
                     </div>
                 </div>
                 <div class="story-problem">
                     <p style="margin: 5px 0;">🍕 <strong>페퍼로니 소스:</strong> 피자 전체의 <strong><span style="color: #ef4444;">1/2</span></strong> 만큼 필요해.</p>
                     <p style="margin: 5px 0;">🍕 <strong>고구마 무스:</strong> 피자 전체의 <strong><span style="color: #f59e0b;">1/3</span></strong> 만큼 필요해.</p>
-                    <p style="margin: 15px 0 0 0; font-weight: bold; color: var(--accent-shadow); font-size: 1.2rem;">이 두 재료가 차지하는 면적을 합치면 피자 전체의 몇 분의 몇이 될까?</p>
+                    <p style="margin: 15px 0 0 0; font-weight: bold; color: var(--accent-shadow); font-size: 1.2rem;">같은 피자 위에 겹치지 않게 놓은 두 재료의 면적을 합치면 피자 전체의 몇 분의 몇이 될까?</p>
                 </div>
                 <button class="primary-btn" onclick="ContentApp.nextScene()">도와주기</button>
             </div>
@@ -90,7 +90,7 @@
         <section id="core-scene" class="scene">
             <div class="content-container">
                 <h2>직접 조각 합쳐보기</h2>
-                <p class="instruction">분모(조각 크기)를 같게 만들어야 더할 수 있어요!</p>
+                <p class="instruction">목표: 같은 전체를 기준으로 조각 크기를 맞추어 더해요. 1/2=3/6, 1/3=2/6을 먼저 예상한 뒤 통분과 합치기를 눌러 확인하세요.</p>
                 
                 <div class="fraction-lab">
                     <div class="fraction-block" id="f1">
@@ -121,6 +121,7 @@
                 </div>
 
                 <div id="feedback-area" class="feedback-box"></div>
+                <button class="primary-btn" onclick="ContentApp.nextScene()">원리 확인하기</button>
             </div>
         </section>
 
@@ -167,12 +168,12 @@
             <div class="content-container">
                 <h2>실전 퀴즈</h2>
                 <div class="quiz-card">
-                    <p class="quiz-q">초콜릿 케이크의 2/5와 딸기 케이크의 1/10을 합치면?</p>
+                    <p class="quiz-q">크기가 같은 두 케이크에서 각각 2/5와 1/10만큼 덜어 합치면, 한 케이크를 전체로 할 때 얼마인가요?</p>
                     
                     <div class="quiz-options">
                         <button class="option-btn" onclick="ContentApp.checkAnswer(this, false)">3/15</button>
                         <button class="option-btn" onclick="ContentApp.checkAnswer(this, true)">5/10</button>
-                        <button class="option-btn" onclick="ContentApp.checkAnswer(this, false)">1/2</button>
+                        <button class="option-btn" onclick="ContentApp.checkAnswer(this, false)">3/10</button>
                     </div>
                     <div id="quiz-feedback" class="feedback-msg"></div>
                     <button id="quiz-next" class="primary-btn" style="display:none;" onclick="ContentApp.nextScene()">다음</button>
@@ -190,11 +191,11 @@
                     <li>👉 분모는 그대로 두고, 분자만 더하면 됩니다.</li>
                 </ul>
                 <div class="next-topic">
-                    <p>다음 시간: <strong>분수의 뺄셈</strong>은 어떻게 할까요?</p>
+                    <p>같은 전체의 3/4와 1/8을 더해 보세요. 왜 분모끼리 더하면 안 되는지 조각 크기로 설명하세요.</p>
                 </div>
                 <div class="action-buttons">
                     <button class="secondary-btn" onclick="ContentApp.showScene(0)">다시 보기</button>
-                    <button class="primary-btn" onclick="alert('다음 레벨로 이동합니다! (데모)')">다음 학습</button>
+                    <button class="primary-btn" onclick="ContentApp.showScene(3)">통분을 다시 확인하기</button>
                 </div>
             </div>
         </section>

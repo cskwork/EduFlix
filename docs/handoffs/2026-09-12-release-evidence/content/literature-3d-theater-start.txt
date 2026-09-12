@@ -1,0 +1,45 @@
+[p1 "Literature 3D Theater - Dong-A Middle School English" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "Literature 3D Theater - Dong-A Middle School English"]
+root
+  paragraph
+    text "Opening the Curtains..."
+  container
+    container
+      container
+        text "📚 Score:"
+        text "0"
+      container
+        text "⭐ Scene:"
+        text "1"
+        text "/"
+        text "12"
+      container
+        text "❤️ Lives:"
+        text "3"
+      container
+        text "🔥 Streak:"
+        text "0"
+    container
+      text "WILLIAM SHAKESPEARE"
+      container
+        text """
+        text """
+    text "🎭 Characters loading..."
+    container
+      text "🎭"
+      heading
+        text "Literature 3D Theater"
+      paragraph
+        text "Experience classic literature scenes in an immersive 3D theater! Watch iconic characters come to life, use words in the dialogue as evidence, and compare supported interpretations of literary themes f..."
+      container
+        container
+          text "🏰"
+          text "Shakespeare"
+        container
+          text "📖"
+          text "Classic Novels"
+        container
+          text "🌟"
+          text "Modern Classics"
+      button [ref=1]
+        text "Enter Theater"
+        text "🎭"

@@ -1,0 +1,13 @@
+{
+  "id": "pythagorean-squares",
+  "browser": "Chrome CUA tab1815027663",
+  "url": "http://127.0.0.1:5173",
+  "frontDoor": true,
+  "activity": "a=4 b=5 produces 16+25=41, sqrt41 approximately6.40",
+  "quiz": "10m wrong,13m correct reselection then explanation continue",
+  "completion": true,
+  "reset": true,
+  "method": "Documented Playwright user clicks and keys, DOM snapshots. No state setters.",
+  "errors": [],
+  "fix": null
+}

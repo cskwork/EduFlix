@@ -64,7 +64,7 @@ class EduFlixEngine {
                 <div class="hook-content">
                     <div class="question-box">
                         <h1 class="hook-question">${question}</h1>
-                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}<p class="scene-text">학습 목표: ${this.data.objective}</p>
                     </div>
                     ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
                     <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
@@ -75,7 +75,7 @@ class EduFlixEngine {
 
         this.createScene('story', (scene) => {
             const { character, situation } = this.data.story;
-            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
+            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}<br><br>${this.data.workedExample}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
         });
 
         this.createScene('core', (scene) => {
@@ -89,7 +89,7 @@ class EduFlixEngine {
         }
 
         this.createScene('wrap', (scene) => {
-            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
+            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3><p class="scene-text">${this.data.reflection}</p></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
         });
     }
 
@@ -127,31 +127,46 @@ class EduFlixEngine {
         if(btn) { btn.style.display = 'inline-block'; btn.classList.add('animate-fade-in'); }
     }
 
-    startQuiz() {
-        const q = this.data.quiz[0];
-        document.getElementById('quiz-question').textContent = q.question;
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = '';
-        q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
-            optsContainer.appendChild(btn);
+    startQuiz(index = 0) {
+        this.quizIndex = index;
+        const q = this.data.quiz[index];
+        const question = document.getElementById('quiz-question');
+        question.textContent = `${index + 1} / ${this.data.quiz.length} · ${q.question}`;
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        q.options.forEach((option, selected) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quiz-option';
+            button.textContent = option;
+            button.onclick = () => this.checkQuiz(selected, q.answer, button);
+            container.appendChild(button);
         });
+        const feedback = document.createElement('p');
+        feedback.id = 'quiz-explanation';
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        container.appendChild(feedback);
     }
 
-    checkQuiz(selectedIdx, correctIdx, btnElement) {
-        const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+    checkQuiz(selected, answer, button) {
+        const container = document.getElementById('quiz-options');
+        const options = container.querySelectorAll('.quiz-option');
+        if (button.disabled) return;
+        options.forEach(option => { option.disabled = true; });
+        button.classList.add(selected === answer ? 'correct' : 'incorrect');
+        options[answer].classList.add('correct');
+        document.getElementById('quiz-explanation').textContent =
+            (selected === answer ? '정답입니다. ' : '답을 비교해 보세요. ') + this.data.quiz[this.quizIndex].explanation;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '해설을 읽었어요 · 다음 문항' : '해설을 읽었어요 · 정리하기';
+        next.onclick = () => {
+            if (this.quizIndex + 1 < this.data.quiz.length) this.startQuiz(this.quizIndex + 1);
+            else this.nextScene();
+        };
+        container.appendChild(next);
     }
 }
 
@@ -165,6 +180,9 @@ window.Engine = new EduFlixEngine();
  */
 
 const probabilityData = {
+    objective: "공정하고 독립인 동전 모형에서 이론적 확률과 실제 앞면 비율을 구별해요.",
+    workedExample: "앞면 확률이 1/2이어도 10번 중 정확히 5번 나온다는 보장은 없습니다. 예를 들어 10번 중 7번이면 관찰 비율은 7/10=70%이고, 다음 던지기의 앞면 확률은 여전히 1/2입니다.",
+    reflection: "100회를 더 던졌는데 50%에서 오히려 멀어질 수도 있을까요? 장기적인 경향과 매번 보장되는 결과를 구별해 설명하세요.",
     title: "확률의 세계",
     hook: {
         question: "동전을 10번 던지면 앞면이 딱 5번 나올까요?",
@@ -204,7 +222,7 @@ const probabilityData = {
     },
     interaction: {
         title: "동전 던지기 실험",
-        instruction: "동전을 클릭해서 던져보세요! 100번 던지기를 눌러 대수의 법칙을 확인해보세요.",
+        instruction: "1번 던지기를 10회 한 뒤 앞면 비율을 기록하세요. 100번 던지기를 두 번 더 실행해 비율을 비교하세요. 이 모형은 각 던지기를 공정하고 독립적으로 생성합니다.",
         onInit: (container, engine) => {
             let heads = 0;
             let tails = 0;
@@ -300,18 +318,32 @@ const probabilityData = {
             coin.onclick = () => flip(1);
             
             finishBtn.onclick = () => {
-                engine.showFeedback("많이 던질수록 50%에 가까워진다는 사실! 이것이 큰 수의 법칙입니다.", "positive");
+                engine.showFeedback("시행을 많이 반복하면 앞면 비율이 50% 근처에 있을 가능성이 커집니다. 하지만 매번 더 가까워지거나 정확히 50%가 된다는 보장은 없습니다.", "positive");
                 engine.enableNext();
             };
         }
     },
     quiz: [
         {
-            question: "동전을 던져 앞면이 나올 확률은 1/2입니다. 그렇다면 동전을 4번 던지면 반드시 앞면이 2번 나올까요?",
-            options: ["그렇다", "아니다", "알 수 없다"],
-            answer: 1 // 아니다
+                "question": "공정한 동전을 독립적으로 4번 던지면 반드시 앞면이 2번 나올까요?",
+                "options": [
+                        "그렇다",
+                        "아니다"
+                ],
+                "answer": 1,
+                "explanation": "각 던지기의 확률이 1/2이라는 뜻이지 네 번의 결과를 미리 정한다는 뜻은 아닙니다. 네 번 모두 앞면일 수도 있습니다."
+        },
+        {
+                "question": "공정한 동전에서 앞면이 연속 5번 나왔습니다. 독립적인 다음 던지기의 앞면 확률은?",
+                "options": [
+                        "1/2",
+                        "0",
+                        "1/6"
+                ],
+                "answer": 0,
+                "explanation": "독립 시행에서는 이전 결과가 다음 확률을 바꾸지 않습니다. 뒷면이 나와 균형을 맞추어야 할 의무도 없습니다."
         }
-    ]
+]
 };
 
 Engine.init(probabilityData);

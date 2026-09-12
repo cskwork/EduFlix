@@ -203,7 +203,7 @@
         <div id="feedback-message"></div>
         <div id="start-screen">
             <h1>📐 기하 월드 3D</h1>
-            <p class="subtitle">3D 공간에서 도형의 넓이, 둘레, 부피를 계산하세요! 다양한 도형을 마스터해요!</p>
+            <p class="subtitle">도형에서 필요한 길이를 골라 넓이·둘레·부피를 계산해요. 한 변 3 cm인 정육면체는 부피 27 cm³, 겉넓이 54 cm²예요. 둘을 구별하는 이유를 면 6개와 연결해 설명해 보세요.</p>
             <button id="start-btn">탐험 시작! 🚀</button>
             <div class="features">
                 <div class="feature"><div class="feature-icon">▭</div><div class="feature-title">평면도형</div><div class="feature-desc">넓이와 둘레 계산</div></div>
@@ -352,6 +352,7 @@
         }
 
         function generateProblem() {
+            document.getElementById("answer-input").disabled = false;
             currentProblem = shapes[currentShape].generate(level);
             document.getElementById('problem-text').textContent = currentProblem.text;
             document.getElementById('formula-hint').textContent = currentProblem.formula;
@@ -367,13 +368,15 @@
             document.getElementById('shape-preview').textContent = shape.icon;
             document.getElementById('shape-name').textContent = shape.name;
             document.getElementById('formula-display').textContent = currentProblem.formula;
-            document.getElementById('type-display').textContent = currentProblem.type === 'area' ? '넓이' : (currentProblem.type === 'volume' ? '부피' : '둘레');
+            document.getElementById('type-display').textContent = ({ area: '넓이', volume: '부피', surface: '겉넓이', perimeter: '둘레', circumference: '둘레' })[currentProblem.type];
         }
 
         function submitAnswer() {
+            if (document.getElementById("answer-input").disabled) return;
             const userAnswer = parseFloat(document.getElementById('answer-input').value);
             if (isNaN(userAnswer)) { showFeedback('❓', '#fbbf24'); return; }
-            if (Math.abs(userAnswer - currentProblem.answer) < 0.1) {
+            if (Math.abs(userAnswer - currentProblem.answer) < 1e-9) {
+                document.getElementById("answer-input").disabled = true;
                 correct++; score += 100 + level * 20;
                 if (correct % 5 === 0) level++;
                 showFeedback('🎉 정답!', '#10b981');

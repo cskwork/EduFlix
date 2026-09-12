@@ -431,7 +431,7 @@
                 <h2>🔗 알고 있는 것부터 시작해요</h2>
                 <p><strong>정사각형의 넓이</strong>는 한 변의 길이를 제곱하면 돼요.</p>
                 <p style="margin-top: 12px;">한 변이 <span style="color: var(--primary-light)">3</span>이면 넓이는 <span style="color: var(--primary-light)">3² = 9</span></p>
-                <p style="margin-top: 12px;">그렇다면 <strong>입체 정사각형(큐브)</strong>의 부피는?</p>
+                <p style="margin-top: 12px;">여기서는 <strong>두께가 모두 같은 얇은 정사각형 판</strong>으로 넓이를 비교해요. 정육면체의 부피 a³와는 달라요.</p>
             </div>
         </div>
 
@@ -473,7 +473,7 @@
                     <div class="formula">a² + b² = c²</div>
                 </div>
                 <p>직각삼각형에서 <strong>빗변(c)</strong>의 제곱은 나머지 <strong>두 변(a, b)</strong>의 제곱의 합과 같습니다.</p>
-                <p style="margin-top: 12px; color: var(--secondary);">이것은 기원전 500년경 피타고라스가 증명한 정리예요!</p>
+                <p style="margin-top: 12px; color: var(--secondary);">예: 3² + 4² = 25이므로 c = 5예요. 3 + 4 = 7을 빗변으로 고르면 안 돼요.</p>
             </div>
         </div>
 
@@ -777,7 +777,7 @@
                 this.buildPythagoreanModel(3, 4, false);
 
                 // Typewriter effect
-                const story = "기원전 500년경, 그리스의 수학자 피타고라스는 직각삼각형의 비밀을 발견했어요. 각 변에 정사각형을 그려보니... 놀라운 관계가 있었죠! 작은 두 정사각형의 넓이를 합하면, 빗변 위의 큰 정사각형 넓이와 정확히 같았어요!";
+                const story = "직각삼각형의 두 직각변을 a, b, 빗변을 c라고 해 볼까요? 각 변에 정사각형을 그려보니... 놀라운 관계가 있었죠! 작은 두 정사각형의 넓이를 합하면, 빗변 위의 큰 정사각형 넓이와 정확히 같았어요!";
                 const textEl = document.getElementById('story-text');
                 textEl.textContent = '';
                 let i = 0;

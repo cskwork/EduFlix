@@ -1,0 +1,124 @@
+{
+  "id": "function-explorer-3d",
+  "family": "continuous-custom",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": {
+        "text": "y = 5x + 0 일 때, x = 1이면 y의 값은?",
+        "answer": 5,
+        "hint": "y = 5 × 1 + 0 = ?",
+        "slope": 5,
+        "intercept": 0
+      },
+      "previousCorrect": 0,
+      "result": {
+        "text": "📈\n레벨\n1\n⭐\n점수\n120\n✅\n정답\n1\n📊 함수 유형\n📈\n일차함수 y = ax + b\n🎯\n함숫값 구하기\n📐\n기울기 구하기\n🔵\ny절편 구하기\n📉 그래프\nx\ny\ny = 5x + 0\n기울기 (a): 5\ny절편 (b): 0\ny = 5x + 0 일 때, x = 1이면 y의 값은?\ny =\n💡 힌트\n✓ 제출\n🎉 정답!",
+        "correct": 1,
+        "score": "120",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "text": "f(x) = 2x - 3 일 때, f(4)의 값은?",
+        "answer": 5,
+        "hint": "f(4) = 2 × 4 - 3",
+        "slope": 2,
+        "intercept": -3
+      },
+      "previousCorrect": 1,
+      "result": {
+        "text": "📈\n레벨\n1\n⭐\n점수\n240\n✅\n정답\n2\n📊 함수 유형\n📈\n일차함수 y = ax + b\n🎯\n함숫값 구하기\n📐\n기울기 구하기\n🔵\ny절편 구하기\n📉 그래프\nx\ny\ny = 2x - 3\n기울기 (a): 2\ny절편 (b): -3\nf(x) = 2x - 3 일 때, f(4)의 값은?\ny =\n💡 힌트\n✓ 제출\n🎉 정답!",
+        "correct": 2,
+        "score": "240",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "text": "y = -1x + 2 의 기울기는?",
+        "answer": -1,
+        "hint": "y = ax + b에서 기울기는 a입니다",
+        "slope": -1,
+        "intercept": 2
+      },
+      "previousCorrect": 2,
+      "result": {
+        "text": "📈\n레벨\n1\n⭐\n점수\n360\n✅\n정답\n3\n📊 함수 유형\n📈\n일차함수 y = ax + b\n🎯\n함숫값 구하기\n📐\n기울기 구하기\n🔵\ny절편 구하기\n📉 그래프\nx\ny\ny = -1x + 2\n기울기 (a): -1\ny절편 (b): 2\ny = -1x + 2 의 기울기는?\ny =\n💡 힌트\n✓ 제출\n🎉 정답!",
+        "correct": 3,
+        "score": "360",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "text": "y = 5x - 2 의 y절편은?",
+        "answer": -2,
+        "hint": "y = ax + b에서 y절편은 b입니다",
+        "slope": 5,
+        "intercept": -2
+      },
+      "previousCorrect": 3,
+      "result": {
+        "text": "📈\n레벨\n1\n⭐\n점수\n480\n✅\n정답\n4\n📊 함수 유형\n📈\n일차함수 y = ax + b\n🎯\n함숫값 구하기\n📐\n기울기 구하기\n🔵\ny절편 구하기\n📉 그래프\nx\ny\ny = 5x - 2\n기울기 (a): 5\ny절편 (b): -2\ny = 5x - 2 의 y절편은?\ny =\n💡 힌트\n✓ 제출\n🎉 정답!",
+        "correct": 4,
+        "score": "480",
+        "start": "none"
+      }
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#start-btn"
+    },
+    {
+      "click": ".func-btn[data-func=\"linear\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".func-btn[data-func=\"value\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".func-btn[data-func=\"slope\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".func-btn[data-func=\"intercept\"]"
+    },
+    {
+      "click": "#submit-btn"
+    }
+  ],
+  "completionModel": "Continuous practice: no terminal completion state exists; complete means verified bounded activity cycle, not every possible generated question.",
+  "coverage": [
+    "linear",
+    "value",
+    "slope",
+    "intercept"
+  ],
+  "title": "함수 탐험가 3D",
+  "finiteCompletion": false,
+  "completionObservation": {
+    "text": "📈\n레벨\n1\n⭐\n점수\n480\n✅\n정답\n4\n📊 함수 유형\n📈\n일차함수 y = ax + b\n🎯\n함숫값 구하기\n📐\n기울기 구하기\n🔵\ny절편 구하기\n📉 그래프\nx\ny\ny = 3x + 0\n기울기 (a): 3\ny절편 (b): 0\ny = 3x + 0 의 y절편은?\ny =\n💡 힌트\n✓ 제출\n🎉 정답!",
+    "correct": 4,
+    "score": "480",
+    "start": "none"
+  },
+  "resetObservation": {
+    "text": "📈\n레벨\n1\n⭐\n점수\n0\n✅\n정답\n0\n📊 함수 유형\n📈\n일차함수 y = ax + b\n🎯\n함숫값 구하기\n📐\n기울기 구하기\n🔵\ny절편 구하기\n📉 그래프\nx\ny\ny = 2x + 1\n기울기 (a): 2\ny절편 (b): 1\ny = 2x + 1일 때, x = 3이면 y의 값은?\ny =\n💡 힌트\n✓ 제출\n📈 함수 탐험가 3D\n\ny = 2x + 1에서 x가 1 늘면 y는 2 늘고, x = 0일 때 y는 1이에요. 기울기만 바꾸었을 때와 y절편만 바꾸었을 때 그래프가 어떻게 달라지는지 비교해 보세요.\n\n탐험 시작! 🚀",
+    "correct": 0,
+    "score": "0",
+    "start": "flex"
+  }
+}

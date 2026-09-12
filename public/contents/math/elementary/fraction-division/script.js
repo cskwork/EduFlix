@@ -3,11 +3,7 @@ const ContentApp = {
     scenes: ['hook', 'anchor', 'story', 'core', 'visualize', 'quiz', 'wrap'],
 
     coreState: {
-        slices: [
-            { id: 1, placed: false, plate: null },
-            { id: 2, placed: false, plate: null },
-            { id: 3, placed: false, plate: null }
-        ],
+        slices: Array.from({ length: 6 }, (_, i) => ({ id: i + 1, placed: false, plate: null })),
         plate1Count: 0,
         plate2Count: 0
     },
@@ -79,7 +75,7 @@ const ContentApp = {
     },
 
     initStoryScene() {
-        const text = "\"으하하! 나는 바다를 누비는 해적 선장 '잭'이다! 🏴‍☠️\\n우리가 어렵게 구한 전설의 황금 피자가 딱 3/4판 남았군.\\n나의 충직한 선원 2명이 이 남은 피자를 똑같이 나누어 먹어야 한다는데, 각자 얼마나 먹을 수 있는 거지?\"";
+        const text = "\"으하하! 나는 바다를 누비는 해적 선장 '잭'이다! 🏴‍☠️\n우리가 어렵게 구한 전설의 황금 피자가 딱 3/4판 남았군.\n나의 충직한 선원 2명이 이 남은 피자를 똑같이 나누어 먹어야 한다는데, 각자 얼마나 먹을 수 있는 거지?\"";
         const el = document.getElementById('typewriter-text');
         if (!el) return;
 
@@ -107,11 +103,7 @@ const ContentApp = {
 
     resetCore() {
         this.coreState = {
-            slices: [
-                { id: 1, placed: false, plate: null },
-                { id: 2, placed: false, plate: null },
-                { id: 3, placed: false, plate: null }
-            ],
+            slices: Array.from({ length: 6 }, (_, i) => ({ id: i + 1, placed: false, plate: null })),
             plate1Count: 0,
             plate2Count: 0
         };
@@ -126,8 +118,8 @@ const ContentApp = {
 
         document.getElementById('plate-1-slices').innerHTML = '';
         document.getElementById('plate-2-slices').innerHTML = '';
-        document.getElementById('plate-1-fraction').textContent = '0/4';
-        document.getElementById('plate-2-fraction').textContent = '0/4';
+        document.getElementById('plate-1-fraction').textContent = '0/8';
+        document.getElementById('plate-2-fraction').textContent = '0/8';
 
         const feedbackArea = document.getElementById('feedback-area');
         feedbackArea.classList.remove('active');
@@ -227,14 +219,25 @@ const ContentApp = {
             slice.addEventListener('touchstart', onDragStart, { passive: false });
         });
 
-        // Ensure global listeners are only attached once
-        if(!window.isDragBound) {
-            document.addEventListener('mousemove', onDragMove);
-            document.addEventListener('touchmove', onDragMove, { passive: false });
-            document.addEventListener('mouseup', onDragEnd);
-            document.addEventListener('touchend', onDragEnd);
-            window.isDragBound = true;
-        }
+        // Rebind on scene entry so document handlers use the current drag state.
+        if (this.dragCleanup) this.dragCleanup();
+        document.addEventListener('mousemove', onDragMove);
+        document.addEventListener('touchmove', onDragMove, { passive: false });
+        document.addEventListener('mouseup', onDragEnd);
+        document.addEventListener('touchend', onDragEnd);
+        this.dragCleanup = () => {
+            document.removeEventListener('mousemove', onDragMove);
+            document.removeEventListener('touchmove', onDragMove);
+            document.removeEventListener('mouseup', onDragEnd);
+            document.removeEventListener('touchend', onDragEnd);
+        };
+    },
+
+    giveNextSlice(plateId) {
+        const next = this.coreState.slices.find(slice => !slice.placed);
+        if (!next) return;
+        this.placeSlice(next.id, plateId);
+        this.checkCoreCompletion();
     },
 
     placeSlice(sliceId, plateId) {
@@ -250,14 +253,15 @@ const ContentApp = {
         const plateSlices = document.getElementById(`plate-${plateId}-slices`);
         const miniSlice = document.createElement('div');
         miniSlice.className = 'mini-slice';
+        miniSlice.textContent = '1/8';
         plateSlices.appendChild(miniSlice);
 
         if (plateId === 1) {
             this.coreState.plate1Count++;
-            document.getElementById('plate-1-fraction').textContent = `${this.coreState.plate1Count}/4`;
+            document.getElementById('plate-1-fraction').textContent = `${this.coreState.plate1Count}/8`;
         } else {
             this.coreState.plate2Count++;
-            document.getElementById('plate-2-fraction').textContent = `${this.coreState.plate2Count}/4`;
+            document.getElementById('plate-2-fraction').textContent = `${this.coreState.plate2Count}/8`;
         }
         
         // Pop effect
@@ -276,11 +280,12 @@ const ContentApp = {
             const p1 = this.coreState.plate1Count;
             const p2 = this.coreState.plate2Count;
 
-            if (p1 === p2) {
-                // Impossible to split 3 evenly
-                feedbackText.innerHTML = '앗! 3조각을 2명이 똑같이 나눌 수 없네요. 🤔<br>그래서 <b>"분수 곱하기"</b> 계산이 필요해요!';
+            if (p1 === 3 && p2 === 3) {
+                feedbackText.innerHTML = '각자 1/8 조각 3개를 받았으므로 한 판의 3/8씩입니다.<br>3/8 + 3/8 = 6/8 = 3/4로 처음 양과 같은지도 확인하세요.';
             } else {
-                feedbackText.innerHTML = `앗! 한 명이 더 많이 가져갔네요 (${p1}개 vs ${p2}개). 🏴‍☠️<br>공평하게 나누려면 <b>"분수 곱하기"</b> 계산이 필요해요!`;
+                feedbackText.innerHTML = `친구 1은 ${p1}/8, 친구 2는 ${p2}/8입니다. 같은 양이 되도록 다시 하기를 누르고 3조각씩 나누세요.`;
+                feedbackArea.classList.add('active');
+                return;
             }
 
             feedbackArea.classList.add('active');
@@ -322,9 +327,11 @@ const ContentApp = {
 
         if (isCorrect) {
             feedbackEl.classList.add('success');
-            feedbackEl.innerHTML = '🎉 정답입니다! 2/3 x 1/4 = 2/12 (= 1/6) 🎉';
+            feedbackEl.innerHTML = '정답입니다. 2/3을 4명이 똑같이 나누면 한 사람은 그 양의 1/4을 받아 2/12=1/6판입니다. 1/6×4=2/3으로 검산할 수 있습니다.';
             this.createConfetti(50);
-            setTimeout(() => this.nextScene(), 2500);
+            const next = document.createElement('button');
+            next.className = 'btn-primary'; next.textContent = '해설을 읽었어요 · 정리하기';
+            next.onclick = () => this.nextScene(); feedbackEl.appendChild(next);
         } else {
             feedbackEl.classList.add('error');
             feedbackEl.innerHTML = '💡 아쉬워요! 2/3 x 1/4 = 2/12 예요. 분자끼리, 분모끼리 곱하세요!';
@@ -359,6 +366,7 @@ const ContentApp = {
 
     bindEvents() {
         document.addEventListener('keydown', (e) => {
+            if (e.target instanceof window.HTMLElement && e.target.matches('input, textarea, select')) return;
             if (e.key === 'ArrowRight') this.nextScene();
             if (e.key === 'ArrowLeft') this.prevScene();
         });

@@ -1,0 +1,61 @@
+[p1 "함수 탐험가 3D | 동아출판 중학 수학" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "함수 탐험가 3D | 동아출판 중학 수학"]
+root
+  canvas
+  container
+    container
+      text "📈"
+      text "레벨"
+      text "1"
+    container
+      text "⭐"
+      text "점수"
+      text "480"
+    container
+      text "✅"
+      text "정답"
+      text "4"
+  container
+    heading
+      text "📊 함수 유형"
+    button [ref=1]
+      text "📈"
+      text "일차함수 y = ax + b"
+    button [ref=2]
+      text "🎯"
+      text "함숫값 구하기"
+    button [ref=3]
+      text "📐"
+      text "기울기 구하기"
+    button [ref=4]
+      text "🔵"
+      text "y절편 구하기"
+  container
+    heading
+      text "📉 그래프"
+    svg_root "x y"
+      text "x"
+      text "y"
+    text "y = 3x + 0"
+    container
+      container
+        text "기울기 (a):"
+        text "3"
+      spinbutton [ref=5]
+    container
+      container
+        text "y절편 (b):"
+        text "0"
+      spinbutton [ref=6]
+  container
+    container
+      text "y = 3x + 0 의 y절편은?"
+      container
+        text "y ="
+        spinbutton [ref=7, loc=css:input[placeholder="?"]]
+          text "?"
+    container
+      button [ref=8]
+        text "💡 힌트"
+      button [ref=9]
+        text "✓ 제출"
+  text "🎉 정답!"

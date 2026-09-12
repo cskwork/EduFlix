@@ -1,0 +1,54 @@
+[p1 "Grammar Galaxy - Dong-A Elementary English" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "Grammar Galaxy - Dong-A Elementary English"]
+root
+  container
+    text "🌍"
+    paragraph
+      text "Launching Grammar Galaxy..."
+  container
+    container
+      container
+        text "⭐"
+        text "Score:"
+        text "0"
+      container
+        text "❤️"
+        text "Lives:"
+        text "3"
+      container
+        text "🎯"
+        text "Level:"
+        text "1"
+      container
+        text "📝"
+        text "Question:"
+        text "1"
+        text "/"
+        text "20"
+    text "XP:"
+    text "0"
+    text "/"
+    text "100"
+    text "🌟 Nouns & Verbs 🌟"
+    text "🔥 Streak:"
+    text "0"
+    text "GRAMMAR TOPIC"
+    text "💡"
+    container
+      text "🌌"
+      heading
+        text "Grammar Galaxy"
+      paragraph
+        text "Travel through space and master grammar! Learn about nouns, verbs, adjectives, pronouns, and more as you explore different planets!"
+      container
+        container
+          text "🌟"
+          text "Explorer"
+        container
+          text "⭐"
+          text "Voyager"
+        container
+          text "💫"
+          text "Commander"
+      button [ref=1]
+        text "Start Adventure"
+        text "🚀"

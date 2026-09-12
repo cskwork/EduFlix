@@ -1,0 +1,17 @@
+[p1 "3D 벡터: 힘의 합성" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "3D 벡터: 힘의 합성"]
+root
+  container
+    heading
+      text "우주에서 로켓에 여러 방향으로 힘이 가해지면, 로켓의 가속도는 어느 방향일까요?"
+    paragraph
+      text "두 힘을 합치면 어떤 방향이 될까요?"
+    paragraph
+      text "학습 목표: 벡터의 같은 성분끼리 더해 합력을 구하고 힘과 속도를 구별해요."
+  svg_root "O A B A + B 벡터의 합: 각 성분을 더하면 돼요!"
+    text "O"
+    text "A"
+    text "B"
+    text "A + B"
+    text "벡터의 합: 각 성분을 더하면 돼요!"
+  button [ref=1]
+    text "시작하기"

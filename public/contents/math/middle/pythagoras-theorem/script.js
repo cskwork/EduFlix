@@ -64,7 +64,7 @@ class EduFlixEngine {
                 <div class="hook-content">
                     <div class="question-box">
                         <h1 class="hook-question">${question}</h1>
-                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}<p class="scene-text">학습 목표: ${this.data.objective}</p>
                     </div>
                     ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
                     <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
@@ -75,7 +75,7 @@ class EduFlixEngine {
 
         this.createScene('story', (scene) => {
             const { character, situation } = this.data.story;
-            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
+            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}<br><br>${this.data.workedExample}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
         });
 
         this.createScene('core', (scene) => {
@@ -89,7 +89,7 @@ class EduFlixEngine {
         }
 
         this.createScene('wrap', (scene) => {
-            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
+            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3><p class="scene-text">${this.data.reflection}</p></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
         });
     }
 
@@ -127,31 +127,46 @@ class EduFlixEngine {
         if(btn) { btn.style.display = 'inline-block'; btn.classList.add('animate-fade-in'); }
     }
 
-    startQuiz() {
-        const q = this.data.quiz[0];
-        document.getElementById('quiz-question').textContent = q.question;
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = '';
-        q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
-            optsContainer.appendChild(btn);
+    startQuiz(index = 0) {
+        this.quizIndex = index;
+        const q = this.data.quiz[index];
+        const question = document.getElementById('quiz-question');
+        question.textContent = `${index + 1} / ${this.data.quiz.length} · ${q.question}`;
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        q.options.forEach((option, selected) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quiz-option';
+            button.textContent = option;
+            button.onclick = () => this.checkQuiz(selected, q.answer, button);
+            container.appendChild(button);
         });
+        const feedback = document.createElement('p');
+        feedback.id = 'quiz-explanation';
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        container.appendChild(feedback);
     }
 
-    checkQuiz(selectedIdx, correctIdx, btnElement) {
-        const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+    checkQuiz(selected, answer, button) {
+        const container = document.getElementById('quiz-options');
+        const options = container.querySelectorAll('.quiz-option');
+        if (button.disabled) return;
+        options.forEach(option => { option.disabled = true; });
+        button.classList.add(selected === answer ? 'correct' : 'incorrect');
+        options[answer].classList.add('correct');
+        document.getElementById('quiz-explanation').textContent =
+            (selected === answer ? '정답입니다. ' : '답을 비교해 보세요. ') + this.data.quiz[this.quizIndex].explanation;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '해설을 읽었어요 · 다음 문항' : '해설을 읽었어요 · 정리하기';
+        next.onclick = () => {
+            if (this.quizIndex + 1 < this.data.quiz.length) this.startQuiz(this.quizIndex + 1);
+            else this.nextScene();
+        };
+        container.appendChild(next);
     }
 }
 
@@ -165,10 +180,13 @@ window.Engine = new EduFlixEngine();
  */
 
 const pythagorasData = {
+    objective: "직각삼각형의 세 변 위 정사각형 넓이로 a²+b²=c²를 설명해요.",
+    workedExample: "직각을 끼는 두 변이 3, 4이면 그 위 정사각형의 넓이는 9, 16입니다. 빗변 위 넓이는 25이므로 빗변의 길이는 √25=5입니다. 넓이와 길이의 단위를 구별하세요.",
+    reflection: "길이가 3, 4, 6인 세 변에는 3²+4²=6²이 성립하나요? 직각 표시를 확인해야 하는 이유를 설명하세요.",
     title: "피타고라스의 정리",
     hook: {
         question: "직각삼각형의 세 변 사이에는 어떤 비밀이 숨겨져 있을까요?",
-        subText: "고대 그리스의 수학자가 타일 바닥에서 발견한 비밀!",
+        subText: "직각삼각형의 세 변 위에 정사각형을 그려 비교해요!",
         visual: {
             type: "svg",
             content: `
@@ -196,11 +214,11 @@ const pythagorasData = {
     },
     story: {
         character: { image: "assets/character.svg" }, // Placeholder, engine might use default if missing
-        situation: "고대 그리스의 수학자 피타고라스가 타일 바닥을 보다가 깜짝 놀랐습니다.<br>'어? 이 직각삼각형 빗변 위의 정사각형 넓이가 나머지 두 정사각형 넓이의 합과 같네!'"
+        situation: "수업용 창작 상황입니다. 타일 설계자가 직각삼각형의 세 변 위에 정사각형을 그렸습니다.<br>어느 두 정사각형의 넓이를 합하면 나머지 넓이와 같을까요?"
     },
     interaction: {
         title: "직각삼각형 탐구",
-        instruction: "파란색 점을 드래그하여 직각삼각형의 모양을 바꿔보세요.",
+        instruction: "파란 점을 움직여 두 직각변의 길이를 바꾸세요. a², b², c²를 세 번 기록하고 합을 비교하세요. 그림을 관찰한 결과와 모든 직각삼각형에 대한 증명은 구별합니다.",
         onInit: (container, engine) => {
             // State
             let a = 3;
@@ -403,11 +421,27 @@ const pythagorasData = {
     },
     quiz: [
         {
-            question: "직각삼각형의 두 변의 길이가 5cm, 12cm일 때, 빗변의 길이는 얼마일까요?",
-            options: ["13cm", "15cm", "17cm", "25cm"],
-            answer: 0
+                "question": "직각을 끼는 두 변이 5cm, 12cm인 직각삼각형의 빗변은?",
+                "options": [
+                        "13cm",
+                        "15cm",
+                        "17cm",
+                        "25cm"
+                ],
+                "answer": 0,
+                "explanation": "빗변의 제곱은 5²+12²=169이므로 길이는 양수인 √169=13cm입니다."
+        },
+        {
+                "question": "빗변이 10이고 한 직각변이 6이면 다른 직각변은?",
+                "options": [
+                        "4",
+                        "8",
+                        "√136"
+                ],
+                "answer": 1,
+                "explanation": "다른 직각변의 제곱은 10²−6²=64이므로 길이는 8입니다. 빗변을 알고 있을 때는 두 제곱을 빼야 합니다."
         }
-    ]
+]
 };
 
 Engine.init(pythagorasData);

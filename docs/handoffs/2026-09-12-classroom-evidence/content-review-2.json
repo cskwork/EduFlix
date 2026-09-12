@@ -1,0 +1,761 @@
+{
+  "group": 2,
+  "reviewed": 25,
+  "improved": 25,
+  "unchanged": 0,
+  "verificationArtifact": "/tmp/eduflix-content-audit/verification-2.json",
+  "deterministicVerificationCommand": "node /tmp/eduflix-content-audit/verify-2.cjs",
+  "deterministicChecksPassed": 11,
+  "proposedCatalogUpdates": [
+    {
+      "id": "irp-future-wealth-simulator",
+      "description": "같은 가상 원금·수익률·기간에서 공제 시점에 따른 복리 계산 결과를 비교하는 수학 활동입니다. 실제 IRP 수익이나 세금 계산을 제공하지 않습니다.",
+      "titleUnchanged": true,
+      "reason": "Local manifest description now matches fictional mathematics scope; synchronize global catalog description if stored."
+    }
+  ],
+  "lessons": [
+    {
+      "id": "fraction-factory-3d",
+      "title": "분수 공장 3D",
+      "subject": "math",
+      "grade": "elementary-4",
+      "type": "simulation",
+      "directory": "public/contents/math/elementary/fraction-factory-3d",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/fraction-factory-3d/index.html",
+        "public/contents/math/elementary/fraction-factory-3d/script.js",
+        "public/contents/math/elementary/fraction-factory-3d/style.css"
+      ],
+      "before": "통분을 무조건 한다고 설명하고 나누는 수만 역수로 바꾼다는 조건이 빠졌습니다.",
+      "after": [
+        "덧셈의 통분 조건과 계산 예시 명시",
+        "역수 적용 대상을 명확화",
+        "전이 질문으로 통분 이유 점검"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다.",
+        "목록은 초4지만 이분모 덧셈과 분수 나눗셈은 상위 학년 내용입니다. 학년 메타데이터 재분류 또는 심화 표시는 권고입니다."
+      ]
+    },
+    {
+      "id": "multiplication-mountain-3d",
+      "title": "구구단 산 3D",
+      "subject": "math",
+      "grade": "elementary-2",
+      "type": "game",
+      "directory": "public/contents/math/elementary/multiplication-mountain-3d",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/multiplication-mountain-3d/index.html"
+      ],
+      "before": "2~9단 산을 9개로 표시하고 소수 입력을 정수로 잘랐으며 정답 처리 중 입력이 가능했습니다.",
+      "after": [
+        "2~9단 산 개수 교정",
+        "반복 덧셈 예시와 오답 복습 안내",
+        "직전 곱셈에 한 묶음 더하는 오답 풀이",
+        "소수 답을 정수로 잘라 정답 처리하는 오류 방지",
+        "새 문제 입력 잠금 해제",
+        "정답 연속 제출로 중복 가점 방지",
+        "정답 후 다음 문제까지 입력 잠금"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "measurement-lab-3d",
+      "title": "측정 연구소 3D",
+      "subject": "math",
+      "grade": "elementary-3",
+      "type": "simulation",
+      "directory": "public/contents/math/elementary/measurement-lab-3d",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/measurement-lab-3d/index.html"
+      ],
+      "before": "기준값과 ±10% 판정이 가상 어림임을 설명하지 않았고 진행률이 100%를 넘을 수 있었습니다.",
+      "after": [
+        "가상 물체와 어림 ±10% 판정 조건 공개",
+        "진행률 100% 초과 방지",
+        "문제마다 힌트 감점 상태 초기화",
+        "새 문제 입력 잠금 해제",
+        "정답 연속 제출로 중복 가점 방지",
+        "정답 후 다음 문제까지 입력 잠금"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "pattern-planet-3d",
+      "title": "패턴 행성 3D",
+      "subject": "math",
+      "grade": "elementary-3",
+      "type": "exploration",
+      "directory": "public/contents/math/elementary/pattern-planet-3d",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/pattern-planet-3d/index.html"
+      ],
+      "before": "규칙을 설명하는 예시가 없고 오답에는 다시 하라는 말만 표시했습니다.",
+      "after": [
+        "규칙 진술과 두 단계 예측 예시",
+        "실제 생성 규칙으로 오답 설명"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "3d-algebra-city",
+      "title": "3D 대수 도시",
+      "subject": "math",
+      "grade": "middle-1",
+      "type": "simulation",
+      "directory": "public/contents/math/middle/3d-algebra-city",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/middle/3d-algebra-city/index.html"
+      ],
+      "before": "양변 x 계수가 같아 해가 무한한 식에도 단일 정답을 지정했고 연속 제출 가점이 가능했습니다.",
+      "after": [
+        "등식 성질과 검산 예시",
+        "문제별 풀이 힌트와 답 연결",
+        "새 문제 입력 잠금 해제",
+        "정답 연속 제출로 중복 가점 방지",
+        "정답 후 다음 문제까지 입력 잠금",
+        "무한한 해를 가진 항등식이 단일 정답 문제로 생성되던 오류 방지",
+        "방정식 해 정확히 채점"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed",
+        "algebra hard equations always have unique intended solution"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "geometry-world-3d",
+      "title": "기하 월드 3D",
+      "subject": "math",
+      "grade": "middle-2",
+      "type": "exploration",
+      "directory": "public/contents/math/middle/geometry-world-3d",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/middle/geometry-world-3d/index.html"
+      ],
+      "before": "겉넓이를 둘레로 표시했고 정확한 계산에도 0.1 미만 오차를 허용했습니다.",
+      "after": [
+        "정육면체 겉넓이를 둘레로 표시하던 오류 교정",
+        "겉넓이와 부피 비교 예시 및 단위 지도",
+        "새 문제 입력 잠금 해제",
+        "정답 연속 제출로 중복 가점 방지",
+        "정답 후 다음 문제까지 입력 잠금",
+        "정확한 넓이 계산에서 0.09 오차까지 정답 처리하던 오류 교정"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed",
+        "geometry rejects near answer, credits correct answer once"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "data-visualization-hub",
+      "title": "데이터 시각화 허브",
+      "subject": "math",
+      "grade": "middle-2",
+      "type": "simulation",
+      "directory": "public/contents/math/middle/data-visualization-hub",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/middle/data-visualization-hub/index.html"
+      ],
+      "before": "동률 최댓값과 최솟값 중 첫 항목만 정답이었고 가상 자료 출처가 표시되지 않았습니다.",
+      "after": [
+        "가상 자료 표시와 평균 계산·그래프 선택 과제",
+        "동률 정답 조건 명시",
+        "동률 정답 조건 명시",
+        "최댓값·최솟값 동률 항목 모두 정답 인정",
+        "시작 전 차트 선택 null 오류 방지 및 자료 출처 명시",
+        "키보드 재선택으로 중복 가점 방지",
+        "채점 완료 선택지를 실제 비활성화"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed",
+        "data maximum and minimum ties accepted once"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "function-explorer-3d",
+      "title": "함수 탐험가 3D",
+      "subject": "math",
+      "grade": "middle-2",
+      "type": "simulation",
+      "directory": "public/contents/math/middle/function-explorer-3d",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/middle/function-explorer-3d/index.html"
+      ],
+      "before": "기울기와 절편 조작의 관찰 과제가 없고 정답을 여러 번 제출하면 가점되었습니다.",
+      "after": [
+        "기울기와 절편의 조작 비교 및 수치 예시",
+        "새 문제 입력 잠금 해제",
+        "정답 연속 제출로 중복 가점 방지",
+        "정답 후 다음 문제까지 입력 잠금",
+        "정확한 함숫값 채점"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed",
+        "function exact answer one credit"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "problem-solving-arena",
+      "title": "문제 해결 아레나",
+      "subject": "math",
+      "grade": "middle-3",
+      "type": "quiz",
+      "directory": "public/contents/math/middle/problem-solving-arena",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/middle/problem-solving-arena/index.html"
+      ],
+      "before": "고정 가짜 순위를 실제 리더보드처럼 표시했고 오답은 정답을 알 수 없었습니다.",
+      "after": [
+        "가짜 실시간 순위 오인 방지",
+        "속도 이전 풀이 전략과 연습 경로 제공",
+        "중복 제출 점수·타이머 보너스 방지",
+        "유효 답 하나만 처리",
+        "오답을 확인할 수 있도록 답 제공"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다.",
+        "중3 목록이지만 문제은행은 주로 초등 계산·중1 일차식 복습입니다. 중3 심화 문제은행 확충은 이번 수정으로 충족하지 않았습니다."
+      ]
+    },
+    {
+      "id": "multiplication-balloon",
+      "title": "구구단 풍선 터트리기",
+      "subject": "math",
+      "grade": "elementary-2",
+      "type": "game",
+      "directory": "public/contents/math/elementary/multiplication-balloon",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/multiplication-balloon/index.html",
+        "public/contents/math/elementary/multiplication-balloon/manifest.json"
+      ],
+      "before": "퀴즈 오답에 정답 숫자만 표시했습니다.",
+      "after": [
+        "풍선 퀴즈 오답 후 반복 덧셈 복습",
+        "풀이 피드백이 캔버스 폭 안에서 줄바꿈되도록 조정"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "multiplication-racing",
+      "title": "구구단 레이싱",
+      "subject": "math",
+      "grade": "elementary-2",
+      "type": "game",
+      "directory": "public/contents/math/elementary/multiplication-racing",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/multiplication-racing/index.html"
+      ],
+      "before": "퀴즈 반복 클릭으로 점수 증가와 단계 건너뛰기가 가능했습니다.",
+      "after": [
+        "새 퀴즈 제출 상태 초기화",
+        "반복 클릭 점수 중복 및 문제 건너뛰기 방지",
+        "점수 정리 대신 분배 전략으로 전이"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed",
+        "racing and coordinate quiz repeated submit only counts once"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "coordinate-explorer",
+      "title": "좌표 탐험대",
+      "subject": "math",
+      "grade": "elementary-5",
+      "type": "game",
+      "directory": "public/contents/math/elementary/coordinate-explorer",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/coordinate-explorer/index.html"
+      ],
+      "before": "퀴즈 반복 클릭으로 점수 증가와 단계 건너뛰기가 가능했습니다.",
+      "after": [
+        "새 퀴즈 제출 상태 초기화",
+        "반복 클릭 점수 중복 및 문제 건너뛰기 방지",
+        "완료 장면에 구체적인 좌표 이동 복습"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed",
+        "racing and coordinate quiz repeated submit only counts once"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다.",
+        "음수 좌표·사분면을 사용하는 초5 목록은 심화 내용입니다. 학년 적합성 재분류를 권고합니다."
+      ]
+    },
+    {
+      "id": "pythagorean-3d",
+      "title": "피타고라스 정리 - 3D 큐브 증명",
+      "subject": "math",
+      "grade": "middle-2",
+      "type": "simulation",
+      "directory": "public/contents/math/middle/pythagorean-3d",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/middle/pythagorean-3d/index.html"
+      ],
+      "before": "정사각형을 큐브라고 부르며 넓이와 부피를 혼동시켰습니다.",
+      "after": [
+        "정사각형 넓이와 정육면체 부피 혼동 교정",
+        "근거 불명 역사 단정 대신 제곱근 풀이",
+        "역사 단정 제거 및 직각 조건 설명",
+        "실제 0.2 두께 모형에 맞춰 설명 조정"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "rotation-solid",
+      "title": "회전체 - 2D에서 3D로",
+      "subject": "math",
+      "grade": "middle-3",
+      "type": "simulation",
+      "directory": "public/contents/math/middle/rotation-solid",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/middle/rotation-solid/index.html"
+      ],
+      "before": "회전축을 지정하지 않은 삼각형→원뿔 설명이 있었습니다.",
+      "after": [
+        "회전축에 따른 성립 조건 명확화",
+        "회전각 비교 및 반지름 탐구"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "space-numbers",
+      "title": "우주의 크기와 숫자",
+      "subject": "math",
+      "grade": "elementary-5",
+      "type": "exploration",
+      "directory": "public/contents/math/elementary/space-numbers",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/space-numbers/index.html",
+        "public/contents/math/elementary/space-numbers/script.js",
+        "public/contents/math/elementary/space-numbers/style.css"
+      ],
+      "before": "5학년 콘텐츠인데 1~5 세기 중심이었고 별 아이콘이 겹쳤습니다.",
+      "after": [
+        "초등 5학년 수의 크기 비교로 학습 목표 구체화",
+        "자릿값에 의한 큰 수 비교 예시",
+        "그림 대신 숫자 근거로 판단하도록 설명",
+        "큰 수의 차이 계산 전이",
+        "완료 목표를 실제 수 비교 활동과 일치",
+        "완료 목표 학년 수준 정렬",
+        "가상 수 자료 비교 활동",
+        "큰 수 자료 부여",
+        "큰 수 자료 부여",
+        "큰 수 자료 부여",
+        "자리 바뀐 큰 수 비교 활동",
+        "큰 수 자료 부여",
+        "큰 수 자료 부여",
+        "큰 수 자료 부여",
+        "그림 기호의 단위량 읽기",
+        "별 기호가 같은 위치에 겹쳐 셀 수 없던 오류 수정",
+        "중복 클릭으로 단계 건너뛰기 방지",
+        "단계 변경 시 응답 잠금 해제",
+        "활동별 자릿값/단위량 정답 근거",
+        "최종 퀴즈를 큰 수 비교로 확장",
+        "정답 선택지 식별 라벨 표시",
+        "큰 수 비교 및 차이 해설"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed",
+        "space stars distinct and stage click not repeated"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "pythagorean-isometric",
+      "title": "피타고라스 탐험 3D - 아이소메트릭",
+      "subject": "math",
+      "grade": "middle-2",
+      "type": "game",
+      "directory": "public/contents/math/middle/pythagorean-isometric",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/middle/pythagorean-isometric/index.html",
+        "public/contents/math/middle/pythagorean-isometric/script.js",
+        "public/contents/math/middle/pythagorean-isometric/style.css"
+      ],
+      "before": "같은 퀴즈를 반복 채점하여 점수를 늘릴 수 있었습니다.",
+      "after": [
+        "높이 1 모형 전제 명시",
+        "새 문제 채점 버튼 초기화",
+        "반복 채점 방지",
+        "문제당 한 번 채점하여 점수 분모·분자 보존"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed",
+        "isometric quiz credits one attempt until next question"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "8bit-math-quest",
+      "title": "8비트 수학 원정대: 연산 동굴 레이드",
+      "subject": "math",
+      "grade": "elementary-3",
+      "type": "game",
+      "directory": "public/contents/math/elementary/8bit-math-quest",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/8bit-math-quest/index.html",
+        "public/contents/math/elementary/8bit-math-quest/script.js",
+        "public/contents/math/elementary/8bit-math-quest/style.css"
+      ],
+      "before": "실제 없는 30초 제한을 약속하고 힌트는 답의 자릿수만 누설했습니다.",
+      "after": [
+        "구현에 없는 30초 제한 약속 제거",
+        "근거 없는 학습효과 수식 대신 연산 전략 예시",
+        "답 숫자를 누설하던 힌트를 계산 전략으로 교체"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "fraction-precision-alpha",
+      "title": "분수의 정밀함: 프리시전 알파",
+      "subject": "math",
+      "grade": "elementary-5",
+      "type": "game",
+      "directory": "public/contents/math/elementary/fraction-precision-alpha",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/fraction-precision-alpha/index.html",
+        "public/contents/math/elementary/fraction-precision-alpha/script.js",
+        "public/contents/math/elementary/fraction-precision-alpha/style.css"
+      ],
+      "before": "다음 버튼이 호출되지 않았고 1/3을 0.333으로 저장·반올림 표시하여 근사를 정확한 분수처럼 채점했습니다.",
+      "after": [
+        "호출되지 않던 다음 버튼 수정",
+        "유한 근삿값과 순환소수 구별",
+        "소수가 본질적으로 부정확하다는 오개념 교정",
+        "분수 범위 오개념 교정",
+        "정확한 유리수 목표 보존",
+        "목표를 반올림 소수 대신 정확한 분수 표시",
+        "정수 교차곱으로 동치분수 판정",
+        "한 개 게이지가 표현할 수 있는 분수로 입력 제한",
+        "이야기 목표를 무작위 목표 분수와 일치"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed",
+        "alpha exact target/equivalence, approximate rejection, one-whole bounds"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "fraction-precision-beta",
+      "title": "분수의 정확도 게임: Beta 버전",
+      "subject": "math",
+      "grade": "elementary-5",
+      "type": "game",
+      "directory": "public/contents/math/elementary/fraction-precision-beta",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/fraction-precision-beta/index.html",
+        "public/contents/math/elementary/fraction-precision-beta/script.js",
+        "public/contents/math/elementary/fraction-precision-beta/style.css"
+      ],
+      "before": "도입 3/4와 핵심 4/5 목표가 달랐고 30.9도 30으로 채점했습니다.",
+      "after": [
+        "도입과 핵심 미션 목표 통일",
+        "30.9를 30으로 잘라 정답 처리하는 오류 교정",
+        "비커 답 범위 및 유효 숫자 검증"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed",
+        "beta decimal answer not truncated"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "fraction-precision-gamma",
+      "title": "분수의 정밀도: 감마 프로젝트",
+      "subject": "math",
+      "grade": "elementary-5",
+      "type": "game",
+      "directory": "public/contents/math/elementary/fraction-precision-gamma",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/fraction-precision-gamma/index.html",
+        "public/contents/math/elementary/fraction-precision-gamma/script.js",
+        "public/contents/math/elementary/fraction-precision-gamma/style.css"
+      ],
+      "before": "원리 화면 다음 버튼이 동작하지 않았고 오답 피드백은 두 분수를 비교하지 않았습니다.",
+      "after": [
+        "호출되지 않던 다음 버튼 수정",
+        "사용자 분수와 목표를 연결한 오답 피드백",
+        "동일한 전체라는 비교 조건 명시"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "fraction-precision-delta",
+      "title": "분수의 델타: 정밀한 차이 게임",
+      "subject": "math",
+      "grade": "elementary-5",
+      "type": "game",
+      "directory": "public/contents/math/elementary/fraction-precision-delta",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/fraction-precision-delta/index.html",
+        "public/contents/math/elementary/fraction-precision-delta/script.js",
+        "public/contents/math/elementary/fraction-precision-delta/style.css"
+      ],
+      "before": "오버슈트는 폭발 문구만 표시했고 정확한 차이와 검산식이 없었습니다.",
+      "after": [
+        "뺄셈과 덧셈 검산 연결",
+        "과잉 입력의 원인 설명",
+        "분수 뺄셈 성립 조건 명시"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "fraction-precision-epsilon",
+      "title": "오차 범위(Epsilon)의 마법: 게임 히트박스 만들기",
+      "subject": "math",
+      "grade": "elementary-5",
+      "type": "game",
+      "directory": "public/contents/math/elementary/fraction-precision-epsilon",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/fraction-precision-epsilon/index.html",
+        "public/contents/math/elementary/fraction-precision-epsilon/script.js",
+        "public/contents/math/elementary/fraction-precision-epsilon/style.css"
+      ],
+      "before": "설명은 <이고 판정은 ≤였으며 표시 반올림 값과 판정이 다를 수 있었습니다. 다음 버튼과 재진입 핸들러도 문제였습니다.",
+      "after": [
+        "호출되지 않던 다음 버튼 수정",
+        "표시 부등호를 실제 포함 경계 판정과 일치",
+        "오차 경계 비교 과제와 무작위 실험 의미 설명",
+        "재진입 시 던지기 핸들러 중복 방지",
+        "화면 표시 3자리와 판정 값 일치 및 경계 부동소수 오차 방지"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed",
+        "epsilon displayed boundary accepted, outside rejected"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "line-point-symmetry",
+      "title": "도리와 대칭 박물관 복원 작전",
+      "subject": "math",
+      "grade": "elementary-5",
+      "type": "simulation",
+      "directory": "public/contents/math/elementary/line-point-symmetry",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/line-point-symmetry/index.html",
+        "public/contents/math/elementary/line-point-symmetry/script.js",
+        "public/contents/math/elementary/line-point-symmetry/style.css",
+        "public/contents/math/elementary/line-point-symmetry/manifest.json"
+      ],
+      "before": "핵심 활동·퀴즈·전이 문제는 이미 충분했습니다. 중점 성질을 종이에서 새 점에 적용하는 활동을 보완했습니다.",
+      "after": [
+        "교실 종이 활동으로 중점 성질 전이"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "cylinder-volume",
+      "title": "원기둥의 부피: 공간의 들이를 계산하자",
+      "subject": "math",
+      "grade": "elementary-6",
+      "type": "simulation",
+      "directory": "public/contents/math/elementary/cylinder-volume",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/elementary/cylinder-volume/index.html",
+        "public/contents/math/elementary/cylinder-volume/script.js",
+        "public/contents/math/elementary/cylinder-volume/style.css",
+        "public/contents/math/elementary/cylinder-volume/manifest.json"
+      ],
+      "before": "슬라이더 조작은 있었지만 높이 2배와 반지름 2배를 비교하는 구체적 예측 과제가 없었습니다.",
+      "after": [
+        "반지름 제곱과 높이 비례를 비교하는 예측 실험"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다."
+      ]
+    },
+    {
+      "id": "irp-future-wealth-simulator",
+      "title": "시간 여행 자산 시뮬레이터: 30년 뒤 나의 지갑은?",
+      "subject": "math",
+      "grade": "middle-2",
+      "type": "simulation",
+      "directory": "public/contents/math/middle/irp-future-wealth-simulator",
+      "status": "improved",
+      "reviewedFiles": [
+        "public/contents/math/middle/irp-future-wealth-simulator/index.html",
+        "public/contents/math/middle/irp-future-wealth-simulator/script.js",
+        "public/contents/math/middle/irp-future-wealth-simulator/style.css",
+        "public/contents/math/middle/irp-future-wealth-simulator/manifest.json"
+      ],
+      "before": "자산이 계산 없이 항상 2.5 대 7.5로 표시됐고 세액공제와 과세이연을 혼동했습니다. 법정 한도·의무 이전을 조건 없이 단정했습니다.",
+      "after": [
+        "수학 목표와 모형의 한계 명시",
+        "비교 조건·현실 한계·납입 시점 공개",
+        "달성 주장 범위를 실제 활동과 일치",
+        "완료 장면 수식과 0% 반례 탐구",
+        "세액공제와 과세이연 혼동 교정 및 법정 조건 단정 제거",
+        "의무 이전 단정 제거",
+        "공정 비교 납입 조건",
+        "실제 계좌 수익 비교로 오인하지 않도록 표시",
+        "실제 계좌 수익 비교로 오인하지 않도록 표시",
+        "개인 제도 적용 단정 제거",
+        "추가 납입 0 기준 실험 지원",
+        "시작 원금 양쪽 동일 적용",
+        "900만 원을 법정 한도가 아닌 실험 범위로 한정",
+        "세액공제 계산 없이 혜택을 적용했다는 주장 제거",
+        "0원 실험 안내",
+        "0원 기준 진행 허용",
+        "보장된 수익 표현 제거",
+        "고정 3배 자산 탑을 실제 복리 계산으로 교체",
+        "계산 결과 관찰 및 설명 유도",
+        "정확한 숫자 결과 접근 가능한 텍스트 제공",
+        "탑 실제 높이와 y 위치·가상 금액 배율 일치",
+        "같은 지갑 두 번 클릭으로 두 선택 완료 오인 방지",
+        "서로 다른 지갑 두 개 확인",
+        "첫 지갑 방문 기록",
+        "두 번째 지갑 방문 기록",
+        "법정 요건 퀴즈를 복리 계산·공정 비교·모형 한계 퀴즈로 교체",
+        "로컬 manifest 설명에 수학 모형 범위 명시",
+        "빈 지갑을 개인 선택의 결과로 단정하는 서사 교정",
+        "부의 보장 대신 공정 비교 서사",
+        "가정·결과 텍스트와 조작 버튼을 짧은 화면에서 스크롤로 접근 가능하게 조정"
+      ],
+      "verification": [
+        "All actual local inline/external JS parsed with node --check; local JSON/importmaps parsed",
+        "IRP actual model equal-baseline, zero-return, zero-deduction, zero-year, one-year and growth cases",
+        "bun test server/irp-lesson.bun.test.ts: 1 passed, 5 assertions"
+      ],
+      "remainingLimits": [
+        "실제 브라우저 시각·조작 검증은 coordinator 담당이며 이 결과로 입증하지 않습니다.",
+        "가상 모델은 음의 수익률·수수료·물가·실제 제도 적용을 다루지 않습니다. 실제 IRP 비교·세금 계산·수익 예측으로 사용하지 않습니다."
+      ]
+    }
+  ],
+  "browserPriorities": [
+    {
+      "id": "fraction-precision-alpha",
+      "steps": "시작→계속→미션 버튼, 목표 분수 확인→동치분수 설정→발사→원리 다음→2/6→결과 보기. 1/3 목표를 0.33으로 쓰지 않는지 확인."
+    },
+    {
+      "id": "fraction-precision-gamma",
+      "steps": "코어 목표와 같은 분수를 맞춘 뒤 원리 화면 이해했어요 버튼과 퀴즈 칸 선택 확인."
+    },
+    {
+      "id": "fraction-precision-epsilon",
+      "steps": "원리 화면 ≤ 표시와 다음 버튼, 자유 탐색 재진입 후 한 번 클릭에 결과 1회 확인."
+    },
+    {
+      "id": "irp-future-wealth-simulator",
+      "steps": "지갑 두 개 각각 클릭→스토리→두 모형 원금 넣기→추가 0으로 시간 이동 가능 확인→금액 결과/탑 및 가정 노출→수학 퀴즈 3문제. 짧은 viewport에서 설명·버튼 스크롤 접근 확인."
+    },
+    {
+      "id": "space-numbers",
+      "steps": "탐사 큰 수 비교 3단계→별 5개가 겹치지 않는지→125,000/152,000 퀴즈와 설명 확인."
+    },
+    {
+      "id": "geometry-world-3d",
+      "steps": "정육면체 겉넓이 문제 유형과 cm² 표시; 답 빠르게 반복 제출 시 가점 1회."
+    }
+  ]
+}

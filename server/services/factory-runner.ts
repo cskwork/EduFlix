@@ -216,7 +216,7 @@ export class FactoryRunner {
       // Option 2: problem 텍스트가 토픽. difficulty → grade 매핑.
       // subject가 사용자에게서 오지 않았으면 plan LLM이 problem에서 추론할 것임.
       subject = request.subject ?? TEMP_SUBJECT_FOR_PROBLEM
-      grade = gradeForDifficulty(request.difficulty!)
+      grade = request.grade ?? gradeForDifficulty(request.difficulty!)
       topic = request.problem!
     } else {
       // Option 1 (interest): 관심사가 토픽. subject/grade는 사용자 선택.

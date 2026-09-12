@@ -1,0 +1,12 @@
+{
+  "id": "platonic-solids",
+  "frontDoor": true,
+  "activity": "Selected cube,octahedron,dodecahedron,icosahedron; FEV values correct; wireframe click",
+  "answers": [
+    "8개"
+  ],
+  "completion": true,
+  "reset": true,
+  "browser": "Chrome CUA",
+  "method": "actual button input and DOM terminal screen"
+}

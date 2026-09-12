@@ -245,7 +245,7 @@ const ContentApp = {
             msgEl.innerHTML = '<span class="success">정답입니다! 등분수를 찾아내셨네요.</span>';
             setTimeout(() => this.nextScene(), 2000);
         } else {
-            msgEl.innerHTML = '<span class="error">틀렸습니다. 다시 생각해보세요.</span>';
+            msgEl.innerHTML = `<span class="error">현재 ${quizUserNum}/${quizUserDenom}입니다. 목표 ${quizTargetNum}/${quizTargetDenom}와 분모를 맞춘 뒤 선택 조각 수를 비교해 보세요.</span>`;
         }
     },
 

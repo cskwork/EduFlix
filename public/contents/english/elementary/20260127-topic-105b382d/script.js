@@ -16,7 +16,7 @@ const ContentApp = {
                 id: 1,
                 time: 'morning',
                 visual: 'sun',
-                question: '해가 떴어요. 친구를 만났습니다. 뭐라고 할까요?',
+                question: '오전 8시, 친구를 만났습니다. 뭐라고 할까요?',
                 options: ['Good morning', 'Good afternoon', 'Good evening'],
                 answer: 'Good morning'
             },
@@ -24,7 +24,7 @@ const ContentApp = {
                 id: 2,
                 time: 'afternoon',
                 visual: 'sun-high',
-                question: '학교 점심시간이에요. 친구를 만났습니다.',
+                question: '오후 1시, 점심을 먹고 친구를 만났습니다.',
                 options: ['Good morning', 'Good afternoon', 'Good evening'],
                 answer: 'Good afternoon'
             },
@@ -32,7 +32,7 @@ const ContentApp = {
                 id: 3,
                 time: 'evening',
                 visual: 'moon',
-                question: '해가 지고 달이 떴어요. 이럴 땐 뭐라고 할까요?',
+                question: '저녁 7시, 이웃을 처음 만났습니다. 어떤 인사가 알맞을까요?',
                 options: ['Good morning', 'Good afternoon', 'Good evening'],
                 answer: 'Good evening'
             }
@@ -206,7 +206,7 @@ const ContentApp = {
         options.forEach(btn => btn.disabled = true);
 
         if (selected === correct) {
-            feedback.textContent = "정답! 대단해! 🎉";
+            feedback.textContent = `정답! ${correct}은(는) 이 시간에 만날 때 쓰는 인사예요. Hello도 만날 때 쓸 수 있어요.`;
             feedback.className = "feedback-msg correct";
             document.getElementById('next-quiz-btn').classList.remove('hidden');
         } else {

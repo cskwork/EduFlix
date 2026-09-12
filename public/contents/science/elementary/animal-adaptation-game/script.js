@@ -356,7 +356,7 @@ const animalAdaptationData = {
         }
     },
     interaction: {
-        instruction: "추위에 떠는 친구들을 올바른 곳으로 데려다 주세요! (카드를 클릭하고, 이동할 곳을 클릭하세요.)",
+        instruction: "이 모형의 불곰과 철새가 겨울을 나는 행동을 연결하세요. 모든 곰과 새가 같은 행동을 하지는 않습니다. (카드와 이동할 곳을 차례로 클릭하세요.)",
         onInit: (container, engine) => {
             let selected = null;
             const rescued = new Set();
@@ -374,7 +374,7 @@ const animalAdaptationData = {
                         </div>
                     </div>
                     <div class="draggable-cards">
-                        <div class="drag-card" id="card-bear" data-type="hibernate" data-name="곰" tabindex="0" role="button" aria-label="곰 카드">
+                        <div class="drag-card" id="card-bear" data-type="hibernate" data-name="불곰" tabindex="0" role="button" aria-label="불곰 카드">
                             <svg viewBox="0 0 60 60"><circle cx="30" cy="35" r="20" fill="#A0522D"/><circle cx="15" cy="15" r="10" fill="#A0522D"/><circle cx="45" cy="15" r="10" fill="#A0522D"/></svg>
                         </div>
                         <div class="drag-card" id="card-bird" data-type="migrate" data-name="철새" tabindex="0" role="button" aria-label="새 카드">
@@ -442,7 +442,7 @@ const animalAdaptationData = {
                     { text: "빨간색" }
                 ],
                 correctChoiceIndex: 0,
-                correctFeedback: "딩동댕! 하얀 털은 눈과 잘 섞여 적에게 안 보이는 '보호색' 역할을 해요.",
+                correctFeedback: "딩동댕! 하얗게 보이는 털은 눈과 얼음에 섞여 먹잇감에게 잘 드러나지 않는 보호색 역할을 합니다.",
                 incorrectFeedback: "틀렸어요. 눈이 가득한 곳에 숨으려면 어떤 색이 좋을까요?",
                 hint: "주변 환경(눈)과 비슷한 색을 떠올려 보세요."
             },
@@ -481,7 +481,7 @@ const animalAdaptationData = {
             const dexData = {
                 polar: {
                     title: "북극곰 도감",
-                    content: "북극곰은 흰 털로 눈 속에 숨어요. 이걸 '보호색'이라고 해요. 훌륭한 구조대원이에요!"
+                    content: "북극곰의 털은 하얗게 보여 눈과 얼음에서 몸을 덜 드러내도록 돕습니다. 이런 유전되는 특징은 여러 세대에 걸쳐 환경과 관련해 나타난 것이며, 필요할 때 마음대로 털색을 바꾸는 것은 아닙니다."
                 },
                 desert: {
                     title: "사막여우 도감",

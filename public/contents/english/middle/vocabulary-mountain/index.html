@@ -799,6 +799,13 @@
             }
 
             const wordData = allWords[currentWordIndex];
+            if (!wordData.positionsBalanced) {
+                const answerText = wordData.options[wordData.correct];
+                const offset = (currentWordIndex + 1) % wordData.options.length;
+                wordData.options = wordData.options.slice(offset).concat(wordData.options.slice(0, offset));
+                wordData.correct = wordData.options.indexOf(answerText);
+                wordData.positionsBalanced = true;
+            }
             const altitudeGained = (currentWordIndex / allWords.length) * 8848; // Height of Everest
             altitude = Math.round(altitudeGained);
 
@@ -869,7 +876,7 @@
             if (selectedIndex === wordData.correct) {
                 // Correct answer
                 buttons[selectedIndex].classList.add('correct');
-                feedback.textContent = '🎉 Correct! Moving up!';
+                feedback.textContent = `Correct. ${wordData.word}: ${wordData.definition}. ${wordData.hint}`;
                 feedback.style.color = '#38ef7d';
                 score += 100 + (altitude / 100); // Bonus for higher altitude
                 document.getElementById('score').textContent = Math.round(score);
@@ -877,7 +884,7 @@
                 // Wrong answer
                 buttons[selectedIndex].classList.add('wrong');
                 buttons[wordData.correct].classList.add('correct');
-                feedback.textContent = '❌ Keep trying!';
+                feedback.textContent = `${wordData.word} means ${wordData.options[wordData.correct]}. ${wordData.definition}`;
                 feedback.style.color = '#f45c43';
             }
 
@@ -887,7 +894,7 @@
                 feedback.classList.remove('show');
                 currentWordIndex++;
                 showWord();
-            }, 1500);
+            }, 5000);
         }
 
         function showHint() {
@@ -901,7 +908,7 @@
             document.getElementById('hint-display').style.display = 'block';
             hintsRemaining--;
             document.getElementById('hints').textContent = hintsRemaining;
-            score -= 25; // Penalty for using hint
+            score = Math.max(0, score - 25); // Practice hints cannot create negative scores.
             document.getElementById('score').textContent = Math.round(score);
         }
 

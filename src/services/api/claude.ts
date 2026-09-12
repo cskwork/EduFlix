@@ -65,6 +65,7 @@ export interface ContentGenerationOptions {
   language: Language
   renderMode?: RenderMode
   additionalContext?: string
+    contentType?: ContentType
   // Option 2 (problem)
   problem?: string
   difficulty?: Difficulty
@@ -173,6 +174,7 @@ export async function generateContentServerless(
       language: options.language,
       renderMode: options.renderMode,
       additionalContext: options.additionalContext,
+      contentType: options.contentType,
       problem: options.problem,
       difficulty: options.difficulty,
     }
@@ -312,6 +314,7 @@ export class ClaudeApiClient {
         language: options.language,
         renderMode: options.renderMode,
         additionalContext: options.additionalContext,
+      contentType: options.contentType,
         problem: options.problem,
         difficulty: options.difficulty,
       }

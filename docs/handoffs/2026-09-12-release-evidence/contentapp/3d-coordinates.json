@@ -1,0 +1,10 @@
+{
+  "id": "3d-coordinates",
+  "frontDoor": true,
+  "activity": "Entered core and sent actual d,d,d,e,e,s,s,s,s keys. Position check opened alert. Coordinate result not observed.",
+  "completion": false,
+  "reset": false,
+  "status": "tool-blocked",
+  "failure": "After native alert, getJsDialog eventually returned none but DOM inspection still failed Emulation.setFocusEmulationEnabled. No app state setters used.",
+  "handoff": "Root transferred remaining verification to Ego owner"
+}

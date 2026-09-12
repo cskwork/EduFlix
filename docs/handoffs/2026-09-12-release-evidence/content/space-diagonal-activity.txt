@@ -1,0 +1,39 @@
+[p1 "공간 대각선" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "공간 대각선"]
+root
+  heading
+    text "공간 대각선 탐구"
+  text "가로 3, 세로 4, 높이 2로 설정하세요. 밑면은 5, 공간 대각선은 √29≈5.39입니다. 높이 12인 예제는 종이에 계산하세요. 밑면 대각선을 먼저 표시하고 공�..."
+  container
+    canvas
+    container
+      container
+        container
+          text "가로 (a)"
+          spinbutton [ref=1]
+          text "3"
+        container
+          text "세로 (b)"
+          spinbutton [ref=2]
+          text "4"
+        container
+          text "높이 (c)"
+          spinbutton [ref=3]
+          text "2"
+      container
+        button [ref=4]
+          text "직육면체"
+        button [ref=5]
+          text "바닥 대각선"
+        button [ref=6]
+          text "공간 대각선"
+      container
+        text "직육면체"
+        container
+          text "가로:"
+          text "3"
+          text ", 세로:"
+          text "4"
+          text ", 높이:"
+          text "2"
+    paragraph
+      text "드래그해서 직육면체를 여러 각도에서 관찰하세요!"

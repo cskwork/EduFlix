@@ -1,0 +1,284 @@
+{
+  "id": "measurement-lab-3d",
+  "family": "continuous-custom",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": {
+        "name": "자",
+        "icon": "📏",
+        "type": "box",
+        "value": 30,
+        "unit": "cm",
+        "color": 10233776,
+        "answer": 30
+      },
+      "previousCorrect": 0,
+      "result": {
+        "text": "🔬\n레벨\n1\n⭐\n점수\n50\n✅\n정답\n1/1\n🔬 측정 영역\n📏\n길이\ncm, m로 길이 측정\n1/5\n⚖️\n무게\ng, kg으로 무게 측정\n0/5\n🧪\n부피\nmL, L로 부피 측정\n0/5\n쉬움\n보통\n어려움\n📏\n자\n📏\n자\n측정 항목\n길이\n힌트\n?\n이 자의 길이는 얼마일까요?\ncm\nm\n💡 힌트\n✓ 제출하기\n📐 단위 변환 참고\n1 m\n=\n100 cm\n1 kg\n=\n1000 g\n1 L\n=\n1000 mL\n진행률: 7%\n🎉 정답!",
+        "correct": 1,
+        "score": "50",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "name": "문",
+        "icon": "🚪",
+        "type": "box",
+        "value": 2,
+        "unit": "m",
+        "color": 6323595,
+        "answer": 2
+      },
+      "previousCorrect": 1,
+      "result": {
+        "text": "🔬\n레벨\n1\n⭐\n점수\n125\n✅\n정답\n2/2\n🔬 측정 영역\n📏\n길이\ncm, m로 길이 측정\n2/5\n⚖️\n무게\ng, kg으로 무게 측정\n0/5\n🧪\n부피\nmL, L로 부피 측정\n0/5\n쉬움\n보통\n어려움\n🚪\n문\n🚪\n문\n측정 항목\n길이\n힌트\n?\n이 문의 길이는 얼마일까요?\ncm\nm\n💡 힌트\n✓ 제출하기\n📐 단위 변환 참고\n1 m\n=\n100 cm\n1 kg\n=\n1000 g\n1 L\n=\n1000 mL\n진행률: 13%\n🎉 정답!",
+        "correct": 2,
+        "score": "125",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "name": "축구장",
+        "icon": "⚽",
+        "type": "box",
+        "value": 105,
+        "unit": "m",
+        "color": 9159498,
+        "answer": 105
+      },
+      "previousCorrect": 2,
+      "result": {
+        "text": "🔬\n레벨\n1\n⭐\n점수\n225\n✅\n정답\n3/3\n🔬 측정 영역\n📏\n길이\ncm, m로 길이 측정\n3/5\n⚖️\n무게\ng, kg으로 무게 측정\n0/5\n🧪\n부피\nmL, L로 부피 측정\n0/5\n쉬움\n보통\n어려움\n⚽\n축구장\n⚽\n축구장\n측정 항목\n길이\n힌트\n?\n이 축구장의 길이는 얼마일까요?\ncm\nm\n💡 힌트\n✓ 제출하기\n📐 단위 변환 참고\n1 m\n=\n100 cm\n1 kg\n=\n1000 g\n1 L\n=\n1000 mL\n진행률: 20%\n🎉 정답!",
+        "correct": 3,
+        "score": "225",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "name": "오렌지",
+        "icon": "🍊",
+        "type": "sphere",
+        "value": 180,
+        "unit": "g",
+        "color": 16750592,
+        "answer": 180
+      },
+      "previousCorrect": 3,
+      "result": {
+        "text": "🔬\n레벨\n1\n⭐\n점수\n275\n✅\n정답\n4/4\n🔬 측정 영역\n📏\n길이\ncm, m로 길이 측정\n3/5\n⚖️\n무게\ng, kg으로 무게 측정\n1/5\n🧪\n부피\nmL, L로 부피 측정\n0/5\n쉬움\n보통\n어려움\n🍊\n오렌지\n🍊\n오렌지\n측정 항목\n무게\n힌트\n?\n이 오렌지의 무게는 얼마일까요?\ng\nkg\n💡 힌트\n✓ 제출하기\n📐 단위 변환 참고\n1 m\n=\n100 cm\n1 kg\n=\n1000 g\n1 L\n=\n1000 mL\n진행률: 27%\n🎉 정답!",
+        "correct": 4,
+        "score": "275",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "name": "물병 500mL",
+        "icon": "🧴",
+        "type": "cylinder",
+        "value": 500,
+        "unit": "g",
+        "color": 2201331,
+        "answer": 500
+      },
+      "previousCorrect": 4,
+      "result": {
+        "text": "🔬\n레벨\n2\n⭐\n점수\n350\n✅\n정답\n5/5\n🔬 측정 영역\n📏\n길이\ncm, m로 길이 측정\n3/5\n⚖️\n무게\ng, kg으로 무게 측정\n2/5\n🧪\n부피\nmL, L로 부피 측정\n0/5\n쉬움\n보통\n어려움\n🧴\n물병 500mL\n🧴\n물병 500mL\n측정 항목\n무게\n힌트\n?\n이 물병 500mL의 무게는 얼마일까요?\ng\nkg\n💡 힌트\n✓ 제출하기\n📐 단위 변환 참고\n1 m\n=\n100 cm\n1 kg\n=\n1000 g\n1 L\n=\n1000 mL\n진행률: 33%\n🎉 정답!",
+        "correct": 5,
+        "score": "350",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "name": "어린이 몸무게",
+        "icon": "🧒",
+        "type": "cylinder",
+        "value": 30,
+        "unit": "kg",
+        "color": 16750592,
+        "answer": 30
+      },
+      "previousCorrect": 5,
+      "result": {
+        "text": "🔬\n레벨\n2\n⭐\n점수\n450\n✅\n정답\n6/6\n🔬 측정 영역\n📏\n길이\ncm, m로 길이 측정\n3/5\n⚖️\n무게\ng, kg으로 무게 측정\n3/5\n🧪\n부피\nmL, L로 부피 측정\n0/5\n쉬움\n보통\n어려움\n🧒\n어린이 몸무게\n🧒\n어린이 몸무게\n측정 항목\n무게\n힌트\n?\n이 어린이 몸무게의 무게는 얼마일까요?\ng\nkg\n💡 힌트\n✓ 제출하기\n📐 단위 변환 참고\n1 m\n=\n100 cm\n1 kg\n=\n1000 g\n1 L\n=\n1000 mL\n진행률: 40%\n🎉 정답!",
+        "correct": 6,
+        "score": "450",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "name": "주스 팩",
+        "icon": "🧃",
+        "type": "box",
+        "value": 200,
+        "unit": "mL",
+        "color": 16740419,
+        "answer": 200
+      },
+      "previousCorrect": 6,
+      "result": {
+        "text": "🔬\n레벨\n2\n⭐\n점수\n500\n✅\n정답\n7/7\n🔬 측정 영역\n📏\n길이\ncm, m로 길이 측정\n3/5\n⚖️\n무게\ng, kg으로 무게 측정\n3/5\n🧪\n부피\nmL, L로 부피 측정\n1/5\n쉬움\n보통\n어려움\n🧃\n주스 팩\n🧃\n주스 팩\n측정 항목\n부피\n힌트\n?\n이 주스 팩의 부피는 얼마일까요?\nmL\nL\n💡 힌트\n✓ 제출하기\n📐 단위 변환 참고\n1 m\n=\n100 cm\n1 kg\n=\n1000 g\n1 L\n=\n1000 mL\n진행률: 47%\n🎉 정답!",
+        "correct": 7,
+        "score": "500",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "name": "우유 1팩",
+        "icon": "🥛",
+        "type": "box",
+        "value": 1,
+        "unit": "L",
+        "color": 16777215,
+        "answer": 1
+      },
+      "previousCorrect": 7,
+      "result": {
+        "text": "🔬\n레벨\n2\n⭐\n점수\n575\n✅\n정답\n8/8\n🔬 측정 영역\n📏\n길이\ncm, m로 길이 측정\n3/5\n⚖️\n무게\ng, kg으로 무게 측정\n3/5\n🧪\n부피\nmL, L로 부피 측정\n2/5\n쉬움\n보통\n어려움\n🥛\n우유 1팩\n🥛\n우유 1팩\n측정 항목\n부피\n힌트\n?\n이 우유 1팩의 부피는 얼마일까요?\nmL\nL\n💡 힌트\n✓ 제출하기\n📐 단위 변환 참고\n1 m\n=\n100 cm\n1 kg\n=\n1000 g\n1 L\n=\n1000 mL\n진행률: 53%\n🎉 정답!",
+        "correct": 8,
+        "score": "575",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "name": "수영장 어린이용",
+        "icon": "🏊",
+        "type": "box",
+        "value": 1000,
+        "unit": "L",
+        "color": 38823,
+        "answer": 1000
+      },
+      "previousCorrect": 8,
+      "result": {
+        "text": "🔬\n레벨\n2\n⭐\n점수\n675\n✅\n정답\n9/9\n🔬 측정 영역\n📏\n길이\ncm, m로 길이 측정\n3/5\n⚖️\n무게\ng, kg으로 무게 측정\n3/5\n🧪\n부피\nmL, L로 부피 측정\n3/5\n쉬움\n보통\n어려움\n🏊\n수영장 어린이용\n🏊\n수영장 어린이용\n측정 항목\n부피\n힌트\n?\n이 수영장 어린이용의 부피는 얼마일까요?\nmL\nL\n💡 힌트\n✓ 제출하기\n📐 단위 변환 참고\n1 m\n=\n100 cm\n1 kg\n=\n1000 g\n1 L\n=\n1000 mL\n진행률: 60%\n🎉 정답!",
+        "correct": 9,
+        "score": "675",
+        "start": "none"
+      }
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#start-btn"
+    },
+    {
+      "click": ".category-btn[data-category=\"length\"]"
+    },
+    {
+      "click": ".diff-btn[data-diff=\"easy\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".category-btn[data-category=\"length\"]"
+    },
+    {
+      "click": ".diff-btn[data-diff=\"medium\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".category-btn[data-category=\"length\"]"
+    },
+    {
+      "click": ".diff-btn[data-diff=\"hard\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".category-btn[data-category=\"weight\"]"
+    },
+    {
+      "click": ".diff-btn[data-diff=\"easy\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".category-btn[data-category=\"weight\"]"
+    },
+    {
+      "click": ".diff-btn[data-diff=\"medium\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".category-btn[data-category=\"weight\"]"
+    },
+    {
+      "click": ".diff-btn[data-diff=\"hard\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".category-btn[data-category=\"volume\"]"
+    },
+    {
+      "click": ".diff-btn[data-diff=\"easy\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".category-btn[data-category=\"volume\"]"
+    },
+    {
+      "click": ".diff-btn[data-diff=\"medium\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".category-btn[data-category=\"volume\"]"
+    },
+    {
+      "click": ".diff-btn[data-diff=\"hard\"]"
+    },
+    {
+      "click": "#submit-btn"
+    }
+  ],
+  "completionModel": "Continuous practice: no terminal completion state exists; complete means verified bounded activity cycle, not every possible generated question.",
+  "coverage": [
+    "length/easy",
+    "length/medium",
+    "length/hard",
+    "weight/easy",
+    "weight/medium",
+    "weight/hard",
+    "volume/easy",
+    "volume/medium",
+    "volume/hard"
+  ],
+  "title": "측정 연구소 3D",
+  "finiteCompletion": false,
+  "completionObservation": {
+    "text": "🔬\n레벨\n2\n⭐\n점수\n675\n✅\n정답\n9/9\n🔬 측정 영역\n📏\n길이\ncm, m로 길이 측정\n3/5\n⚖️\n무게\ng, kg으로 무게 측정\n3/5\n🧪\n부피\nmL, L로 부피 측정\n3/5\n쉬움\n보통\n어려움\n🧺\n세탁기 물\n🧺\n세탁기 물\n측정 항목\n부피\n힌트\n?\n이 세탁기 물의 부피는 얼마일까요?\nmL\nL\n💡 힌트\n✓ 제출하기\n📐 단위 변환 참고\n1 m\n=\n100 cm\n1 kg\n=\n1000 g\n1 L\n=\n1000 mL\n진행률: 60%\n🎉 정답!",
+    "correct": 9,
+    "score": "675",
+    "start": "none"
+  },
+  "resetObservation": {
+    "text": "🔬\n레벨\n1\n⭐\n점수\n0\n✅\n정답\n0/0\n🔬 측정 영역\n📏\n길이\ncm, m로 길이 측정\n0/5\n⚖️\n무게\ng, kg으로 무게 측정\n0/5\n🧪\n부피\nmL, L로 부피 측정\n0/5\n쉬움\n보통\n어려움\n📦\n물체\n📦\n물체 이름\n측정 항목\n길이\n힌트\n?\n이 물체의 길이는 얼마일까요?\ncm\nm\n💡 힌트\n✓ 제출하기\n📐 단위 변환 참고\n1 m\n=\n100 cm\n1 kg\n=\n1000 g\n1 L\n=\n1000 mL\n진행률: 0%\n📏\n⚖️\n🧪\n📐\n🔬\n🔬 측정 연구소 3D\n\n길이·무게·들이의 단위를 고르고 어림해요. 물체의 값은 연습용이며 실제 크기는 다를 수 있어요. 이 활동은 기준값의 ±10%까지 인정해요. 단위 변환 예: 1.5 L = 1500 mL.\n\n연구 시작!\n🚀\n📏\n길이 측정\ncm와 m로 길이를 측정해요\n⚖️\n무게 측정\ng과 kg으로 무게를 재요\n🧪\n부피 측정\nmL와 L로 부피를 측정해요",
+    "correct": 0,
+    "score": "0",
+    "start": "flex"
+  }
+}

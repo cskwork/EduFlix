@@ -333,8 +333,8 @@ const ContentApp = {
     }
 
     if (level === 2) {
-      const tens = Math.floor(question.correct / 10);
-      return `2단계 힌트: 정답의 십의 자리는 ${tens}입니다.`;
+      if (question.operator === "x") return `2단계 힌트: ${question.a}을 ${question.b}번 더하거나, ${question.b}를 두 수로 나누어 곱해 보세요.`;
+      return `2단계 힌트: ${question.b}를 십의 자리와 일의 자리로 나누어 ${question.a}에서 차례로 ${question.operator === "+" ? "더해" : "빼"} 보세요.`;
     }
 
     const ones = Math.abs(question.correct % 10);

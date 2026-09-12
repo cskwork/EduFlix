@@ -1,3 +1,4 @@
+import { revisionedContentUrl } from '../content/revision'
 import type { SaveContentRequest } from '../../types/editor'
 
 export function validateEditorOverrides(value: unknown): SaveContentRequest {
@@ -19,7 +20,7 @@ export function embedEditorOverrides(html: string, value: unknown): string {
   const cleaned = html.replace(/<script\b[^>]*\bid=["']eduflix-editor-overrides["'][^>]*>[\s\S]*?<\/script\s*>/gi, '')
   const payload = `<script id="eduflix-editor-overrides" type="application/json">${json}</script>`
   const bridge = /<script\b[^>]*src=["'][^"']*editor-bridge\.js["']/i.test(cleaned)
-    ? '' : '<script id="editor-bridge-script" src="/contents/common/editor-bridge.js"></script>'
+    ? '' : `<script id="editor-bridge-script" src="${revisionedContentUrl('/contents/common/editor-bridge.js')}"></script>`
   const insertion = `${payload}\n${bridge}`
   return /<\/body\s*>/i.test(cleaned) ? cleaned.replace(/<\/body\s*>/i, () => `${insertion}\n</body>`) : `${cleaned}\n${insertion}`
 }

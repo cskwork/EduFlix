@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { revisionedContentUrl } from '../../services/content/revision'
 import type { ContentCardData, Subject } from '../../types/content'
 import { contentTypeLabel, gradeLevelLabel } from '../../i18n/labels'
-import { getContentHtmlPath, IFRAME_SANDBOX_ATTRS } from '../../services/content/loader'
-import { createLocalContentUrl, getLocalContent, isLocalContentId } from '../../services/content/localContent'
 import { useContentStore } from '../../stores/content'
 
 // Props 정의
@@ -36,63 +35,17 @@ const typeLabel = computed(() => contentTypeLabel(props.content.type))
 // 학년 레벨 라벨
 const gradeLabel = computed(() => gradeLevelLabel(props.content.gradeLevel))
 
-// Start lesson scripts only when their card reaches the viewport; keep a started
-// preview mounted so scrolling back preserves its state.
-const thumbnailElement = ref<HTMLElement | null>(null)
-const previewActive = ref(false)
-let previewObserver: InstanceType<typeof window.IntersectionObserver> | undefined
-onMounted(() => {
-  if (typeof window.IntersectionObserver === 'undefined') {
-    previewActive.value = true
-    return
-  }
-  previewObserver = new window.IntersectionObserver((entries) => {
-    if (entries.some((entry) => entry.isIntersecting)) {
-      previewActive.value = true
-      previewObserver?.disconnect()
-    }
-  })
-  if (thumbnailElement.value) previewObserver.observe(thumbnailElement.value)
-})
-onUnmounted(() => previewObserver?.disconnect())
-
-// 콘텐츠 미리보기 URL
-const localPreviewUrl = ref('')
-const previewUrl = computed(() => isLocalContentId(props.content.id)
-  ? localPreviewUrl.value
-  : getContentHtmlPath(contentStore.getContentById(props.content.id) ?? props.content))
-watch([previewActive, () => props.content.id], async ([active, id], _previous, onCleanup) => {
-  if (!active || !isLocalContentId(id)) return
-  let disposed = false
-  let blobUrl = ''
-  onCleanup(() => {
-    disposed = true
-    if (blobUrl) URL.revokeObjectURL(blobUrl)
-    localPreviewUrl.value = ''
-  })
-  try {
-    const local = await getLocalContent(id)
-    if (!local || disposed) return
-    blobUrl = createLocalContentUrl(local)
-    localPreviewUrl.value = blobUrl
-  } catch {
-    // Missing or inaccessible local content keeps its card without a broken URL.
-  }
-})
+// Cards never execute lesson code. The full player opens only after selection.
+const imageFailed = ref(false)
+watch(() => props.content.thumbnail, () => { imageFailed.value = false })
 </script>
 
 <template>
   <router-link :to="`/content/${content.id}`" class="content-card" :class="subjectColorClass" @click="handleClick">
-    <div ref="thumbnailElement" class="card-thumbnail">
-      <div class="iframe-container">
-        <iframe
-          v-if="previewActive && previewUrl"
-          :src="previewUrl"
-          class="preview-iframe"
-          :sandbox="IFRAME_SANDBOX_ATTRS"
-          tabindex="-1"
-          aria-hidden="true"
-        ></iframe>
+    <div class="card-thumbnail">
+      <img v-if="content.thumbnail && !imageFailed" :src="revisionedContentUrl(content.thumbnail)" alt="" loading="lazy" decoding="async" class="thumbnail-image" @error="imageFailed = true" />
+      <div v-else class="thumbnail-fallback" aria-hidden="true">
+        <span>{{ gradeLabel }}</span><strong>{{ content.title }}</strong>
       </div>
       <div class="card-overlay">
         <span class="play-icon">▶</span>
@@ -145,32 +98,10 @@ watch([previewActive, () => props.content.id], async ([active, id], _previous, o
   background: var(--color-bg-secondary);
 }
 
-.iframe-container {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-}
-
-.preview-iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1280px; /* Base resolution width */
-  height: 720px; /* Base resolution height */
-  border: none;
-  /* Scale down from 1280x720 to 280x157.5 */
-  transform: scale(0.21875);
-  transform-origin: 0 0;
-  pointer-events: none; /* Disable interaction */
-  background-color: #fff;
-  opacity: 0.9;
-  transition: opacity var(--transition-normal);
-}
-
-.content-card:hover .preview-iframe {
-  opacity: 1;
-}
+.thumbnail-image { width: 100%; height: 100%; object-fit: cover; }
+.thumbnail-fallback { height: 100%; display: flex; flex-direction: column; justify-content: center; gap: .5rem; padding: 1.5rem 1.25rem 2.8rem; color: var(--color-text-primary); }
+.thumbnail-fallback span { font-size: .75rem; }
+.thumbnail-fallback strong { font-size: 1.3rem; line-height: 1.35; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 
 .card-overlay {
   position: absolute;

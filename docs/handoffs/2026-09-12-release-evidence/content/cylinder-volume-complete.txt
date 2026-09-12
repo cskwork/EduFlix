@@ -1,0 +1,23 @@
+[p1 "원기둥의 부피: 공간의 들이를 계산하자" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "원기둥의 부피: 공간의 들이를 계산하자"]
+root
+  progressindicator "학습 진행 상태"
+    text "5 / 5"
+  container
+    image
+    heading
+      text "탐험 완료!"
+    container
+      paragraph
+        text "오늘 배운 핵심 공식"
+      heading
+        text "원기둥의 부피"
+      container
+        text "부피 = 밑면적 × 높이"
+        text "(π × r × r × h)"
+      paragraph
+        text "일상 속 원기둥 모양 물건들의 부피도 계산해 보세요!"
+    container
+      button [ref=1]
+        text "다시 학습하기"
+      button [ref=2]
+        text "학습 완료"

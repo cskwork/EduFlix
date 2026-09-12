@@ -137,8 +137,11 @@ const ScienceApp = {
             // 상태에 따른 위치 조정
             if (this.temperature < 0) {
                 // 고체: 격자 형태로 정렬 시도
-                const targetY = 180;
-                mol.y += (targetY - mol.y) * 0.02;
+                const index = this.molecules.indexOf(mol);
+                const targetX = 60 + (index % 5) * 42;
+                const targetY = 55 + Math.floor(index / 5) * 40;
+                mol.x += (targetX - mol.x) * 0.5;
+                mol.y += (targetY - mol.y) * 0.5;
             }
         });
     },
@@ -233,9 +236,8 @@ const ScienceApp = {
 
     // 간격 텍스트
     getSpacingText() {
-        if (this.temperature < 0) return '매우 좁음';
-        if (this.temperature < 50) return '보통';
-        if (this.temperature < 100) return '넓음';
+        if (this.temperature < 0) return '규칙적인 배열 (얼음은 물보다 덜 조밀함)';
+        if (this.temperature < 100) return '서로 가까이 있으나 이동 가능';
         return '매우 넓음';
     },
 
@@ -269,7 +271,7 @@ const ScienceApp = {
             feedback.classList.remove('hidden', 'error');
             feedback.classList.add('success');
             feedbackIcon.textContent = '🎉';
-            feedbackText.textContent = '정답! 뚜껑을 닫으면 열이 빠져나가지 못해서 물 분자들이 더 빨리 움직이게 되고, 그래서 더 빨리 끓어요!';
+            feedbackText.textContent = '정답! 일반 냄비의 뚜껑은 증발과 대류로 빠져나가는 열을 줄여 같은 가열 조건에서 끓는점에 더 빨리 도달하도록 돕습니다. 열이 전혀 빠져나가지 않는 것은 아닙니다.';
             nextBtn.classList.remove('hidden');
             retryBtn.classList.add('hidden');
         } else {
@@ -283,7 +285,7 @@ const ScienceApp = {
             feedback.classList.remove('hidden', 'success');
             feedback.classList.add('error');
             feedbackIcon.textContent = '🤔';
-            feedbackText.textContent = '아쉬워요! 열이 빠져나가지 못하면 분자들이 더 빨리 움직여서 빨리 끓는 거예요. 다시 한번 생각해볼까요?';
+            feedbackText.textContent = '뚜껑을 덮으면 열 손실이 줄어듭니다. 이 모형은 대기압에서 물의 상태를 단순화하며, 끓는 동안 공급한 열은 주로 기화에 쓰입니다.';
             retryBtn.classList.remove('hidden');
             nextBtn.classList.remove('hidden');
         }

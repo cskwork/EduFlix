@@ -1,0 +1,86 @@
+{
+  "id": "equation-puzzle",
+  "title": "방정식 퍼즐",
+  "family": "classic",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": "방정식 2x + 4 = 10의 해는?",
+      "selected": "3",
+      "feedback": "정답입니다. 양변에서 4를 빼면 2x=6입니다. 양변을 2로 나누면 x=3이며 2×3+4=10으로 검산합니다."
+    },
+    {
+      "question": "3x = 21의 해는?",
+      "selected": "7",
+      "feedback": "정답입니다. 양변을 0이 아닌 3으로 나누면 x=7입니다. 3×7=21로 확인할 수 있습니다."
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#scene-hook button"
+    },
+    {
+      "click": "#scene-story button"
+    },
+    {
+      "fill": "#answer-input",
+      "value": 3
+    },
+    {
+      "click": "#check-btn"
+    },
+    {
+      "fill": "#answer-input",
+      "value": 3
+    },
+    {
+      "click": "#check-btn"
+    },
+    {
+      "fill": "#answer-input",
+      "value": 7
+    },
+    {
+      "click": "#check-btn"
+    },
+    {
+      "fill": "#answer-input",
+      "value": 5
+    },
+    {
+      "click": "#check-btn"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(3)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#scene-wrap button:first-child"
+    }
+  ],
+  "errors": [],
+  "activityObservation": {
+    "scene": "core",
+    "text": "저울 균형 맞추기\nx를 입력해 저울을 맞추세요. 답을 누르기 전에 양변에 적용한 연산을 말하고, 맞춘 뒤 원래 식에 대입해 확인하세요. 막히면 힌트를 활용하세요.\n5x = 25\n5x\n25\nx =  확인 힌트\n모든 자물쇠가 풀렸습니다!\n다음",
+    "errors": []
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "🎉 완료!\n\n오늘 배운 내용\n\n방정식 퍼즐\n\n2x−4=10을 풀 때 왜 한쪽에만 4를 더하면 안 될까요? 같은 무게의 저울에 빗대어 설명하세요.\n\n다시하기\n홈으로",
+    "errors": []
+  }
+}

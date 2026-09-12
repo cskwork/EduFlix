@@ -1,0 +1,30 @@
+[p1 "시간 여행 자산 시뮬레이터: 30년 뒤 나의 지갑은?" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "시간 여행 자산 시뮬레이터: 30년 뒤 나의 지갑은?"]
+root
+  progressindicator "학습 진행도"
+    container
+      text "1"
+      text "2"
+      text "3"
+      text "4"
+      text "5"
+  container
+    region "오늘의 학습 목표"
+      paragraph
+        text "[오늘의 학습 목표]"
+      paragraph
+        text "같은 가상 원금과 수익률에서 공제 시점이 복리 결과에 미치는 차이를 식으로 설명할 수 있습니다. 이 모형의 수치는 실제 IRP 세율·한도나 미래 수익�..."
+    container
+      heading
+        text "30년 뒤 미래의 나의 지갑은 어떤 모습일까요?"
+      paragraph
+        text "두 지갑을 클릭하여 안을 확인해 보세요!"
+    container
+      button "텅 빈 지갑 클릭" [ref=1, loc=css:button[aria-label="텅 빈 지갑 클릭"]]
+        svg_root "비어있음..."
+          text "비어있음..."
+      button "가득 찬 지갑 클릭" [ref=2, loc=css:button[aria-label="가득 찬 지갑 클릭"]]
+        svg_root "₩ ₩"
+          text "₩"
+          text "₩"
+    button [ref=3]
+      text "미래로 떠나기"

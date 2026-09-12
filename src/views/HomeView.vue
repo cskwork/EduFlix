@@ -7,10 +7,11 @@ import ContentRow from '../components/home/ContentRow.vue'
 import LoadingSpinner from '../components/common/LoadingSpinner.vue'
 import ErrorMessage from '../components/common/ErrorMessage.vue'
 import EmptyState from '../components/common/EmptyState.vue'
-import { isSubjectSlug, type Subject } from '../types/content'
+import { isSubjectSlug, type Subject, type GradeLevel } from '../types/content'
 import { useI18n } from '../i18n'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const say = (ko: string, en: string) => locale.value === 'ko' ? ko : en
 
 // 콘텐츠 스토어 사용
 const contentStore = useContentStore()
@@ -164,6 +165,11 @@ async function clearRecommendations() {
       </div>
     </section>
 
+    <section class="classroom-tools">
+      <div><h2>{{ say('우리 수업에 맞는 자료', 'Find lessons for your learners') }}</h2><router-link to="/studio">{{ say('수업 작업실에서 자료 만들기', 'Create materials in Lesson studio') }}</router-link></div>
+      <label>{{ say('학교급', 'School level') }}<select :value="contentStore.selectedGradeLevel ?? ''" @change="contentStore.setGradeLevelFilter((($event.target as HTMLSelectElement).value || null) as GradeLevel | null)"><option value="">{{ say('전체', 'All levels') }}</option><option value="elementary">{{ say('초등학교', 'Elementary') }}</option><option value="middle">{{ say('중학교', 'Middle school') }}</option><option value="high">{{ say('고등학교', 'High school') }}</option></select></label>
+    </section>
+
     <!-- 로딩 상태 -->
     <LoadingSpinner
       v-if="contentStore.isLoading"
@@ -231,6 +237,11 @@ async function clearRecommendations() {
 </template>
 
 <style scoped>
+.classroom-tools { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin:1.5rem var(--content-padding); padding:1.5rem 0; border-bottom:1px solid #d8d1e3; }
+.classroom-tools h2 { font-size:1.4rem; margin:0 0 .6rem; }
+.classroom-tools a { color:var(--color-brand-primary); text-decoration:underline; text-underline-offset:3px; }
+.classroom-tools label { display:flex; align-items:center; gap:.8rem; }
+.classroom-tools select { min-height:44px; padding:.6rem; font:inherit; font-size:1rem; border:1px solid #b9adcb; border-radius:8px; background:var(--color-bg-card); color:var(--color-text-primary); }
 .home-view {
   min-height: 100%;
   padding-bottom: 50px;

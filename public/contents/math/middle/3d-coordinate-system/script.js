@@ -64,7 +64,7 @@ class EduFlixEngine {
                 <div class="hook-content">
                     <div class="question-box">
                         <h1 class="hook-question">${question}</h1>
-                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}<p class="scene-text">학습 목표: ${this.data.objective}</p>
                     </div>
                     ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
                     <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
@@ -75,7 +75,7 @@ class EduFlixEngine {
 
         this.createScene('story', (scene) => {
             const { character, situation } = this.data.story;
-            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
+            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}<br><br>${this.data.workedExample}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
         });
 
         this.createScene('core', (scene) => {
@@ -89,7 +89,7 @@ class EduFlixEngine {
         }
 
         this.createScene('wrap', (scene) => {
-            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
+            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3><p class="scene-text">${this.data.reflection}</p></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
         });
     }
 
@@ -127,31 +127,46 @@ class EduFlixEngine {
         if(btn) { btn.style.display = 'inline-block'; btn.classList.add('animate-fade-in'); }
     }
 
-    startQuiz() {
-        const q = this.data.quiz[0];
-        document.getElementById('quiz-question').textContent = q.question;
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = '';
-        q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
-            optsContainer.appendChild(btn);
+    startQuiz(index = 0) {
+        this.quizIndex = index;
+        const q = this.data.quiz[index];
+        const question = document.getElementById('quiz-question');
+        question.textContent = `${index + 1} / ${this.data.quiz.length} · ${q.question}`;
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        q.options.forEach((option, selected) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quiz-option';
+            button.textContent = option;
+            button.onclick = () => this.checkQuiz(selected, q.answer, button);
+            container.appendChild(button);
         });
+        const feedback = document.createElement('p');
+        feedback.id = 'quiz-explanation';
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        container.appendChild(feedback);
     }
 
-    checkQuiz(selectedIdx, correctIdx, btnElement) {
-        const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+    checkQuiz(selected, answer, button) {
+        const container = document.getElementById('quiz-options');
+        const options = container.querySelectorAll('.quiz-option');
+        if (button.disabled) return;
+        options.forEach(option => { option.disabled = true; });
+        button.classList.add(selected === answer ? 'correct' : 'incorrect');
+        options[answer].classList.add('correct');
+        document.getElementById('quiz-explanation').textContent =
+            (selected === answer ? '정답입니다. ' : '답을 비교해 보세요. ') + this.data.quiz[this.quizIndex].explanation;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '해설을 읽었어요 · 다음 문항' : '해설을 읽었어요 · 정리하기';
+        next.onclick = () => {
+            if (this.quizIndex + 1 < this.data.quiz.length) this.startQuiz(this.quizIndex + 1);
+            else this.nextScene();
+        };
+        container.appendChild(next);
     }
 }
 
@@ -166,6 +181,9 @@ window.Engine = new EduFlixEngine();
  */
 
 const droneData = {
+    objective: "순서가 있는 세 좌표로 위치를 지정하고 한 성분 변화의 의미를 설명해요.",
+    workedExample: "좌표 (2,3,5)는 원점에서 정한 x, y, z 방향의 성분이 차례로 2,3,5라는 뜻입니다. (2,3,5)와 (3,2,5)는 서로 다른 위치입니다. 축의 양의 방향은 화면의 축 이름과 화살표로 확인하세요.",
+    reflection: "(2,3,5)에서 (2,3,2)로 가려면 어느 성분을 얼마나 바꿔야 할까요? 시점을 바꾸는 일과 드론을 옮기는 일을 구별해 설명하세요.",
     title: "3D 좌표계: 드론 파일럿",
     hook: {
         question: "드론이 3D 공간을 자유롭게 날아다니려면 어떤 정보가 필요할까요?",
@@ -214,7 +232,7 @@ const droneData = {
     },
     interaction: {
         title: "드론 비행 시뮬레이션",
-        instruction: "x, y, z 좌표를 입력하고 '비행!' 버튼을 눌러 드론을 목표 지점으로 보내세요!",
+        instruction: "목표의 x,y,z를 차례로 입력해 비행하세요. 한 축 값만 1 바꾸어 드론의 이동 방향을 관찰한 뒤 목표로 돌아오세요. 화면을 돌려도 좌표가 바뀌는지 확인하세요.",
         onInit: (container, engine) => {
             // 미션 목표
             const missions = [
@@ -548,11 +566,26 @@ const droneData = {
     },
     quiz: [
         {
-            question: "3D 공간에서 점 A(2, 3, 5)는 어떤 축을 따라 5만큼 떨어져 있나요?",
-            options: ["z축", "x축", "y축", "원점"],
-            answer: 0
+                "question": "점 A(2,3,5)의 z좌표는?",
+                "options": [
+                        "5",
+                        "2",
+                        "3"
+                ],
+                "answer": 0,
+                "explanation": "세 좌표는 x,y,z 순서입니다. 세 번째 성분 5가 z좌표이며 원점까지의 전체 거리를 뜻하지는 않습니다."
+        },
+        {
+                "question": "(2,3,5)에서 z좌표만 3 줄이면?",
+                "options": [
+                        "(−1,3,5)",
+                        "(2,0,5)",
+                        "(2,3,2)"
+                ],
+                "answer": 2,
+                "explanation": "x와 y를 유지하고 z에서 3을 빼므로 (2,3,2)입니다."
         }
-    ]
+]
 };
 
 Engine.init(droneData);

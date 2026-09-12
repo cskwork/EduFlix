@@ -1,0 +1,13 @@
+{
+  "before": {
+    "focus": false,
+    "visibility": "visible",
+    "url": "http://127.0.0.1:5173/contents/science/elementary/animal-adaptation-game/index.html"
+  },
+  "after": {
+    "focus": true,
+    "visibility": "visible",
+    "frames": 75,
+    "elapsed": 2500.5
+  }
+}

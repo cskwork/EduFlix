@@ -1,0 +1,13 @@
+{
+  "id": "decimal-multiplication",
+  "browser": "Chrome CUA tab1815027663",
+  "url": "http://127.0.0.1:5173",
+  "frontDoor": true,
+  "activity": "0.8 and1.2 actual spinbox input gives0.96 after simulation",
+  "quiz": "0.96 correct",
+  "completion": true,
+  "reset": true,
+  "method": "Documented Playwright user clicks and keys, DOM snapshots. No state setters.",
+  "errors": "not separately collected",
+  "fix": null
+}

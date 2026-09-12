@@ -149,7 +149,7 @@ class HookScene extends CyberScene {
             fontFamily: 'Orbitron', fontSize: '36px', color: '#0ea5e9', fontStyle: '900', shadow: { blur: 10, color: '#0ea5e9', fill: true }
         }).setOrigin(0.5);
 
-        this.add.text(300, 140, '어느 쪽의 에너지 용량이 더 클까?', {
+        this.add.text(300, 140, '목표: 원의 넓이를 구해 두 원의 양을 비교해요.', {
             fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#94a3b8'
         }).setOrigin(0.5);
 
@@ -288,7 +288,7 @@ class CoreScene extends CyberScene {
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
         this.createHeader('CORE VISUALIZATION MODE');
 
-        this.add.text(300, 100, '코어를 여러 개의 부채꼴로 잘라서 펼쳐보자.', {
+        this.add.text(300, 100, '조각 수를 늘려 펼친 모양과 직사각형을 비교하세요.', {
             fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#94a3b8'
         }).setOrigin(0.5);
 
@@ -388,7 +388,7 @@ class CoreScene extends CyberScene {
             this.btnNext.setPosition(400, 520);
             
             // 설명 텍스트 표시
-            this.explText = this.add.text(300, 430, '직사각형과 거의 비슷한 모양이 되었죠?', {
+            this.explText = this.add.text(300, 430, '조각이 많아질수록 굽은 경계가 직선에 가까워져요.', {
                 fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#10b981', fontStyle: 'bold'
             }).setOrigin(0.5);
         });
@@ -483,6 +483,7 @@ class VisualizeScene extends CyberScene {
 class QuizScene extends CyberScene {
     constructor() { super('QuizScene'); }
     create() {
+        this.answerComplete = false;
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
         this.createHeader('TARGET DECRYPTION');
 
@@ -516,14 +517,16 @@ class QuizScene extends CyberScene {
             this.createButton(bx, 450, opt.text, 140, 50, () => this.checkAnswer(opt.val, bx, 450));
         });
 
-        this.feedback = this.add.text(300, 530, '', { fontFamily: 'Noto Sans KR', fontSize: '22px', fontStyle: 'bold' }).setOrigin(0.5);
+        this.feedback = this.add.text(300, 530, '', { fontFamily: 'Noto Sans KR', fontSize: '16px', wordWrap: { width: 550 }, align: 'center', fontStyle: 'bold' }).setOrigin(0.5);
 
         this.cameras.main.fadeIn(500, 0, 0, 0);
     }
 
     checkAnswer(isCorrect, x, y) {
+        if (this.answerComplete) return;
         if (isCorrect) {
-            this.feedback.setText('DECRYPTION SUCCESS!').setColor('#10b981');
+            this.answerComplete = true;
+            this.feedback.setText('정답! 3.14×10² = 314cm²').setColor('#10b981');
             this.cameras.main.flash(500, 16, 185, 129); // success flash
             
             // 파티클 터지는 효과
@@ -540,12 +543,9 @@ class QuizScene extends CyberScene {
                 });
             }
 
-            this.time.delayedCall(1500, () => {
-                this.cameras.main.fadeOut(300, 0, 0, 0);
-                this.time.delayedCall(300, () => this.scene.start('WrapScene'));
-            });
+            this.createButton(300, 575, '해설 확인 · 정리', 240, 38, () => this.scene.start('WrapScene'));
         } else {
-            this.feedback.setText('ACCESS DENIED. 넓이(S) = π × r × r').setColor('#f43f5e');
+            this.feedback.setText('반지름을 제곱해요. 3.14×100=314cm²').setColor('#f43f5e');
             this.cameras.main.shake(200, 0.01);
         }
     }
@@ -564,7 +564,7 @@ class WrapScene extends CyberScene {
         UI.drawCyberBox(box, 50, 100, 500, 200, COLORS.bgSecondary, 0.8, COLORS.primary);
         
         this.add.text(300, 130, '[ SYSTEM LOG: 원의 넓이 확보 ]', { fontFamily: 'Noto Sans KR', fontSize: '18px', color: '#0ea5e9', fontStyle: 'bold' }).setOrigin(0.5);
-        this.add.text(100, 170, '▶ 원을 잘라 펼치면 직사각형이 된다.\n▶ 직사각형의 가로는 (원주의 절반), 세로는 (반지름)\n▶ S = π r²', {
+        this.add.text(100, 170, '▶ 조각 수를 늘리면 직사각형 모양에 가까워진다.\n▶ 직사각형의 가로는 (원주의 절반), 세로는 (반지름)\n▶ S = π r²', {
             fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#ffffff', lineSpacing: 10
         });
 
@@ -576,11 +576,11 @@ class WrapScene extends CyberScene {
         uiLine.lineStyle(1, COLORS.textSecondary, 0.5);
         uiLine.strokeRect(80, 380, 440, 100);
 
-        this.add.text(180, 410, '지름 30cm (1개)\n= 706.5', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#38bdf8', align: 'center' }).setOrigin(0.5);
+        this.add.text(180, 410, '지름 30cm (1개)\n= 706.5cm²', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#38bdf8', align: 'center' }).setOrigin(0.5);
         this.add.text(300, 410, '>', { fontFamily: 'Orbitron', fontSize: '24px', color: '#fcd34d' }).setOrigin(0.5);
-        this.add.text(420, 410, '지름 20cm (2개)\n= 314 × 2 = 628', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#e879f9', align: 'center' }).setOrigin(0.5);
+        this.add.text(420, 410, '지름 20cm (2개)\n= 314 × 2 = 628cm²', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#e879f9', align: 'center' }).setOrigin(0.5);
 
-        this.add.text(300, 450, '지름 30cm 코어 하나가 훨씬 에너지가 큽니다.', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#10b981' }).setOrigin(0.5);
+        this.add.text(300, 450, '반지름을 2배로 하면 넓이는 몇 배일까요?', { fontFamily: 'Noto Sans KR', fontSize: '16px', color: '#10b981' }).setOrigin(0.5);
 
         // 다시하기
         this.createButton(300, 530, '시스템 재부팅', 200, 50, () => {

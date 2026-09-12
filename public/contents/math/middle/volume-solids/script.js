@@ -12,13 +12,13 @@ const SOLIDS_DATA = {
     cone: { 
         name: '원뿔', 
         formula: '⅓πr²h',
-        description: '원기둥의 1/3',
+        description: '같은 밑면과 높이를 가진 원기둥 부피의 1/3',
         color: 0xFDCB6E
     },
     sphere: { 
         name: '구', 
         formula: '⁴⁄₃πr³',
-        description: '모든 점이 중심에서 같은 거리',
+        description: '표면의 모든 점이 중심에서 같은 거리',
         color: 0x00CEC9
     }
 };
@@ -384,6 +384,7 @@ class VolumeSolidsApp {
             m.visible = false;
         });
         
+        this.currentQuiz = 0;
         this.loadQuiz(this.currentQuiz);
         this.camera.position.set(0, 3, 8);
         this.controls.autoRotate = true;
@@ -417,6 +418,7 @@ class VolumeSolidsApp {
     }
 
     switchSolid(solidName) {
+        clearInterval(this.waterTimer);
         Object.values(this.solidMeshes).forEach(m => {
             m.visible = false;
             m.scale.set(1, 1, 1);
@@ -443,7 +445,8 @@ class VolumeSolidsApp {
         this.waterMesh.visible = true;
         this.waterLevel = 0;
         
-        const fillInterval = setInterval(() => {
+        clearInterval(this.waterTimer);
+        const fillInterval = this.waterTimer = setInterval(() => {
             this.waterLevel += 0.02;
             if (this.waterLevel >= 1) {
                 this.waterLevel = 1;
@@ -451,7 +454,7 @@ class VolumeSolidsApp {
             }
             
             const height = this.waterLevel * 2.9;
-            this.waterMesh.scale.y = Math.max(height, 0.1);
+            this.waterMesh.scale.y = Math.max(height / 0.1, 0.001);
             this.waterMesh.position.y = -1.5 + height / 2;
         }, 30);
     }
@@ -460,7 +463,8 @@ class VolumeSolidsApp {
         // 물 붓기 애니메이션 (시각적 효과)
         if (this.waterLevel <= 0) return;
         
-        const pourInterval = setInterval(() => {
+        clearInterval(this.waterTimer);
+        const pourInterval = this.waterTimer = setInterval(() => {
             this.waterLevel -= 0.03;
             if (this.waterLevel <= 0) {
                 this.waterLevel = 0;
@@ -469,23 +473,17 @@ class VolumeSolidsApp {
             }
             
             const height = this.waterLevel * 2.9;
-            this.waterMesh.scale.y = Math.max(height, 0.1);
+            this.waterMesh.scale.y = Math.max(height / 0.1, 0.001);
             this.waterMesh.position.y = -1.5 + height / 2;
         }, 30);
     }
 
     toggleSlice() {
-        // 단면 보기 (투명도 조절)
+        // Toggle opacity on the selected group or mesh, including the sphere itself.
         const mesh = this.solidMeshes[this.currentSolid];
-        if (mesh.children) {
-            mesh.children.forEach(child => {
-                if (child.material) {
-                    child.material.opacity = child.material.opacity > 0.3 ? 0.15 : 0.4;
-                }
-            });
-        } else if (mesh.material) {
-            mesh.material.opacity = mesh.material.opacity > 0.3 ? 0.15 : 0.4;
-        }
+        mesh.traverse(child => {
+            if (child.material) child.material.opacity = child.material.opacity > 0.3 ? 0.15 : 0.4;
+        });
     }
 
     loadQuiz(index) {
@@ -518,6 +516,7 @@ class VolumeSolidsApp {
     }
 
     checkQuizAnswer(e) {
+        if (e.target.disabled) return;
         const selected = e.target.dataset.answer;
         const quiz = QUIZ_DATA[this.currentQuiz];
         const feedback = document.getElementById('quiz-feedback');
@@ -541,14 +540,17 @@ class VolumeSolidsApp {
         
         feedback.classList.remove('hidden');
         
-        setTimeout(() => {
+        const next = document.createElement('button');
+        next.className = 'action-btn';
+        next.textContent = '해설을 읽었어요 · 다음';
+        next.onclick = () => {
+            next.remove();
             this.currentQuiz++;
-            if (this.currentQuiz < QUIZ_DATA.length) {
-                this.loadQuiz(this.currentQuiz);
-            } else {
-                this.nextScene();
-            }
-        }, 2500);
+            if (this.currentQuiz < QUIZ_DATA.length) this.loadQuiz(this.currentQuiz);
+            else this.nextScene();
+        };
+        feedback.appendChild(document.createElement('br'));
+        feedback.appendChild(next);
     }
 
     enterFreeExplore() {

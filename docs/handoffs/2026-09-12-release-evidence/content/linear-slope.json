@@ -1,0 +1,66 @@
+{
+  "id": "linear-slope",
+  "title": "일차함수와 기울기",
+  "family": "classic",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": "y = 2x + 1의 기울기는?",
+      "selected": "2",
+      "feedback": "정답입니다. x가 1 증가할 때 y는 2 증가하므로 기울기는 2입니다. 상수항 1은 y절편입니다."
+    },
+    {
+      "question": "x가 2 증가할 때 y가 6 감소하는 직선의 기울기는?",
+      "selected": "−3",
+      "feedback": "정답입니다. 기울기는 y의 변화량을 x의 변화량으로 나눈 값입니다. −6÷2=−3입니다."
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#scene-hook button"
+    },
+    {
+      "click": "#scene-story button"
+    },
+    {
+      "drag": "#control-point",
+      "dx": 30,
+      "dy": 30
+    },
+    {
+      "click": "#check-slope-btn"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#scene-wrap button:first-child"
+    }
+  ],
+  "errors": [],
+  "activityObservation": {
+    "scene": "core",
+    "text": "기울기 실험실\n파란 점을 움직여 상승하는 직선과 하강하는 직선을 만드세요. 두 점의 가로 변화량과 세로 변화량을 기록해 비를 구하세요. 가로 변화량이 0인 수직선에서는 이 비를 정의할 수 없습니다.\n2\n3\n기울기(a) = 세로증가량 / 가로증가량\ny = 2/3 ≈ 0.67x\n확인\n기울기(a)는 y증가량 / x증가량 입니다. 스키장의 경사도와 같죠!\n다음",
+    "errors": []
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "🎉 완료!\n\n오늘 배운 내용\n\n일차함수와 기울기\n\n기울기가 같은 두 직선의 y절편만 다르면 어떤 관계일까요? y=2x+1과 y=2x−3에서 같은 x 두 개를 골라 비교하세요.\n\n다시하기\n홈으로",
+    "errors": []
+  }
+}

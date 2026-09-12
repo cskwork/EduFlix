@@ -1,0 +1,66 @@
+[p1 "함수 탐험가 3D | 동아출판 중학 수학" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "함수 탐험가 3D | 동아출판 중학 수학"]
+root
+  container
+    container
+      text "📈"
+      text "레벨"
+      text "1"
+    container
+      text "⭐"
+      text "점수"
+      text "0"
+    container
+      text "✅"
+      text "정답"
+      text "0"
+  container
+    heading
+      text "📊 함수 유형"
+    button [ref=1]
+      text "📈"
+      text "일차함수 y = ax + b"
+    button [ref=2]
+      text "🎯"
+      text "함숫값 구하기"
+    button [ref=3]
+      text "📐"
+      text "기울기 구하기"
+    button [ref=4]
+      text "🔵"
+      text "y절편 구하기"
+  container
+    heading
+      text "📉 그래프"
+    svg_root "x y"
+      text "x"
+      text "y"
+    text "y = 2x + 1"
+    container
+      container
+        text "기울기 (a):"
+        text "2"
+      spinbutton [ref=5]
+    container
+      container
+        text "y절편 (b):"
+        text "1"
+      spinbutton [ref=6]
+  container
+    container
+      text "y = 2x + 1일 때, x = 3이면 y의 값은?"
+      container
+        text "y ="
+        spinbutton [ref=7, loc=css:input[placeholder="?"]]
+          text "?"
+    container
+      button [ref=8]
+        text "💡 힌트"
+      button [ref=9]
+        text "✓ 제출"
+  container
+    heading
+      text "📈 함수 탐험가 3D"
+    paragraph
+      text "y = 2x + 1에서 x가 1 늘면 y는 2 늘고, x = 0일 때 y는 1이에요. 기울기만 바꾸었을 때와 y절편만 바꾸었을 때 그래프가 어떻게 달라지는지 비교해 보세요."
+    button [ref=10]
+      text "탐험 시작! 🚀"

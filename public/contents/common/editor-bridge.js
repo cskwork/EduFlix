@@ -22,6 +22,7 @@
 
   // 텍스트 추출 선택자 목록
   const TEXT_SELECTORS = [
+    { selector: '[data-editable]', type: 'instruction', label: '학습 내용' },
     { selector: 'h1.main-title, .question-box h1', type: 'title', label: '메인 제목' },
     { selector: '.sub-text, .question-box p', type: 'description', label: '설명 텍스트' },
     { selector: 'h2', type: 'title', label: '섹션 제목' },
@@ -37,13 +38,16 @@
   function extractTexts() {
     const texts = [];
     let idCounter = 0;
+    const seen = new Set();
 
     TEXT_SELECTORS.forEach(({ selector, type, label }) => {
       const elements = document.querySelectorAll(selector);
       elements.forEach((el, index) => {
         // 빈 텍스트나 스크립트로 채워지는 요소는 건너뛰기
         const text = el.textContent?.trim();
-        if (!text || el.id === 'typewriter-text') return;
+        if (!text || el.id === 'typewriter-text' || seen.has(el)) return;
+        if (el.hasAttribute('data-editable') && el.children.length) return;
+        seen.add(el);
 
         // 상위 씬 찾기
         const scene = el.closest('.scene');

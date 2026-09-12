@@ -773,6 +773,7 @@ class QuizScene extends CyberScene {
     }
 
     showQuiz() {
+        this.quizAnswered = false;
         this.children.removeAll();
         this.add.rectangle(300, 300, 600, 600, COLORS.bgPrimary);
 
@@ -802,6 +803,8 @@ class QuizScene extends CyberScene {
     }
 
     checkQuizAnswer(selected, correct) {
+        if (this.quizAnswered) return;
+        this.quizAnswered = true;
         if (selected === correct) {
             this.quizCorrect++;
             this.showFeedback(true, 'ACCESS GRANTED');
@@ -881,7 +884,7 @@ class WrapScene extends CyberScene {
         const summary = this.add.graphics();
         UI.drawCyberBox(summary, 60, 360, 480, 100, COLORS.bgCard, 0.8, COLORS.primary);
 
-        this.add.text(300, 410, '[ 데이터 해제 완료 ]\n> (x, y) 순서로 좌표 해독\n> 원점 (0,0)과 4개의 사분면 통제권 확보', {
+        this.add.text(300, 410, '[ 데이터 해제 완료 ]\n> (x, y)는 가로 먼저, 세로 다음\n> (3, -2)는 오른쪽 3칸, 아래 2칸', {
             fontFamily: 'Noto Sans KR', fontSize: '15px', color: '#94a3b8', align: 'center', lineSpacing: 6
         }).setOrigin(0.5);
 

@@ -59,7 +59,7 @@ const ContentApp = {
             this.drawRuler();
         });
 
-        document.getElementById('throw-btn').addEventListener('click', () => this.playGame());
+        document.getElementById('throw-btn').onclick = () => this.playGame();
     },
 
     initQuizScene() {
@@ -123,8 +123,8 @@ const ContentApp = {
 
     playGame() {
         // Generate random hit between 0 and 1
-        const hit = Math.random();
-        const difference = Math.abs(this.target - hit);
+        const hit = Math.round(Math.random() * 1000) / 1000;
+        const difference = Math.abs(Math.round(this.target * 1000) - Math.round(hit * 1000)) / 1000;
         const isSuccess = difference <= this.epsilon;
 
         // Visual feedback

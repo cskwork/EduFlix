@@ -64,7 +64,7 @@ class EduFlixEngine {
                 <div class="hook-content">
                     <div class="question-box">
                         <h1 class="hook-question">${question}</h1>
-                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}<p class="scene-text">학습 목표: ${this.data.objective}</p>
                     </div>
                     ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
                     <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
@@ -75,7 +75,7 @@ class EduFlixEngine {
 
         this.createScene('story', (scene) => {
             const { character, situation } = this.data.story;
-            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
+            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}<br><br>${this.data.workedExample}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
         });
 
         this.createScene('core', (scene) => {
@@ -89,7 +89,7 @@ class EduFlixEngine {
         }
 
         this.createScene('wrap', (scene) => {
-            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
+            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3><p class="scene-text">${this.data.reflection}</p></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
         });
     }
 
@@ -127,31 +127,46 @@ class EduFlixEngine {
         if(btn) { btn.style.display = 'inline-block'; btn.classList.add('animate-fade-in'); }
     }
 
-    startQuiz() {
-        const q = this.data.quiz[0];
-        document.getElementById('quiz-question').textContent = q.question;
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = '';
-        q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
-            optsContainer.appendChild(btn);
+    startQuiz(index = 0) {
+        this.quizIndex = index;
+        const q = this.data.quiz[index];
+        const question = document.getElementById('quiz-question');
+        question.textContent = `${index + 1} / ${this.data.quiz.length} · ${q.question}`;
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        q.options.forEach((option, selected) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quiz-option';
+            button.textContent = option;
+            button.onclick = () => this.checkQuiz(selected, q.answer, button);
+            container.appendChild(button);
         });
+        const feedback = document.createElement('p');
+        feedback.id = 'quiz-explanation';
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        container.appendChild(feedback);
     }
 
-    checkQuiz(selectedIdx, correctIdx, btnElement) {
-        const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+    checkQuiz(selected, answer, button) {
+        const container = document.getElementById('quiz-options');
+        const options = container.querySelectorAll('.quiz-option');
+        if (button.disabled) return;
+        options.forEach(option => { option.disabled = true; });
+        button.classList.add(selected === answer ? 'correct' : 'incorrect');
+        options[answer].classList.add('correct');
+        document.getElementById('quiz-explanation').textContent =
+            (selected === answer ? '정답입니다. ' : '답을 비교해 보세요. ') + this.data.quiz[this.quizIndex].explanation;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '해설을 읽었어요 · 다음 문항' : '해설을 읽었어요 · 정리하기';
+        next.onclick = () => {
+            if (this.quizIndex + 1 < this.data.quiz.length) this.startQuiz(this.quizIndex + 1);
+            else this.nextScene();
+        };
+        container.appendChild(next);
     }
 }
 
@@ -165,6 +180,9 @@ window.Engine = new EduFlixEngine();
  */
 
 const negativeData = {
+    objective: "수직선 이동으로 정수의 덧셈과 뺄셈을 설명해요.",
+    workedExample: "−3+5는 −3에서 오른쪽으로 5칸 이동하여 2입니다. −3−(−5)는 −3+(+5)와 같아 역시 2입니다. 어떤 수를 빼는 것은 그 수의 반대수를 더하는 것입니다.",
+    reflection: "온도가 −3℃에서 5℃ 올라간 경우와 5℃ 내려간 경우를 각각 식으로 쓰고 결과를 설명하세요.",
     title: "정수의 덧셈과 뺄셈",
     hook: {
         question: "용돈 5000원에서 7000원을 쓰면 어떻게 될까요?",
@@ -217,7 +235,7 @@ const negativeData = {
     },
     interaction: {
         title: "수직선 탐험",
-        instruction: "숫자를 입력하고 '이동' 버튼을 눌러보세요.",
+        instruction: "0에서 더하기 −3으로 출발점을 만드세요. 이어 더하기 5를 해 보세요. 초기화한 뒤 다시 −3으로 가서 빼기 −5를 해 보고 두 도착점을 비교하세요. 마지막에는 −3에서 빼기 5를 시험하세요.",
         onInit: (container, engine) => {
             // State
             let currentPos = 0;
@@ -226,7 +244,7 @@ const negativeData = {
             
             container.innerHTML = `
                 <div class="equation-display">
-                    0 <span id="op-display"></span> <span id="num-display"></span> = <span id="result-display">0</span>
+                    <span id="start-display">0</span> <span id="op-display"></span> <span id="num-display"></span> = <span id="result-display">0</span>
                 </div>
                 
                 <div class="number-line-container">
@@ -278,23 +296,24 @@ const negativeData = {
                 const percent = (pos - min) * step;
                 penguin.style.transition = "left 1s cubic-bezier(0.25, 1, 0.5, 1)";
                 penguin.style.left = `${percent}%`;
-                resultDisplay.textContent = pos;
+                resultDisplay.textContent = String(pos);
                 
-                // Check Bounds
-                if (pos < min || pos > max) {
-                    engine.showFeedback("수직선을 벗어났어요! 다시 돌아옵니다.", "neutral");
-                    setTimeout(() => updatePenguin(Math.max(min, Math.min(max, pos))), 1000);
-                }
+
             };
             
             moveBtn.onclick = () => {
-                const val = parseInt(inputNum.value);
+                const val = Number(inputNum.value);
                 const op = opSelect.value;
-                if(isNaN(val)) return;
+                if (!inputNum.value.trim() || !Number.isInteger(val) || val < -10 || val > 10) { engine.showFeedback('−10부터 10까지 정수를 입력하세요.', 'negative'); return; }
                 
                 let moveAmount = val;
                 if(op === '-') moveAmount = -val;
                 
+                if (currentPos + moveAmount < min || currentPos + moveAmount > max) {
+                    engine.showFeedback(`계산 결과는 ${currentPos + moveAmount}입니다. 이 화면의 범위는 −10~10이므로 초기화하거나 다른 수를 선택하세요.`, 'neutral');
+                    return;
+                }
+                container.querySelector('#start-display').textContent = currentPos;
                 opDisplay.textContent = op;
                 numDisplay.textContent = val >= 0 ? val : `(${val})`;
                 
@@ -302,21 +321,15 @@ const negativeData = {
                 currentPos += moveAmount;
                 updatePenguin(currentPos);
                 
-                let feedbackText = "";
-                if(op === '+' && val > 0) feedbackText = "오른쪽으로 이동!";
-                else if(op === '-' && val > 0) feedbackText = "왼쪽으로 이동!";
-                else if(op === '-' && val < 0) feedbackText = "빼기의 빼기는... 반대로 뒤돌아서 뒤로 가니까 오른쪽!";
-                
-                engine.showFeedback(feedbackText, "neutral");
-                
-                if(currentPos === -3 || currentPos === 7) { 
-                     // Just a random check to finish
-                     // engine.enableNext(); 
-                }
+                const direction = moveAmount > 0 ? '오른쪽' : moveAmount < 0 ? '왼쪽' : '제자리';
+                engine.showFeedback(`${direction}으로 ${Math.abs(moveAmount)}칸. 현재 위치는 ${currentPos}입니다. 빼기는 반대수를 더하는 것과 같습니다.`, 'neutral');
+                moveCount++;
+                if (moveCount >= 3) engine.enableNext();
             };
 
             resetBtn.onclick = () => {
                 currentPos = 0;
+                container.querySelector('#start-display').textContent = '0';
                 opDisplay.textContent = "";
                 numDisplay.textContent = "";
                 resultDisplay.textContent = "0";
@@ -325,19 +338,32 @@ const negativeData = {
             
             // Allow completion after a few moves
             let moveCount = 0;
-            moveBtn.addEventListener('click', () => {
-                moveCount++;
-                if(moveCount >= 3) engine.enableNext();
-            });
+
         }
     },
     quiz: [
         {
-            question: "(-3) - (-5) 의 결과는 무엇일까요?",
-            options: ["-8", "-2", "2", "8"],
-            answer: 2 // 2
+                "question": "(−3) − (−5)의 결과는?",
+                "options": [
+                        "−8",
+                        "−2",
+                        "2",
+                        "8"
+                ],
+                "answer": 2,
+                "explanation": "음수 −5를 빼면 반대수 +5를 더합니다. −3+5=2입니다."
+        },
+        {
+                "question": "−3 − 5를 수직선으로 설명하면?",
+                "options": [
+                        "−3에서 오른쪽으로 5칸",
+                        "−3에서 왼쪽으로 5칸",
+                        "5에서 오른쪽으로 3칸"
+                ],
+                "answer": 1,
+                "explanation": "양수 5를 빼므로 출발점 −3에서 왼쪽으로 5칸 이동하여 −8에 도착합니다."
         }
-    ]
+]
 };
 
 Engine.init(negativeData);

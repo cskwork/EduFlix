@@ -2,6 +2,7 @@
 // iframe 샌드박스 콘텐츠 뷰어
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { IFRAME_SANDBOX_ATTRS, IFRAME_ALLOW_ATTRS } from '../../services/content/loader'
+import { revisionedContentUrl } from '../../services/content/revision'
 import { useI18n } from '../../i18n'
 
 const { t } = useI18n()
@@ -52,7 +53,7 @@ function injectEditorBridge() {
 
   const script = doc.createElement('script')
   script.id = 'editor-bridge-script'
-  script.src = new URL('/contents/common/editor-bridge.js', window.location.origin).href
+  script.src = new URL(revisionedContentUrl('/contents/common/editor-bridge.js'), window.location.origin).href
   doc.head.appendChild(script)
 
   console.log('[ContentViewer] editor-bridge.js 동적 주입 완료')

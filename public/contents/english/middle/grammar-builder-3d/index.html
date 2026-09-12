@@ -381,11 +381,11 @@
             },
             {
                 prompt: "Write a sentence about reading an interesting book",
-                grammarConcept: "Compound Sentence",
-                conceptExplanation: "Compound sentences join two independent clauses with conjunctions like 'and', 'but', 'or'.",
+                grammarConcept: "Compound Predicate",
+                conceptExplanation: "Here one subject, I, shares two verb phrases: read a book and learned many new things. This is a compound predicate, not two independent clauses.",
                 words: ["I", "read", "a", "book", "and", "learned", "many", "new", "things"],
                 correctOrder: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-                tip: "Combine two complete ideas with 'and'"
+                tip: "Use one subject with two verb phrases joined by and"
             },
             {
                 prompt: "Describe a beautiful sunset using a prepositional phrase",
@@ -449,7 +449,7 @@
                 conceptExplanation: "Present perfect uses 'have/has + past participle' for actions that happened at unspecified times.",
                 words: ["I", "have", "completed", "my", "project"],
                 correctOrder: [0, 1, 2, 3, 4],
-                tip: "Use 'have' + past participle (-ed) for present perfect tense"
+                tip: "Use have + past participle: completed is regular; eaten and been are irregular examples."
             }
         ];
 
@@ -615,6 +615,7 @@
         }
 
         function showSentence() {
+            document.getElementById('check-btn').disabled = false;
             if (currentSentenceIndex >= sentenceData.length) {
                 showCelebration();
                 return;
@@ -689,6 +690,7 @@
         }
 
         function checkSentence() {
+            if (document.getElementById('check-btn').disabled) return;
             const sentence = sentenceData[currentSentenceIndex];
             const feedback = document.getElementById('feedback-message');
 
@@ -704,14 +706,15 @@
             // Check word order
             let isCorrect = true;
             for (let i = 0; i < selectedWords.length; i++) {
-                if (selectedWords[i].index !== sentence.correctOrder[i]) {
+                if (sentence.words[selectedWords[i].index] !== sentence.words[sentence.correctOrder[i]]) {
                     isCorrect = false;
                     break;
                 }
             }
 
             if (isCorrect) {
-                feedback.textContent = '✅ Perfect!';
+                document.getElementById('check-btn').disabled = true;
+                feedback.textContent = 'Correct. ' + sentence.conceptExplanation;
                 feedback.style.color = '#38ef7d';
                 score += 150;
                 correctCount++;
@@ -724,13 +727,13 @@
                     block.style.background = 'linear-gradient(135deg, #38ef7d 0%, #11998e 100%)';
                 });
             } else {
-                feedback.textContent = '❌ Try again!';
+                feedback.textContent = 'Check this pattern: ' + sentence.tip;
                 feedback.style.color = '#f45c43';
 
                 // Highlight wrong words
                 const wordBlocks = document.querySelectorAll('.word-block');
                 wordBlocks.forEach((block, i) => {
-                    if (selectedWords[i].index !== sentence.correctOrder[i]) {
+                    if (sentence.words[selectedWords[i].index] !== sentence.words[sentence.correctOrder[i]]) {
                         block.style.background = 'linear-gradient(135deg, #eb3349 0%, #f45c43 100%)';
                     }
                 });

@@ -17,3 +17,17 @@ describe('vercel.json rewrites', () => {
     expect(rewrite?.source).toContain('api')
   })
 })
+
+
+describe('mutable lesson deployment caching', () => {
+  it('routes revision URLs to content files before SPA fallback and requires revalidation', () => {
+    const config = JSON.parse(readFileSync('vercel.json', 'utf8'))
+    expect(config.rewrites[0]).toEqual({ source: '/content-revisions/:revision/:path*', destination: '/contents/:path*' })
+    expect(config.rewrites[1].source).toContain('content-revisions')
+    for (const source of ['/contents/(.*)', '/content-revisions/(.*)']) {
+      const header = config.headers.find((entry: { source: string }) => entry.source === source).headers.find((entry: { key: string }) => entry.key === 'Cache-Control').value
+      expect(header).toContain('must-revalidate')
+      expect(header).not.toContain('immutable')
+    }
+  })
+})

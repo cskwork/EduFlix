@@ -684,11 +684,11 @@
                 {
                     name: "Nouns",
                     questions: [
-                        { question: "Which word is a NOUN?", sentence: "The _____ jumped over the fence.", options: ["quickly", "dog", "run", "green"], correct: 1, explanation: "A noun is a person, place, thing, or animal. 'Dog' is an animal!" },
+                        { question: "Which word is a NOUN?", sentence: "The _____ jumped over the fence.", options: ["quickly", "dog", "run", "green"], correct: 1, explanation: "In this sentence, dog names an animal and is the subject. Nouns can also name ideas, such as hope." },
                         { question: "Choose the correct NOUN:", sentence: "My _____ is very tall.", options: ["slowly", "teacher", "teaches", "tall"], correct: 1, explanation: "'Teacher' is a person - a noun!" },
                         { question: "Which word is a NOUN?", sentence: "The _____ shines bright.", options: ["sun", "sunny", "shine", "brightly"], correct: 0, explanation: "'Sun' is a thing - a noun!" },
                         { question: "Find the NOUN:", sentence: "We visited the _____.", options: ["visited", "museum", "happily", "big"], correct: 1, explanation: "'Museum' is a place - a noun!" },
-                        { question: "Which is a NOUN?", sentence: "My _____ loves to cook.", options: ["grandmother", "cooking", "delicious", "often"], correct: 0, explanation: "'Grandmother' is a person - a noun!" }
+                        { question: "Which is a NOUN?", sentence: "My _____ loves to cook.", options: ["grandmother", "cooks", "delicious", "often"], correct: 0, explanation: "'Grandmother' is a person - a noun!" }
                     ]
                 },
                 {
@@ -1126,7 +1126,7 @@
             }
 
             feedback.classList.add('show');
-            explanation.textContent = questionData.explanation;
+            explanation.textContent = questionData.explanation + ' Completed sentence: ' + questionData.sentence.replace(/_{2,}/g, questionData.options[questionData.correct]);
             explanation.classList.add('show');
 
             setTimeout(() => {

@@ -1,0 +1,40 @@
+[p1 "광합성 - 식물의 비밀 공장" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "광합성 - 식물의 비밀 공장"]
+root
+  container
+    heading
+      text "오늘 발견한 것"
+    container
+      container
+        text "1"
+        paragraph
+          text "식물은"
+          text "스스로 음식(포도당)"
+          text "을 만든다"
+      container
+        text "2"
+        paragraph
+          text "빛, 물, 이산화탄소"
+          text "가 광합성의 재료다"
+      container
+        text "3"
+        paragraph
+          text "광합성 결과 (상대 지수 모형)"
+          text "산소"
+          text "가 나온다"
+    container
+      heading
+        text "🌍 광합성이 중요한 이유"
+      paragraph
+        text "육상 식물뿐 아니라 바다의 조류와 광합성 미생물도 산소를 생산해요. 생물의 호흡과 분해 과정에서는 산소가 소비됩니다."
+    container
+      heading
+        text "다음에 배울 것"
+      paragraph
+        text "식물의 호흡, 광합성과 호흡의 관계"
+    container
+      button [ref=1]
+        svg_root
+        text "다시 실험하기"
+      button [ref=2]
+        svg_root
+        text "처음으로"

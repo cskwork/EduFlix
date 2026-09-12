@@ -33,7 +33,12 @@ export type Grade =
   | 'high-2'
   | 'high-3'
 
-// 난이도 타입 - 학년 대신 UI에서 사용
+export const GRADES: Grade[] = [
+  'elementary-1', 'elementary-2', 'elementary-3', 'elementary-4', 'elementary-5', 'elementary-6',
+  'middle-1', 'middle-2', 'middle-3', 'high-1', 'high-2', 'high-3',
+]
+
+// 학년 내 학습 난이도
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
 // 난이도 → 학년 매핑 (저장 경로와 기존 검증을 그대로 활용하기 위한 내부 매핑)

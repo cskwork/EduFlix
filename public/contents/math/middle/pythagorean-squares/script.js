@@ -324,6 +324,16 @@ const ContentApp = {
         });
     },
 
+    initQuizScene() {
+        document.querySelectorAll('.opt-btn').forEach(button => {
+            button.style.pointerEvents = 'auto';
+            button.classList.remove('disabled', 'correct', 'incorrect');
+        });
+        document.getElementById('quiz-feedback').textContent = '';
+        document.getElementById('quiz-feedback').className = 'quiz-feedback';
+        document.getElementById('quiz-continue').hidden = true;
+    },
+
     // === 6. Quiz Scene: 인라인 피드백 ===
     checkAnswer(btnEl, val) {
         const options = document.querySelectorAll('.opt-btn');
@@ -339,7 +349,7 @@ const ContentApp = {
             btnEl.classList.add('correct');
             feedback.innerHTML = '정답! 5<sup>2</sup> + 12<sup>2</sup> = 25 + 144 = 169 = 13<sup>2</sup>';
             feedback.className = 'quiz-feedback show correct';
-            setTimeout(() => this.nextScene(), 2000);
+            document.getElementById('quiz-continue').hidden = false;
         } else {
             btnEl.classList.add('incorrect');
             // 정답 하이라이트
@@ -348,7 +358,7 @@ const ContentApp = {
             });
             feedback.innerHTML = '아쉬워요! &radic;(25 + 144) = &radic;169 = 13';
             feedback.className = 'quiz-feedback show incorrect';
-            setTimeout(() => this.nextScene(), 3000);
+            document.getElementById('quiz-continue').hidden = false;
         }
     },
 

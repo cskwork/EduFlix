@@ -1,0 +1,61 @@
+{
+  "id": "moon-phases",
+  "title": "달의 위상 변화: 변하는 달의 비밀",
+  "family": "ScienceApp",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "feedback": "\n                        \n                            🎉\n                            정답! 보름달은 태양의 반대쪽에 있어 밝은 면을 거의 모두 볼 수 있어요. 궤도가 기울어져 있어 보통 정확히 일렬은 아니며, 지구 그림자에 들어갈 때만 월식이 일어납니다.\n                        \n                        다시 풀기\n                    ",
+      "question": "보름달일 때 태양, 지구, 달의 위치는?"
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": ".scene.active button[onclick=\"ScienceApp.nextScene()\"]"
+    },
+    {
+      "click": ".scene.active button[onclick=\"ScienceApp.nextScene()\"]"
+    },
+    {
+      "click": ".scene.active button[onclick=\"ScienceApp.nextScene()\"]"
+    },
+    {
+      "range": "#orbit-slider",
+      "key": "End"
+    },
+    {
+      "range": "#orbit-slider",
+      "key": "Home"
+    },
+    {
+      "click": ".scene.active button[onclick=\"ScienceApp.nextScene()\"]"
+    },
+    {
+      "click": ".scene.active button[onclick=\"ScienceApp.nextScene()\"]"
+    },
+    {
+      "click": ".quiz-option[data-correct=\"true\"]"
+    },
+    {
+      "click": ".scene.active button[onclick=\"ScienceApp.nextScene()\"]"
+    },
+    {
+      "click": "#wrap-scene button[onclick=\"ScienceApp.showScene(0)\"]"
+    }
+  ],
+  "start": {
+    "scene": "hook",
+    "text": "달은 왜 모양이 변할까?\n\n어제는 동그랬는데 오늘은 반달이야...\n\n알아보기"
+  },
+  "activityObservation": {
+    "scene": "core",
+    "text": "달의 위상 관측소\n\n달을 공전시켜서 위상이 어떻게 변하는지 관찰해봐!\n\n지구\n태양\n삭\n공전 위치\n0일\n0일\n(삭)\n7일\n(상현)\n15일\n(보름)\n22일\n(하현)\n29일\n(그믐)\n삭 (초승달 전)\n상현달\n보름달\n하현달\n원리 정리하기"
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "오늘 발견한 것\n1\n\n달은 태양빛을 반사해서 밝게 보인다\n\n2\n\n달이 지구 주위를 돌면서 위상이 변한다\n\n3\n\n한 달 주기: 삭 → 상현 → 보름 → 하현 → 삭\n\n🌙 재미있는 사실\n\n달은 항상 같은 면만 지구를 향하고 있어! 이것을 \"동주기 자전\"이라고 해.\n\n다음에 배울 것\n\n일식과 월식, 조석 현상\n\n다시 관측하기\n처음으로"
+  }
+}

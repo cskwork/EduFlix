@@ -1,0 +1,102 @@
+[
+  {
+    "id": "fractions-pizza",
+    "directory": "public/contents/math/elementary/fractions-pizza"
+  },
+  {
+    "id": "shapes-explorer",
+    "directory": "public/contents/math/elementary/shapes-explorer"
+  },
+  {
+    "id": "equation-puzzle",
+    "directory": "public/contents/math/middle/equation-puzzle"
+  },
+  {
+    "id": "pythagoras-theorem",
+    "directory": "public/contents/math/middle/pythagoras-theorem"
+  },
+  {
+    "id": "probability-coin",
+    "directory": "public/contents/math/middle/probability-coin"
+  },
+  {
+    "id": "linear-slope",
+    "directory": "public/contents/math/middle/linear-slope"
+  },
+  {
+    "id": "negative-addition",
+    "directory": "public/contents/math/middle/negative-addition"
+  },
+  {
+    "id": "quadratic-graph",
+    "directory": "public/contents/math/high/quadratic-graph"
+  },
+  {
+    "id": "3d-shapes-discovery",
+    "directory": "public/contents/math/elementary/3d-shapes-discovery"
+  },
+  {
+    "id": "volume-explorer",
+    "directory": "public/contents/math/elementary/volume-explorer"
+  },
+  {
+    "id": "3d-coordinate-system",
+    "directory": "public/contents/math/middle/3d-coordinate-system"
+  },
+  {
+    "id": "space-diagonal",
+    "directory": "public/contents/math/middle/space-diagonal"
+  },
+  {
+    "id": "3d-vectors",
+    "directory": "public/contents/math/high/3d-vectors"
+  },
+  {
+    "id": "pythagorean-squares",
+    "directory": "public/contents/math/middle/pythagorean-squares"
+  },
+  {
+    "id": "box-volume",
+    "directory": "public/contents/math/elementary/box-volume"
+  },
+  {
+    "id": "circle-area",
+    "directory": "public/contents/math/elementary/circle-area"
+  },
+  {
+    "id": "decimal-multiplication",
+    "directory": "public/contents/math/elementary/decimal-multiplication"
+  },
+  {
+    "id": "fraction-division",
+    "directory": "public/contents/math/elementary/fraction-division"
+  },
+  {
+    "id": "ratio-proportion",
+    "directory": "public/contents/math/elementary/ratio-proportion"
+  },
+  {
+    "id": "fraction-addition",
+    "directory": "public/contents/math/elementary/fraction-addition"
+  },
+  {
+    "id": "platonic-solids",
+    "directory": "public/contents/math/middle/platonic-solids"
+  },
+  {
+    "id": "volume-solids",
+    "directory": "public/contents/math/middle/volume-solids"
+  },
+  {
+    "id": "3d-coordinates",
+    "directory": "public/contents/math/middle/3d-coordinates"
+  },
+  {
+    "id": "angles-rocket",
+    "directory": "public/contents/math/elementary/angles-rocket"
+  },
+  {
+    "id": "3d-geometry-explorer-donga",
+    "directory": "public/contents/math/elementary/3d-geometry-explorer-donga"
+  }
+]

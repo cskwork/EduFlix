@@ -1,0 +1,105 @@
+{
+  "id": "modal-can",
+  "title": "I Can Do It! Talking About Abilities",
+  "family": "ContentApp",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "index": 1,
+      "answer": "can't",
+      "question": "Quiz\n알맞은 형태를 고르세요!\n아기에 대해 말하고 있어요\n\nThe baby ______ walk yet. She has not learned to walk yet.\n\ncan\ncan't\ncans\n1 / 4",
+      "selector": "#quiz-scene button[onclick=\"ContentApp.checkAnswer(1, 'can\\\\'t')\"]",
+      "feedback": "Excellent! 아기는 아직 걸을 수 없어요 (6개월). can't가 맞아요!"
+    },
+    {
+      "index": 2,
+      "answer": "Can",
+      "question": "Quiz\n알맞은 형태를 고르세요!\n컴퓨터 게임에 대해 묻고 있어요\n\n______ you play computer games?\n\nCan\nDo can\nAre can\n2 / 4",
+      "selector": "#quiz-scene button[onclick=\"ContentApp.checkAnswer(2, 'Can')\"]",
+      "feedback": "Excellent! 의문문은 Can으로 시작해요. Can you ~?"
+    },
+    {
+      "index": 3,
+      "answer": "can",
+      "question": "Quiz\n알맞은 형태를 고르세요!\n친구의 요리 실력에 대해 말해요\n\nMy friend ______ cook delicious food.\n\ncan\ncans\ncan to\n3 / 4",
+      "selector": "#quiz-scene button[onclick=\"ContentApp.checkAnswer(3, 'can')\"]",
+      "feedback": "Excellent! he/she도 can은 그대로! cans 아니에요."
+    },
+    {
+      "index": 4,
+      "answer": "can",
+      "question": "Quiz\n알맞은 형태를 고르세요!\nKOREAN\n언어 능력에 대한 질문에 대답해요\n\n\"Can you speak Korean?\" - \"Yes, I ______.\"\n\ncan\ncan speak\ndo\n4 / 4",
+      "selector": "#quiz-scene button[onclick=\"ContentApp.checkAnswer(4, 'can')\"]",
+      "feedback": "Excellent! Yes, I can. / No, I can't. 짧게 대답해요!"
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#hook-scene button[onclick=\"ContentApp.nextScene()\"]"
+    },
+    {
+      "click": "#anchor-scene button[onclick=\"ContentApp.nextScene()\"]"
+    },
+    {
+      "click": "#story-scene button[onclick=\"ContentApp.nextScene()\"]"
+    },
+    {
+      "click": "[data-card=\"1\"] .can-btn"
+    },
+    {
+      "click": "[data-card=\"2\"] .cant-btn"
+    },
+    {
+      "click": "[data-card=\"3\"] .can-btn"
+    },
+    {
+      "click": "[data-card=\"4\"] .cant-btn"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": "#visualize-scene button[onclick=\"ContentApp.nextScene()\"]"
+    },
+    {
+      "click": "#quiz-scene button[onclick=\"ContentApp.checkAnswer(1, 'can\\\\'t')\"]"
+    },
+    {
+      "click": "#quiz-scene button[onclick=\"ContentApp.checkAnswer(2, 'Can')\"]"
+    },
+    {
+      "click": "#quiz-scene button[onclick=\"ContentApp.checkAnswer(3, 'can')\"]"
+    },
+    {
+      "click": "#quiz-scene button[onclick=\"ContentApp.checkAnswer(4, 'can')\"]"
+    },
+    {
+      "wheel": 162.8359375,
+      "reason": "nested scene scroll; wrapper failed to find viewport target"
+    },
+    {
+      "click": "#wrap-scene button[onclick=\"location.reload()\"]"
+    }
+  ],
+  "activityObservation": {
+    "scene": "core",
+    "text": "Can / Can't 사용하기\n\n그림을 보고 알맞은 버튼을 누르세요!\n\nCAN (할 수 있다)\n주어 + can + 동사원형\n\"I can swim.\"\nCAN'T (할 수 없다)\n주어 + can't + 동사원형\n\"I can't cook.\"\nCAN ~? (할 수 있니?)\nCan + 주어 + 동사원형?\n\"Can you dance?\"\n한글\n?\n?\n\nTom can't read Korean.\n\n(Tom은 아직 한국어 읽기를 배우지 않았어요)\n\ncan\ncan't\n진행: 4 / 4\n💪\n\nGreat! can = 할 수 있다, can't = 할 수 없다!\n\n규칙 정리하기",
+    "errors": []
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "SUPER\nSTAR\nSuper Star!\nToday's Key Points\ncan: ~할 수 있다 (능력/허락)\n\"I can swim.\"\ncan't: ~할 수 없다\n\"I can't dance.\"\nCan ~?: ~할 수 있니?\n\"Can you help me?\"\n주의! can 뒤에는 동사원형 (to X, -s X)\n오늘 바로 써보세요!\n\"I can speak English!\"\n나는 영어를 말할 수 있어!\n\"I can't eat spicy food.\"\n나는 매운 음식을 못 먹어.\n\"Can I use your phone?\"\n네 전화기 써도 돼?\n다시 하기\n다음 주제로",
+    "errors": []
+  },
+  "lastObservation": {},
+  "resetObservation": {
+    "scene": "hook",
+    "currentCard": 1,
+    "currentQuiz": 1,
+    "text": "What's Your Superpower?\n\n수퍼히어로들은 자기 능력을 어떻게 말할까요?\n\"I can fly!\" vs \"I can't swim.\"\n\nI can fly!\nI can't swim!\n능력 표현 배우기"
+  },
+  "harnessRecovery": "Error: JavaScript evaluation failed at line 0, column 0: ReferenceError: ContentApp is not defined\n    at <anonymous>:1:102\n    at __egoWaitForFunction (<anonymous>:1:107)\n    at <anonymous>:1:159; expression: (async function __egoWaitForFunction() { return { matched: Boolean(await (()=>ContentApp.currentScene===0)()), url: location.href, title: document.title }; })()\npage.waitForFunction() callbacks run inside the Page and cannot access variables from the Node.js script. Define the value inside the callback or pass JSON data as the second argument."
+}

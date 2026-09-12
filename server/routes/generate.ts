@@ -1,4 +1,5 @@
 // AI 콘텐츠 생성·리뷰 API 엔드포인트
+import { POST as generateEditableLessonResponse } from '../../api/generate'
 import type { GenerationRequest } from '../../src/types/generation'
 import { getFactoryLlmConfig } from '../../agents/content-factory/pipeline/lib/engine'
 import { assertSafeContentId } from '../../agents/content-factory/pipeline/stages/common'
@@ -38,6 +39,10 @@ export async function handleGenerateRoute(
       const validationError = validateGeneration(body)
       if (validationError) return errorResponse(validationError, 400)
       const config = dependencies.getConfig()
+      if (body.editableLesson) {
+        if (config.provider !== 'zai') return errorResponse('편집 가능한 AI 수업 초안은 Z.ai 제공자와 ZAI_API_KEY가 필요합니다', 503)
+        return generateEditableLessonResponse(new Request(req.url, { method: 'POST', headers: req.headers, body: JSON.stringify(body) }))
+      }
       if (!config.keyConfigured) return errorResponse('ZAI_API_KEY가 설정되지 않아 콘텐츠를 생성할 수 없습니다', 503)
       const job = dependencies.runner.startGeneration(body)
       return jsonResponse({ success: true, jobId: job.jobId, message: job.message }, 202)

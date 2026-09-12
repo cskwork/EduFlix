@@ -1,0 +1,73 @@
+{
+  "id": "shapes-explorer",
+  "title": "도형 탐험가",
+  "family": "classic",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": "변이 3개이고 꼭짓점이 3개인 도형은?",
+      "selected": "삼각형",
+      "feedback": "정답입니다. 삼각형은 곧은 변 3개와 꼭짓점 3개로 둘러싸인 도형입니다."
+    },
+    {
+      "question": "다각형의 곧은 변과 꼭짓점이 없는 도형은?",
+      "selected": "원",
+      "feedback": "정답입니다. 원은 곡선으로 둘러싸여 있어 다각형의 곧은 변과 꼭짓점이 없습니다."
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#scene-hook button"
+    },
+    {
+      "click": "#scene-story button"
+    },
+    {
+      "click": "#core-interactive-area button:nth-child(1)"
+    },
+    {
+      "click": "#core-interactive-area button:nth-child(2)"
+    },
+    {
+      "click": "#core-interactive-area button:nth-child(3)"
+    },
+    {
+      "click": "#core-interactive-area button:nth-child(4)"
+    },
+    {
+      "click": "#core-interactive-area button:nth-child(5)"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(3)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#scene-wrap button:first-child"
+    }
+  ],
+  "errors": [],
+  "activityObservation": {
+    "scene": "core",
+    "text": "도형 관찰하기\n도형을 둘 이상 선택해 변과 꼭짓점을 하나씩 세어 보세요. 삼각형과 사각형의 차이를 말하고, 종이에 모양이 다른 삼각형 두 개를 그려 비교하세요.\n삼각형\n사각형\n오각형\n육각형\n원\n원\n\n변과 꼭짓점이 없어요. 동그란 모양이에요.\n\n변\n0\n꼭짓점\n0\n모든 도형을 찾았습니다!\n다음",
+    "errors": []
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "🎉 완료!\n\n오늘 배운 내용\n\n도형 탐험가\n\n삼각형을 거꾸로 놓아도 삼각형일까요? 위치나 색 대신 어떤 특징으로 판단했는지 설명하세요.\n\n다시하기\n홈으로",
+    "errors": []
+  }
+}

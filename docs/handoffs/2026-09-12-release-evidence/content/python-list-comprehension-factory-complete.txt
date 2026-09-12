@@ -1,0 +1,29 @@
+[p1 "파이썬 복제 기계: 리스트 컴프리헨션 공장" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "파이썬 복제 기계: 리스트 컴프리헨션 공장"]
+root
+  container
+    heading
+      text "학습 완료!"
+    container
+      paragraph
+        text "우리가 만든 리스트 암호로 미스터리 상자가 열렸어요! 리스트 컴프리헨션의 3단계 작동 원리를 기억하세요."
+      container
+        container
+          text "1"
+          container
+            text "원재료 생성"
+            text "range()로 숫자를 만듭니다."
+        container
+          text "2"
+          container
+            text "공식 변환"
+            text "x*2 등 왼쪽 공식을 통과시킵니다."
+        container
+          text "3"
+          container
+            text "리스트 조립"
+            text "대괄호 [ ] 안에 결과를 담습니다."
+    container
+      button [ref=1]
+        text "다시 학습하기"
+      button [ref=2]
+        text "학습 종료하기"

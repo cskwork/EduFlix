@@ -68,7 +68,7 @@ class EduFlixEngine {
                 <div class="hook-content">
                     <div class="question-box">
                         <h1 class="hook-question">${question}</h1>
-                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}<p class="scene-text">학습 목표: ${this.data.objective}</p>
                     </div>
                     ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
                     <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
@@ -79,7 +79,7 @@ class EduFlixEngine {
 
         this.createScene('story', (scene) => {
             const { character, situation } = this.data.story;
-            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
+            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}<br><br>${this.data.workedExample}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
         });
 
         this.createScene('core', (scene) => {
@@ -93,7 +93,7 @@ class EduFlixEngine {
         }
 
         this.createScene('wrap', (scene) => {
-            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
+            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3><p class="scene-text">${this.data.reflection}</p></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
         });
     }
 
@@ -131,31 +131,46 @@ class EduFlixEngine {
         if(btn) { btn.style.display = 'inline-block'; btn.classList.add('animate-fade-in'); }
     }
 
-    startQuiz() {
-        const q = this.data.quiz[0];
-        document.getElementById('quiz-question').textContent = q.question;
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = '';
-        q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
-            optsContainer.appendChild(btn);
+    startQuiz(index = 0) {
+        this.quizIndex = index;
+        const q = this.data.quiz[index];
+        const question = document.getElementById('quiz-question');
+        question.textContent = `${index + 1} / ${this.data.quiz.length} · ${q.question}`;
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        q.options.forEach((option, selected) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quiz-option';
+            button.textContent = option;
+            button.onclick = () => this.checkQuiz(selected, q.answer, button);
+            container.appendChild(button);
         });
+        const feedback = document.createElement('p');
+        feedback.id = 'quiz-explanation';
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        container.appendChild(feedback);
     }
 
-    checkQuiz(selectedIdx, correctIdx, btnElement) {
-        const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+    checkQuiz(selected, answer, button) {
+        const container = document.getElementById('quiz-options');
+        const options = container.querySelectorAll('.quiz-option');
+        if (button.disabled) return;
+        options.forEach(option => { option.disabled = true; });
+        button.classList.add(selected === answer ? 'correct' : 'incorrect');
+        options[answer].classList.add('correct');
+        document.getElementById('quiz-explanation').textContent =
+            (selected === answer ? '정답입니다. ' : '답을 비교해 보세요. ') + this.data.quiz[this.quizIndex].explanation;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '해설을 읽었어요 · 다음 문항' : '해설을 읽었어요 · 정리하기';
+        next.onclick = () => {
+            if (this.quizIndex + 1 < this.data.quiz.length) this.startQuiz(this.quizIndex + 1);
+            else this.nextScene();
+        };
+        container.appendChild(next);
     }
 }
 
@@ -246,6 +261,9 @@ const shapesData = {
 };
 
 const contentData = {
+    objective: "변과 꼭짓점의 수로 다각형을 분류하고 원과 구별해요.",
+    workedExample: "삼각형은 곧은 변 3개와 꼭짓점 3개가 있습니다. 모양을 돌리거나 길쭉하게 그려도 변의 수는 바뀌지 않습니다. 원에는 다각형의 곧은 변이나 꼭짓점이 없습니다.",
+    reflection: "삼각형을 거꾸로 놓아도 삼각형일까요? 위치나 색 대신 어떤 특징으로 판단했는지 설명하세요.",
     title: "도형 탐험가",
     hook: {
         question: "네모, 세모, 동그라미... 이름이 뭘까요?",
@@ -278,7 +296,7 @@ const contentData = {
     },
     interaction: {
         title: "도형 관찰하기",
-        instruction: "버튼을 눌러 도형을 살펴보고 특징을 알아보세요.",
+        instruction: "도형을 둘 이상 선택해 변과 꼭짓점을 하나씩 세어 보세요. 삼각형과 사각형의 차이를 말하고, 종이에 모양이 다른 삼각형 두 개를 그려 비교하세요.",
         onInit: (container, engine) => {
              // UI Structure
              container.innerHTML = `
@@ -358,16 +376,28 @@ const contentData = {
     },
     quiz: [
         {
-            question: "변이 3개이고 꼭짓점이 3개인 도형은?",
-            options: ["사각형", "삼각형", "원", "육각형"],
-            answer: 1
+                "question": "변이 3개이고 꼭짓점이 3개인 도형은?",
+                "options": [
+                        "사각형",
+                        "삼각형",
+                        "원",
+                        "육각형"
+                ],
+                "answer": 1,
+                "explanation": "삼각형은 곧은 변 3개와 꼭짓점 3개로 둘러싸인 도형입니다."
         },
         {
-            question: "변과 꼭짓점이 없는 도형은?",
-            options: ["삼각형", "사각형", "원", "오각형"],
-            answer: 2
+                "question": "다각형의 곧은 변과 꼭짓점이 없는 도형은?",
+                "options": [
+                        "삼각형",
+                        "사각형",
+                        "원",
+                        "오각형"
+                ],
+                "answer": 2,
+                "explanation": "원은 곡선으로 둘러싸여 있어 다각형의 곧은 변과 꼭짓점이 없습니다."
         }
-    ]
+]
 };
 
 Engine.init(contentData);

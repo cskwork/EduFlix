@@ -9,9 +9,9 @@ const ContentApp = {
     currentPreposition: 'in',
     quizData: [
         { prep: 'in', sentence: 'The ball is ______ the box.', answer: 'in' },
-        { prep: 'on', sentence: 'The book is ______ the table.', answer: 'on' },
-        { prep: 'under', sentence: 'The cat is ______ the chair.', answer: 'under' },
-        { prep: 'nextto', sentence: 'The lamp is ______ the bed.', answer: 'next to' },
+        { prep: 'on', sentence: 'The ball is ______ the table.', answer: 'on' },
+        { prep: 'under', sentence: 'The ball is ______ the table.', answer: 'under' },
+        { prep: 'nextto', sentence: 'The ball is ______ the box.', answer: 'next to' },
         { prep: 'between', sentence: 'The ball is ______ the boxes.', answer: 'between' }
     ],
     currentQuiz: 0,
@@ -485,7 +485,7 @@ const ContentApp = {
         const positions = {
             'in': { x: 0, y: 0.7, z: 0 },
             'on': { x: 0, y: 1.15, z: 0 },
-            'under': { x: 0, y: 0.3, z: 0.8 },
+            'under': { x: 0, y: 0.3, z: 0 },
             'nextto': { x: 1.2, y: 0.3, z: 0 },
             'between': { x: 0, y: 0.3, z: 0 }
         };
@@ -683,7 +683,7 @@ const ContentApp = {
         const positions = {
             'in': { x: 0, y: 0.7, z: 0 },
             'on': { x: 0, y: 1.15, z: 0 },
-            'under': { x: 0, y: 0.3, z: 0.8 },
+            'under': { x: 0, y: 0.3, z: 0 },
             'next to': { x: 1.2, y: 0.3, z: 0 },
             'between': { x: 0, y: 0.3, z: 0 }
         };
@@ -693,7 +693,7 @@ const ContentApp = {
         scene.add(ball);
 
         // Special cases
-        if (quiz.answer === 'on') {
+        if (quiz.answer === 'on' || quiz.answer === 'under') {
             box.visible = false;
             const table = this.createTable();
             scene.add(table);
@@ -729,11 +729,11 @@ const ContentApp = {
 
         if (answer === quiz.answer) {
             this.quizScore++;
-            feedback.textContent = 'Correct! 정답이에요!';
+            feedback.textContent = `Correct! ${quiz.sentence.replace('______', quiz.answer)} ${quiz.answer === 'on' ? '표면에 닿아 있어요.' : quiz.answer === 'under' ? '테이블 면 아래에 있어요.' : quiz.answer === 'between' ? '두 상자의 사이에 있어요.' : quiz.answer === 'in' ? '상자 안쪽이에요.' : '상자 옆이에요.'}`;
             feedback.classList.add('show', 'correct');
             this.playAudio('Correct');
         } else {
-            feedback.textContent = `Oops! 정답은 "${quiz.answer}" 이에요.`;
+            feedback.textContent = `정답: ${quiz.sentence.replace('______', quiz.answer)} 그림의 물체와 기준 물체의 위치를 비교해 보세요.`;
             feedback.classList.add('show', 'incorrect');
         }
 

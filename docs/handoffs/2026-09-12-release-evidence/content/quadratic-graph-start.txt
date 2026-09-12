@@ -1,0 +1,16 @@
+[p1 "이차함수 그래프" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "이차함수 그래프"]
+root
+  container
+    heading
+      text "농구공이 날아가는 경로는 어떤 모양일까요?"
+    paragraph
+      text "포물선의 비밀을 알아봐요!"
+    paragraph
+      text "학습 목표: 계수와 그래프의 관계를 비교하고 꼭짓점과 x절편을 계산해요."
+  svg_root "x y 꼭짓점 y = ax^2 + bx + c"
+    text "x"
+    text "y"
+    text "꼭짓점"
+    text "y = ax^2 + bx + c"
+  button [ref=1]
+    text "시작하기"

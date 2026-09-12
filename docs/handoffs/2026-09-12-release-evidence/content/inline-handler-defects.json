@@ -1,0 +1,42 @@
+[
+  {
+    "id": "modal-can",
+    "file": "public/contents/english/elementary/modal-can/index.html",
+    "line": 256,
+    "attr": "onclick",
+    "code": "ContentApp.checkAbility(1, 'can\\\\'t')",
+    "error": "missing ) after argument list"
+  },
+  {
+    "id": "modal-can",
+    "file": "public/contents/english/elementary/modal-can/index.html",
+    "line": 286,
+    "attr": "onclick",
+    "code": "ContentApp.checkAbility(2, 'can\\\\'t')",
+    "error": "missing ) after argument list"
+  },
+  {
+    "id": "modal-can",
+    "file": "public/contents/english/elementary/modal-can/index.html",
+    "line": 314,
+    "attr": "onclick",
+    "code": "ContentApp.checkAbility(3, 'can\\\\'t')",
+    "error": "missing ) after argument list"
+  },
+  {
+    "id": "modal-can",
+    "file": "public/contents/english/elementary/modal-can/index.html",
+    "line": 341,
+    "attr": "onclick",
+    "code": "ContentApp.checkAbility(4, 'can\\\\'t')",
+    "error": "missing ) after argument list"
+  },
+  {
+    "id": "modal-can",
+    "file": "public/contents/english/elementary/modal-can/index.html",
+    "line": 455,
+    "attr": "onclick",
+    "code": "ContentApp.checkAnswer(1, 'can\\\\'t')",
+    "error": "missing ) after argument list"
+  }
+]

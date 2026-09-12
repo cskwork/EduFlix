@@ -117,12 +117,13 @@ class EduFlixEngine {
     }
 
     startQuiz() {
-        const q = this.data.quiz[0];
+        this.quizIndex = this.quizIndex || 0;
+        const q = this.data.quiz[this.quizIndex];
         document.getElementById('quiz-question').textContent = q.question;
         const optsContainer = document.getElementById('quiz-options');
         optsContainer.innerHTML = '';
         q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
+            const btn = document.createElement('button');
             btn.className = 'quiz-option';
             btn.textContent = opt;
             btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
@@ -132,16 +133,21 @@ class EduFlixEngine {
 
     checkQuiz(selectedIdx, correctIdx, btnElement) {
         const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+        opts.forEach(o => { o.disabled = true; });
+        btnElement.classList.add(selectedIdx === correctIdx ? 'correct' : 'incorrect');
+        opts[correctIdx].classList.add('correct');
+        const q = this.data.quiz[this.quizIndex];
+        const feedback = document.createElement('p');
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        feedback.textContent = (selectedIdx === correctIdx ? '정답입니다. ' : '정답을 확인하세요. ') + q.explanation;
+        const next = document.createElement('button');
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '다음 문항' : '학습 정리';
+        next.onclick = () => { this.quizIndex++; feedback.remove(); next.remove(); if (this.quizIndex < this.data.quiz.length) this.startQuiz(); else this.nextScene(); };
+        document.getElementById('quiz-options').after(feedback, next);
     }
+
 }
 
 window.Engine = new EduFlixEngine();
@@ -156,7 +162,7 @@ window.Engine = new EduFlixEngine();
 const contentData = {
     title: "화학 반응 시뮬레이터",
     hook: {
-        question: "색깔이 변하고 거품이 나는 마법같은 변화!"
+        question: "같은 양의 산과 염기를 섞으면 pH가 어떻게 달라질까요?"
     },
     story: {
         character: { image: "assets/character.svg" },
@@ -164,7 +170,7 @@ const contentData = {
     },
     interaction: {
         title: "중화 반응 실험",
-        instruction: "비커에 시약을 넣어 반응을 관찰하세요.<br>산성 용액에 염기성 용액을 넣으면 어떻게 될까요?",
+        instruction: "25°C 물 50mL에 0.1mol/L HCl과 NaOH를 10mL씩 넣는 모형입니다. 두 용액을 모두 넣어 몰수가 같아지는 때를 찾으세요. 실제 실험은 교사 지도하에 보안경을 착용합니다. H⁺ + OH⁻ → H₂O이며 기체는 생기지 않습니다.",
         onInit: (container, engine) => {
              container.innerHTML = `
                 <div class="lab-bench">
@@ -202,7 +208,8 @@ const contentData = {
              
              let ph = 7.0;
              let hasIndicator = false;
-             let volume = 50; // %
+             let volume = 50; // mL
+             let acidMoles = 0, baseMoles = 0;
              
              const updateVisuals = () => {
                  // Color based on pH and Indicator
@@ -238,7 +245,7 @@ const contentData = {
              };
              
              const addReagent = (type) => {
-                 if (volume >= 90) {
+                 if (type !== 'indicator' && volume >= 90) {
                      engine.showFeedback("비커가 가득 찼습니다!", "negative");
                      return;
                  }
@@ -248,14 +255,14 @@ const contentData = {
                  if (type === 'acid') {
                      // Decrease pH
                      // Proper calculation is complex (-log[H+]), simplified here:
-                     if (ph > 1) ph -= 1.5;
+                     acidMoles += 0.001;
                      
                      // Reaction visual
                      if (ph > 7) { // Neutralizing
                          showReaction();
                      }
                  } else if (type === 'base') {
-                     if (ph < 13) ph += 1.5;
+                     baseMoles += 0.001;
                      if (ph < 7) { // Neutralizing
                          showReaction();
                      }
@@ -264,34 +271,33 @@ const contentData = {
                      volume -= 10; // Indicator volume negligible
                  }
                  
-                 // Clamp
-                 if (ph < 1) ph = 1;
-                 if (ph > 14) ph = 14;
+                 const excess = (acidMoles - baseMoles) / (volume / 1000);
+                 // Solve [H+] - [OH-] = excess with Kw = 1e-14 at 25°C.
+                 const h = excess >= 0 ? (excess + Math.sqrt(excess * excess + 4e-14)) / 2 : 2e-14 / (-excess + Math.sqrt(excess * excess + 4e-14));
+                 ph = -Math.log10(h);
                  
                  updateVisuals();
                  
                  // Check Goal (Neutralize)
-                 if (hasIndicator && Math.abs(ph - 7.0) < 0.5) {
-                     engine.showFeedback("중화 적정 성공! 완벽한 초록색입니다.", "positive");
+                 if (hasIndicator && acidMoles > 0 && baseMoles > 0 && Math.abs(acidMoles - baseMoles) < 1e-10) {
+                     engine.showFeedback("같은 몰수의 HCl과 NaOH가 중화되었습니다. 이 강산·강염기 모형은 25°C에서 pH 7입니다. 약산·약염기는 같지 않을 수 있습니다.", "positive");
                      engine.enableNext();
                  }
              };
              
              const showReaction = () => {
-                 bubbles.style.display = 'block';
-                 bubbles.innerHTML = '';
-                 for(let i=0; i<5; i++) {
-                     bubbles.innerHTML += `<div class="bubble" style="left:${Math.random()*80+10}%; width:${Math.random()*10+5}px; height:${Math.random()*10+5}px; animation-duration:${Math.random()+1}s"></div>`;
-                 }
-                 setTimeout(() => bubbles.style.display = 'none', 1000);
+                 bubbles.style.display = 'none';
+                 engine.showFeedback('수소 이온과 수산화 이온이 반응하여 물이 됩니다. 이 반응에는 기체 거품이 생기지 않습니다.', 'neutral');
              };
-             
+
              container.querySelectorAll('.reagent').forEach(el => {
                  el.onclick = () => addReagent(el.dataset.type);
              });
              
              container.querySelector('#reset-btn').onclick = () => {
                  ph = 7.0;
+                 acidMoles = 0; baseMoles = 0;
+                 document.getElementById('core-next-btn').style.display = 'none';
                  hasIndicator = false;
                  volume = 50;
                  updateVisuals();
@@ -303,14 +309,14 @@ const contentData = {
     },
     quiz: [
         {
-            question: "산성 용액의 pH 범위는?",
+            question: "25°C에서 산성 수용액의 pH는?",
             options: ["7보다 작다", "7이다", "7보다 크다", "14이다"],
-            answer: 0
+            answer: 0, explanation: "25°C에서 중성인 물의 pH는 7이며, 산성 수용액의 pH는 7보다 작습니다. pH는 수소 이온 농도의 로그 척도입니다."
         },
         {
             question: "산성과 염기성이 만나 물과 염이 생성되는 반응은?",
             options: ["산화 반응", "중화 반응", "연소 반응", "분해 반응"],
-            answer: 1
+            answer: 1, explanation: "HCl과 NaOH의 중화에서는 물과 염이 생깁니다. 두 시약만의 반응으로 기체가 발생하지 않습니다."
         }
     ]
 };

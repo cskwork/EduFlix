@@ -1,0 +1,110 @@
+[
+  {
+    "id": "grammar-builder-3d",
+    "title": "Grammar Builder 3D - Middle School English",
+    "start": "Start Building!",
+    "buttons": [
+      "Start Building!"
+    ],
+    "beforeText": "📝 Sentence: 1/10\n⭐ Score: 0\n✅ Correct: 0\n🔄 Reset\n✓ Check Sentence\nGrammar Concept\n\n💡 Tip: Click words in order to build your sentence\n🏗️ Grammar Builder 3D\n\nWelcome to the Grammar Construction Site! Your task is to build grammatically correct sentences by arranging word blocks in the right order. Pay attention to sentence structure, grammar rules, and create perfect sentences!\n\nStart Building!",
+    "changed": true,
+    "afterText": "📝 Sentence: 1/10\n⭐ Score: 0\n✅ Correct: 0\nCreate a sentence about a cat chasing a mouse\nthe\na\ncat\nchased\nmouse\n🔄 Reset\n✓ Check Sentence\nSimple Subject-Verb-Object\n\nSVO structure: Subject performs action (verb) on object. Basic sentence pattern in English.\n\n💡 Tip: Start with who or what (subject), then the action (verb), then what received the action (object)",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "reading-comprehension-quest",
+    "title": "Reading Comprehension Quest - Middle School English",
+    "buttons": [
+      "Begin Quest!"
+    ],
+    "beforeText": "📖 Story: 1/10\n⭐ Score: 0\n🏆 Best: 0\nLoading...\n📖 Reading Comprehension Quest\n\nEmbark on an adventure through captivating stories! Read each passage carefully, analyze the content, and answer questions to test your comprehension. Each story is a new adventure waiting to be explored!\n\nBegin Quest!",
+    "changed": false,
+    "afterText": "📖 Story: 1/10\n⭐ Score: 0\n🏆 Best: 0\nLoading...\n📖 Reading Comprehension Quest\n\nEmbark on an adventure through captivating stories! Read each passage carefully, analyze the content, and answer questions to test your comprehension. Each story is a new adventure waiting to be explored!\n\nBegin Quest!",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "vocabulary-mountain",
+    "title": "Vocabulary Mountain - Middle School English",
+    "start": "Start Climbing!",
+    "buttons": [
+      "Start Climbing!"
+    ],
+    "beforeText": "⛰️ Altitude: 0m\n⭐ Score: 0\n💡 Hints: 3\nMEDIUM\nSummit\nThe highest point of a mountain or hill\n💡 Get Hint\n🧗\n🏔️ Vocabulary Mountain\n\nClimb the Vocabulary Mountain by mastering advanced words! Each level brings you higher up the mountain with increasingly challenging vocabulary. Use context clues, word parts, and your knowledge to reach the summit!\n\nStart Climbing!",
+    "changed": true,
+    "afterText": "⛰️ Altitude: 0m\n⭐ Score: 0\n💡 Hints: 3\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\nEASY\nbenevolent\nCharacterized by expressing goodwill; kind and charitable\n\"The benevolent teacher always stayed after class to help struggling students.\"\ngenerous\nangry\nselfish\ncruel\n💡 Get Hint\n🧗",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "action-verbs-game",
+    "title": "동사 의미 분류 게임 | Action Verbs Game",
+    "buttons": [],
+    "beforeText": "초등 3-4학년 영어 | 동작 동사를 올바른 카테고리에 드래그하세요",
+    "changed": false,
+    "afterText": "초등 3-4학년 영어 | 동작 동사를 올바른 카테고리에 드래그하세요",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "mario-country-quiz",
+    "title": "슈퍼마리오 나라이름 퀴즈",
+    "start": "PRESS START BUTTON",
+    "buttons": [
+      "PRESS START BUTTON"
+    ],
+    "beforeText": "SUPER MARIO\n나라 이름 퀴즈\nPRESS START BUTTON\n\n이동: ← → | 점프: 스페이스바/↑ | 파이프 입장: 파이프 위로 점프!\n\n정답 블럭을 머리로 치세요! 오답이면 굼바가 나타납니다.",
+    "error": "ElementResolutionError: page.click timed out after 3000ms: page.click failed: element is not connected",
+    "loaded": false
+  },
+  {
+    "id": "world-quiz-battle",
+    "title": "WORLD QUIZ BATTLE - 세계 상식 대전",
+    "buttons": [],
+    "beforeText": "WORLD\nQUIZ BATTLE\nTOUCH TO START",
+    "changed": false,
+    "afterText": "WORLD\nQUIZ BATTLE\nTOUCH TO START",
+    "errors": [],
+    "overflow": false,
+    "canvas": 1,
+    "loaded": true
+  },
+  {
+    "id": "animal-adaptation-game",
+    "title": "동물 마을의 비밀: 환경 적응 대작전",
+    "start": "탐험 시작하기",
+    "buttons": [
+      "탐험 시작하기"
+    ],
+    "beforeText": "학습 목표: 동물의 환경 적응 특징 알아보기\n날씨가 뒤죽박죽! 동물 친구들을 구할 수 있을까요?\n\n사막에 펭귄이, 북극에 사막여우가?! 동물들이 원래 살던 곳으로 돌아가도록 도와줍시다.\n\n날씨가 이상해요!\n탐험 시작하기",
+    "changed": true,
+    "afterText": "환경 탐험\n\n안녕하세요! 저는 북극곰 탐험대장이에요. 살아가기 좋은 환경에서 동물들은 특별한 모습을 하고 있답니다. 세 곳의 환경을 관찰해 볼까요?\n\n버튼을 눌러 환경을 관찰해 보세요!\n\n사막\n열대우림\n극지방\n게임하러 가기",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  },
+  {
+    "id": "python-list-comprehension-factory",
+    "title": "파이썬 복제 기계: 리스트 컴프리헨션 공장",
+    "buttons": [
+      "기계 조작법 배우기"
+    ],
+    "beforeText": "학습 목표\n\n리스트 컴프리헨션의 작동 원리와 range() 함수의 특징을 이해하고, 코드의 결과값을 예측할 수 있습니다.\n\n미스터리 상자를 여는 암호는 무엇을 의미할까요?\n\n공장에 도착한 상자 위에 기묘한 설계도가 놓여 있습니다.\n\n[x*2 for x in range(3)]\n기계 조작법 배우기",
+    "changed": false,
+    "afterText": "학습 목표\n\n리스트 컴프리헨션의 작동 원리와 range() 함수의 특징을 이해하고, 코드의 결과값을 예측할 수 있습니다.\n\n미스터리 상자를 여는 암호는 무엇을 의미할까요?\n\n공장에 도착한 상자 위에 기묘한 설계도가 놓여 있습니다.\n\n[x*2 for x in range(3)]\n기계 조작법 배우기",
+    "errors": [],
+    "overflow": false,
+    "canvas": 0,
+    "loaded": true
+  }
+]

@@ -1,0 +1,42 @@
+[p1 "정수의 덧셈과 뺄셈" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "정수의 덧셈과 뺄셈"]
+root
+  heading
+    text "수직선 탐험"
+  text "0에서 더하기 −3으로 출발점을 만드세요. 이어 더하기 5를 해 보세요. 초기화한 뒤 다시 −3으로 가서 빼기 −5를 해 보고 두 도착점을 비교하세요. 마�..."
+  container
+    container
+      text "0"
+      text "="
+      text "0"
+    container
+      text "-10"
+      text "-9"
+      text "-8"
+      text "-7"
+      text "-6"
+      text "-5"
+      text "-4"
+      text "-3"
+      text "-2"
+      text "-1"
+      text "0"
+      text "1"
+      text "2"
+      text "3"
+      text "4"
+      text "5"
+      text "6"
+      text "7"
+      text "8"
+      text "9"
+      text "10"
+    container
+      text "현재 위치에서"
+      combobox [ref=1]
+        text "더하기(+)"
+      spinbutton [ref=2]
+        text "3"
+      button [ref=3]
+        text "이동!"
+      button [ref=4]
+        text "초기화"

@@ -1,0 +1,17 @@
+[p1 "입체도형 탐험대" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "입체도형 탐험대"]
+root
+  container
+    heading
+      text "상자, 공, 캔... 우리 주변의 물건들은 어떤 모양으로 이루어져 있을까요?"
+    paragraph
+      text "물건을 돌려 보며 숨은 면도 찾아봐요!"
+    paragraph
+      text "학습 목표: 입체도형을 돌려 보며 면, 모서리, 꼭짓점을 빠짐없이 세어요."
+  svg_root "정육면체 구 원기둥 삼각뿔 면, 모서리, 꼭짓점을 세어볼까요?"
+    text "정육면체"
+    text "구"
+    text "원기둥"
+    text "삼각뿔"
+    text "면, 모서리, 꼭짓점을 세어볼까요?"
+  button [ref=1]
+    text "시작하기"

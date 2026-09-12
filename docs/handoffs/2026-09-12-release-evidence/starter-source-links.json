@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://nrich.maths.org/articles/teaching-fractions-understanding-part-whole-concept",
+    "status": 200,
+    "finalUrl": "https://nrich.maths.org/articles/teaching-fractions-understanding-part-whole-concept"
+  },
+  {
+    "url": "https://www.nesdis.noaa.gov/about/k-12-education/atmosphere/what-makes-it-rain",
+    "status": 200,
+    "finalUrl": "https://www.nesdis.noaa.gov/about/k-12-education/atmosphere/what-makes-it-rain"
+  },
+  {
+    "url": "https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/present-simple-verb-be",
+    "error": "The read operation timed out",
+    "followup": "Web source fetch succeeded and displayed the present-simple verb-to-be article."
+  },
+  {
+    "url": "https://www.loc.gov/programs/teachers/getting-started-with-primary-sources/guides/?reload=no",
+    "status": 403,
+    "followup": "Chrome displayed an automatic Cloudflare security check; page contents were not verified. No challenge was bypassed. This external teacher-reference link is not required for lesson playback."
+  },
+  {
+    "url": "https://science.nasa.gov/moon/moon-phases/",
+    "status": 200,
+    "finalUrl": "https://science.nasa.gov/moon/moon-phases/"
+  },
+  {
+    "url": "https://www.metmuseum.org/learn/educators/lesson-plans",
+    "status": 429,
+    "followup": "Web source fetch succeeded and displayed grade-grouped lesson plans."
+  },
+  {
+    "url": "https://openstax.org/books/algebra-and-trigonometry-2e/pages/5-1-quadratic-functions",
+    "status": 200,
+    "finalUrl": "https://openstax.org/books/algebra-and-trigonometry-2e/pages/5-1-quadratic-functions"
+  },
+  {
+    "url": "https://docs.python.org/3/tutorial/controlflow.html",
+    "status": 200,
+    "finalUrl": "https://docs.python.org/3/tutorial/controlflow.html"
+  },
+  {
+    "url": "https://www.unesco.org/en/media-information-literacy/five-laws",
+    "status": 200,
+    "finalUrl": "https://www.unesco.org/en/media-information-literacy/five-laws"
+  }
+]

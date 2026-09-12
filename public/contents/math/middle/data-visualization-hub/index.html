@@ -192,7 +192,7 @@
 
     <div id="start-screen">
         <h1>📊 데이터 시각화 허브</h1>
-        <p class="subtitle">다양한 그래프로 데이터를 분석하고 통계를 배워보세요! 평균, 최댓값, 최솟값을 찾아보세요!</p>
+        <p class="subtitle">연습용 가상 자료의 합과 평균을 계산해요. 10, 20, 30의 평균은 60 ÷ 3 = 20이에요. 같은 자료를 여러 그래프로 보고, 시간의 변화는 꺾은선으로 읽기 좋은 이유를 말해 보세요.</p>
         <button id="start-btn">분석 시작! 🚀</button>
     </div>
 
@@ -206,8 +206,8 @@
         ];
 
         const questionTypes = [
-            { q: (d) => `이 그래프에서 가장 큰 값을 가진 항목은?`, a: (d) => d.labels[d.values.indexOf(Math.max(...d.values))], opts: (d) => d.labels },
-            { q: (d) => `이 그래프에서 가장 작은 값을 가진 항목은?`, a: (d) => d.labels[d.values.indexOf(Math.min(...d.values))], opts: (d) => d.labels },
+            { q: (d) => `이 그래프에서 가장 큰 값을 가진 항목 중 하나는?`, a: (d) => d.labels[d.values.indexOf(Math.max(...d.values))], opts: (d) => d.labels },
+            { q: (d) => `이 그래프에서 가장 작은 값을 가진 항목 중 하나는?`, a: (d) => d.labels[d.values.indexOf(Math.min(...d.values))], opts: (d) => d.labels },
             { q: (d) => `모든 값의 합은 얼마일까요?`, a: (d) => d.values.reduce((a,b)=>a+b,0), opts: (d) => shuffleArray([d.values.reduce((a,b)=>a+b,0), d.values.reduce((a,b)=>a+b,0)+10, d.values.reduce((a,b)=>a+b,0)-5, Math.round(d.values.reduce((a,b)=>a+b,0)*1.2)]) },
             { q: (d) => `평균값(소수점 첫째 자리)은 얼마일까요?`, a: (d) => (d.values.reduce((a,b)=>a+b,0)/d.values.length).toFixed(1), opts: (d) => { const avg = (d.values.reduce((a,b)=>a+b,0)/d.values.length); return shuffleArray([avg.toFixed(1), (avg+2).toFixed(1), (avg-1.5).toFixed(1), (avg*1.1).toFixed(1)]); } }
         ];
@@ -272,7 +272,8 @@
         }
 
         function drawChart() {
-            document.getElementById('chart-title').textContent = currentData.title;
+            if (!currentData) return;
+            document.getElementById('chart-title').textContent = currentData.title + ' (가상 자료)';
             switch (currentChartType) {
                 case 'bar': drawBarChart(currentData); break;
                 case 'pie': drawPieChart(currentData); break;
@@ -305,9 +306,11 @@
         }
 
         function checkAnswer(answer, btn) {
+            if (btn.disabled) return;
             const correctAnswer = currentQuestion.a(currentData);
-            const isCorrect = answer.toString() === correctAnswer.toString();
-            document.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents = 'none');
+            const extreme = currentQuestion === questionTypes[0] ? Math.max(...currentData.values) : currentQuestion === questionTypes[1] ? Math.min(...currentData.values) : null;
+            const isCorrect = extreme === null ? answer.toString() === correctAnswer.toString() : currentData.labels.some((label, i) => label === answer && currentData.values[i] === extreme);
+            document.querySelectorAll('.option-btn').forEach(b => { b.disabled = true; b.style.pointerEvents = 'none'; });
             if (isCorrect) {
                 btn.classList.add('correct');
                 correct++; score += 100 + level * 20;

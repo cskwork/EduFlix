@@ -1,0 +1,408 @@
+bun test v1.3.14 (0d9b296a)
+
+server/generation-language.bun.test.ts:
+(pass) Bun and Vercel reject malformed roots, inherited difficulties and invalid languages without LLM calls [5.86ms]
+(pass) Vercel prompts preserve selected English and Korean generation languages [0.32ms]
+
+server/server-security.bun.test.ts:
+📊 추천 시스템 DB 초기화 완료: /Users/danny/Documents/PARA/Resource/EduFlix/server/db/recommendations.db
+[2026-09-12T05:56:42.979Z] POST /api/content
+(pass) 쓰기 API 접근 제어 > 프로덕션에서 ADMIN_TOKEN이 없으면 콘텐츠 등록이 503으로 막힌다 [8.48ms]
+[2026-09-12T05:56:42.983Z] DELETE /api/content/anything
+(pass) 쓰기 API 접근 제어 > ADMIN_TOKEN이 설정되면 토큰 없는 삭제 요청은 401이다 [3.12ms]
+[2026-09-12T05:56:42.988Z] POST /api/recommendations/clear
+(pass) 쓰기 API 접근 제어 > 추천 데이터 초기화도 관리자 전용이다 [5.91ms]
+[2026-09-12T05:56:42.993Z] GET /api/content
+(pass) 쓰기 API 접근 제어 > 읽기(GET)는 토큰 없이도 열려 있다 [12.98ms]
+[2026-09-12T05:56:43.005Z] GET /api/content
+(pass) 쓰기 API 접근 제어 > 프로덕션 응답에 와일드카드 CORS 헤더가 없다 [4.82ms]
+
+server/irp-lesson.bun.test.ts:
+(pass) IRP scene initialization mounts controls before handlers bind [52.83ms]
+
+server/static.bun.test.ts:
+(pass) live catalog and edited lessons override stale dist while application assets prefer dist [8.21ms]
+
+server/content-storage.bun.test.ts:
+콘텐츠 등록 오류: 47 | export function validateCatalogSource(source: string): void {
+48 |   let catalog: unknown;
+49 |   try {
+50 |     catalog = JSON.parse(source);
+51 |   } catch (error) {
+52 |     throw new Error(`카탈로그 JSON이 손상되었습니다: ${String(error)}`);
+                   ^
+error: 카탈로그 JSON이 손상되었습니다: SyntaxError: JSON Parse error: Expected '}'
+      at validateCatalogSource (/Users/danny/Documents/PARA/Resource/EduFlix/server/services/catalog.ts:52:15)
+      at loadCatalog (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:79:5)
+      at async handleContentRouteUnlocked (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:160:29)
+      at async handleContentRoute (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:551:22)
+
+콘텐츠 등록 오류: 60 |   }
+61 |   if (typeof wrapper.lastUpdated !== "string" || wrapper.lastUpdated.trim().length === 0) {
+62 |     throw new Error("카탈로그 루트 lastUpdated는 비어 있지 않은 문자열이어야 합니다.");
+63 |   }
+64 |   if (!Array.isArray(wrapper.contents)) {
+65 |     throw new Error("카탈로그 contents[] 래퍼가 없습니다.");
+                   ^
+error: 카탈로그 contents[] 래퍼가 없습니다.
+      at validateCatalogSource (/Users/danny/Documents/PARA/Resource/EduFlix/server/services/catalog.ts:65:15)
+      at loadCatalog (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:79:5)
+      at async handleContentRouteUnlocked (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:160:29)
+      at async handleContentRoute (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:551:22)
+
+(pass) corrupt and structurally invalid catalogs are not reset by writes [13.74ms]
+(pass) CRUD respects the publication lock and can retry without losing entries [13.01ms]
+콘텐츠 파일 업데이트 오류: 262 |         if (overrides.contentId !== contentId) return errorResponse('contentId가 일치하지 않습니다', 400)
+263 |       } catch (error) {
+264 |         return errorResponse(error instanceof Error ? error.message : '잘못된 편집 데이터입니다', 400)
+265 |       }
+266 |       const htmlPath = path.join(resolvedDir, 'index.html')
+267 |       const htmlContent = await fs.readFile(htmlPath, 'utf-8')
+                                         ^
+ENOENT: no such file or directory, open '/var/folders/lp/p1cqpv0549zdwkvkg6tzpp7h0000gn/T/eduflix-storage-feA9Za/public/contents/math/elementary/test-lesson/index.html'
+    path: "/var/folders/lp/p1cqpv0549zdwkvkg6tzpp7h0000gn/T/eduflix-storage-feA9Za/public/contents/math/elementary/test-lesson/index.html",
+ syscall: "open",
+   errno: -2,
+    code: "ENOENT"
+
+      at async handleContentRouteUnlocked (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:267:36)
+      at async handleContentRoute (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:551:22)
+      at async <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/server/content-storage.bun.test.ts:64:17)
+
+(pass) editor saves a durable overlay, rejects quizzes and reports missing HTML [9.39ms]
+(pass) export then import preserves all four files and rewrites duplicate manifest id [14.68ms]
+(pass) archive rejects corruption and oversize before inflate [5.34ms]
+(pass) ordinary DEFLATE enclosing-folder archive supports standalone HTML [8.76ms]
+(pass) import never overwrites an uncatalogued lesson directory [9.82ms]
+(pass) malformed archive returns a client error and leaves the catalog unchanged [4.77ms]
+(pass) export reports unsupported assets instead of silently omitting them [4.35ms]
+(pass) simultaneous stale-lock contenders leave the lock and catalog intact [5.76ms]
+(pass) release preserves a replacement lock owned by another acquisition [4.92ms]
+콘텐츠 삭제 오류: 167 |
+168 | test('delete restores lesson files when catalog commit fails, then can retry', async () => {
+169 |   const {root, dir, files} = await fixture()
+170 |   const path = join(root, 'public/contents/index.json')
+171 |   const before = await readFile(path, 'utf8')
+172 |   const write = spyOn(catalogService, 'atomicWriteFile').mockRejectedValue(new Error('injected commit failure'))
+                                                                                     ^
+error: injected commit failure
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/server/content-storage.bun.test.ts:172:80)
+
+(pass) delete restores lesson files when catalog commit fails, then can retry [14.79ms]
+콘텐츠 내보내기 오류: 304 |       if (unsupported.length) return errorResponse(`이 ZIP 형식은 HTML/CSS/JS/manifest만 지원합니다. 별도 에셋이 있어 내보낼 수 없습니다: ${unsupported.join(', ')}`, 400)
+305 |
+306 |       for (const fileName of fileNames) {
+307 |         try {
+308 |           const filePath = path.join(resolvedDir, fileName)
+309 |           files[fileName] = await fs.readFile(filePath, 'utf-8')
+                                           ^
+ENOENT: no such file or directory, open '/var/folders/lp/p1cqpv0549zdwkvkg6tzpp7h0000gn/T/eduflix-storage-tEdBu8/public/contents/math/elementary/test-lesson/index.html'
+    path: "/var/folders/lp/p1cqpv0549zdwkvkg6tzpp7h0000gn/T/eduflix-storage-tEdBu8/public/contents/math/elementary/test-lesson/index.html",
+ syscall: "open",
+   errno: -2,
+    code: "ENOENT"
+
+      at async handleContentRouteUnlocked (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:309:38)
+      at async <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/server/content-storage.bun.test.ts:190:17)
+
+(pass) export requires readable HTML while absent CSS and JS remain optional [8.02ms]
+(pass) streaming multipart imports an exact 2 MiB ZIP with framing overhead [375.70ms]
+(pass) oversize streaming multipart is canceled before parsing and preserves catalog [7.76ms]
+(pass) file size is rejected before arrayBuffer even inside the multipart request bound [12.78ms]
+(pass) malformed multipart returns 400 and releases its lock [8.38ms]
+
+server/server-http.bun.test.ts:
+[2026-09-12T05:56:43.764Z] POST /api/generate
+[2026-09-12T05:56:43.771Z] GET /api/generate/status/http-job
+(pass) Bun HTTP server wiring > POST 202의 jobId를 실제 HTTP GET status로 즉시 조회한다 [9.76ms]
+[2026-09-12T05:56:43.776Z] POST /api/generate
+(pass) Bun HTTP server wiring > 키가 없으면 실제 HTTP/JSON 배선에서 503을 반환한다 [4.83ms]
+[2026-09-12T05:56:43.780Z] POST /api/generate
+(pass) Bun HTTP server wiring > 유효하지 않은 renderMode는 400을 반환한다 [4.61ms]
+
+tests/unit/server-health.test.ts:
+(pass) 생성 엔진 헬스 체크 > 기본 Z.ai 모델과 키 준비 상태를 반환한다 [1.02ms]
+(pass) 생성 엔진 헬스 체크 > 선택적 Codex provider를 반환한다 [0.08ms]
+
+tests/unit/server-config.test.ts:
+(pass) 서버 설정 > PORT가 없거나 올바르지 않으면 3001을 사용한다 [0.18ms]
+(pass) 서버 설정 > 양의 PORT를 사용한다 [0.02ms]
+(pass) 서버 설정 > Z.ai 기본 URL과 모델을 제공한다 [0.09ms]
+
+tests/unit/serverless-generation-quality.test.ts:
+ 5 | const files = (js: string) => `===FILE: index.html===\n<h1>Fractions</h1>\n===END FILE===\n===FILE: style.css===\nh1{color:black}\n===END FILE===\n===FILE: script.js===\n${js}\n===END FILE===`
+ 6 | const sse = (text: string) => new Response(`data: ${JSON.stringify({ choices: [{ delta: { content: text }, finish_reason: 'stop' }] })}\n\ndata: [DONE]\n\n`, { headers: { 'Content-Type': 'text/event-stream' } })
+ 7 |
+ 8 | describe('serverless generation quality', () => {
+ 9 |   it('uses low for GLM-5.3 while preserving the selected model and explicit supported effort', () => {
+10 |     vi.stubEnv('ZAI_MODEL', 'glm-5.3-flash'); vi.stubEnv('ZAI_REASONING_EFFORT', '')
+            ^
+TypeError: vi.stubEnv is not a function. (In 'vi.stubEnv("ZAI_MODEL", "glm-5.3-flash")', 'vi.stubEnv' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:10:8)
+1 | import { afterEach, describe, expect, it, vi } from 'vitest'
+2 | import { buildZaiRequestBody, parseBuildMarkers, parseEducationalVerdict, POST } from '../../api/generate'
+3 |
+4 | afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.restoreAllMocks() })
+                         ^
+TypeError: vi.unstubAllEnvs is not a function. (In 'vi.unstubAllEnvs()', 'vi.unstubAllEnvs' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:4:22)
+(fail) serverless generation quality > uses low for GLM-5.3 while preserving the selected model and explicit supported effort [1.24ms]
+16 |     vi.stubEnv('ZAI_REASONING_EFFORT', 'medium')
+17 |     expect(() => buildZaiRequestBody('brief')).toThrow('low, high, max')
+18 |   })
+19 |   it('parses classic JavaScript without running it and rejects broken or module scripts', () => {
+20 |     expect(parseBuildMarkers(files('throw new Error("must not run");'))['script.js']).toContain('must not run')
+21 |     expect(() => parseBuildMarkers(files('const broken = ;'))).toThrow('script.js 문법 오류')
+                                                                    ^
+error: expect(received).toThrow(expected)
+
+Expected substring: "script.js 문법 오류"
+
+Received function did not throw
+Received value: {
+  "index.html": "<h1>Fractions</h1>",
+  "style.css": "h1{color:black}",
+  "script.js": "const broken = ;",
+}
+
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:21:64)
+1 | import { afterEach, describe, expect, it, vi } from 'vitest'
+2 | import { buildZaiRequestBody, parseBuildMarkers, parseEducationalVerdict, POST } from '../../api/generate'
+3 |
+4 | afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.restoreAllMocks() })
+                         ^
+TypeError: vi.unstubAllEnvs is not a function. (In 'vi.unstubAllEnvs()', 'vi.unstubAllEnvs' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:4:22)
+(fail) serverless generation quality > parses classic JavaScript without running it and rejects broken or module scripts [1.78ms]
+20 |     expect(parseBuildMarkers(files('throw new Error("must not run");'))['script.js']).toContain('must not run')
+21 |     expect(() => parseBuildMarkers(files('const broken = ;'))).toThrow('script.js 문법 오류')
+22 |     expect(() => parseBuildMarkers(files('export const value = 1;'))).toThrow('script.js 문법 오류')
+23 |   })
+24 |   it('sends configured effort on the real request path and retries syntax failure with feedback', async () => {
+25 |     vi.stubEnv('ZAI_API_KEY', 'test'); vi.stubEnv('ADMIN_TOKEN', ''); vi.stubEnv('NODE_ENV', 'test')
+            ^
+TypeError: vi.stubEnv is not a function. (In 'vi.stubEnv("ZAI_API_KEY", "test")', 'vi.stubEnv' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:25:8)
+1 | import { afterEach, describe, expect, it, vi } from 'vitest'
+2 | import { buildZaiRequestBody, parseBuildMarkers, parseEducationalVerdict, POST } from '../../api/generate'
+3 |
+4 | afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.restoreAllMocks() })
+                         ^
+TypeError: vi.unstubAllEnvs is not a function. (In 'vi.unstubAllEnvs()', 'vi.unstubAllEnvs' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:4:22)
+(fail) serverless generation quality > sends configured effort on the real request path and retries syntax failure with feedback [0.32ms]
+51 |     const fetch = vi.fn()
+52 |       .mockResolvedValueOnce(sse(files('const feedback = "안쪽은 마른 상태";')))
+53 |       .mockResolvedValueOnce(sse(JSON.stringify({ pass: false, issues: [issue] })))
+54 |       .mockResolvedValueOnce(sse(files('const feedback = "표면 온도와 공기 습도 조건을 확인하세요";')))
+55 |       .mockResolvedValueOnce(pass())
+56 |     vi.stubGlobal('fetch', fetch)
+            ^
+TypeError: vi.stubGlobal is not a function. (In 'vi.stubGlobal("fetch", fetch)', 'vi.stubGlobal' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:56:8)
+1 | import { afterEach, describe, expect, it, vi } from 'vitest'
+2 | import { buildZaiRequestBody, parseBuildMarkers, parseEducationalVerdict, POST } from '../../api/generate'
+3 |
+4 | afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.restoreAllMocks() })
+                         ^
+TypeError: vi.unstubAllEnvs is not a function. (In 'vi.unstubAllEnvs()', 'vi.unstubAllEnvs' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:4:22)
+(fail) mandatory educational review > regenerates contradictions using exact review issues and accepts only reviewed output [0.31ms]
+68 |     const fetch = vi.fn()
+69 |       .mockResolvedValueOnce(sse(files('const first = 1;')))
+70 |       .mockResolvedValueOnce(sse('Looks good!'))
+71 |       .mockResolvedValueOnce(sse(files('const second = 2;')))
+72 |       .mockResolvedValueOnce(sse('{"pass":"true","issues":[]}'))
+73 |     vi.stubGlobal('fetch', fetch)
+            ^
+TypeError: vi.stubGlobal is not a function. (In 'vi.stubGlobal("fetch", fetch)', 'vi.stubGlobal' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:73:8)
+1 | import { afterEach, describe, expect, it, vi } from 'vitest'
+2 | import { buildZaiRequestBody, parseBuildMarkers, parseEducationalVerdict, POST } from '../../api/generate'
+3 |
+4 | afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.restoreAllMocks() })
+                         ^
+TypeError: vi.unstubAllEnvs is not a function. (In 'vi.unstubAllEnvs()', 'vi.unstubAllEnvs' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:4:22)
+(fail) mandatory educational review > does not accept malformed reviewer output, even after both generation attempts [0.18ms]
+1 | import { afterEach, describe, expect, it, vi } from 'vitest'
+2 | import { buildZaiRequestBody, parseBuildMarkers, parseEducationalVerdict, POST } from '../../api/generate'
+3 |
+4 | afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.restoreAllMocks() })
+                         ^
+TypeError: vi.unstubAllEnvs is not a function. (In 'vi.unstubAllEnvs()', 'vi.unstubAllEnvs' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:4:22)
+(fail) mandatory educational review > rejects contradictory or empty failure verdicts instead of assuming approval [0.34ms]
+84 |       expect(() => parseEducationalVerdict(value)).toThrow()
+85 |     }
+86 |   })
+87 |   it('returns output after an explicit successful educational review', async () => {
+88 |     const fetch = vi.fn().mockResolvedValueOnce(sse(files('const ready = true;'))).mockResolvedValueOnce(pass())
+89 |     vi.stubGlobal('fetch', fetch)
+            ^
+TypeError: vi.stubGlobal is not a function. (In 'vi.stubGlobal("fetch", fetch)', 'vi.stubGlobal' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:89:8)
+1 | import { afterEach, describe, expect, it, vi } from 'vitest'
+2 | import { buildZaiRequestBody, parseBuildMarkers, parseEducationalVerdict, POST } from '../../api/generate'
+3 |
+4 | afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.restoreAllMocks() })
+                         ^
+TypeError: vi.unstubAllEnvs is not a function. (In 'vi.unstubAllEnvs()', 'vi.unstubAllEnvs' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:4:22)
+(fail) mandatory educational review > returns output after an explicit successful educational review [0.15ms]
+ 97 |     vi.spyOn(Date, 'now').mockImplementation(() => now)
+ 98 |     const fetch = vi.fn().mockImplementationOnce(async () => {
+ 99 |       now += 284_500
+100 |       return sse(files('const ready = true;'))
+101 |     })
+102 |     vi.stubGlobal('fetch', fetch)
+             ^
+TypeError: vi.stubGlobal is not a function. (In 'vi.stubGlobal("fetch", fetch)', 'vi.stubGlobal' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:102:8)
+1 | import { afterEach, describe, expect, it, vi } from 'vitest'
+2 | import { buildZaiRequestBody, parseBuildMarkers, parseEducationalVerdict, POST } from '../../api/generate'
+3 |
+4 | afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.restoreAllMocks() })
+                         ^
+TypeError: vi.unstubAllEnvs is not a function. (In 'vi.unstubAllEnvs()', 'vi.unstubAllEnvs' is undefined)
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/tests/unit/serverless-generation-quality.test.ts:4:22)
+(fail) mandatory educational review > keeps the original total deadline rather than granting review a fresh budget [0.16ms]
+
+tests/unit/server-security.test.ts:
+(pass) isInside > 하위 경로를 허용한다 [0.03ms]
+(pass) isInside > 형제 디렉터리의 접두사 일치를 거부한다 (startsWith 우회 방지) [0.04ms]
+(pass) isInside > 상위로 탈출하는 경로를 거부한다 [0.02ms]
+(pass) isInside > base 자기 자신은 기본적으로 거부한다 (콘텐츠 루트 통째 삭제 방지) [0.01ms]
+(pass) slug 검증 > kebab-case slug만 통과시킨다 [0.12ms]
+(pass) slug 검증 > gradeLevel은 3종만 허용한다 [0.04ms]
+(pass) checkWriteAccess > 개발 모드에서 토큰이 없으면 통과시킨다 [0.12ms]
+(pass) checkWriteAccess > 프로덕션에서 ADMIN_TOKEN 미설정이면 쓰기를 막는다 [0.03ms]
+(pass) checkWriteAccess > 토큰이 설정되면 헤더가 일치해야 통과한다 [0.14ms]
+(pass) checkWriteAccess > Authorization: Bearer 형식도 허용한다 [0.06ms]
+(pass) checkWriteAccess > 개발 모드라도 토큰이 설정되어 있으면 검증한다 [0.04ms]
+
+agents/content-factory/pipeline/schema-contract.test.ts:
+(pass) Codex 출력 스키마와 사후 검증 계약 > 네 단계 스키마가 strict subset이며 validator의 유효 산출물을 허용한다 [7.02ms]
+(pass) Codex 출력 스키마와 사후 검증 계약 > generated 이미지 필수 필드 누락을 schema와 validator가 함께 거부한다 [0.70ms]
+(pass) Codex 출력 스키마와 사후 검증 계약 > validator가 허용하는 모든 명시 enum 값을 스키마도 허용한다 [7.02ms]
+(pass) Codex 출력 스키마와 사후 검증 계약 > 핵심 required/type 경계를 schema와 validator가 함께 거부한다 [4.58ms]
+(pass) Codex 출력 스키마와 사후 검증 계약 > judge 선택 fix 없이도 schema와 validator가 같은 산출물을 허용한다 [0.49ms]
+(pass) Codex 출력 스키마와 사후 검증 계약 > JSON 생성 단계가 각 스키마 파일을 Codex 호출에 전달한다 [1.03ms]
+
+agents/content-factory/pipeline/run.test.ts:
+(pass) CLI 입력 경계 > 한글이 섞인 주제는 ASCII 조각이 같아도 서로 다른 안전한 slug를 만든다 [0.82ms]
+(pass) CLI 입력 경계 > 단계 단독 실행은 누락된 선행 산출물을 단계 이름과 함께 알린다 [1.79ms]
+(pass) CLI 입력 경계 > 선행 산출물이 없는 단계 단독 실행은 빈 run 디렉터리를 만들지 않는다 [49.22ms]
+
+agents/content-factory/pipeline/judge-contract.test.ts:
+(pass) Q21 정적 심사 계약 > 입력·포커스·키보드 코드만으로 판정 가능하다 [0.75ms]
+
+agents/content-factory/pipeline/stages/publish.test.ts:
+(pass) updateCatalog > 기존 항목 원문을 유지한 채 새 항목을 추가한다 [0.63ms]
+(pass) updateCatalog > 같은 id를 force 없이 덮어쓰지 않는다 [0.11ms]
+(pass) updateCatalog > force 교체에서도 다른 항목 바이트를 보존한다 [0.09ms]
+(pass) updateCatalog > 손상되거나 id가 중복된 카탈로그를 수정하지 않는다 [0.08ms]
+(pass) updateCatalog > version과 lastUpdated가 유효한 문자열인 루트 래퍼만 허용한다 [0.07ms]
+(pass) updateCatalog > contents가 먼저 와도 루트 lastUpdated만 갱신한다 [0.09ms]
+(pass) updateCatalog > 중첩 contents보다 루트 contents만 찾아 새 항목을 추가한다 [0.07ms]
+(pass) updateCatalog > 루트 contents 키가 중복되면 수정하지 않고 거부한다 [0.04ms]
+(pass) updateCatalog > 완전한 성공 QA 보고서 없이는 퍼블리시하지 않는다 [0.31ms]
+(pass) updateCatalog > QA 이후 핵심 파일이나 로컬 이미지가 변경되면 퍼블리시하지 않는다 [59.77ms]
+(pass) updateCatalog > manifest grade가 실행 grade와 다르면 퍼블리시하지 않는다 [10.05ms]
+(pass) updateCatalog > 동시 퍼블리시 락이 있으면 카탈로그를 쓰지 않는다 [12.21ms]
+(pass) updateCatalog > 소유 프로세스가 종료된 stale 락도 안전하게 보존한다 [8.94ms]
+
+agents/content-factory/pipeline/stages/qa.test.ts:
+(pass) 정적 QA 경로 일관성 > 정확한 Three.js r128 CDN 두 파일만 외부 script 예외로 허용한다 [8.55ms]
+(pass) 정적 QA 경로 일관성 > 인라인 EduFlixEngine 핵심 런타임 계약이 없으면 실패한다 [5.69ms]
+(pass) 정적 QA 경로 일관성 > manifest가 실제 콘텐츠 디렉터리와 다른 id를 주장하면 실패한다 [5.47ms]
+(pass) 정적 QA 경로 일관성 > manifest grade 형식과 gradeLevel 접두사가 잘못되면 실패한다 [10.99ms]
+(pass) 정적 QA 경로 일관성 > 참조한 0바이트 이미지와 사용하지 않은 계획 이미지를 거부한다 [5.93ms]
+(pass) 정적 QA 경로 일관성 > script.js의 객체 속성 문자열로 참조한 계획 이미지도 사용으로 인정한다 [9.18ms]
+(pass) 정적 QA 경로 일관성 > 생성 PNG는 manifest가 아니라 콘텐츠 코드에서 하나 이상 참조해야 한다 [8.79ms]
+(pass) 정적 QA 경로 일관성 > 입력과 대상 파일이 그대로인 성공 QA 보고서는 재개할 수 있다 [14.46ms]
+
+agents/content-factory/pipeline/stages/build.test.ts:
+(pass) 빌드 산출물 격리 > 빌드 프롬프트는 에셋 단계의 상대경로만 참조하고 이미지를 스테이징하지 않는다 [0.62ms]
+(pass) 빌드 산출물 격리 > 빌드는 에셋 단계가 둔 이미지를 보존하고 네 핵심 파일만 승격한다 [478.71ms]
+(pass) 빌드 산출물 격리 > renderMode 기본값 3d는 3D 모범 사례를, dom은 DOM 모범 사례를 채택한다 [819.72ms]
+(pass) 빌드 산출물 격리 > force 빌드가 새 핵심 파일을 쓰지 않으면 기존 파일을 보존하고 실패한다 [447.12ms]
+(pass) 빌드 산출물 격리 > 잘못된 상위 JSON은 Codex 실행 전에 거부한다 [15.15ms]
+(pass) 빌드 산출물 격리 > Codex가 계약의 4파일 외 산출물을 쓰면 승격하지 않고 실패한다 [408.95ms]
+(pass) 빌드 산출물 격리 > 숨김 도구 아티팩트(.playwright-cli 등)는 4파일 검사에서 무시되고 승격되지 않는다 [487.96ms]
+(pass) 빌드 산출물 격리 > 핵심 파일 승격 중 실패하면 기존 4파일을 모두 복원한다 [490.10ms]
+
+agents/content-factory/pipeline/stages/common.test.ts:
+(pass) 콘텐츠 ID 경계 > slug만 허용하고 경로·빈 값·숨김 경로를 거부한다 [0.33ms]
+(pass) 단계 재개 입력 동일성 > 동일 입력만 재사용하고 변경된 입력은 명확히 거부한다 [2.81ms]
+
+agents/content-factory/pipeline/stages/assets.vitest.test.ts:
+(pass) assets image policy > runner가 skipImages를 미리 true로 설정해도 Z.ai 자동 skip을 로그로 남긴다 [4.98ms]
+
+agents/content-factory/pipeline/stages/boundaries.test.ts:
+(pass) 단계 소비 경계 > storyboard는 저장된 plan을 사용하기 전에 검증한다 [3.25ms]
+(pass) 단계 소비 경계 > assets는 저장된 storyboard를 사용하기 전에 검증한다 [8.58ms]
+
+agents/content-factory/pipeline/lib/validate.test.ts:
+(pass) 단계 산출물 타입가드 > 프롬프트의 기획 JSON 계약을 허용한다 [0.19ms]
+(pass) 단계 산출물 타입가드 > 기획 최상위 입력과 언어 지침을 요구한다 [0.12ms]
+(pass) 단계 산출물 타입가드 > 비어 있는 기획 내부 객체와 배열 항목을 거부한다 [0.13ms]
+(pass) 단계 산출물 타입가드 > 다섯 장면 순서와 퀴즈 수를 확인한다 [0.10ms]
+(pass) 단계 산출물 타입가드 > 빈 스토리보드 장면과 문항 내부 필드를 거부한다 [0.04ms]
+(pass) 단계 산출물 타입가드 > 신규 이미지 2개 초과를 거부한다 [0.07ms]
+(pass) 단계 산출물 타입가드 > 에셋 파일 경로 이탈과 허용되지 않은 이름을 거부한다 [0.18ms]
+(pass) 단계 산출물 타입가드 > 에셋 계획의 reused, cssAlternatives, coverage 내부 계약을 검증한다 [0.07ms]
+(pass) 단계 산출물 타입가드 > 재사용 목록 membership과 필수 에셋 coverage를 교차 검증한다 [0.27ms]
+(pass) 단계 산출물 타입가드 > skip-images는 주입 목록의 thumbnail 공용 PNG를 요구한다 [0.09ms]
+(pass) 단계 산출물 타입가드 > 에셋 계획 contentId를 요구한다 [0.02ms]
+(pass) 단계 산출물 타입가드 > 심사 총평과 항목 판정이 모순되면 거부한다 [0.09ms]
+(pass) 단계 산출물 타입가드 > 생성 manifest의 고정 12필드를 검증한다 [0.08ms]
+(pass) 단계 산출물 타입가드 > manifest grade 형식과 gradeLevel 접두사를 검증한다 [0.08ms]
+
+agents/content-factory/pipeline/lib/zai.vitest.test.ts:
+(pass) Z.ai SSE 생성 > 기본 시간 제한은 정확히 10분이다 [0.14ms]
+(pass) Z.ai SSE 생성 > 분할된 SSE stream에서 choice[0].delta.content만 모으고 stop에서 종료한다 [6.59ms]
+(pass) Z.ai SSE 생성 > schema 없는 일반 텍스트는 EOF의 마지막 SSE frame까지 원문 그대로 보존한다 [3.60ms]
+(pass) Z.ai SSE 생성 > [DONE] 뒤의 event를 읽지 않는다 [2.69ms]
+(pass) Z.ai SSE 생성 > schema 본문을 prompt 끝에 붙이고 실패해도 기존 출력을 원자적으로 보존하며 총 3회 시도한다 [3.26ms]
+(pass) Z.ai SSE 생성 > 재시도 prompt에 직전 검증 오류를 피드백한다 [2.53ms]
+(pass) Z.ai SSE 생성 > HTTP 오류와 빈 응답을 재시도하고 abort timeout을 보고한다 [23.48ms]
+(pass) Z.ai SSE 생성 > 호출자가 지정한 label을 최종 오류에 보존한다 [1.53ms]
+(pass) build marker 계약 > 정확한 네 파일을 파싱한다 [0.55ms]
+(pass) build marker 계약 > 호출자가 지정한 파일 목록만 marker whitelist로 사용한다 [0.27ms]
+(pass) build marker 계약 > 동적 파일 계약으로 staging 파일과 원문 response를 기록한다 [4.46ms]
+(pass) build marker 계약 > 경로 이탈을 거부한다 [0.17ms]
+(pass) build marker 계약 > 중복을 거부한다 [0.03ms]
+(pass) build marker 계약 > 누락을 거부한다 [0.02ms]
+(pass) build marker 계약 > 빈 파일을 거부한다
+
+agents/content-factory/pipeline/lib/assets.test.ts:
+(pass) 빌드 에셋 경로 해석 > 생성·재사용 에셋을 실존하는 절대경로로 전달하고 누락은 거부한다 [4.34ms]
+
+agents/content-factory/pipeline/lib/engine.vitest.test.ts:
+(pass) 팩토리 LLM 엔진 라우팅 > 기본 Z.ai와 선택적 Codex 설정을 해석한다 [1.08ms]
+(pass) 팩토리 LLM 엔진 라우팅 > 일반 텍스트 옵션을 provider별 구현으로 그대로 라우팅한다 [1.16ms]
+(pass) 팩토리 LLM 엔진 라우팅 > 파일 생성 계약을 Z.ai에는 명시적으로, Codex에는 기존 workspace-write 옵션으로 전달한다 [0.30ms]
+
+agents/content-factory/pipeline/lib/codex.test.ts:
+(pass) Codex 출력 복구 > 호출자가 지정한 label을 최종 오류에 보존한다 [241.77ms]
+(pass) Codex 출력 복구 > 새 출력을 쓰지 않은 성공 프로세스가 이전 파일을 재사용하지 못한다 [226.85ms]
+(pass) Codex 출력 복구 > 첫 성공 프로세스의 빈 출력도 한 번 재시도한다 [477.17ms]
+(pass) Codex 출력 복구 > 오염된 JSON 재생성이 두 번 실패해도 이전 산출물을 보존한다 [445.41ms]
+(pass) Codex 출력 복구 > 이미지 재생성이 실패해도 이전 PNG를 보존한다 [250.33ms]
+(pass) Codex 출력 복구 > 시간 제한으로 종료할 때 Codex가 만든 자식 프로세스도 남기지 않는다 [1067.62ms]
+
+8 tests failed:
+(fail) serverless generation quality > uses low for GLM-5.3 while preserving the selected model and explicit supported effort [1.24ms]
+(fail) serverless generation quality > parses classic JavaScript without running it and rejects broken or module scripts [1.78ms]
+(fail) serverless generation quality > sends configured effort on the real request path and retries syntax failure with feedback [0.32ms]
+(fail) mandatory educational review > regenerates contradictions using exact review issues and accepts only reviewed output [0.31ms]
+(fail) mandatory educational review > does not accept malformed reviewer output, even after both generation attempts [0.18ms]
+(fail) mandatory educational review > rejects contradictory or empty failure verdicts instead of assuming approval [0.34ms]
+(fail) mandatory educational review > returns output after an explicit successful educational review [0.15ms]
+(fail) mandatory educational review > keeps the original total deadline rather than granting review a fresh budget [0.16ms]
+
+ 128 pass
+ 8 fail
+ 920 expect() calls
+Ran 136 tests across 24 files. [7.17s]

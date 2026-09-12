@@ -1,0 +1,32 @@
+[p1 "입체도형 탐험대" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "입체도형 탐험대"]
+root
+  heading
+    text "입체도형 관찰하기"
+  text "정육면체를 선택해 천천히 돌리며 면, 모서리, 꼭짓점을 세세요. 그다음 직육면체와 비교하세요. 곡면을 가진 도형은 평평한 면과 굽은 면을 구별해 설..."
+  container
+    container
+      button [ref=1]
+        text "정육면체"
+      button [ref=2]
+        text "구"
+      button [ref=3]
+        text "원기둥"
+      button [ref=4]
+        text "삼각뿔"
+    canvas
+    container
+      heading
+        text "정육면체"
+      container
+        container
+          text "6"
+          text "면"
+        container
+          text "12"
+          text "모서리"
+        container
+          text "8"
+          text "꼭짓점"
+    paragraph
+      text "도형을 드래그해서 여러 방향에서 관찰해보세요!"
+    text "발견한 도형: 0/4"

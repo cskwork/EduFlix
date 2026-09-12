@@ -1,0 +1,16 @@
+[p1 "일차함수와 기울기" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "일차함수와 기울기"]
+root
+  container
+    heading
+      text "스키장의 가파른 정도를 숫자로 어떻게 나타낼까요?"
+    paragraph
+      text "겨울에 스키장 가본 적 있나요?"
+    paragraph
+      text "학습 목표: 직선 위 두 점에서 x와 y의 변화량을 구하여 기울기를 설명해요."
+  svg_root "완만 가파름 기울기 = ? 기울기 = ?"
+    text "완만"
+    text "가파름"
+    text "기울기 = ?"
+    text "기울기 = ?"
+  button [ref=1]
+    text "시작하기"

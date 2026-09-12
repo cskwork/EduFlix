@@ -221,7 +221,7 @@
         <div id="feedback-message"></div>
         <div id="start-screen">
             <h1>📈 함수 탐험가 3D</h1>
-            <p class="subtitle">3D 공간에서 함수 그래프를 탐험하세요! 일차함수의 기울기, y절편, 함숫값을 마스터해요!</p>
+            <p class="subtitle">y = 2x + 1에서 x가 1 늘면 y는 2 늘고, x = 0일 때 y는 1이에요. 기울기만 바꾸었을 때와 y절편만 바꾸었을 때 그래프가 어떻게 달라지는지 비교해 보세요.</p>
             <button id="start-btn">탐험 시작! 🚀</button>
         </div>
     </div>
@@ -351,6 +351,7 @@
         }
 
         function generateProblem() {
+            document.getElementById("answer-input").disabled = false;
             currentProblem = problemGenerators[currentFuncType](level);
             document.getElementById('problem-text').textContent = currentProblem.text;
             document.getElementById('answer-input').value = '';
@@ -367,9 +368,11 @@
         }
 
         function submitAnswer() {
+            if (document.getElementById("answer-input").disabled) return;
             const userAnswer = parseFloat(document.getElementById('answer-input').value);
             if (isNaN(userAnswer)) { showFeedback('❓', '#fbbf24'); return; }
-            if (Math.abs(userAnswer - currentProblem.answer) < 0.01) {
+            if (Math.abs(userAnswer - currentProblem.answer) < 1e-9) {
+                document.getElementById("answer-input").disabled = true;
                 correct++; score += 100 + level * 20;
                 if (correct % 5 === 0) level++;
                 showFeedback('🎉 정답!', '#10b981');

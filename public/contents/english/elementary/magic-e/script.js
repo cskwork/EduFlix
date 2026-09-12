@@ -125,7 +125,7 @@ const ContentApp = {
         setTimeout(() => {
             const discovery = document.getElementById('discovery-box');
             if (discovery) discovery.classList.add('show');
-        }, 1500);
+        }, 4500);
     },
     
     nextWord() {
@@ -241,6 +241,11 @@ const ContentApp = {
             this.playAudio(quiz.options[quiz.correct]);
         }
         
+        const feedback = document.createElement('p');
+        feedback.className = 'quiz-feedback show';
+        feedback.setAttribute('role', 'status');
+        feedback.textContent = `정답은 ${quiz.options[quiz.correct]}입니다. 끝의 e는 소리 내지 않고 앞의 모음을 이름 소리로 바꾸는 이 단어 묶음을 비교해 보세요.`;
+        document.getElementById('quiz-container').appendChild(feedback);
         setTimeout(() => {
             if (this.quizIndex < this.quizData.length - 1) {
                 this.quizIndex++;
@@ -248,7 +253,7 @@ const ContentApp = {
             } else {
                 this.nextScene();
             }
-        }, 1500);
+        }, 4500);
     },
     
     bindEvents() {

@@ -18,8 +18,8 @@
         <!-- Hook Scene -->
         <div id="hook-ui" class="scene-ui active">
             <div class="info-panel bottom-panel">
-                <h1 class="hook-title">원기둥에 원뿔이 몇 개 들어갈까?</h1>
-                <p class="hook-subtitle">똑같은 높이와 밑면을 가진 원기둥과 원뿔</p>
+                <h1 class="hook-title">같은 밑면·높이에서 부피는 몇 배일까?</h1>
+                <p class="hook-subtitle">목표: 같은 반지름과 높이를 기준으로 원기둥과 원뿔의 부피를 비교해요.</p>
             </div>
         </div>
         
@@ -37,15 +37,15 @@
             <div class="info-panel bottom-panel story-panel">
                 <div class="character-badge">음료 회사</div>
                 <h3>새 음료 용기 설계</h3>
-                <p id="story-text">"이번에 새 음료를 출시하는데, 원기둥 캔과 원뿔 컵 중 어떤 게 더 많이 담길까? 같은 재료로 더 많이 담을 수 있는 모양을 찾아줘!"</p>
+                <p id="story-text">"이번에 새 음료를 출시하는데, 원기둥 캔과 원뿔 컵 중 어떤 게 더 많이 담길까? 밑면 반지름과 높이가 같을 때 부피를 비교해 줘! 겉넓이나 재료량은 이 모형에서 비교하지 않아."</p>
             </div>
         </div>
         
         <!-- Core Scene -->
         <div id="core-ui" class="scene-ui">
             <div class="info-panel top-panel">
-                <h2>물 채우기 실험</h2>
-                <p class="instruction">원뿔에 물을 채워서 원기둥에 부어보세요!</p>
+                <h2>입체와 부피 모형</h2>
+                <p class="instruction">원기둥을 선택해 채우기·비우기를 관찰하세요. 원뿔로 옮겨 붓는 실험은 아닙니다. r=3, h=6이면 원기둥 54π, 원뿔 18π입니다. 세 배 관계를 계산하고 회전해 모양을 비교하세요.</p>
             </div>
             <div class="solid-selector">
                 <button class="solid-btn active" data-solid="cylinder">
@@ -77,8 +77,8 @@
             </div>
             <div class="action-buttons core-actions">
                 <button class="action-btn" id="fill-btn">물 채우기</button>
-                <button class="action-btn" id="pour-btn">부어보기</button>
-                <button class="action-btn" id="slice-btn">단면 보기</button>
+                <button class="action-btn" id="pour-btn">원기둥 비우기</button>
+                <button class="action-btn" id="slice-btn">투명도 바꾸기</button>
             </div>
         </div>
         

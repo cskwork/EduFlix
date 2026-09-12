@@ -1,0 +1,102 @@
+[
+  {
+    "id": "fraction-factory-3d",
+    "directory": "public/contents/math/elementary/fraction-factory-3d"
+  },
+  {
+    "id": "multiplication-mountain-3d",
+    "directory": "public/contents/math/elementary/multiplication-mountain-3d"
+  },
+  {
+    "id": "measurement-lab-3d",
+    "directory": "public/contents/math/elementary/measurement-lab-3d"
+  },
+  {
+    "id": "pattern-planet-3d",
+    "directory": "public/contents/math/elementary/pattern-planet-3d"
+  },
+  {
+    "id": "3d-algebra-city",
+    "directory": "public/contents/math/middle/3d-algebra-city"
+  },
+  {
+    "id": "geometry-world-3d",
+    "directory": "public/contents/math/middle/geometry-world-3d"
+  },
+  {
+    "id": "data-visualization-hub",
+    "directory": "public/contents/math/middle/data-visualization-hub"
+  },
+  {
+    "id": "function-explorer-3d",
+    "directory": "public/contents/math/middle/function-explorer-3d"
+  },
+  {
+    "id": "problem-solving-arena",
+    "directory": "public/contents/math/middle/problem-solving-arena"
+  },
+  {
+    "id": "multiplication-balloon",
+    "directory": "public/contents/math/elementary/multiplication-balloon"
+  },
+  {
+    "id": "multiplication-racing",
+    "directory": "public/contents/math/elementary/multiplication-racing"
+  },
+  {
+    "id": "coordinate-explorer",
+    "directory": "public/contents/math/elementary/coordinate-explorer"
+  },
+  {
+    "id": "pythagorean-3d",
+    "directory": "public/contents/math/middle/pythagorean-3d"
+  },
+  {
+    "id": "rotation-solid",
+    "directory": "public/contents/math/middle/rotation-solid"
+  },
+  {
+    "id": "space-numbers",
+    "directory": "public/contents/math/elementary/space-numbers"
+  },
+  {
+    "id": "pythagorean-isometric",
+    "directory": "public/contents/math/middle/pythagorean-isometric"
+  },
+  {
+    "id": "8bit-math-quest",
+    "directory": "public/contents/math/elementary/8bit-math-quest"
+  },
+  {
+    "id": "fraction-precision-alpha",
+    "directory": "public/contents/math/elementary/fraction-precision-alpha"
+  },
+  {
+    "id": "fraction-precision-beta",
+    "directory": "public/contents/math/elementary/fraction-precision-beta"
+  },
+  {
+    "id": "fraction-precision-gamma",
+    "directory": "public/contents/math/elementary/fraction-precision-gamma"
+  },
+  {
+    "id": "fraction-precision-delta",
+    "directory": "public/contents/math/elementary/fraction-precision-delta"
+  },
+  {
+    "id": "fraction-precision-epsilon",
+    "directory": "public/contents/math/elementary/fraction-precision-epsilon"
+  },
+  {
+    "id": "line-point-symmetry",
+    "directory": "public/contents/math/elementary/line-point-symmetry"
+  },
+  {
+    "id": "cylinder-volume",
+    "directory": "public/contents/math/elementary/cylinder-volume"
+  },
+  {
+    "id": "irp-future-wealth-simulator",
+    "directory": "public/contents/math/middle/irp-future-wealth-simulator"
+  }
+]

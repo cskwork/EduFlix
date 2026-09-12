@@ -1,0 +1,25 @@
+[p1 "Word Detective 3D - Middle School English" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "Word Detective 3D - Middle School English"]
+root
+  container
+    container
+      text "🔎 Case:"
+      text "1"
+      text "/10"
+    container
+      text "⭐ Score:"
+      text "0"
+    container
+      text "💡 Hints:"
+      text "3"
+  container
+    text "📋 Detective Case #1"
+    text "🔍 Context Clues:"
+  button [ref=1]
+    text "💡 Get Hint"
+  container
+    heading
+      text "🕵️ Word Detective 3D"
+    paragraph
+      text "Welcome, Detective! Your mission is to solve vocabulary mysteries using context clues. Read each sentence carefully, examine the clues, and determine the meaning of the mystery word. Good luck!"
+    button [ref=2]
+      text "Start Investigation!"

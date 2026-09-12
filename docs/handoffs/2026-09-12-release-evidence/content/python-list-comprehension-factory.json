@@ -1,0 +1,302 @@
+{
+  "id": "python-list-comprehension-factory",
+  "title": "파이썬 복제 기계: 리스트 컴프리헨션 공장",
+  "family": "classic-special",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "q": {
+        "prompt": "코드: <span style='color:#00CEC9; font-family:monospace;'>[x for x in range(3)]</span> 의 결과로 알맞은 것은?",
+        "choice": "B",
+        "options": [
+          {
+            "id": "A",
+            "text": "[1, 2, 3]"
+          },
+          {
+            "id": "B",
+            "text": "[0, 1, 2]"
+          },
+          {
+            "id": "C",
+            "text": "[0, 1, 2, 3]"
+          },
+          {
+            "id": "D",
+            "text": "[1, 2]"
+          }
+        ],
+        "index": 0,
+        "source": {
+          "id": "Q1",
+          "prompt": "코드: <span style='color:#00CEC9; font-family:monospace;'>[x for x in range(3)]</span> 의 결과로 알맞은 것은?",
+          "choices": [
+            {
+              "id": "A",
+              "text": "[1, 2, 3]"
+            },
+            {
+              "id": "B",
+              "text": "[0, 1, 2]"
+            },
+            {
+              "id": "C",
+              "text": "[0, 1, 2, 3]"
+            },
+            {
+              "id": "D",
+              "text": "[1, 2]"
+            }
+          ],
+          "correctChoiceId": "B",
+          "correctFeedback": "정답입니다! range(3)는 0부터 3직전까지(0, 1, 2)를 만들어내요.",
+          "incorrectFeedback": "앗, 틀렸어요! range(3)의 범위를 다시 생각해 보세요.",
+          "hint": "시작값을 생략한 range(3)는 0부터 시작하며 끝값 3은 포함하지 않습니다. range(1, 4)는 1, 2, 3입니다."
+        }
+      },
+      "after": {
+        "scene": "quiz",
+        "text": "코드 점검 퀴즈!\n코드: [x for x in range(3)] 의 결과로 알맞은 것은?\n[1, 2, 3]\n[0, 1, 2]\n[0, 1, 2, 3]\n[1, 2]\n정답입니다! range(3)는 0부터 3직전까지(0, 1, 2)를 만들어내요.\n다음 문제"
+      }
+    },
+    {
+      "q": {
+        "prompt": "코드: <span style='color:#00CEC9; font-family:monospace;'>[x*2 for x in range(2)]</span> 의 결과로 알맞은 것은?",
+        "choice": "A",
+        "options": [
+          {
+            "id": "A",
+            "text": "[0, 2]"
+          },
+          {
+            "id": "B",
+            "text": "[2, 4]"
+          },
+          {
+            "id": "C",
+            "text": "[0, 1, 2]"
+          },
+          {
+            "id": "D",
+            "text": "[0, 2, 4]"
+          }
+        ],
+        "index": 1,
+        "source": {
+          "id": "Q2",
+          "prompt": "코드: <span style='color:#00CEC9; font-family:monospace;'>[x*2 for x in range(2)]</span> 의 결과로 알맞은 것은?",
+          "choices": [
+            {
+              "id": "A",
+              "text": "[0, 2]"
+            },
+            {
+              "id": "B",
+              "text": "[2, 4]"
+            },
+            {
+              "id": "C",
+              "text": "[0, 1, 2]"
+            },
+            {
+              "id": "D",
+              "text": "[0, 2, 4]"
+            }
+          ],
+          "correctChoiceId": "A",
+          "correctFeedback": "정답입니다! range(2)로 0, 1이 나오고 각각 2를 곱해서 0, 2가 되었어요.",
+          "incorrectFeedback": "틀렸어요. range의 숫자를 먼저 확인하세요.",
+          "hint": "range(2)는 0과 1 두 개의 숫자를 만들어냅니다. 그것들을 각각 2배 해보세요."
+        }
+      },
+      "after": {
+        "scene": "quiz",
+        "text": "코드 점검 퀴즈!\n코드: [x*2 for x in range(2)] 의 결과로 알맞은 것은?\n[0, 2]\n[2, 4]\n[0, 1, 2]\n[0, 2, 4]\n정답입니다! range(2)로 0, 1이 나오고 각각 2를 곱해서 0, 2가 되었어요.\n다음 문제"
+      }
+    },
+    {
+      "q": {
+        "prompt": "코드: <span style='color:#00CEC9; font-family:monospace;'>[x+3 for x in range(3)]</span> 의 결과로 알맞은 것은?",
+        "choice": "A",
+        "options": [
+          {
+            "id": "A",
+            "text": "[3, 4, 5]"
+          },
+          {
+            "id": "B",
+            "text": "[3, 6, 9]"
+          },
+          {
+            "id": "C",
+            "text": "[0, 1, 2]"
+          },
+          {
+            "id": "D",
+            "text": "[1, 2, 3]"
+          }
+        ],
+        "index": 2,
+        "source": {
+          "id": "Q3",
+          "prompt": "코드: <span style='color:#00CEC9; font-family:monospace;'>[x+3 for x in range(3)]</span> 의 결과로 알맞은 것은?",
+          "choices": [
+            {
+              "id": "A",
+              "text": "[3, 4, 5]"
+            },
+            {
+              "id": "B",
+              "text": "[3, 6, 9]"
+            },
+            {
+              "id": "C",
+              "text": "[0, 1, 2]"
+            },
+            {
+              "id": "D",
+              "text": "[1, 2, 3]"
+            }
+          ],
+          "correctChoiceId": "A",
+          "correctFeedback": "정답입니다! 0, 1, 2에 각각 3을 더해서 [3, 4, 5]가 되었어요.",
+          "incorrectFeedback": "곱하기(*)가 아니라 더하기(+) 연산자네요. 숫자를 꼼꼼히 계산해 보세요.",
+          "hint": "range(3)으로 0, 1, 2를 만든 뒤, 각각에 3을 더해보세요."
+        }
+      },
+      "after": {
+        "scene": "quiz",
+        "text": "코드 점검 퀴즈!\n코드: [x+3 for x in range(3)] 의 결과로 알맞은 것은?\n[3, 4, 5]\n[3, 6, 9]\n[0, 1, 2]\n[1, 2, 3]\n정답입니다! 0, 1, 2에 각각 3을 더해서 [3, 4, 5]가 되었어요.\n다음 문제"
+      }
+    },
+    {
+      "q": {
+        "prompt": "리스트 컴프리헨션 기계에서 코드를 읽고 실행되는 가장 알맞은 순서는 무엇인가요?",
+        "choice": "B",
+        "options": [
+          {
+            "id": "A",
+            "text": "왼쪽의 공식부터 계산한 뒤, 오른쪽의 for문으로 진행한다."
+          },
+          {
+            "id": "B",
+            "text": "오른쪽의 for문으로 원재료를 먼저 꺼낸 뒤, 왼쪽의 공식으로 변환한다."
+          },
+          {
+            "id": "C",
+            "text": "대괄호 기호 [ ]를 먼저 그리고 안의 숫자를 채운다."
+          },
+          {
+            "id": "D",
+            "text": "위에서 아래로 차례대로 읽는다."
+          }
+        ],
+        "index": 3,
+        "source": {
+          "id": "Q4",
+          "prompt": "리스트 컴프리헨션 기계에서 코드를 읽고 실행되는 가장 알맞은 순서는 무엇인가요?",
+          "choices": [
+            {
+              "id": "A",
+              "text": "왼쪽의 공식부터 계산한 뒤, 오른쪽의 for문으로 진행한다."
+            },
+            {
+              "id": "B",
+              "text": "오른쪽의 for문으로 원재료를 먼저 꺼낸 뒤, 왼쪽의 공식으로 변환한다."
+            },
+            {
+              "id": "C",
+              "text": "대괄호 기호 [ ]를 먼저 그리고 안의 숫자를 채운다."
+            },
+            {
+              "id": "D",
+              "text": "위에서 아래로 차례대로 읽는다."
+            }
+          ],
+          "correctChoiceId": "B",
+          "correctFeedback": "정확합니다! 리스트 컴프리헨션은 오른쪽 for문부터 실행되어 재료를 꺼낸 뒤 왼쪽 공식으로 변환됩니다.",
+          "incorrectFeedback": "코드를 읽는 방향에 대해 다시 생각해 보세요.",
+          "hint": "기계 작동 시 슬롯에 값을 넣기 위해 가장 먼저 실행된 부분을 떠올려 보세요."
+        }
+      },
+      "after": {
+        "scene": "quiz",
+        "text": "코드 점검 퀴즈!\n리스트 컴프리헨션 기계에서 코드를 읽고 실행되는 가장 알맞은 순서는 무엇인가요?\n왼쪽의 공식부터 계산한 뒤, 오른쪽의 for문으로 진행한다.\n오른쪽의 for문으로 원재료를 먼저 꺼낸 뒤, 왼쪽의 공식으로 변환한다.\n대괄호 기호 [ ]를 먼저 그리고 안의 숫자를 채운다.\n위에서 아래로 차례대로 읽는다.\n정확합니다! 리스트 컴프리헨션은 오른쪽 for문부터 실행되어 재료를 꺼낸 뒤 왼쪽 공식으로 변환됩니다.\n다음 문제"
+      }
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#scene-hook button"
+    },
+    {
+      "click": "#scene-story button"
+    },
+    {
+      "click": ".num-card[data-value=\"2\"]"
+    },
+    {
+      "click": ".num-card[data-value=\"0\"]"
+    },
+    {
+      "click": "#lever-btn"
+    },
+    {
+      "click": ".num-card[data-value=\"1\"]"
+    },
+    {
+      "click": "#lever-btn"
+    },
+    {
+      "click": ".num-card[data-value=\"2\"]"
+    },
+    {
+      "click": "#lever-btn"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": ".quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#quiz-next-btn"
+    },
+    {
+      "click": ".quiz-option:nth-child(1)"
+    },
+    {
+      "click": "#quiz-next-btn"
+    },
+    {
+      "click": ".quiz-option:nth-child(1)"
+    },
+    {
+      "click": "#quiz-next-btn"
+    },
+    {
+      "click": ".quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#quiz-next-btn"
+    },
+    {
+      "click": "#scene-wrap button:first-child"
+    }
+  ],
+  "rejectedOutOfOrder": {
+    "disabled": true,
+    "text": "range(3)는 순서대로 0, 1, 2를 만듭니다. 지금은 0을(를) 넣으세요."
+  },
+  "activityObservation": {
+    "scene": "core",
+    "text": "리스트 컴프리헨션 공장\n\nrange(3)가 만드는 순서 0 → 1 → 2대로 카드를 슬롯에 넣고 레버를 당겨보세요. 3번 카드는 끝값을 포함하는지 확인하는 오답 카드입니다.\n\nRANGE(3) 창고\n0\n1\n2\n3\nX*2 변환 슬롯\n기계 가동 (레버 당기기)\n[\n0\n2\n4\n]\n멋지게 리스트 [0, 2, 4]가 완성되었어요! 대괄호 상자 안에 잘 모였네요.\n결과 확인하러 가기"
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "학습 완료!\n\n우리가 만든 리스트 암호로 미스터리 상자가 열렸어요! 리스트 컴프리헨션의 3단계 작동 원리를 기억하세요.\n\n1\n원재료 생성\nrange()로 숫자를 만듭니다.\n2\n공식 변환\nx*2 등 왼쪽 공식을 통과시킵니다.\n3\n리스트 조립\n대괄호 [ ] 안에 결과를 담습니다.\n다시 학습하기\n학습 종료하기"
+  }
+}

@@ -1,0 +1,11 @@
+[p1 "물질의 상태 변화 - 분자의 비밀" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "물질의 상태 변화 - 분자의 비밀"]
+root
+  container
+    svg_root "열"
+      text "열"
+    heading
+      text "물이 갑자기 사라졌다?"
+    paragraph
+      text "뜨거운 물에서 올라오는 김... 어디로 가는 걸까?"
+    button [ref=1]
+      text "알아보기"

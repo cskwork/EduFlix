@@ -113,6 +113,8 @@ function handleImprove(contentId: string) {
           {{ t('common.cancel') }}
         </button>
 
+        <button v-if="isError" type="button" class="btn btn-secondary" @click="handleCancel">{{ t('common.back') }}</button>
+
         <button v-if="isError" type="button" class="btn btn-primary" @click="handleRetry">
           {{ t('common.retry') }}
         </button>

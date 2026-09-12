@@ -30,6 +30,8 @@ function getMimeType(path: string): string {
 export async function serveStaticFile(
   pathname: string, directories: { staticDir: string; publicDir: string },
 ): Promise<Response | null> {
+  // A built frontend uses revision URLs on Bun as well as on Vercel.
+  pathname = pathname.replace(/^\/content-revisions\/[a-f0-9]{16}\//, '/contents/')
   const roots = pathname.startsWith('/contents/')
     ? [directories.publicDir, directories.staticDir]
     : [directories.staticDir, directories.publicDir]
@@ -39,7 +41,7 @@ export async function serveStaticFile(
     if (!isInside(base, target)) continue
     const candidate = file(target)
     if (await candidate.exists()) {
-      return new Response(candidate, { headers: { 'Content-Type': getMimeType(pathname) } })
+      return new Response(candidate, { headers: { 'Content-Type': getMimeType(pathname), ...(pathname.startsWith('/contents/') ? { 'Cache-Control': 'public, max-age=0, must-revalidate' } : {}) } })
     }
   }
   return null

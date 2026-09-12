@@ -1,0 +1,12 @@
+{
+  "id": "fraction-factory-3d",
+  "frontDoor": true,
+  "activity": "Machine actual click generated5/6",
+  "answers": [
+    "6/12 (1/2)"
+  ],
+  "completion": true,
+  "reset": true,
+  "method": "Chrome CUA actual input, DOM evidence",
+  "mobile": false
+}

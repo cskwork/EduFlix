@@ -1,0 +1,36 @@
+[p1 "달의 위상 변화 - 변하는 달의 비밀" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "달의 위상 변화 - 변하는 달의 비밀"]
+root
+  container
+    heading
+      text "오늘 발견한 것"
+    container
+      container
+        text "1"
+        paragraph
+          text "달은"
+          text "태양빛을 반사"
+          text "해서 밝게 보인다"
+      container
+        text "2"
+        paragraph
+          text "달이 지구 주위를 돌면서"
+          text "위상이 변한다"
+      container
+        text "3"
+        paragraph
+          text "한 달 주기: 삭 → 상현 → 보름 → 하현 → 삭"
+    container
+      heading
+        text "🌙 재미있는 사실"
+      paragraph
+        text "달은 항상 같은 면만 지구를 향하고 있어! 이것을 "동주기 자전"이라고 해."
+    container
+      heading
+        text "다음에 배울 것"
+      paragraph
+        text "일식과 월식, 조석 현상"
+    container
+      button [ref=1]
+        text "다시 관측하기"
+      button [ref=2]
+        text "처음으로"

@@ -1,0 +1,51 @@
+[p1 "3D 좌표계: 드론 파일럿" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "3D 좌표계: 드론 파일럿"]
+root
+  heading
+    text "드론 비행 시뮬레이션"
+  text "목표의 x,y,z를 차례로 입력해 비행하세요. 한 축 값만 1 바꾸어 드론의 이동 방향을 관찰한 뒤 목표로 돌아오세요. 화면을 돌려도 좌표가 바뀌는지 확인..."
+  container
+    canvas
+    container
+      container
+        text "("
+        container
+          text "x:"
+          spinbutton [ref=1]
+            text "0"
+        text ","
+        container
+          text "y:"
+          spinbutton [ref=2]
+            text "0"
+        text ","
+        container
+          text "z:"
+          spinbutton [ref=3]
+            text "0"
+        text ")"
+      button [ref=4]
+        text "비행!"
+      container
+        container
+          text "0"
+          text "X 좌표"
+        container
+          text "0"
+          text "Y 좌표"
+        container
+          text "0"
+          text "Z 좌표"
+    container
+      text "미션 1"
+      container
+        text "목표:"
+        text "창고 A"
+        text "("
+        text "3"
+        text ","
+        text "2"
+        text ","
+        text "4"
+        text ")"
+    paragraph
+      text "드래그해서 3D 공간을 둘러보세요!"

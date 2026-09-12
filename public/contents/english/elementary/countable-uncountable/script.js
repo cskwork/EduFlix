@@ -24,7 +24,7 @@ const ContentApp = {
             sentence: 'I need ______ water.',
             answer: 'some',
             options: ['a', 'an', 'some', 'two'],
-            explanation: 'water는 셀 수 없어서 "some"을 써요.'
+            explanation: '이 문장의 water는 물질을 나타내므로 some water가 알맞아요. Water is important처럼 some 없이도 쓰며, a bottle of water로 용기를 셀 수 있어요.'
         },
         {
             sentence: 'There are three ______ on the table.',
@@ -36,7 +36,7 @@ const ContentApp = {
             sentence: 'Can I have ______ egg?',
             answer: 'an',
             options: ['a', 'an', 'some', 'many'],
-            explanation: 'egg는 셀 수 있고 모음으로 시작해서 "an"을 써요.'
+            explanation: 'egg는 단수 가산명사이며 첫 발음이 모음 소리 /e/이므로 an egg라고 해요. 글자가 아니라 소리를 기준으로 고릅니다.'
         },
         {
             sentence: 'We need ______ for the recipe.',

@@ -1,0 +1,212 @@
+bun test v1.3.14 (0d9b296a)
+
+server/generation-language.bun.test.ts:
+(pass) Bun and Vercel reject malformed roots, inherited difficulties and invalid languages without LLM calls [3.37ms]
+(pass) Vercel prompts preserve selected English and Korean generation languages [0.74ms]
+
+server/server-security.bun.test.ts:
+📊 추천 시스템 DB 초기화 완료: /Users/danny/Documents/PARA/Resource/EduFlix/server/db/recommendations.db
+[2026-09-12T04:52:28.420Z] POST /api/content
+(pass) 쓰기 API 접근 제어 > 프로덕션에서 ADMIN_TOKEN이 없으면 콘텐츠 등록이 503으로 막힌다 [5.63ms]
+[2026-09-12T04:52:28.425Z] DELETE /api/content/anything
+(pass) 쓰기 API 접근 제어 > ADMIN_TOKEN이 설정되면 토큰 없는 삭제 요청은 401이다 [4.44ms]
+[2026-09-12T04:52:28.429Z] POST /api/recommendations/clear
+(pass) 쓰기 API 접근 제어 > 추천 데이터 초기화도 관리자 전용이다 [4.31ms]
+[2026-09-12T04:52:28.434Z] GET /api/content
+(pass) 쓰기 API 접근 제어 > 읽기(GET)는 토큰 없이도 열려 있다 [11.17ms]
+[2026-09-12T04:52:28.444Z] GET /api/content
+(pass) 쓰기 API 접근 제어 > 프로덕션 응답에 와일드카드 CORS 헤더가 없다 [7.64ms]
+
+server/irp-lesson.bun.test.ts:
+(pass) IRP scene initialization mounts controls before handlers bind [298.53ms]
+
+server/static.bun.test.ts:
+(pass) live catalog and edited lessons override stale dist while application assets prefer dist [8.76ms]
+
+server/content-storage.bun.test.ts:
+콘텐츠 등록 오류: 47 | export function validateCatalogSource(source: string): void {
+48 |   let catalog: unknown;
+49 |   try {
+50 |     catalog = JSON.parse(source);
+51 |   } catch (error) {
+52 |     throw new Error(`카탈로그 JSON이 손상되었습니다: ${String(error)}`);
+                   ^
+error: 카탈로그 JSON이 손상되었습니다: SyntaxError: JSON Parse error: Expected '}'
+      at validateCatalogSource (/Users/danny/Documents/PARA/Resource/EduFlix/server/services/catalog.ts:52:15)
+      at loadCatalog (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:79:5)
+      at async handleContentRouteUnlocked (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:160:29)
+      at async handleContentRoute (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:551:22)
+
+콘텐츠 등록 오류: 60 |   }
+61 |   if (typeof wrapper.lastUpdated !== "string" || wrapper.lastUpdated.trim().length === 0) {
+62 |     throw new Error("카탈로그 루트 lastUpdated는 비어 있지 않은 문자열이어야 합니다.");
+63 |   }
+64 |   if (!Array.isArray(wrapper.contents)) {
+65 |     throw new Error("카탈로그 contents[] 래퍼가 없습니다.");
+                   ^
+error: 카탈로그 contents[] 래퍼가 없습니다.
+      at validateCatalogSource (/Users/danny/Documents/PARA/Resource/EduFlix/server/services/catalog.ts:65:15)
+      at loadCatalog (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:79:5)
+      at async handleContentRouteUnlocked (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:160:29)
+      at async handleContentRoute (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:551:22)
+
+(pass) corrupt and structurally invalid catalogs are not reset by writes [54.77ms]
+(pass) CRUD respects the publication lock and can retry without losing entries [17.27ms]
+콘텐츠 파일 업데이트 오류: 262 |         if (overrides.contentId !== contentId) return errorResponse('contentId가 일치하지 않습니다', 400)
+263 |       } catch (error) {
+264 |         return errorResponse(error instanceof Error ? error.message : '잘못된 편집 데이터입니다', 400)
+265 |       }
+266 |       const htmlPath = path.join(resolvedDir, 'index.html')
+267 |       const htmlContent = await fs.readFile(htmlPath, 'utf-8')
+                                         ^
+ENOENT: no such file or directory, open '/var/folders/lp/p1cqpv0549zdwkvkg6tzpp7h0000gn/T/eduflix-storage-R7vdCm/public/contents/math/elementary/test-lesson/index.html'
+    path: "/var/folders/lp/p1cqpv0549zdwkvkg6tzpp7h0000gn/T/eduflix-storage-R7vdCm/public/contents/math/elementary/test-lesson/index.html",
+ syscall: "open",
+   errno: -2,
+    code: "ENOENT"
+
+      at async handleContentRouteUnlocked (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:267:36)
+      at async handleContentRoute (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:551:22)
+      at async <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/server/content-storage.bun.test.ts:64:17)
+
+(pass) editor saves a durable overlay, rejects quizzes and reports missing HTML [15.95ms]
+(pass) export then import preserves all four files and rewrites duplicate manifest id [21.51ms]
+(pass) archive rejects corruption and oversize before inflate [4.98ms]
+(pass) ordinary DEFLATE enclosing-folder archive supports standalone HTML [11.38ms]
+(pass) import never overwrites an uncatalogued lesson directory [10.09ms]
+(pass) malformed archive returns a client error and leaves the catalog unchanged [8.46ms]
+(pass) export reports unsupported assets instead of silently omitting them [5.88ms]
+(pass) simultaneous stale-lock contenders leave the lock and catalog intact [4.81ms]
+(pass) release preserves a replacement lock owned by another acquisition [14.01ms]
+콘텐츠 삭제 오류: 167 |
+168 | test('delete restores lesson files when catalog commit fails, then can retry', async () => {
+169 |   const {root, dir, files} = await fixture()
+170 |   const path = join(root, 'public/contents/index.json')
+171 |   const before = await readFile(path, 'utf8')
+172 |   const write = spyOn(catalogService, 'atomicWriteFile').mockRejectedValue(new Error('injected commit failure'))
+                                                                                     ^
+error: injected commit failure
+      at <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/server/content-storage.bun.test.ts:172:80)
+
+(pass) delete restores lesson files when catalog commit fails, then can retry [15.98ms]
+콘텐츠 내보내기 오류: 304 |       if (unsupported.length) return errorResponse(`이 ZIP 형식은 HTML/CSS/JS/manifest만 지원합니다. 별도 에셋이 있어 내보낼 수 없습니다: ${unsupported.join(', ')}`, 400)
+305 |
+306 |       for (const fileName of fileNames) {
+307 |         try {
+308 |           const filePath = path.join(resolvedDir, fileName)
+309 |           files[fileName] = await fs.readFile(filePath, 'utf-8')
+                                           ^
+ENOENT: no such file or directory, open '/var/folders/lp/p1cqpv0549zdwkvkg6tzpp7h0000gn/T/eduflix-storage-Sn7fA5/public/contents/math/elementary/test-lesson/index.html'
+    path: "/var/folders/lp/p1cqpv0549zdwkvkg6tzpp7h0000gn/T/eduflix-storage-Sn7fA5/public/contents/math/elementary/test-lesson/index.html",
+ syscall: "open",
+   errno: -2,
+    code: "ENOENT"
+
+      at async handleContentRouteUnlocked (/Users/danny/Documents/PARA/Resource/EduFlix/server/routes/content.ts:309:38)
+      at async <anonymous> (/Users/danny/Documents/PARA/Resource/EduFlix/server/content-storage.bun.test.ts:190:17)
+
+(pass) export requires readable HTML while absent CSS and JS remain optional [8.11ms]
+(pass) streaming multipart imports an exact 2 MiB ZIP with framing overhead [1794.13ms]
+(pass) oversize streaming multipart is canceled before parsing and preserves catalog [10.22ms]
+(pass) file size is rejected before arrayBuffer even inside the multipart request bound [19.47ms]
+(pass) malformed multipart returns 400 and releases its lock [4.51ms]
+
+server/server-http.bun.test.ts:
+[2026-09-12T04:52:31.323Z] POST /api/generate
+[2026-09-12T04:52:31.324Z] GET /api/generate/status/http-job
+(pass) Bun HTTP server wiring > POST 202의 jobId를 실제 HTTP GET status로 즉시 조회한다 [9.48ms]
+[2026-09-12T04:52:31.401Z] POST /api/generate
+(pass) Bun HTTP server wiring > 키가 없으면 실제 HTTP/JSON 배선에서 503을 반환한다 [77.18ms]
+[2026-09-12T04:52:31.410Z] POST /api/generate
+(pass) Bun HTTP server wiring > 유효하지 않은 renderMode는 400을 반환한다 [8.94ms]
+
+agents/content-factory/pipeline/schema-contract.test.ts:
+(pass) Codex 출력 스키마와 사후 검증 계약 > 네 단계 스키마가 strict subset이며 validator의 유효 산출물을 허용한다 [10.55ms]
+(pass) Codex 출력 스키마와 사후 검증 계약 > generated 이미지 필수 필드 누락을 schema와 validator가 함께 거부한다 [0.34ms]
+(pass) Codex 출력 스키마와 사후 검증 계약 > validator가 허용하는 모든 명시 enum 값을 스키마도 허용한다 [21.95ms]
+(pass) Codex 출력 스키마와 사후 검증 계약 > 핵심 required/type 경계를 schema와 validator가 함께 거부한다 [36.07ms]
+(pass) Codex 출력 스키마와 사후 검증 계약 > judge 선택 fix 없이도 schema와 validator가 같은 산출물을 허용한다 [2.90ms]
+(pass) Codex 출력 스키마와 사후 검증 계약 > JSON 생성 단계가 각 스키마 파일을 Codex 호출에 전달한다 [8.61ms]
+
+agents/content-factory/pipeline/run.test.ts:
+(pass) CLI 입력 경계 > 한글이 섞인 주제는 ASCII 조각이 같아도 서로 다른 안전한 slug를 만든다 [0.42ms]
+(pass) CLI 입력 경계 > 단계 단독 실행은 누락된 선행 산출물을 단계 이름과 함께 알린다 [3.75ms]
+(pass) CLI 입력 경계 > 선행 산출물이 없는 단계 단독 실행은 빈 run 디렉터리를 만들지 않는다 [145.78ms]
+
+agents/content-factory/pipeline/judge-contract.test.ts:
+(pass) Q21 정적 심사 계약 > 입력·포커스·키보드 코드만으로 판정 가능하다 [0.71ms]
+
+agents/content-factory/pipeline/stages/publish.test.ts:
+(pass) updateCatalog > 기존 항목 원문을 유지한 채 새 항목을 추가한다 [33.55ms]
+(pass) updateCatalog > 같은 id를 force 없이 덮어쓰지 않는다 [0.30ms]
+(pass) updateCatalog > force 교체에서도 다른 항목 바이트를 보존한다 [0.23ms]
+(pass) updateCatalog > 손상되거나 id가 중복된 카탈로그를 수정하지 않는다 [0.31ms]
+(pass) updateCatalog > version과 lastUpdated가 유효한 문자열인 루트 래퍼만 허용한다 [0.14ms]
+(pass) updateCatalog > contents가 먼저 와도 루트 lastUpdated만 갱신한다 [0.12ms]
+(pass) updateCatalog > 중첩 contents보다 루트 contents만 찾아 새 항목을 추가한다 [0.08ms]
+(pass) updateCatalog > 루트 contents 키가 중복되면 수정하지 않고 거부한다 [0.04ms]
+(pass) updateCatalog > 완전한 성공 QA 보고서 없이는 퍼블리시하지 않는다 [0.66ms]
+(pass) updateCatalog > QA 이후 핵심 파일이나 로컬 이미지가 변경되면 퍼블리시하지 않는다 [86.33ms]
+(pass) updateCatalog > manifest grade가 실행 grade와 다르면 퍼블리시하지 않는다 [12.84ms]
+(pass) updateCatalog > 동시 퍼블리시 락이 있으면 카탈로그를 쓰지 않는다 [17.13ms]
+(pass) updateCatalog > 소유 프로세스가 종료된 stale 락도 안전하게 보존한다 [67.50ms]
+
+agents/content-factory/pipeline/stages/qa.test.ts:
+(pass) 정적 QA 경로 일관성 > 정확한 Three.js r128 CDN 두 파일만 외부 script 예외로 허용한다 [33.88ms]
+(pass) 정적 QA 경로 일관성 > 인라인 EduFlixEngine 핵심 런타임 계약이 없으면 실패한다 [8.10ms]
+(pass) 정적 QA 경로 일관성 > manifest가 실제 콘텐츠 디렉터리와 다른 id를 주장하면 실패한다 [12.94ms]
+(pass) 정적 QA 경로 일관성 > manifest grade 형식과 gradeLevel 접두사가 잘못되면 실패한다 [123.92ms]
+(pass) 정적 QA 경로 일관성 > 참조한 0바이트 이미지와 사용하지 않은 계획 이미지를 거부한다 [20.71ms]
+(pass) 정적 QA 경로 일관성 > script.js의 객체 속성 문자열로 참조한 계획 이미지도 사용으로 인정한다 [5.91ms]
+(pass) 정적 QA 경로 일관성 > 생성 PNG는 manifest가 아니라 콘텐츠 코드에서 하나 이상 참조해야 한다 [7.79ms]
+(pass) 정적 QA 경로 일관성 > 입력과 대상 파일이 그대로인 성공 QA 보고서는 재개할 수 있다 [11.51ms]
+
+agents/content-factory/pipeline/stages/build.test.ts:
+(pass) 빌드 산출물 격리 > 빌드 프롬프트는 에셋 단계의 상대경로만 참조하고 이미지를 스테이징하지 않는다 [2.27ms]
+(pass) 빌드 산출물 격리 > 빌드는 에셋 단계가 둔 이미지를 보존하고 네 핵심 파일만 승격한다 [622.33ms]
+(pass) 빌드 산출물 격리 > renderMode 기본값 3d는 3D 모범 사례를, dom은 DOM 모범 사례를 채택한다 [890.07ms]
+(pass) 빌드 산출물 격리 > force 빌드가 새 핵심 파일을 쓰지 않으면 기존 파일을 보존하고 실패한다 [412.72ms]
+(pass) 빌드 산출물 격리 > 잘못된 상위 JSON은 Codex 실행 전에 거부한다 [5.00ms]
+(pass) 빌드 산출물 격리 > Codex가 계약의 4파일 외 산출물을 쓰면 승격하지 않고 실패한다 [401.45ms]
+(pass) 빌드 산출물 격리 > 숨김 도구 아티팩트(.playwright-cli 등)는 4파일 검사에서 무시되고 승격되지 않는다 [402.97ms]
+(pass) 빌드 산출물 격리 > 핵심 파일 승격 중 실패하면 기존 4파일을 모두 복원한다 [402.86ms]
+
+agents/content-factory/pipeline/stages/common.test.ts:
+(pass) 콘텐츠 ID 경계 > slug만 허용하고 경로·빈 값·숨김 경로를 거부한다 [0.15ms]
+(pass) 단계 재개 입력 동일성 > 동일 입력만 재사용하고 변경된 입력은 명확히 거부한다 [2.09ms]
+
+agents/content-factory/pipeline/stages/boundaries.test.ts:
+(pass) 단계 소비 경계 > storyboard는 저장된 plan을 사용하기 전에 검증한다 [5.79ms]
+(pass) 단계 소비 경계 > assets는 저장된 storyboard를 사용하기 전에 검증한다 [5.66ms]
+
+agents/content-factory/pipeline/lib/validate.test.ts:
+(pass) 단계 산출물 타입가드 > 프롬프트의 기획 JSON 계약을 허용한다 [0.19ms]
+(pass) 단계 산출물 타입가드 > 기획 최상위 입력과 언어 지침을 요구한다 [0.13ms]
+(pass) 단계 산출물 타입가드 > 비어 있는 기획 내부 객체와 배열 항목을 거부한다 [0.13ms]
+(pass) 단계 산출물 타입가드 > 다섯 장면 순서와 퀴즈 수를 확인한다 [0.10ms]
+(pass) 단계 산출물 타입가드 > 빈 스토리보드 장면과 문항 내부 필드를 거부한다 [0.05ms]
+(pass) 단계 산출물 타입가드 > 신규 이미지 2개 초과를 거부한다 [0.08ms]
+(pass) 단계 산출물 타입가드 > 에셋 파일 경로 이탈과 허용되지 않은 이름을 거부한다 [0.17ms]
+(pass) 단계 산출물 타입가드 > 에셋 계획의 reused, cssAlternatives, coverage 내부 계약을 검증한다 [0.07ms]
+(pass) 단계 산출물 타입가드 > 재사용 목록 membership과 필수 에셋 coverage를 교차 검증한다 [0.27ms]
+(pass) 단계 산출물 타입가드 > skip-images는 주입 목록의 thumbnail 공용 PNG를 요구한다 [0.08ms]
+(pass) 단계 산출물 타입가드 > 에셋 계획 contentId를 요구한다 [0.02ms]
+(pass) 단계 산출물 타입가드 > 심사 총평과 항목 판정이 모순되면 거부한다 [0.09ms]
+(pass) 단계 산출물 타입가드 > 생성 manifest의 고정 12필드를 검증한다 [0.13ms]
+(pass) 단계 산출물 타입가드 > manifest grade 형식과 gradeLevel 접두사를 검증한다 [0.08ms]
+
+agents/content-factory/pipeline/lib/assets.test.ts:
+(pass) 빌드 에셋 경로 해석 > 생성·재사용 에셋을 실존하는 절대경로로 전달하고 누락은 거부한다 [15.23ms]
+
+agents/content-factory/pipeline/lib/codex.test.ts:
+(pass) Codex 출력 복구 > 호출자가 지정한 label을 최종 오류에 보존한다 [226.46ms]
+(pass) Codex 출력 복구 > 새 출력을 쓰지 않은 성공 프로세스가 이전 파일을 재사용하지 못한다 [234.86ms]
+(pass) Codex 출력 복구 > 첫 성공 프로세스의 빈 출력도 한 번 재시도한다 [574.07ms]
+(pass) Codex 출력 복구 > 오염된 JSON 재생성이 두 번 실패해도 이전 산출물을 보존한다 [1523.04ms]
+(pass) Codex 출력 복구 > 이미지 재생성이 실패해도 이전 PNG를 보존한다 [413.14ms]
+(pass) Codex 출력 복구 > 시간 제한으로 종료할 때 Codex가 만든 자식 프로세스도 남기지 않는다 [1090.83ms]
+
+ 93 pass
+ 0 fail
+ 837 expect() calls
+Ran 93 tests across 17 files. [11.09s]

@@ -20,7 +20,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "factory": "bun agents/content-factory/pipeline/run.ts"
+    "factory": "bun agents/content-factory/pipeline/run.ts",
+    "test:content-quality": "node scripts/verify-content-quality/group-1.mjs && node scripts/verify-content-quality/group-2.mjs && node scripts/verify-content-quality/group-3.mjs && node scripts/verify-content-quality/syntax.mjs"
   },
   "dependencies": {
     "dotenv": "^17.2.3",

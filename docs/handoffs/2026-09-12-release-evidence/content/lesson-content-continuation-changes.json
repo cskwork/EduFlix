@@ -1,0 +1,31 @@
+{
+  "scope": "Changes made by lesson_content during expanded verification continuation, excludes earlier84-content audit improvements",
+  "files": [
+    "public/contents/math/elementary/fractions-pizza/style.css",
+    "public/contents/math/elementary/shapes-explorer/style.css",
+    "public/contents/math/middle/equation-puzzle/style.css",
+    "public/contents/math/middle/pythagoras-theorem/style.css",
+    "public/contents/math/middle/probability-coin/style.css",
+    "public/contents/math/middle/linear-slope/style.css",
+    "public/contents/math/middle/negative-addition/style.css",
+    "public/contents/math/high/quadratic-graph/style.css",
+    "public/contents/math/elementary/3d-shapes-discovery/style.css",
+    "public/contents/math/elementary/volume-explorer/style.css",
+    "public/contents/math/middle/3d-coordinate-system/style.css",
+    "public/contents/math/middle/space-diagonal/style.css",
+    "public/contents/math/high/3d-vectors/style.css",
+    "public/contents/science/middle/cell-explorer/style.css",
+    "public/contents/science/high/chemical-reactor/style.css",
+    "public/contents/math/elementary/volume-explorer/script.js",
+    "public/contents/math/elementary/3d-shapes-discovery/script.js",
+    "public/contents/english/elementary/modal-can/index.html",
+    "public/contents/english/elementary/3d-vocabulary-adventure/index.html"
+  ],
+  "unfinishedSourceEdits": false,
+  "notes": [
+    "15 classic scene scroll fixes verified through completion, space-diagonal reset blocked only by screenshot timeout.",
+    "Two activity instructions corrected to actual controls/gates.",
+    "modal-can five invalid decoded inline handlers corrected;4activities+4quizzes+reset naturally verified.",
+    "Vocabulary shuffled-answer feedback index corrected; syntax compiled and10easy natural feedback strings verified."
+  ]
+}

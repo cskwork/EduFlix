@@ -1,0 +1,66 @@
+{
+  "id": "pythagoras-theorem",
+  "title": "피타고라스의 정리",
+  "family": "classic",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": "직각을 끼는 두 변이 5cm, 12cm인 직각삼각형의 빗변은?",
+      "selected": "13cm",
+      "feedback": "정답입니다. 빗변의 제곱은 5²+12²=169이므로 길이는 양수인 √169=13cm입니다."
+    },
+    {
+      "question": "빗변이 10이고 한 직각변이 6이면 다른 직각변은?",
+      "selected": "8",
+      "feedback": "정답입니다. 다른 직각변의 제곱은 10²−6²=64이므로 길이는 8입니다. 빗변을 알고 있을 때는 두 제곱을 빼야 합니다."
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#scene-hook button"
+    },
+    {
+      "click": "#scene-story button"
+    },
+    {
+      "drag": "#vertex-drag",
+      "dx": 30,
+      "dy": -25
+    },
+    {
+      "click": "#check-pytha-btn"
+    },
+    {
+      "click": "#core-next-btn"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(1)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#quiz-options .quiz-option:nth-child(2)"
+    },
+    {
+      "click": "#quiz-options > button:last-child"
+    },
+    {
+      "click": "#scene-wrap button:first-child"
+    }
+  ],
+  "errors": [],
+  "activityObservation": {
+    "scene": "core",
+    "text": "직각삼각형 탐구\n파란 점을 움직여 두 직각변의 길이를 바꾸세요. a², b², c²를 세 번 기록하고 합을 비교하세요. 그림을 관찰한 결과와 모든 직각삼각형에 대한 증명은 구별합니다.\na=3\nb=5\nc=5.8\na² = 9\nb² = 25\nc² = 34\n9 + 25 = 34\n확인했습니다!\n맞아요! 직각삼각형에서는 항상 a² + b² = c²가 성립합니다.\n다음",
+    "errors": []
+  },
+  "completionObservation": {
+    "scene": "wrap",
+    "text": "🎉 완료!\n\n오늘 배운 내용\n\n피타고라스의 정리\n\n길이가 3, 4, 6인 세 변에는 3²+4²=6²이 성립하나요? 직각 표시를 확인해야 하는 이유를 설명하세요.\n\n다시하기\n홈으로",
+    "errors": []
+  }
+}

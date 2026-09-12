@@ -1,0 +1,60 @@
+[p1 "데이터 시각화 허브 | 동아출판 중학 수학" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "데이터 시각화 허브 | 동아출판 중학 수학"]
+root
+  container
+    container
+      container
+        text "📊"
+        text "레벨"
+        text "1"
+      container
+        text "⭐"
+        text "점수"
+        text "0"
+      container
+        text "✅"
+        text "정답"
+        text "0"
+    container
+      container
+        heading
+          text "📈 차트 유형"
+        button [ref=1]
+          text "📊"
+          text "막대 그래프"
+        button [ref=2]
+          text "🥧"
+          text "원 그래프"
+        button [ref=3]
+          text "📈"
+          text "꺾은선 그래프"
+      container
+        text "학생들의 좋아하는 과일"
+        text "이 그래프에서 가장 인기 있는 과일은 무엇일까요?"
+      container
+        heading
+          text "📋 데이터 정보"
+        container
+          text "총합"
+          text "0"
+        container
+          text "평균"
+          text "0"
+        container
+          text "최댓값"
+          text "0"
+        container
+          text "최솟값"
+          text "0"
+        table
+          table_row
+            table_cell
+              text "항목"
+            table_cell
+              text "값"
+  container
+    heading
+      text "📊 데이터 시각화 허브"
+    paragraph
+      text "연습용 가상 자료의 합과 평균을 계산해요. 10, 20, 30의 평균은 60 ÷ 3 = 20이에요. 같은 자료를 여러 그래프로 보고, 시간의 변화는 꺾은선으로 읽기 좋은 ..."
+    button [ref=4]
+      text "분석 시작! 🚀"

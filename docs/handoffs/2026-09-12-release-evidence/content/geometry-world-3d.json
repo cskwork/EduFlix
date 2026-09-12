@@ -1,0 +1,152 @@
+{
+  "id": "geometry-world-3d",
+  "family": "continuous-custom",
+  "frontDoor": true,
+  "activity": true,
+  "quizzes": [
+    {
+      "question": {
+        "text": "가로 4cm, 세로 4cm인 직사각형의 넓이는?",
+        "answer": 16,
+        "unit": "cm²",
+        "type": "area",
+        "formula": "가로 × 세로",
+        "hint": "4 × 4 = ?"
+      },
+      "previousCorrect": 0,
+      "result": {
+        "text": "📐\n레벨\n1\n⭐\n점수\n120\n✅\n정답\n1\n📐 도형 선택\n▭\n직사각형\n△\n삼각형\n○\n원\n⏢\n사다리꼴\n◻️\n정육면체\n▭\n직사각형\n공식\n가로 × 세로\n유형\n넓이\n넓이를 구하세요\n가로 4cm, 세로 4cm인 직사각형의 넓이는?\n가로 × 세로\ncm²\n💡 힌트\n✓ 제출\n🎉 정답!",
+        "correct": 1,
+        "score": "120",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "text": "밑변 6cm, 높이 5cm인 삼각형의 넓이는?",
+        "answer": 15,
+        "unit": "cm²",
+        "type": "area",
+        "formula": "(밑변 × 높이) ÷ 2",
+        "hint": "(6 × 5) ÷ 2 = ?"
+      },
+      "previousCorrect": 1,
+      "result": {
+        "text": "📐\n레벨\n1\n⭐\n점수\n240\n✅\n정답\n2\n📐 도형 선택\n▭\n직사각형\n△\n삼각형\n○\n원\n⏢\n사다리꼴\n◻️\n정육면체\n△\n삼각형\n공식\n(밑변 × 높이) ÷ 2\n유형\n넓이\n넓이를 구하세요\n밑변 6cm, 높이 5cm인 삼각형의 넓이는?\n(밑변 × 높이) ÷ 2\ncm²\n💡 힌트\n✓ 제출\n🎉 정답!",
+        "correct": 2,
+        "score": "240",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "text": "반지름 3cm인 원의 넓이는? (π=3.14)",
+        "answer": 28.26,
+        "unit": "cm²",
+        "type": "area",
+        "formula": "π × 반지름²",
+        "hint": "3.14 × 3 × 3 = ?"
+      },
+      "previousCorrect": 2,
+      "result": {
+        "text": "📐\n레벨\n1\n⭐\n점수\n360\n✅\n정답\n3\n📐 도형 선택\n▭\n직사각형\n△\n삼각형\n○\n원\n⏢\n사다리꼴\n◻️\n정육면체\n○\n원\n공식\nπ × 반지름²\n유형\n넓이\n넓이를 구하세요\n반지름 3cm인 원의 넓이는? (π=3.14)\nπ × 반지름²\ncm²\n💡 힌트\n✓ 제출\n🎉 정답!",
+        "correct": 3,
+        "score": "360",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "text": "윗변 3cm, 아랫변 7cm, 높이 3cm인 사다리꼴의 넓이는?",
+        "answer": 15,
+        "unit": "cm²",
+        "type": "area",
+        "formula": "(윗변 + 아랫변) × 높이 ÷ 2",
+        "hint": "(3 + 7) × 3 ÷ 2 = ?"
+      },
+      "previousCorrect": 3,
+      "result": {
+        "text": "📐\n레벨\n1\n⭐\n점수\n480\n✅\n정답\n4\n📐 도형 선택\n▭\n직사각형\n△\n삼각형\n○\n원\n⏢\n사다리꼴\n◻️\n정육면체\n⏢\n사다리꼴\n공식\n(윗변 + 아랫변) × 높이 ÷ 2\n유형\n넓이\n넓이를 구하세요\n윗변 3cm, 아랫변 7cm, 높이 3cm인 사다리꼴의 넓이는?\n(윗변 + 아랫변) × 높이 ÷ 2\ncm²\n💡 힌트\n✓ 제출\n🎉 정답!",
+        "correct": 4,
+        "score": "480",
+        "start": "none"
+      }
+    },
+    {
+      "question": {
+        "text": "한 변이 4cm인 정육면체의 부피는?",
+        "answer": 64,
+        "unit": "cm³",
+        "type": "volume",
+        "formula": "한 변³",
+        "hint": "4 × 4 × 4 = ?"
+      },
+      "previousCorrect": 4,
+      "result": {
+        "text": "📐\n레벨\n2\n⭐\n점수\n600\n✅\n정답\n5\n📐 도형 선택\n▭\n직사각형\n△\n삼각형\n○\n원\n⏢\n사다리꼴\n◻️\n정육면체\n◻️\n정육면체\n공식\n한 변³\n유형\n부피\n넓이를 구하세요\n한 변이 4cm인 정육면체의 부피는?\n한 변³\ncm³\n💡 힌트\n✓ 제출\n🎉 정답!",
+        "correct": 5,
+        "score": "600",
+        "start": "none"
+      }
+    }
+  ],
+  "completion": true,
+  "reset": true,
+  "actions": [
+    {
+      "click": "#start-btn"
+    },
+    {
+      "click": ".shape-btn[data-shape=\"rectangle\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".shape-btn[data-shape=\"triangle\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".shape-btn[data-shape=\"circle\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".shape-btn[data-shape=\"trapezoid\"]"
+    },
+    {
+      "click": "#submit-btn"
+    },
+    {
+      "click": ".shape-btn[data-shape=\"cube\"]"
+    },
+    {
+      "click": "#submit-btn"
+    }
+  ],
+  "completionModel": "Continuous practice: no terminal completion state exists; complete means verified bounded activity cycle, not every possible generated question.",
+  "coverage": [
+    "rectangle",
+    "triangle",
+    "circle",
+    "trapezoid",
+    "cube"
+  ],
+  "title": "기하 월드 3D",
+  "finiteCompletion": false,
+  "completionObservation": {
+    "text": "📐\n레벨\n2\n⭐\n점수\n600\n✅\n정답\n5\n📐 도형 선택\n▭\n직사각형\n△\n삼각형\n○\n원\n⏢\n사다리꼴\n◻️\n정육면체\n◻️\n정육면체\n공식\n한 변³\n유형\n부피\n넓이를 구하세요\n한 변이 2cm인 정육면체의 부피는?\n한 변³\ncm³\n💡 힌트\n✓ 제출\n🎉 정답!",
+    "correct": 5,
+    "score": "600",
+    "start": "none"
+  },
+  "resetObservation": {
+    "text": "📐\n레벨\n1\n⭐\n점수\n0\n✅\n정답\n0\n📐 도형 선택\n▭\n직사각형\n△\n삼각형\n○\n원\n⏢\n사다리꼴\n◻️\n정육면체\n▭\n직사각형\n공식\n가로×세로\n유형\n넓이\n넓이를 구하세요\n가로 8cm, 세로 5cm인 직사각형의 넓이는?\n넓이 = 가로 × 세로\ncm²\n💡 힌트\n✓ 제출\n📐 기하 월드 3D\n\n도형에서 필요한 길이를 골라 넓이·둘레·부피를 계산해요. 한 변 3 cm인 정육면체는 부피 27 cm³, 겉넓이 54 cm²예요. 둘을 구별하는 이유를 면 6개와 연결해 설명해 보세요.\n\n탐험 시작! 🚀\n▭\n평면도형\n넓이와 둘레 계산\n◻️\n입체도형\n부피와 겉넓이 계산\n🎯\n단계별 학습\n쉬운 것부터 어려운 것까지",
+    "correct": 0,
+    "score": "0",
+    "start": "flex"
+  }
+}

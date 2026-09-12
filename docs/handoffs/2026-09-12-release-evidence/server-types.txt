@@ -1,0 +1,2 @@
+npm notice run eduflix@0.4.0 npx
+npm notice run 'tsc' --project tsconfig.server.json --noEmit

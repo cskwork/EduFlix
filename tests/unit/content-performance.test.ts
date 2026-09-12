@@ -1,4 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import * as localContent from '../../src/services/content/localContent'
@@ -40,44 +40,28 @@ describe('catalog performance and discoverability', () => {
     expect(calculateSortScore('a', '2026-09-09T00:00:00Z', stats, now)).toBe(116)
   })
 
-  it('activates previews only on intersection and disconnects on unmount', async () => {
-    let callback: IntersectionObserverCallback = () => {}
-    const disconnect = vi.fn()
-    const observe = vi.fn()
-    vi.stubGlobal('IntersectionObserver', class {
-      constructor(cb: IntersectionObserverCallback) { callback = cb }
-      observe = observe
-      disconnect = disconnect
-    })
+  it('loads thumbnails lazily without running lesson iframes and falls back on image error', async () => {
     const wrapper = mount(ContentCard, {
-      props: { content: lesson('preview') }, global: { stubs: { RouterLink: { template: '<a><slot /></a>' } } },
+      props: { content: { ...lesson('preview'), thumbnail: '/lesson.webp' } },
+      global: { stubs: { RouterLink: { template: '<a><slot /></a>' } } },
     })
-    expect(observe).toHaveBeenCalledOnce()
     expect(wrapper.find('iframe').exists()).toBe(false)
-    callback([{ isIntersecting: false } as IntersectionObserverEntry], {} as IntersectionObserver)
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find('iframe').exists()).toBe(false)
-    callback([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver)
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find('iframe').attributes('src')).toBe('/contents/math/elementary/preview/index.html')
-    expect(disconnect).toHaveBeenCalledOnce()
+    expect(wrapper.find('img').attributes('loading')).toBe('lazy')
+    expect(wrapper.find('img').attributes('decoding')).toBe('async')
+    await wrapper.find('img').trigger('error')
+    expect(wrapper.find('img').exists()).toBe(false)
+    expect(wrapper.find('.thumbnail-fallback').text()).toContain('preview')
     wrapper.unmount()
-    expect(disconnect).toHaveBeenCalledTimes(2)
   })
-  it('uses a local Blob preview and releases it when the card unmounts', async () => {
-    vi.stubGlobal('IntersectionObserver', undefined)
-    vi.spyOn(localContent, 'getLocalContent').mockResolvedValue({
-      ...lesson('local-preview'), html: '<h1>Local preview</h1>', css: '', js: '',
-    })
-    vi.spyOn(localContent, 'createLocalContentUrl').mockReturnValue('blob:local-preview')
-    const revoke = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {})
+  it('does not read or execute local lesson contents for a card', () => {
+    const read = vi.spyOn(localContent, 'getLocalContent')
     const wrapper = mount(ContentCard, {
-      props: { content: lesson('local-preview') }, global: { stubs: { RouterLink: { template: '<a><slot /></a>' } } },
+      props: { content: lesson('local-preview') },
+      global: { stubs: { RouterLink: { template: '<a><slot /></a>' } } },
     })
-    await flushPromises()
-    expect(wrapper.find('iframe').attributes('src')).toBe('blob:local-preview')
+    expect(read).not.toHaveBeenCalled()
+    expect(wrapper.find('iframe').exists()).toBe(false)
+    expect(wrapper.find('.thumbnail-fallback').text()).toContain('local-preview')
     wrapper.unmount()
-    expect(revoke).toHaveBeenCalledWith('blob:local-preview')
   })
-
 })

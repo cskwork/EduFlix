@@ -64,7 +64,7 @@ class EduFlixEngine {
                 <div class="hook-content">
                     <div class="question-box">
                         <h1 class="hook-question">${question}</h1>
-                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}
+                        ${subText ? `<p class="hook-subtext">${subText}</p>` : ''}<p class="scene-text">학습 목표: ${this.data.objective}</p>
                     </div>
                     ${visual ? `<div class="hook-visual">${visual.content}</div>` : ''}
                     <button class="btn btn-primary-large" onclick="Engine.nextScene()">시작하기</button>
@@ -75,7 +75,7 @@ class EduFlixEngine {
 
         this.createScene('story', (scene) => {
             const { character, situation } = this.data.story;
-            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
+            scene.innerHTML = `<div class="story-stage">${this.getCharacterMarkup(character)}</div><div class="scene-text typing-effect">${situation}<br><br>${this.data.workedExample}</div><button class="btn btn-primary-large animate-fade-in" onclick="Engine.nextScene()">다음</button>`;
         });
 
         this.createScene('core', (scene) => {
@@ -89,7 +89,7 @@ class EduFlixEngine {
         }
 
         this.createScene('wrap', (scene) => {
-            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
+            scene.innerHTML = `<h1 class="scene-title">🎉 완료!</h1><div class="wrap-summary"><p class="scene-text">오늘 배운 내용</p><h3>${this.data.title}</h3><p class="scene-text">${this.data.reflection}</p></div><div style="display:flex; gap:15px;"><button class="btn btn-secondary-large" onclick="location.reload()">다시하기</button><button class="btn btn-primary-large" onclick="window.parent.postMessage('close', '*')">홈으로</button></div>`;
         });
     }
 
@@ -127,31 +127,46 @@ class EduFlixEngine {
         if(btn) { btn.style.display = 'inline-block'; btn.classList.add('animate-fade-in'); }
     }
 
-    startQuiz() {
-        const q = this.data.quiz[0];
-        document.getElementById('quiz-question').textContent = q.question;
-        const optsContainer = document.getElementById('quiz-options');
-        optsContainer.innerHTML = '';
-        q.options.forEach((opt, idx) => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => this.checkQuiz(idx, q.answer, btn);
-            optsContainer.appendChild(btn);
+    startQuiz(index = 0) {
+        this.quizIndex = index;
+        const q = this.data.quiz[index];
+        const question = document.getElementById('quiz-question');
+        question.textContent = `${index + 1} / ${this.data.quiz.length} · ${q.question}`;
+        const container = document.getElementById('quiz-options');
+        container.innerHTML = '';
+        q.options.forEach((option, selected) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'quiz-option';
+            button.textContent = option;
+            button.onclick = () => this.checkQuiz(selected, q.answer, button);
+            container.appendChild(button);
         });
+        const feedback = document.createElement('p');
+        feedback.id = 'quiz-explanation';
+        feedback.className = 'scene-text';
+        feedback.setAttribute('role', 'status');
+        container.appendChild(feedback);
     }
 
-    checkQuiz(selectedIdx, correctIdx, btnElement) {
-        const opts = document.querySelectorAll('.quiz-option');
-        opts.forEach(o => o.style.pointerEvents = 'none');
-        if (selectedIdx === correctIdx) {
-            btnElement.classList.add('correct');
-            setTimeout(() => this.nextScene(), 1500);
-        } else {
-            btnElement.classList.add('incorrect');
-            opts[correctIdx].classList.add('correct');
-            setTimeout(() => this.nextScene(), 2000);
-        }
+    checkQuiz(selected, answer, button) {
+        const container = document.getElementById('quiz-options');
+        const options = container.querySelectorAll('.quiz-option');
+        if (button.disabled) return;
+        options.forEach(option => { option.disabled = true; });
+        button.classList.add(selected === answer ? 'correct' : 'incorrect');
+        options[answer].classList.add('correct');
+        document.getElementById('quiz-explanation').textContent =
+            (selected === answer ? '정답입니다. ' : '답을 비교해 보세요. ') + this.data.quiz[this.quizIndex].explanation;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn-primary-large';
+        next.textContent = this.quizIndex + 1 < this.data.quiz.length ? '해설을 읽었어요 · 다음 문항' : '해설을 읽었어요 · 정리하기';
+        next.onclick = () => {
+            if (this.quizIndex + 1 < this.data.quiz.length) this.startQuiz(this.quizIndex + 1);
+            else this.nextScene();
+        };
+        container.appendChild(next);
     }
 }
 
@@ -165,6 +180,9 @@ window.Engine = new EduFlixEngine();
  */
 
 const quadraticData = {
+    objective: "계수와 그래프의 관계를 비교하고 꼭짓점과 x절편을 계산해요.",
+    workedExample: "y=x²−4x+3=(x−2)²−1의 꼭짓점은 (2,−1)입니다. (x−1)(x−3)=0에서 x절편의 x좌표는 1과 3입니다. a=0이면 이차함수가 아니며 b와 c에 따라 일차함수 또는 상수함수가 됩니다.",
+    reflection: "c만 2만큼 늘리면 모든 점의 y좌표는 어떻게 바뀔까요? 식에 같은 x를 넣어 비교하고 그래프의 이동으로 설명하세요.",
     title: "이차함수 그래프 탐구",
     hook: {
         question: "농구공이 날아가는 경로는 어떤 모양일까요?",
@@ -199,11 +217,11 @@ const quadraticData = {
     },
     story: {
         character: { image: "assets/character.svg" },
-        situation: "물리학자가 로켓을 쏘아 올리려고 해요.<br>이차함수 계수 a, b, c를 조절하여 로켓의 궤도를 완성해주세요!"
+        situation: "그래프 실험실에서 이차함수 계수를 비교합니다.<br>이 화면은 함수 그래프 모형이며 실제 로켓의 비행 조건을 계산하지는 않습니다."
     },
     interaction: {
         title: "파라볼라 실험실",
-        instruction: "슬라이더를 움직여 y = ax² + bx + c 그래프를 조작해보세요.",
+        instruction: "a=1, b=−4, c=3으로 설정하고 꼭짓점을 확인하세요. b와 c를 그대로 두고 a의 부호를 바꾸어 열린 방향을 비교하세요. a=0도 시험하고 이차항이 사라지는 이유를 설명하세요.",
         onInit: (container, engine) => {
             // State
             let a = 1;
@@ -219,7 +237,7 @@ const quadraticData = {
             
             container.innerHTML = `
                 <div class="formula-display">
-                    y = <span id="val-a">1</span>x² + <span id="val-b">0</span>x + <span id="val-c">0</span>
+                    y = <span id="val-a">1</span>x² <span id="val-b">+ 0</span>x <span id="val-c">+ 0</span>
                 </div>
                 
                 <div class="graph-container">
@@ -322,14 +340,13 @@ const quadraticData = {
                 dispB.textContent = b;
                 dispC.textContent = c;
                 
-                valA.textContent = a;
+                valA.textContent = String(a);
                 valB.textContent = b >= 0 ? `+ ${b}` : b;
                 valC.textContent = c >= 0 ? `+ ${c}` : c;
             };
             
             const updateState = () => {
                 a = parseFloat(sliderA.value);
-                if(a === 0) a = 0.1; // Avoid line
                 b = parseFloat(sliderB.value);
                 c = parseFloat(sliderC.value);
                 render();
@@ -340,7 +357,7 @@ const quadraticData = {
             sliderC.oninput = updateState;
             
             checkBtn.onclick = () => {
-                const msg = a > 0 ? "a > 0 이므로 아래로 볼록하군요!" : "a < 0 이므로 위로 볼록하군요!";
+                const msg = a === 0 ? "a=0이므로 이차항이 사라졌습니다. 이 그래프는 이차함수가 아닙니다." : a > 0 ? "a > 0 이므로 아래로 볼록하군요!" : "a < 0 이므로 위로 볼록하군요!";
                 engine.showFeedback(msg, "neutral");
                 engine.enableNext();
             };
@@ -350,11 +367,27 @@ const quadraticData = {
     },
     quiz: [
         {
-            question: "이차함수 y = -x² + 4 의 그래프가 x축과 만나는 점(x절편)은 어디일까요?",
-            options: ["-2, 2", "-4, 4", "0", "없다"],
-            answer: 0
+                "question": "y = −x² + 4의 x절편의 x좌표는?",
+                "options": [
+                        "−2, 2",
+                        "−4, 4",
+                        "0",
+                        "없다"
+                ],
+                "answer": 0,
+                "explanation": "y=0을 대입하면 x²=4이므로 x=−2 또는 2입니다. x축과 만나는 점은 (−2,0), (2,0)입니다."
+        },
+        {
+                "question": "y=(x−2)²−1의 꼭짓점은?",
+                "options": [
+                        "(−2,−1)",
+                        "(2,−1)",
+                        "(2,1)"
+                ],
+                "answer": 1,
+                "explanation": "제곱 항이 0이 되는 x=2에서 y=−1입니다. 제곱의 계수가 양수이므로 이 값은 최솟값입니다."
         }
-    ]
+]
 };
 
 Engine.init(quadraticData);

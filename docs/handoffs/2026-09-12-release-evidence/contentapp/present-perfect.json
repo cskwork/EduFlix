@@ -1,0 +1,14 @@
+{
+  "id": "present-perfect",
+  "frontDoor": true,
+  "activity": "Dragged6words into2sentences desktop; added click/keyboard alternative and completed all6 at390x844",
+  "answers": [
+    "Have ... been",
+    "have lived",
+    "have ... finished"
+  ],
+  "completion": true,
+  "reset": true,
+  "method": "Chrome CUA actual input, DOM evidence",
+  "mobile": true
+}

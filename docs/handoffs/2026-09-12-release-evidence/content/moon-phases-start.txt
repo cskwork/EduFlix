@@ -1,0 +1,10 @@
+[p1 "달의 위상 변화 - 변하는 달의 비밀" | space "EduFlix catalog full-flow release verification"(16): 1 managed, 0 untracked — p1* "달의 위상 변화 - 변하는 달의 비밀"]
+root
+  container
+    svg_root
+    heading
+      text "달은 왜 모양이 변할까?"
+    paragraph
+      text "어제는 동그랬는데 오늘은 반달이야..."
+    button [ref=1]
+      text "알아보기"

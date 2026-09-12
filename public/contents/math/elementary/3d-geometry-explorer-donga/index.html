@@ -768,6 +768,8 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+    button.quiz-option { font: inherit; color: inherit; }
+        #quiz-explanation { font-size: 15px; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -821,7 +823,7 @@
                         <div class="info-value" id="vertices-count">0</div>
                     </div>
                 </div>
-                <div id="description"></div>
+                <div id="description"></div><p style="font-size:13px;line-height:1.5">곡면 도형의 표에는 굽은 면과 원형 경계도 포함합니다. 다면체의 평평한 면·곧은 모서리와 구별하세요. 색이나 보는 방향을 바꾸어도 개수는 같을까요?</p>
                 <div class="formula-box">
                     <div class="formula-label">오일러 공식</div>
                     <div class="formula">V - E + F = 2</div>
@@ -840,7 +842,7 @@
                 <div id="color-picker"></div>
                 <div class="divider"></div>
                 <button class="control-btn accent" id="quiz-btn" title="퀴즈">❓</button>
-                <button class="control-btn success" id="explode-btn" title="분해 보기">💥</button>
+                <button class="control-btn success" id="explode-btn" title="장식 조각 보기: 실제 전개도 아님">💥</button>
                 <button class="control-btn danger" id="reset-btn" title="초기화">↻</button>
             </div>
         </div>
@@ -903,7 +905,7 @@
                 <p style="font-size: 18px; line-height: 1.6; color: #fff; margin-bottom: 24px;">
                     안녕! 난 우주 탐험가 고양이 <strong>'보라'</strong>야. 🐾<br><br>
                     우주선이 고장 났는데, 수리하려면 입체 도형의 <span style="color: #60a5fa; font-weight: bold;">면, 모서리, 꼭짓점</span> 구조를 완벽하게 알아야 해!<br>
-                    나와 함께 3D 도형을 이리저리 돌려보고 퀴즈를 풀면서 우주선을 고쳐줄래?
+                    목표는 도형을 돌려 숨은 면까지 세는 것입니다. 정육면체는 위아래·앞뒤·좌우 6면입니다. 정육면체와 직육면체를 비교해 개수가 같은데 모양은 어떻게 다른지 말해 주세요.
                 </p>
                 <button id="story-next-btn" style="background: linear-gradient(135deg, var(--success) 0%, #059669 100%); border: none; padding: 16px 40px; border-radius: 50px; color: white; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transition: transform 0.2s;">출발하기!</button>
             </div>
@@ -952,7 +954,7 @@
                 edges: 2,
                 vertices: 0,
                 description: "원기둥은 두 개의 평행한 원형 밑면과 곡면으로 이루어진 도형입니다. 캔 음료, 연필이 원기둥 모양이에요!",
-                quizQuestion: "원기둥의 면은 몇 개일까요?",
+                quizQuestion: "원기둥에서 평평한 두 밑면과 굽은 옆면을 합하면 몇 부분일까요?",
                 quizOptions: [2, 3, 4, 5],
                 quizCorrect: 1,
                 icon: "🥫"
@@ -1007,7 +1009,7 @@
                 faces: 5,
                 edges: 8,
                 vertices: 5,
-                description: "사각뿔은 정사각형 밑면과 4개의 삼각형 면이 꼭대기에서 만나는 도형입니다. 이집트 피라미드가 바로 이 모양이에요!",
+                description: "이 모형의 사각뿔은 정사각형 밑면과 4개의 삼각형 면이 꼭대기에서 만나는 도형입니다. 이집트 피라미드가 바로 이 모양이에요!",
                 quizQuestion: "사각뿔의 꼭짓점은 몇 개일까요?",
                 quizOptions: [4, 5, 6, 8],
                 quizCorrect: 1,
@@ -1049,7 +1051,7 @@
                 faces: 20,
                 edges: 30,
                 vertices: 12,
-                description: "정이십면체는 20개의 정삼각형 면으로 이루어진 플라톤 입체입니다. 축구공의 흰색 부분과 비슷한 구조예요!",
+                description: "정이십면체는 20개의 정삼각형 면으로 이루어진 플라톤 입체입니다. 각 꼭짓점에는 정삼각형 면 5개가 만납니다.",
                 quizQuestion: "정이십면체의 면은 몇 개일까요?",
                 quizOptions: [12, 15, 20, 25],
                 quizCorrect: 2,
@@ -1489,6 +1491,7 @@
         }
 
         function toggleExplode() {
+            showAchievement('장식 모형', '이 조각들은 실제 면이나 전개도가 아닙니다. 면의 수는 원래 도형에서 확인하세요.');
             if (!currentMesh) return;
 
             isExploded = !isExploded;
@@ -1653,13 +1656,15 @@
                 return;
             }
 
+            document.getElementById('quiz-explanation')?.remove();
             document.getElementById('quiz-question').textContent = shape.quizQuestion;
 
             const optionsContainer = document.getElementById('quiz-options');
             optionsContainer.innerHTML = '';
 
             shape.quizOptions.forEach((option, index) => {
-                const optionEl = document.createElement('div');
+                const optionEl = document.createElement('button');
+                optionEl.type = 'button';
                 optionEl.className = 'quiz-option';
                 optionEl.textContent = option;
                 optionEl.addEventListener('click', () => checkQuizAnswer(index, optionEl));
@@ -1673,8 +1678,14 @@
             const shape = shapesData[currentShape];
             const options = document.querySelectorAll('.quiz-option');
 
-            // Disable all options
-            options.forEach(opt => opt.style.pointerEvents = 'none');
+            if (element.disabled) return;
+            options.forEach(opt => { opt.disabled = true; });
+            document.getElementById('quiz-explanation')?.remove();
+            const explanation = document.createElement('p');
+            explanation.id = 'quiz-explanation';
+            explanation.setAttribute('role', 'status');
+            explanation.textContent = `정답은 ${shape.quizOptions[shape.quizCorrect]}입니다. ${shape.description}`;
+            document.getElementById('quiz-panel').appendChild(explanation);
 
             if (selectedIndex === shape.quizCorrect) {
                 element.classList.add('correct');
@@ -1688,29 +1699,30 @@
                 const buttons = document.querySelectorAll('.shape-btn');
                 buttons[currentShape].classList.add('mastered');
 
-                setTimeout(() => {
+                const close = document.createElement('button');
+                close.className = 'quiz-option';
+                close.textContent = '설명을 읽었어요 · 도형으로';
+                close.onclick = () => {
                     document.getElementById('quiz-panel').classList.remove('show');
-                    showAchievement('🎉 정답!', `${shape.name}를 마스터했어요! +100점`);
-
-                    // Check for completion achievement
-                    if (masteredShapes.size === shapesData.length) {
-                        setTimeout(() => {
-                            showAchievement('🏆 완벽한 마스터!', '모든 도형을 마스터했습니다!');
-                        }, 2000);
-                    }
-                }, 1000);
+                    close.remove();
+                    showAchievement('정답!', `${shape.name}의 특징을 확인했어요. 다른 도형과 비교해 보세요.`);
+                };
+                explanation.appendChild(document.createElement('br'));
+                explanation.appendChild(close);
             } else {
                 element.classList.add('wrong');
                 options[shape.quizCorrect].classList.add('correct');
                 score = Math.max(0, score - 20);
                 document.getElementById('score').textContent = score;
 
-                setTimeout(() => {
-                    options.forEach(opt => {
-                        opt.style.pointerEvents = 'auto';
-                        opt.classList.remove('wrong', 'correct');
-                    });
-                }, 1500);
+                const retry = document.createElement('button');
+                retry.className = 'quiz-option';
+                retry.textContent = '설명을 읽고 다시 풀기';
+                retry.onclick = () => {
+                    explanation.remove();
+                    options.forEach(opt => { opt.disabled = false; opt.classList.remove('wrong', 'correct'); });
+                };
+                explanation.appendChild(retry);
             }
         }
 

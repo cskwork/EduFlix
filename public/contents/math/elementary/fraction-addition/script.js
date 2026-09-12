@@ -147,7 +147,7 @@ const ContentApp = {
         feedback.classList.remove('show');
         
         setTimeout(() => {
-            feedback.innerHTML = "분자끼리 더하기: 3 + 2 = 5<br>🍕 하프앤하프 피자 완성! 결과: <strong>5/6</strong>";
+            feedback.innerHTML = "분자끼리 더하기: 3 + 2 = 5<br>🍕 두 가지 맛 피자 완성! 결과: <strong>5/6</strong>";
             feedback.classList.add('show');
             
             const f1Bars = document.querySelectorAll('#f1 .bar');
@@ -191,7 +191,7 @@ const ContentApp = {
         } else {
             btn.classList.add('wrong-ans');
             feedback.classList.add('incorrect');
-            feedback.innerHTML = '💡 틀렸어요. 분모를 먼저 통분해보세요 (공통분모 10).';
+            feedback.innerHTML = '💡 틀렸어요. 같은 전체에서 2/5를 4/10으로 바꾸세요. 4/10+1/10=5/10이며, 약분하면 1/2입니다. 분모는 조각 크기이므로 그대로 둡니다.';
             
             setTimeout(() => {
                 options.forEach(b => {

@@ -143,7 +143,7 @@
         <section id="core-scene" class="scene">
             <div class="content-wrapper">
                 <h2>피자를 나눠 담아보세요!</h2>
-                <p class="instruction">피자 조각을 드래그해서 접시에 나눠 담으세요</p>
+                <p class="instruction">목표: 3/4판을 두 사람이 같은 양으로 나눠요. 1/4 조각을 각각 반으로 자른 1/8 조각 6개입니다. 드래그하거나 아래 버튼으로 3조각씩 나누세요.</p>
 
                 <div class="interaction-area" id="interaction-area">
                     <!-- 피자 영역 -->
@@ -153,24 +153,15 @@
                             <circle cx="120" cy="120" r="100" fill="#fcd34d" stroke="#d97706" stroke-width="4"/>
                             <!-- 먹은 조각 배경 -->
                             <path d="M 120 120 L 120 20 A 100 100 0 0 1 220 120 Z" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
-                            <!-- 드래그 가능한 조각들 (3개) -->
-                            <g id="slice-1" class="pizza-slice draggable" data-slice="1">
-                                <path d="M 120 120 L 20 120 A 100 100 0 0 0 120 220 Z" fill="#fcd34d" stroke="#d97706" stroke-width="2"/>
-                                <circle cx="70" cy="150" r="10" fill="#ef4444"/> <!-- 페퍼로니 -->
-                                <circle cx="90" cy="180" r="8" fill="#10b981"/> <!-- 피망 -->
-                            </g>
-                            <g id="slice-2" class="pizza-slice draggable" data-slice="2">
-                                <path d="M 120 120 L 120 220 A 100 100 0 0 0 220 120 Z" fill="#fcd34d" stroke="#d97706" stroke-width="2"/>
-                                <circle cx="170" cy="150" r="10" fill="#ef4444"/>
-                                <circle cx="150" cy="180" r="8" fill="#10b981"/>
-                            </g>
-                            <g id="slice-3" class="pizza-slice draggable" data-slice="3">
-                                <path d="M 120 120 L 20 120 A 100 100 0 0 1 120 20 Z" fill="#fcd34d" stroke="#d97706" stroke-width="2"/>
-                                <circle cx="70" cy="70" r="10" fill="#ef4444"/>
-                                <circle cx="90" cy="50" r="8" fill="#10b981"/>
-                            </g>
+                            <!-- 남은 3/4판을 같은 넓이의 1/8 조각 여섯 개로 나눕니다. -->
+                            <g id="slice-1" class="pizza-slice draggable" data-slice="1"><path d="M120 120 L220.000 120.000 A100 100 0 0 1 190.711 190.711 Z" fill="#fcd34d" stroke="#d97706" stroke-width="2"/></g>
+                            <g id="slice-2" class="pizza-slice draggable" data-slice="2"><path d="M120 120 L190.711 190.711 A100 100 0 0 1 120.000 220.000 Z" fill="#fcd34d" stroke="#d97706" stroke-width="2"/></g>
+                            <g id="slice-3" class="pizza-slice draggable" data-slice="3"><path d="M120 120 L120.000 220.000 A100 100 0 0 1 49.289 190.711 Z" fill="#fcd34d" stroke="#d97706" stroke-width="2"/></g>
+                            <g id="slice-4" class="pizza-slice draggable" data-slice="4"><path d="M120 120 L49.289 190.711 A100 100 0 0 1 20.000 120.000 Z" fill="#fcd34d" stroke="#d97706" stroke-width="2"/></g>
+                            <g id="slice-5" class="pizza-slice draggable" data-slice="5"><path d="M120 120 L20.000 120.000 A100 100 0 0 1 49.289 49.289 Z" fill="#fcd34d" stroke="#d97706" stroke-width="2"/></g>
+                            <g id="slice-6" class="pizza-slice draggable" data-slice="6"><path d="M120 120 L49.289 49.289 A100 100 0 0 1 120.000 20.000 Z" fill="#fcd34d" stroke="#d97706" stroke-width="2"/></g>
                         </svg>
-                        <div class="source-label">3/4 피자</div>
+                        <div class="source-label">3/4 = 6/8 피자</div><button class="btn-secondary" onclick="ContentApp.giveNextSlice(1)">친구 1에게 한 조각</button><button class="btn-secondary" onclick="ContentApp.giveNextSlice(2)">친구 2에게 한 조각</button>
                     </div>
 
                     <!-- 접시 영역 -->
@@ -184,7 +175,7 @@
                             </div>
                             <div class="plate-slices" id="plate-1-slices"></div>
                             <div class="plate-label">친구 1</div>
-                            <div class="plate-fraction" id="plate-1-fraction">0/4</div>
+                            <div class="plate-fraction" id="plate-1-fraction">0/8</div>
                         </div>
                         <div class="plate" id="plate-2" data-plate="2">
                             <div class="plate-visual">
@@ -195,7 +186,7 @@
                             </div>
                             <div class="plate-slices" id="plate-2-slices"></div>
                             <div class="plate-label">친구 2</div>
-                            <div class="plate-fraction" id="plate-2-fraction">0/4</div>
+                            <div class="plate-fraction" id="plate-2-fraction">0/8</div>
                         </div>
                     </div>
                 </div>
@@ -311,7 +302,7 @@
                     <ul>
                         <li>분수를 자연수로 나누는 방법을 배웠어요.</li>
                         <li><strong>a/b 나누기 c = a/b x 1/c = a/(b x c)</strong></li>
-                        <li>피자와 케이크를 공평하게 나눌 수 있어요!</li>
+                        <li>1/2판을 3명이 나누면 한 사람은 얼마인가요? 받은 양에 3을 곱해 처음 양으로 돌아오는지 확인하세요.</li>
                     </ul>
                 </div>
                 <div class="star-rating">
