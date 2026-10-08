@@ -3,8 +3,8 @@
 # 첫 이미지를 레퍼런스로 삼아 포즈 파생 생성 → 캐릭터 일관성 유지
 set -u
 
-GEN="/Users/danny/.claude/skills/gpt-image-2/scripts/gen.sh"
-OUT_DIR="/Users/danny/Documents/PARA/Resource/EduFlix/public/mascot"
+GEN="${HOME}/.claude/skills/gpt-image-2/scripts/gen.sh"
+OUT_DIR="${HOME}/Documents/PARA/Resource/EduFlix/public/mascot"
 mkdir -p "$OUT_DIR"
 
 BASE_CHAR="An original cute fluffy monster mascot for a kids' education app (original design, NOT any existing IP). Soft cream-colored plush fur, tall pointed bunny-like ears, huge round sparkling dark-brown eyes with big highlights, a wide mischievous grin showing a neat row of tiny rounded white teeth, small chubby body with a pastel-peach round belly, short stubby arms and legs. Collectible designer art-toy aesthetic, soft 3D render, soft studio lighting, detailed fur texture, vibrant and kid-friendly. Full body, centered, isolated on a plain pure white background."

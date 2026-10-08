@@ -87,10 +87,10 @@
   {
     "args": [
       "screenshot",
-      "/Users/danny/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-map-locked.png"
+      "/Users/<user>/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-map-locked.png"
     ],
     "stdin": null,
-    "stdout": "✓ Screenshot saved to /Users/danny/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-map-locked.png\n",
+    "stdout": "✓ Screenshot saved to /Users/<user>/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-map-locked.png\n",
     "stderr": "",
     "exit": 0
   },
@@ -268,10 +268,10 @@
   {
     "args": [
       "screenshot",
-      "/Users/danny/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-map-unlocked.png"
+      "/Users/<user>/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-map-unlocked.png"
     ],
     "stdin": null,
-    "stdout": "✓ Screenshot saved to /Users/danny/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-map-unlocked.png\n",
+    "stdout": "✓ Screenshot saved to /Users/<user>/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-map-unlocked.png\n",
     "stderr": "",
     "exit": 0
   },
@@ -444,10 +444,10 @@
   {
     "args": [
       "screenshot",
-      "/Users/danny/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-retry.png"
+      "/Users/<user>/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-retry.png"
     ],
     "stdin": null,
-    "stdout": "✓ Screenshot saved to /Users/danny/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-retry.png\n",
+    "stdout": "✓ Screenshot saved to /Users/<user>/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-retry.png\n",
     "stderr": "",
     "exit": 0
   },
@@ -540,10 +540,10 @@
   {
     "args": [
       "screenshot",
-      "/Users/danny/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-my-learning.png"
+      "/Users/<user>/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-my-learning.png"
     ],
     "stdin": null,
-    "stdout": "✓ Screenshot saved to /Users/danny/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-my-learning.png\n",
+    "stdout": "✓ Screenshot saved to /Users/<user>/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-my-learning.png\n",
     "stderr": "",
     "exit": 0
   },
@@ -693,10 +693,10 @@
   {
     "args": [
       "screenshot",
-      "/Users/danny/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-creator-running.png"
+      "/Users/<user>/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-creator-running.png"
     ],
     "stdin": null,
-    "stdout": "✓ Screenshot saved to /Users/danny/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-creator-running.png\n",
+    "stdout": "✓ Screenshot saved to /Users/<user>/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-creator-running.png\n",
     "stderr": "",
     "exit": 0
   },
@@ -846,10 +846,10 @@
   {
     "args": [
       "screenshot",
-      "/Users/danny/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-creator-completed.png"
+      "/Users/<user>/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-creator-completed.png"
     ],
     "stdin": null,
-    "stdout": "✓ Screenshot saved to /Users/danny/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-creator-completed.png\n",
+    "stdout": "✓ Screenshot saved to /Users/<user>/Documents/PARA/Resource/EduFlix/docs/handoffs/2026-09-08-maintenance-evidence/continuation-learning-creator-completed.png\n",
     "stderr": "",
     "exit": 0
   },

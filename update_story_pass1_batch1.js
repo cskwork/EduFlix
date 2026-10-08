@@ -8,7 +8,7 @@ const b1Files = [
     'circle-area/index.html',
     'coordinate-explorer/index.html'
 ];
-const baseDir = '/Users/danny/Documents/PARA/Resource/EduFlix/public/contents/math/elementary/';
+const baseDir = path.join(__dirname, 'public/contents/math/elementary') + path.sep;
 
 // We will inject the story scene template right after the hook-scene (or where appropriate)
 const storySceneTemplate = `
